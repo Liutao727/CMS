@@ -56,9 +56,9 @@ function confirmDelete() {
   </tr>
   <tr>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="sensitiveWord.name"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="name" value="${oprt=='edit' ? (bean.name) : ''}" class="required" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text name="name" value="${oprt=='edit' ? (bean.name) : ''}" class="required" maxlength="100" style="width:180px;"/></td>
     <td class="in-lab" width="15%"><s:message code="sensitiveWord.replacement"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="replacement" value="${bean.replacement}" class="required" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text name="replacement" value="${bean.replacement}" maxlength="100" style="width:180px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="sensitiveWord.status"/>:</td>

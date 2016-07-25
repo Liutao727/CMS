@@ -62,8 +62,7 @@ import com.jspxcms.core.support.Siteable;
  */
 @Entity
 @Table(name = "cms_node")
-public class Node implements java.io.Serializable, Anchor, Siteable,
-		PageUrlResolver {
+public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlResolver {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 首页模型类型
@@ -208,13 +207,11 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 	}
 
 	@Transient
-	public boolean isViewPerm(Collection<MemberGroup> groups,
-			Collection<Org> orgs) {
+	public boolean isViewPerm(Collection<MemberGroup> groups, Collection<Org> orgs) {
 		if (Reflections.containsAny(getViewGroups(), groups, "id")) {
 			return true;
 		}
-		if (CollectionUtils.isNotEmpty(orgs)
-				&& Reflections.containsAny(getViewOrgs(), orgs, "id")) {
+		if (CollectionUtils.isNotEmpty(orgs) && Reflections.containsAny(getViewOrgs(), orgs, "id")) {
 			return true;
 		}
 		return false;
@@ -223,9 +220,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 	@Transient
 	public boolean isDataPerm(User user) {
 		Integer siteId = getSite().getId();
-		if (user.getAllNodePerm(siteId)
-				|| Reflections.contains(user.getNodePerms(siteId), getId(),
-						"id")) {
+		if (user.getAllNodePerm(siteId) || Reflections.contains(user.getNodePerms(siteId), getId(), "id")) {
 			return true;
 		}
 		return false;
@@ -508,44 +503,37 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 
 	@Transient
 	public String getNodePathOrDef() {
-		return getNodePath() != null ? getNodePath()
-				: getNodePath(getNodeModel().getCustoms());
+		return getNodePath() != null ? getNodePath() : getNodePath(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public String getInfoPathOrDef() {
-		return getInfoPath() != null ? getInfoPath()
-				: getInfoPath(getNodeModel().getCustoms());
+		return getInfoPath() != null ? getInfoPath() : getInfoPath(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public String getNodeExtensionOrDef() {
-		return getNodeExtension() != null ? getNodeExtension()
-				: getNodeExtension(getNodeModel().getCustoms());
+		return getNodeExtension() != null ? getNodeExtension() : getNodeExtension(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public String getInfoExtensionOrDef() {
-		return getInfoExtension() != null ? getInfoExtension()
-				: getInfoExtension(getNodeModel().getCustoms());
+		return getInfoExtension() != null ? getInfoExtension() : getInfoExtension(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public int getStaticMethodOrDef() {
-		return getStaticMethod() != null ? getStaticMethod()
-				: getStaticMethod(getNodeModel().getCustoms());
+		return getStaticMethod() != null ? getStaticMethod() : getStaticMethod(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public int getStaticPageOrDef() {
-		return getStaticPage() != null ? getStaticPage()
-				: getStaticPage(getNodeModel().getCustoms());
+		return getStaticPage() != null ? getStaticPage() : getStaticPage(getNodeModel().getCustoms());
 	}
 
 	@Transient
 	public boolean getDefPageOrDef() {
-		return getDefPage() != null ? getDefPage() : getDefPage(getNodeModel()
-				.getCustoms());
+		return getDefPage() != null ? getDefPage() : getDefPage(getNodeModel().getCustoms());
 	}
 
 	@Transient
@@ -1065,8 +1053,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 	private Set<NodeBuffer> buffers = new HashSet<NodeBuffer>(0);
 	private Set<NodeRole> nodeRoles = new HashSet<NodeRole>(0);
 	private Set<NodeMemberGroup> nodeGroups = new HashSet<NodeMemberGroup>(0);
-	private SortedSet<NodeOrg> nodeOrgs = new TreeSet<NodeOrg>(
-			new NodeOrgComparator());
+	private SortedSet<NodeOrg> nodeOrgs = new TreeSet<NodeOrg>(new NodeOrgComparator());
 
 	private Node parent;
 	private Site site;
@@ -1083,6 +1070,10 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 	private Date creationDate;
 	private Integer refers;
 	private Integer views;
+	/**
+	 * 是否真实节点。有文档模型的栏目为真实节点，可以在该栏目下添加文档。文档模型为空的栏目不会在文档管理中显示，不能在该栏目下添加文档，
+	 * 这种栏目通常作为单页栏目或跳转栏目。
+	 */
 	private Boolean realNode;
 	private Boolean hidden;
 	private String htmlStatus;
@@ -1098,8 +1089,8 @@ public class Node implements java.io.Serializable, Anchor, Siteable,
 	public Node() {
 	}
 
-	public Node(Site site, User creator, Model nodeModel, String name,
-			String treeNumber, Integer treeLevel, String treeMax) {
+	public Node(Site site, User creator, Model nodeModel, String name, String treeNumber, Integer treeLevel,
+			String treeMax) {
 		this.site = site;
 		this.creator = creator;
 		this.nodeModel = nodeModel;

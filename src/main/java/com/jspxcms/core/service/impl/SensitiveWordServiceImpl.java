@@ -23,13 +23,12 @@ import com.jspxcms.core.service.SensitiveWordService;
 @Service
 @Transactional(readOnly = true)
 public class SensitiveWordServiceImpl implements SensitiveWordService {
-	public Page<SensitiveWord> findAll(Map<String, String[]> params,
-			Pageable pageable) {
+	public Page<SensitiveWord> findAll(Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(params), pageable);
 	}
 
-	public RowSide<SensitiveWord> findSide(Map<String, String[]> params,
-			SensitiveWord bean, Integer position, Sort sort) {
+	public RowSide<SensitiveWord> findSide(Map<String, String[]> params, SensitiveWord bean, Integer position,
+			Sort sort) {
 		if (position == null) {
 			return new RowSide<SensitiveWord>();
 		}
@@ -40,8 +39,7 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
 
 	private Specification<SensitiveWord> spec(Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		Specification<SensitiveWord> sp = SearchFilter.spec(filters,
-				SensitiveWord.class);
+		Specification<SensitiveWord> sp = SearchFilter.spec(filters, SensitiveWord.class);
 		return sp;
 	}
 
@@ -58,7 +56,9 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
 			return s;
 		}
 		for (SensitiveWord word : getList()) {
-			s = StringUtils.replace(s, word.getName(), word.getReplacement());
+			// 如果replacement为null，则会不替换，所以要转换成空字符串
+			String replacement = word.getReplacement() != null ? word.getReplacement() : "";
+			s = StringUtils.replace(s, word.getName(), replacement);
 		}
 		return s;
 	}

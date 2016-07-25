@@ -279,8 +279,8 @@ parent.frames['left'].location.href="left.do";
   <div style="padding:5px 3px;">
 	  <c:if test="${field.required}"><em class="required">*</em></c:if><c:out value="${field.label}"/>:
 	  <span id="editorRadio_${field.name}" style="margin-left:5px;">
-			<f:radio id="editorRadioUeditor_${field.name}" name="customs_${field.name}_editor_type" checked="${bean.customs[fnx:concat(field.name,'_editor_type')]}" default="ueditor" value="ueditor" onclick="create_ueditor_${field.name}(delete_editormd_${field.name}());"/><label for="editorRadioUeditor_${field.name}">Ueditor</label>
-			<f:radio id="editorRadioEditormd_${field.name}" name="customs_${field.name}_editor_type" checked="${bean.customs[fnx:concat(field.name,'_editor_type')]}" value="editormd" onclick="create_editormd_${field.name}(delete_ueditor_${field.name}());"/><label for="editorRadioEditormd_${field.name}">Editor.md</label>
+			<f:radio id="editorRadioUeditor_${field.name}" name="customs_${field.name}_editor_type" checked="${bean.customs[fnx:concat(field.name,'_editor_type')]}" default="${empty field.customs['editorDefault'] ? 'ueditor' : field.customs['editorDefault']}" value="ueditor" onclick="create_ueditor_${field.name}(delete_editormd_${field.name}());"/><label for="editorRadioUeditor_${field.name}">Ueditor</label>
+			<f:radio id="editorRadioEditormd_${field.name}" name="customs_${field.name}_editor_type" checked="${bean.customs[fnx:concat(field.name,'_editor_type')]}" default="${field.customs['editorDefault']}" value="editormd" onclick="create_editormd_${field.name}(delete_ueditor_${field.name}());"/><label for="editorRadioEditormd_${field.name}">Editor.md</label>
 		</span>
 		<script type="text/javascript">$("#editorRadio_${field.name}").buttonset();</script>
   </div>

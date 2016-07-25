@@ -27,8 +27,8 @@ import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
-import com.jspxcms.core.commercial.Versions;
 import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.constant.Versions;
 
 /**
  * Global

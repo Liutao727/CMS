@@ -230,14 +230,20 @@
 		  }
 			<c:choose>
 			  <c:when test="${(empty bean.customs[fnx:concat(field.name,'_editor_type')] && 'editormd' eq field.customs['editorDefault']) || 'editormd' eq bean.customs[fnx:concat(field.name,'_editor_type')]}">
-			  	create_editormd_${field.name}("${fnx:escapeEcmaScript(bean.clobs['text_markdown'])}");
+		      <c:choose>
+		  		  <c:when test="${!empty bean.clobs[fnx:concat(bean.text,'_markdown')]}">
+		          create_editormd_${field.name}("${fnx:escapeEcmaScript(bean.clobs[fnx:concat(bean.text,'_markdown')])}");
+		        </c:when>
+		        <c:otherwise>
+		          create_editormd_${field.name}(toMarkdown("${field.name=='text' ? fnx:escapeEcmaScript(bean.text) : fnx:escapeEcmaScript(bean.clobs[field.name])}"));
+		        </c:otherwise>
+		      </c:choose>
 			  </c:when>
 			  <c:otherwise>
-			  	create_ueditor_${field.name}("${fnx:escapeEcmaScript(bean.text)}");
+			  	create_ueditor_${field.name}("${field.name=='text' ? fnx:escapeEcmaScript(bean.text) : fnx:escapeEcmaScript(bean.clobs[field.name])}");
 			  </c:otherwise>
 		  </c:choose>
 		  </script>
- 		
  		
  			<%--
  			<script id="${c_name}" name="${c_name}" type="text/plain"></script>

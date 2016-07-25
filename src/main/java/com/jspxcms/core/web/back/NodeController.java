@@ -62,13 +62,11 @@ import com.jspxcms.core.support.Context;
 @Controller
 @RequestMapping("/core/node")
 public class NodeController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(NodeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(NodeController.class);
 
 	@RequiresPermissions("core:node:left")
 	@RequestMapping("left.do")
-	public String left(HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String left(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
 		Integer siteId = Context.getCurrentSiteId();
 		List<Node> list = query.findList(siteId, null);
@@ -79,9 +77,7 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:list")
 	@RequestMapping("list.do")
-	public String list(
-			Integer queryParentId,
-			@RequestParam(defaultValue = "false") boolean showDescendants,
+	public String list(Integer queryParentId, @RequestParam(defaultValue = "false") boolean showDescendants,
 			@PageableDefault(sort = { "treeNumber", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
@@ -101,12 +97,10 @@ public class NodeController {
 			treeNumber = parent.getTreeNumber();
 		}
 		boolean isAllNodePerm = user.getAllNodePerm(siteId);
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		List<Node> list = query.findList(siteId, treeNumber, queryParentId,
-				user.getId(), isAllNodePerm, params, pageable.getSort());
-		List<Model> nodeModelList = modelService.findList(siteId,
-				Node.NODE_MODEL_TYPE);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		List<Node> list = query.findList(siteId, treeNumber, queryParentId, user.getId(), isAllNodePerm, params,
+				pageable.getSort());
+		List<Model> nodeModelList = modelService.findList(siteId, Node.NODE_MODEL_TYPE);
 		modelMap.addAttribute("parent", parent);
 		modelMap.addAttribute("list", list);
 		modelMap.addAttribute("nodeModelList", nodeModelList);
@@ -117,10 +111,8 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:create")
 	@RequestMapping("create.do")
-	public String create(Integer cid, Integer parentId, Integer modelId,
-			Integer infoModelId, Integer queryParentId,
-			Boolean showDescendants, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String create(Integer cid, Integer parentId, Integer modelId, Integer infoModelId, Integer queryParentId,
+			Boolean showDescendants, HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Integer siteId = site.getId();
 		// 复制节点
@@ -176,8 +168,7 @@ public class NodeController {
 		String orgTreeNumber = site.getOrg().getTreeNumber();
 		String modelType = model.getType();
 		List<Model> nodeModelList = modelService.findList(siteId, modelType);
-		List<Model> infoModelList = modelService.findList(siteId,
-				Info.MODEL_TYPE);
+		List<Model> infoModelList = modelService.findList(siteId, Info.MODEL_TYPE);
 		Model infoModel = null;
 		if (infoModelId != null) {
 			infoModel = modelService.get(infoModelId);
@@ -209,12 +200,8 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:edit")
 	@RequestMapping("edit.do")
-	public String edit(
-			Integer id,
-			Integer modelId,
-			Integer queryParentId,
-			@RequestParam(defaultValue = "false") boolean showDescendants,
-			Integer position,
+	public String edit(Integer id, Integer modelId, Integer queryParentId,
+			@RequestParam(defaultValue = "false") boolean showDescendants, Integer position,
 			@PageableDefault(sort = { "treeNumber", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
@@ -231,18 +218,14 @@ public class NodeController {
 			treeNumber = parent.getTreeNumber();
 		}
 		boolean isAllNodePerm = user.getAllNodePerm(siteId);
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		RowSide<Node> side = query.findSide(siteId, treeNumber, queryParentId,
-				user.getId(), isAllNodePerm, params, bean, position,
-				pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<Node> side = query.findSide(siteId, treeNumber, queryParentId, user.getId(), isAllNodePerm, params,
+				bean, position, pageable.getSort());
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("side", side);
 		modelMap.addAttribute("position", position);
-		List<Model> infoModelList = modelService.findList(siteId,
-				Info.MODEL_TYPE);
-		List<Model> modelList = modelService.findList(siteId,
-				Node.NODE_MODEL_TYPE);
+		List<Model> infoModelList = modelService.findList(siteId, Info.MODEL_TYPE);
+		List<Model> modelList = modelService.findList(siteId, Node.NODE_MODEL_TYPE);
 		List<Model> nodeModelList;
 		if (bean.getParent() == null) {
 			// 首页模型
@@ -281,22 +264,21 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:save")
 	@RequestMapping("save.do")
-	public String save(Integer cid, Node bean, NodeDetail detail,
-			Integer[] infoPermIds, Integer[] nodePermIds,
-			Integer[] viewGroupIds, Integer[] contriGroupIds,
-			Integer[] commentGroupIds, Integer[] viewOrgIds, Integer parentId,
-			Integer nodeModelId, Integer infoModelId, Integer workflowId,
+	public String save(Integer cid, Node bean, NodeDetail detail, Integer[] infoPermIds, Integer[] nodePermIds,
+			Integer[] viewGroupIds, Integer[] contriGroupIds, Integer[] commentGroupIds, Integer[] viewOrgIds,
+			Integer parentId, Integer nodeModelId, Integer infoModelId, Integer workflowId,
 			@RequestParam(defaultValue = "false") boolean infoPermIdsExist,
 			@RequestParam(defaultValue = "false") boolean nodePermIdsExist,
 			@RequestParam(defaultValue = "false") boolean viewGroupIdsExist,
 			@RequestParam(defaultValue = "false") boolean contriGroupIdsExist,
-			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist,
-			Integer queryParentId, Boolean showDescendants, String redirect,
-			HttpServletRequest request, RedirectAttributes ra) {
+			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist, Integer queryParentId,
+			Boolean showDescendants, String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
-		Node parent = query.get(parentId);
-		Backends.validateDataInSite(parent, siteId);
+		if (parentId != null) {
+			Node parent = query.get(parentId);
+			Backends.validateDataInSite(parent, siteId);
+		}
 		if (!infoPermIdsExist) {
 			infoPermIds = getInfoPermIds(siteId, parentId);
 		}
@@ -314,12 +296,10 @@ public class NodeController {
 		}
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
 		Map<String, String> clobs = Servlets.getParamMap(request, "clobs_");
-		service.save(bean, detail, customs, clobs, infoPermIds, nodePermIds,
-				viewGroupIds, contriGroupIds, commentGroupIds, viewOrgIds,
-				parentId, nodeModelId, infoModelId, workflowId, userId, siteId);
+		service.save(bean, detail, customs, clobs, infoPermIds, nodePermIds, viewGroupIds, contriGroupIds,
+				commentGroupIds, viewOrgIds, parentId, nodeModelId, infoModelId, workflowId, userId, siteId);
 		String ip = Servlets.getRemoteAddr(request);
-		logService.operation("opr.node.add", bean.getTitle(), null,
-				bean.getId(), ip, userId, siteId);
+		logService.operation("opr.node.add", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 		logger.info("save Node, name={}.", bean.getName());
 		ra.addAttribute("queryParentId", queryParentId);
 		ra.addAttribute("showDescendants", showDescendants);
@@ -338,23 +318,21 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") Node bean,
-			@ModelAttribute("detail") NodeDetail detail, Integer[] infoPermIds,
-			Integer[] nodePermIds, Integer[] viewGroupIds,
-			Integer[] contriGroupIds, Integer[] commentGroupIds,
-			Integer[] viewOrgIds, Integer parentId, Integer nodeModelId,
-			Integer infoModelId, Integer workflowId,
-			@RequestParam(defaultValue = "false") boolean infoPermIdsExist,
+	public String update(@ModelAttribute("bean") Node bean, @ModelAttribute("detail") NodeDetail detail,
+			Integer[] infoPermIds, Integer[] nodePermIds, Integer[] viewGroupIds, Integer[] contriGroupIds,
+			Integer[] commentGroupIds, Integer[] viewOrgIds, Integer parentId, Integer nodeModelId, Integer infoModelId,
+			Integer workflowId, @RequestParam(defaultValue = "false") boolean infoPermIdsExist,
 			@RequestParam(defaultValue = "false") boolean nodePermIdsExist,
 			@RequestParam(defaultValue = "false") boolean viewGroupIdsExist,
 			@RequestParam(defaultValue = "false") boolean contriGroupIdsExist,
-			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist,
-			Integer position, Integer queryParentId, Boolean showDescendants,
-			String redirect, HttpServletRequest request, RedirectAttributes ra) {
+			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist, Integer position, Integer queryParentId,
+			Boolean showDescendants, String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
-		Node parent = query.get(parentId);
-		Backends.validateDataInSite(parent, site.getId());
+		if (parentId != null) {
+			Node parent = query.get(parentId);
+			Backends.validateDataInSite(parent, site.getId());
+		}
 		Backends.validateDataInSite(bean, site.getId());
 		if (!bean.isDataPerm(user)) {
 			throw new CmsException("accessDenied");
@@ -379,17 +357,14 @@ public class NodeController {
 		}
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
 		Map<String, String> clobs = Servlets.getParamMap(request, "clobs_");
-		service.update(bean, detail, customs, clobs, infoPermIds, nodePermIds,
-				viewGroupIds, contriGroupIds, commentGroupIds, viewOrgIds,
-				nodeModelId, infoModelId, workflowId);
+		service.update(bean, detail, customs, clobs, infoPermIds, nodePermIds, viewGroupIds, contriGroupIds,
+				commentGroupIds, viewOrgIds, nodeModelId, infoModelId, workflowId);
 		Integer userId = Context.getCurrentUserId();
 		String ip = Servlets.getRemoteAddr(request);
-		logService.operation("opr.node.edit", bean.getTitle(), null,
-				bean.getId(), ip, userId, site.getId());
+		logService.operation("opr.node.edit", bean.getTitle(), null, bean.getId(), ip, userId, site.getId());
 		logger.info("update Node, name={}.", bean.getName());
 		// 移动节点
-		if (parentId != null && bean.getParent() != null
-				&& !parentId.equals(bean.getParent().getId())) {
+		if (parentId != null && bean.getParent() != null && !parentId.equals(bean.getParent().getId())) {
 			service.move(new Integer[] { bean.getId() }, parentId, site.getId());
 		}
 		logger.info("update Node, name={}.", bean.getName());
@@ -408,22 +383,19 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:batch_update")
 	@RequestMapping("batch_update.do")
-	public String batchUpdate(Integer[] id, String[] name, String[] number,
-			Integer[] views, Boolean[] hidden, Integer queryParentId,
-			Boolean showDescendants, Pageable pageable,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String batchUpdate(Integer[] id, String[] name, String[] number, Integer[] views, Boolean[] hidden,
+			Integer queryParentId, Boolean showDescendants, Pageable pageable, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		validateIds(id, siteId);
 		if (ArrayUtils.isNotEmpty(id)) {
 			// 有排序的情况下不更新树结构，以免引误操作。
 			boolean isUpdateTree = pageable.getSort() == null;
-			Node[] beans = service.batchUpdate(id, name, number, views, hidden,
-					siteId, isUpdateTree);
+			Node[] beans = service.batchUpdate(id, name, number, views, hidden, siteId, isUpdateTree);
 			Integer userId = Context.getCurrentUserId();
 			String ip = Servlets.getRemoteAddr(request);
 			for (Node bean : beans) {
-				logService.operation("opr.node.batchEdit", bean.getTitle(),
-						null, bean.getId(), ip, userId, siteId);
+				logService.operation("opr.node.batchEdit", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 				logger.info("batch update Node, name={}.", bean.getName());
 			}
 		}
@@ -436,8 +408,7 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:delete")
 	@RequestMapping("delete.do")
-	public String delete(Integer[] ids, Integer queryParentId,
-			Boolean showDescendants, HttpServletRequest request,
+	public String delete(Integer[] ids, Integer queryParentId, Boolean showDescendants, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -451,8 +422,8 @@ public class NodeController {
 		Node[] beans = service.delete(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Node bean : beans) {
-			logService.operation("opr.node.delete", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.node.delete", bean.getTitle(), null, bean.getId(), ip, user.getId(),
+					site.getId());
 			logger.info("delete Node, name={}.", bean.getName());
 		}
 		ra.addAttribute("queryParentId", queryParentId);
@@ -464,8 +435,7 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:move_form")
 	@RequestMapping("move_form.do")
-	public String moveForm(Integer[] ids, Boolean noChecked,
-			Integer queryParentId, Boolean showDescendants,
+	public String moveForm(Integer[] ids, Boolean noChecked, Integer queryParentId, Boolean showDescendants,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -497,9 +467,8 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:move_submit")
 	@RequestMapping("move_submit.do")
-	public String moveSubmit(Integer[] ids, Integer id, Integer queryParentId,
-			Boolean showDescendants, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String moveSubmit(Integer[] ids, Integer id, Integer queryParentId, Boolean showDescendants,
+			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
 		service.move(ids, id, site.getId());
@@ -508,8 +477,7 @@ public class NodeController {
 		Node bean;
 		for (Integer bid : ids) {
 			bean = query.get(bid);
-			logService.operation("opr.node.move", bean.getTitle(), null,
-					bean.getId(), ip, userId, site.getId());
+			logService.operation("opr.node.move", bean.getTitle(), null, bean.getId(), ip, userId, site.getId());
 			logger.info("move Node, name={}.", bean.getName());
 		}
 		// bug??
@@ -524,10 +492,9 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:merge_form")
 	@RequestMapping("merge_form.do")
-	public String mergeForm(
-			@RequestParam(defaultValue = "true") boolean deleteMergedNode,
-			Boolean noChecked, Integer queryParentId, Boolean showDescendants,
-			HttpServletRequest request, org.springframework.ui.Model modelMap) {
+	public String mergeForm(@RequestParam(defaultValue = "true") boolean deleteMergedNode, Boolean noChecked,
+			Integer queryParentId, Boolean showDescendants, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		// 获得已选择节点的所有父节点ID，用于展开树。
@@ -546,10 +513,8 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:merge_submit")
 	@RequestMapping("merge_submit.do")
-	public String mergeSubmit(Integer[] ids, Integer id,
-			@RequestParam(defaultValue = "true") boolean deleteMergedNode,
-			Integer queryParentId, Boolean showDescendants,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String mergeSubmit(Integer[] ids, Integer id, @RequestParam(defaultValue = "true") boolean deleteMergedNode,
+			Integer queryParentId, Boolean showDescendants, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		Node node = query.get(id);
@@ -559,8 +524,7 @@ public class NodeController {
 		Node bean;
 		for (Integer bid : ids) {
 			bean = query.get(bid);
-			logService.operation("opr.node.merge", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.node.merge", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 			logger.info("merge Node, name={}.", bean.getName());
 		}
 		ra.addAttribute("deleteMergedNode", deleteMergedNode);
@@ -573,8 +537,7 @@ public class NodeController {
 	}
 
 	@ModelAttribute
-	public void preloadBean(@RequestParam(required = false) Integer oid,
-			org.springframework.ui.Model modelMap) {
+	public void preloadBean(@RequestParam(required = false) Integer oid, org.springframework.ui.Model modelMap) {
 		if (oid != null) {
 			Node bean = query.get(oid);
 			if (bean != null) {

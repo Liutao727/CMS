@@ -52,17 +52,14 @@ import com.jspxcms.ext.service.CollectService;
 @Controller
 @RequestMapping("/ext/collect")
 public class CollectController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(CollectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CollectController.class);
 
 	@RequiresPermissions("ext:collect:list")
 	@RequestMapping("list.do")
-	public String list(
-			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+	public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		Page<Collect> pagedList = service.findAll(siteId, params, pageable);
 		modelMap.addAttribute("pagedList", pagedList);
 		return "ext/collect/collect_list";
@@ -83,18 +80,14 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:edit")
 	@RequestMapping("edit.do")
-	public String edit(
-			Integer id,
-			Integer position,
-			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
-			HttpServletRequest request, org.springframework.ui.Model modelMap) {
+	public String edit(Integer id, Integer position,
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
 		Collect bean = service.get(id);
 		Backends.validateDataInSite(bean, siteId);
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		RowSide<Collect> side = service.findSide(siteId, params, bean,
-				position, pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<Collect> side = service.findSide(siteId, params, bean, position, pageable.getSort());
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("side", side);
 		modelMap.addAttribute("position", position);
@@ -104,15 +97,14 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:save")
 	@RequestMapping("save.do")
-	public String save(Collect bean, Integer nodeId, String redirect,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String save(Collect bean, Integer nodeId, String redirect, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
 		Node node = nodeQueryService.get(nodeId);
 		Backends.validateDataInSite(node, siteId);
 		service.save(bean, nodeId, userId, siteId);
-		logService.operation("opr.collect.add", bean.getName(), null,
-				bean.getId(), request);
+		logService.operation("opr.collect.add", bean.getName(), null, bean.getId(), request);
 		logger.info("save Collect, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -127,16 +119,14 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") Collect bean, Integer nodeId,
-			Integer position, String redirect, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String update(@ModelAttribute("bean") Collect bean, Integer nodeId, Integer position, String redirect,
+			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		Node node = nodeQueryService.get(nodeId);
 		Backends.validateDataInSite(node, site.getId());
 		Backends.validateDataInSite(bean, site.getId());
 		service.update(bean, nodeId);
-		logService.operation("opr.collect.edit", bean.getName(), null,
-				bean.getId(), request);
+		logService.operation("opr.collect.edit", bean.getName(), null, bean.getId(), request);
 		logger.info("update Collect, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -150,14 +140,12 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:delete")
 	@RequestMapping("delete.do")
-	public String delete(Integer[] ids, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
 		List<Collect> beans = service.delete(ids);
 		for (Collect bean : beans) {
-			logService.operation("opr.collect.delete", bean.getName(), null,
-					bean.getId(), request);
+			logService.operation("opr.collect.delete", bean.getName(), null, bean.getId(), request);
 			logger.info("delete Collect, name={}.", bean.getName());
 		}
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
@@ -165,13 +153,10 @@ public class CollectController {
 	}
 
 	@RequestMapping("list_pattern_dialog.do")
-	public String listPatternDialog(String listPattern, Integer pageBegin,
-			Integer pageEnd, String charset, String userAgent, String areaId,
-			String itemId, @RequestParam(defaultValue = "true") boolean desc,
-			org.springframework.ui.Model modelMap)
-			throws ClientProtocolException, IOException {
-		List<String> urls = Collect.getListUrls(listPattern, pageBegin,
-				pageEnd, desc);
+	public String listPatternDialog(String listPattern, Integer pageBegin, Integer pageEnd, String charset,
+			String userAgent, String areaId, String itemId, @RequestParam(defaultValue = "true") boolean desc,
+			org.springframework.ui.Model modelMap) throws ClientProtocolException, IOException {
+		List<String> urls = Collect.getListUrls(listPattern, pageBegin, pageEnd, desc);
 		modelMap.addAttribute("urls", urls);
 		modelMap.addAttribute("charset", charset);
 		modelMap.addAttribute("userAgent", userAgent);
@@ -181,16 +166,14 @@ public class CollectController {
 	}
 
 	@RequestMapping("item_pattern_dialog.do")
-	public String itemPatternDialog(Integer collectId, String filterId,
-			String areaId, String itemId, org.springframework.ui.Model modelMap)
-			throws ClientProtocolException, IOException, URISyntaxException {
+	public String itemPatternDialog(Integer collectId, String filterId, String areaId, String itemId,
+			org.springframework.ui.Model modelMap) throws ClientProtocolException, IOException, URISyntaxException {
 		Collect collect = service.get(collectId);
 		List<URI> listUris = collect.getListUris();
 		List<String> urls = new ArrayList<String>();
 		if (listUris.size() > 0) {
 			URI uri = listUris.get(0);
-			String html = Collect.fetchHtml(uri, collect.getCharset(),
-					collect.getUserAgent());
+			String html = Collect.fetchHtml(uri, collect.getCharset(), collect.getUserAgent());
 			List<URI> itemUris = collect.getItemUris(html, uri);
 			for (URI itemUri : itemUris) {
 				urls.add(itemUri.toString());
@@ -206,9 +189,8 @@ public class CollectController {
 	}
 
 	@RequestMapping("id_pattern_dialog.do")
-	public String idPatternDialog(Integer collectId, String idPattern,
-			boolean idReg, String idUrl, boolean isUrlType, String filterId,
-			String areaId, String itemId, org.springframework.ui.Model modelMap)
+	public String idPatternDialog(Integer collectId, String idPattern, boolean idReg, String idUrl, boolean isUrlType,
+			String filterId, String areaId, String itemId, org.springframework.ui.Model modelMap)
 			throws ClientProtocolException, IOException, URISyntaxException {
 		Collect collect = service.get(collectId);
 		String charset = collect.getCharset();
@@ -235,10 +217,8 @@ public class CollectController {
 	}
 
 	@RequestMapping("find_text.do")
-	public void findText(String source, String search,
-			@RequestParam(defaultValue = "false") boolean isReg,
-			@RequestParam(defaultValue = "true") boolean isFirst,
-			HttpServletResponse response) {
+	public void findText(String source, String search, @RequestParam(defaultValue = "false") boolean isReg,
+			@RequestParam(defaultValue = "true") boolean isFirst, HttpServletResponse response) {
 		StringBuilder result = new StringBuilder();
 		if (isFirst) {
 			result.append(Collect.findFirst(source, search, isReg));
@@ -254,16 +234,14 @@ public class CollectController {
 	}
 
 	@RequestMapping("filter_text.do")
-	public void filterText(String source, String filter,
-			HttpServletResponse response) {
+	public void filterText(String source, String filter, HttpServletResponse response) {
 		List<Pattern> patterns = CollectField.getFilterPattern(filter);
 		String result = CollectField.applyFilter(patterns, source);
 		Servlets.writeHtml(response, result);
 	}
 
 	@RequestMapping("fetch_url.do")
-	public void fetchUrl(String url, String charset, String userAgent,
-			HttpServletResponse response) {
+	public void fetchUrl(String url, String charset, String userAgent, HttpServletResponse response) {
 		String source;
 		try {
 			source = Collect.fetchHtml(URI.create(url), charset, userAgent);
@@ -275,16 +253,14 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:start")
 	@RequestMapping("start.do")
-	public String start(Integer[] ids, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String start(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
 		Collect bean;
 		for (Integer id : ids) {
 			collector.start(id);
 			bean = service.get(id);
-			logService.operation("opr.collect.start", bean.getName(), null,
-					bean.getId(), request);
+			logService.operation("opr.collect.start", bean.getName(), null, bean.getId(), request);
 			logger.info("start Collect, name={}.", bean.getName());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
@@ -293,16 +269,14 @@ public class CollectController {
 
 	@RequiresPermissions("ext:collect:stop")
 	@RequestMapping("stop.do")
-	public String stop(Integer[] ids, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String stop(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
 		Collect bean;
 		for (Integer id : ids) {
 			service.ready(id);
 			bean = service.get(id);
-			logService.operation("opr.collect.stop", bean.getName(), null,
-					bean.getId(), request);
+			logService.operation("opr.collect.stop", bean.getName(), null, bean.getId(), request);
 			logger.info("stop Collect, name={}.", bean.getName());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
@@ -310,19 +284,16 @@ public class CollectController {
 	}
 
 	@RequestMapping("schedule_job.do")
-	public String scheduleJob(HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String scheduleJob(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
 		List<Collect> collectList = service.findList(siteId);
 		modelMap.addAttribute("collectList", collectList);
-		modelMap.addAttribute("includePage",
-				"../../ext/collect/collect_job.jsp");
+		modelMap.addAttribute("includePage", "../../ext/collect/collect_job.jsp");
 		return "core/schedule_job/schedule_job_form";
 	}
 
 	@ModelAttribute
-	public void preloadBean(@RequestParam(required = false) Integer oid,
-			org.springframework.ui.Model modelMap) {
+	public void preloadBean(@RequestParam(required = false) Integer oid, org.springframework.ui.Model modelMap) {
 		if (oid != null) {
 			Collect bean = service.get(oid);
 			modelMap.addAttribute("bean", bean);
@@ -337,6 +308,7 @@ public class CollectController {
 
 	@Autowired
 	private OperationLogService logService;
+	@Autowired
 	private NodeQueryService nodeQueryService;
 	@Autowired
 	private Collector collector;
