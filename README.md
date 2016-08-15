@@ -15,5 +15,5 @@
 2. 执行数据库脚本。数据库脚本在`database`目录下。
 3. 在eclipse中导入maven项目。点击eclipse菜单`File` - `Import`，选择`Maven` - `Existing Maven Projects`。创建好maven项目后，会开始从maven服务器下载第三方jar包（如spring等），需要一定时间，请耐心等待。
 4. 修改数据库连接。打开`/src/main/resources/custom.propertis`文件，根据实际情况修改`jdbc.url`、`jdbc.username`、`jdbc.password`的值。
-5. 运行程序。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`tomcat6:run`，然后点击`Run`。
+5. 运行程序。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`tomcat6:run`或`tomcat7:run`，然后点击`Run`。
 6. 访问系统。前台地址：[http://localhost:8080/](http://localhost:8080/)，手机站地址：[http://127.0.0.1:8080/](http://127.0.0.1:8080/)；后台地址：[http://localhost:8080/cmscp/index.do](http://localhost:8080/cmscp/index.do)，用户名：admin，密码：空。

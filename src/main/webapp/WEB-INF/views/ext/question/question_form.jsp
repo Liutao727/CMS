@@ -162,7 +162,7 @@ $(function() {
     	<input type="hidden" name="dy-itemId-${status.index}" value="${item.id}"/>
     </td>
     <td align="center">
-    	<a id="edit_opt_${item.id}" href="../question_item/edit.do?id=${item.id}&position=${status.index}" class="ls-opt"><s:message code="edit"/></a>
+    	<a id="edit_opt_${item.id}" href="../question_item/edit.do?id=${item.id}&position=${position}" class="ls-opt"><s:message code="edit"/></a>
       <a href="javascript:;" onclick="$(this).parent().parent().remove();" class="ls-opt"><s:message code="delete"/></a>
     </td>
     <td align="center"><f:text name="dy-itemTitle-${status.index}" value="${item.title}" class="required" maxlength="150" style="width:300px;"/></td>

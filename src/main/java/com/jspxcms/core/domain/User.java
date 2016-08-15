@@ -91,6 +91,8 @@ public class User implements java.io.Serializable {
 	 */
 	public static final String AVATAR_SMALL = "avatar_small.jpg";
 
+	public static final Integer DEFAULT_RANK = 99999;
+
 	/**
 	 * 是否需要验证码
 	 * 
@@ -511,11 +513,10 @@ public class User implements java.io.Serializable {
 	@Transient
 	public String getAvatar() {
 		if (getDetail().getWithAvatar()) {
-			return getGlobal().getUploadsPublishPoint().getUrlPrefix()
-					+ Constants.UPLOADS_USERS + "/" + getId() + "/" + AVATAR;
+			return getGlobal().getUploadsPublishPoint().getUrlPrefix() + Constants.UPLOADS_USERS + "/" + getId() + "/"
+					+ AVATAR;
 		} else {
-			return getGlobal().getTemplateDisplayPathByCtx()
-					+ Constants.TEMPLATE_GLOBAL + "/" + AVATAR_LARGE;
+			return getGlobal().getTemplateDisplayPathByCtx() + Constants.TEMPLATE_GLOBAL + "/" + AVATAR_LARGE;
 		}
 	}
 
@@ -531,12 +532,10 @@ public class User implements java.io.Serializable {
 	@Transient
 	public String getAvatarLarge() {
 		if (getDetail().getWithAvatar()) {
-			return getGlobal().getUploadsPublishPoint().getUrlPrefix()
-					+ Constants.UPLOADS_USERS + "/" + getId() + "/"
+			return getGlobal().getUploadsPublishPoint().getUrlPrefix() + Constants.UPLOADS_USERS + "/" + getId() + "/"
 					+ AVATAR_LARGE;
 		} else {
-			return getGlobal().getTemplateDisplayPathByCtx()
-					+ Constants.TEMPLATE_GLOBAL + "/" + AVATAR_LARGE;
+			return getGlobal().getTemplateDisplayPathByCtx() + Constants.TEMPLATE_GLOBAL + "/" + AVATAR_LARGE;
 		}
 	}
 
@@ -552,12 +551,10 @@ public class User implements java.io.Serializable {
 	@Transient
 	public String getAvatarSmall() {
 		if (getDetail().getWithAvatar()) {
-			return getGlobal().getUploadsPublishPoint().getUrlPrefix()
-					+ Constants.UPLOADS_USERS + "/" + getId() + "/"
+			return getGlobal().getUploadsPublishPoint().getUrlPrefix() + Constants.UPLOADS_USERS + "/" + getId() + "/"
 					+ AVATAR_SMALL;
 		} else {
-			return getGlobal().getTemplateDisplayPathByCtx()
-					+ Constants.TEMPLATE_GLOBAL + "/" + AVATAR_SMALL;
+			return getGlobal().getTemplateDisplayPathByCtx() + Constants.TEMPLATE_GLOBAL + "/" + AVATAR_SMALL;
 		}
 	}
 
@@ -600,7 +597,7 @@ public class User implements java.io.Serializable {
 	@Transient
 	public void applyDefaultValue() {
 		if (getRank() == null) {
-			setRank(999);
+			setRank(DEFAULT_RANK);
 		}
 		if (getType() == null) {
 			setType(MEMBER);

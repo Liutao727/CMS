@@ -92,7 +92,7 @@ function optDelete(form) {
   <tbody>
   <c:forEach var="bean" varStatus="status" items="${list}">
   <tr<shiro:hasPermission name="core:member_group:edit"> ondblclick="location.href=$('#edit_opt_${bean.id}').attr('href');"</shiro:hasPermission>>
-    <td><input type="checkbox" name="ids" value="${bean.id}"/></td>
+    <td><c:if test="${bean.id!=0}"><input type="checkbox" name="ids" value="${bean.id}"/></c:if></td>
     <td align="center">
 			<shiro:hasPermission name="core:member_group:copy">
       <c:choose>

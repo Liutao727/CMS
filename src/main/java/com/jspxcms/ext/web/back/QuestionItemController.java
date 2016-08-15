@@ -71,7 +71,9 @@ public class QuestionItemController {
 		logger.info("update Question, title={}.", bean.getTitle());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
-			return "redirect:list.do";
+			ra.addAttribute("id", bean.getQuestion().getId());
+			ra.addAttribute("position", position);
+			return "redirect:../question/edit.do";
 		} else {
 			ra.addAttribute("id", bean.getId());
 			ra.addAttribute("position", position);

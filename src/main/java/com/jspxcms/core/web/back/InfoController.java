@@ -805,7 +805,7 @@ public class InfoController {
 			String queryStatus, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) throws WeixinException {
 		if (tokenHolder == null) {
-			throw new CmsException("info.error.weixinAppNotFound");
+			throw new CmsException("info.error.weixinAppNotSet");
 		}
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());

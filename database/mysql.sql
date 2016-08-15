@@ -3700,7 +3700,7 @@ INSERT INTO cms_score_item (f_scoreitem_id, f_scoregroup_id, f_site_id, f_name, 
 INSERT INTO cms_score_item (f_scoreitem_id, f_scoregroup_id, f_site_id, f_name, f_score, f_icon, f_seq) VALUES (12,2,1,'四星',4,NULL,3);
 INSERT INTO cms_score_item (f_scoreitem_id, f_scoregroup_id, f_site_id, f_name, f_score, f_icon, f_seq) VALUES (13,2,1,'五星',5,NULL,4);
 INSERT INTO cms_site (f_site_id, f_global_id, f_org_id, f_parent_id, f_name, f_number, f_full_name, f_no_picture, f_template_theme, f_domain, f_is_identify_domain, f_is_def, f_status, f_tree_number, f_tree_level, f_tree_max, f_is_static_home, f_html_publishpoint_id) VALUES (1,1,1,NULL,'Jspxcms演示主站','1','Jspxcms演示主站','/img/nopic.jpg','default','localhost','1','1',0,'0000',0,'0000','0',2);
-INSERT INTO cms_site (f_site_id, f_global_id, f_org_id, f_parent_id, f_name, f_number, f_full_name, f_no_picture, f_template_theme, f_domain, f_is_identify_domain, f_is_def, f_status, f_tree_number, f_tree_level, f_tree_max, f_is_static_home, f_html_publishpoint_id) VALUES (3,1,1,NULL,'Jspxcms演示手机站','m',NULL,'/img/no_picture.jpg','default','127.0.0.1','1','0',0,'0001',0,'0000','0',2);
+INSERT INTO cms_site (f_site_id, f_global_id, f_org_id, f_parent_id, f_name, f_number, f_full_name, f_no_picture, f_template_theme, f_domain, f_is_identify_domain, f_is_def, f_status, f_tree_number, f_tree_level, f_tree_max, f_is_static_home, f_html_publishpoint_id) VALUES (3,1,1,NULL,'Jspxcms演示手机站','m',NULL,'/img/nopic.jpg','default','127.0.0.1','1','0',0,'0001',0,'0000','0',2);
 INSERT INTO cms_site_custom (f_site_id, f_key, f_value) VALUES (1,'company','南昌蓝智科技有限公司');
 INSERT INTO cms_site_custom (f_site_id, f_key, f_value) VALUES (1,'icp','赣ICP备12001124号');
 INSERT INTO cms_site_custom (f_site_id, f_key, f_value) VALUES (1,'sys_watermark_mode','1');
@@ -3757,7 +3757,7 @@ INSERT INTO cms_tag (f_tag_id, f_site_id, f_name, f_creation_date, f_refers) VAL
 INSERT INTO cms_user (f_user_id, f_org_id, f_membergroup_id, f_username, f_password, f_salt, f_email, f_mobile, f_real_name, f_gender, f_birth_date, f_validation_type, f_validation_key, f_rank, f_type, f_status, f_global_id, f_qq_openid, f_weibo_uid, f_weixin_openid) VALUES (0,1,1,'anonymous',NULL,NULL,NULL,NULL,NULL,'M',NULL,NULL,NULL,1,1,1,1,NULL,NULL,NULL);
 INSERT INTO cms_user (f_user_id, f_org_id, f_membergroup_id, f_username, f_password, f_salt, f_email, f_mobile, f_real_name, f_gender, f_birth_date, f_validation_type, f_validation_key, f_rank, f_type, f_status, f_global_id, f_qq_openid, f_weibo_uid, f_weixin_openid) VALUES (1,1,1,'admin',NULL,NULL,NULL,NULL,'管理员',NULL,NULL,NULL,NULL,0,1,0,1,NULL,NULL,NULL);
 INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_validation_value, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,'2013-03-09 22:18:56','127.0.0.1',0,NULL,NULL,NULL,NULL,NULL,'0');
-INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_validation_value, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (1,'2015-04-12 10:27:43',NULL,NULL,0,'2016-07-06 17:34:18','0:0:0:0:0:0:0:1','2016-07-11 18:20:19','0:0:0:0:0:0:0:1','2013-02-21 20:59:27','127.0.0.1',646,NULL,NULL,NULL,NULL,NULL,'1');
+INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_validation_value, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (1,'2015-04-12 10:27:43',NULL,NULL,0,'2016-07-25 16:30:53','0:0:0:0:0:0:0:1','2016-07-28 11:56:46','0:0:0:0:0:0:0:1','2013-02-21 20:59:27','127.0.0.1',648,NULL,NULL,NULL,NULL,NULL,'1');
 INSERT INTO cms_user_membergroup (f_usermgroup_id, f_user_id, f_membergroup_id, f_group_index) VALUES (2,1,1,0);
 INSERT INTO cms_user_membergroup (f_usermgroup_id, f_user_id, f_membergroup_id, f_group_index) VALUES (6,0,1,0);
 INSERT INTO cms_user_org (f_userorg_id, f_user_id, f_org_id, f_org_index) VALUES (2,1,1,0);
@@ -3797,7 +3797,7 @@ INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_node',99);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_node_membergroup',93);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_node_org',23);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_node_role',79);
-INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_operation_log',1465);
+INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_operation_log',1473);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_org',4);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_publish_point',3);
 INSERT INTO t_id_table (f_table, f_id_value) VALUES ('cms_question',3);

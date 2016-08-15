@@ -32,6 +32,7 @@ import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.service.MemberGroupService;
 import com.jspxcms.core.service.OperationLogService;
+import com.jspxcms.core.support.CmsException;
 import com.jspxcms.core.support.Context;
 
 /**
@@ -43,17 +44,14 @@ import com.jspxcms.core.support.Context;
 @Controller
 @RequestMapping("/core/member_group")
 public class MemberGroupController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(MemberGroupController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MemberGroupController.class);
 
 	@RequestMapping("list.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:list")
-	public String list(
-			@PageableDefault(sort = { "seq", "id" }) Pageable pageable,
-			HttpServletRequest request, org.springframework.ui.Model modelMap) {
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+	public String list(@PageableDefault(sort = { "seq", "id" }) Pageable pageable, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		List<MemberGroup> list = service.findList(params, pageable.getSort());
 		modelMap.addAttribute("list", list);
 		return "core/member_group/member_group_list";
@@ -74,20 +72,16 @@ public class MemberGroupController {
 	@RequestMapping("edit.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:edit")
-	public String edit(Integer id, Integer position, @PageableDefault(sort = {
-			"seq", "id" }) Pageable pageable, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String edit(Integer id, Integer position, @PageableDefault(sort = { "seq", "id" }) Pageable pageable,
+			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		MemberGroup bean = service.get(id);
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		RowSide<MemberGroup> side = service.findSide(params, bean, position,
-				pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<MemberGroup> side = service.findSide(params, bean, position, pageable.getSort());
 
 		modelMap.addAttribute("viewNodes", bean.getViewNodes(site.getId()));
 		modelMap.addAttribute("contriNodes", bean.getContriNodes(site.getId()));
-		modelMap.addAttribute("commentNodes",
-				bean.getCommentNodes(site.getId()));
+		modelMap.addAttribute("commentNodes", bean.getCommentNodes(site.getId()));
 
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("side", side);
@@ -99,13 +93,11 @@ public class MemberGroupController {
 	@RequestMapping("save.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:save")
-	public String save(MemberGroup bean, Integer[] viewNodeIds,
-			Integer[] contriNodeIds, Integer[] commentNodeIds, String redirect,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String save(MemberGroup bean, Integer[] viewNodeIds, Integer[] contriNodeIds, Integer[] commentNodeIds,
+			String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		service.save(bean, viewNodeIds, contriNodeIds, commentNodeIds, siteId);
-		logService.operation("opr.memberGroup.add", bean.getName(),
-				null, bean.getId(), request);
+		logService.operation("opr.memberGroup.add", bean.getName(), null, bean.getId(), request);
 		logger.info("save MemberGroup, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -121,10 +113,9 @@ public class MemberGroupController {
 	@RequestMapping("update.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:update")
-	public String update(@ModelAttribute("bean") MemberGroup bean,
-			Integer[] viewNodeIds, Integer[] contriNodeIds,
-			Integer[] commentNodeIds, Integer position, String redirect,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String update(@ModelAttribute("bean") MemberGroup bean, Integer[] viewNodeIds, Integer[] contriNodeIds,
+			Integer[] commentNodeIds, Integer position, String redirect, HttpServletRequest request,
+			RedirectAttributes ra) {
 		if (viewNodeIds == null) {
 			viewNodeIds = new Integer[0];
 		}
@@ -137,8 +128,7 @@ public class MemberGroupController {
 
 		Integer siteId = Context.getCurrentSiteId();
 		service.update(bean, viewNodeIds, contriNodeIds, commentNodeIds, siteId);
-		logService.operation("opr.memberGroup.edit", bean.getName(), null,
-				bean.getId(), request);
+		logService.operation("opr.memberGroup.edit", bean.getName(), null, bean.getId(), request);
 		logger.info("update MemberGroup, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -153,12 +143,16 @@ public class MemberGroupController {
 	@RequestMapping("delete.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:delete")
-	public String delete(Integer[] ids, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+		for (Integer id : ids) {
+			if (id != null && id == 0) {
+				// 游客组不能删除
+				throw new CmsException("memberGroup.error.guestGroupCannotBeDeleted");
+			}
+		}
 		MemberGroup[] beans = service.delete(ids);
 		for (MemberGroup bean : beans) {
-			logService.operation("opr.memberGroup.delete", bean.getName(),
-					null, bean.getId(), request);
+			logService.operation("opr.memberGroup.delete", bean.getName(), null, bean.getId(), request);
 			logger.info("delete MemberGroup, name={}.", bean.getName());
 		}
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);

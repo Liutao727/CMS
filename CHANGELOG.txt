@@ -1,6 +1,19 @@
 # Jspxcms 发版说明
 
 
+## jspxcms-6.5.2-release (2016-08-10)
+
+### 改进(Improvement)
+
+1. MySQL驱动改为5.1.24，兼容MySQL5.1。
+2. 游客组、匿名用户、根用户不能被删除。
+3. 默认模板cover_news.html不固定获取news栏目的子栏目。
+  
+### 缺陷(Bug)
+
+1. 修复：调查问卷-修改调查项-保存并返回，出现404错误。
+
+
 ## jspxcms-6.5.1-release (2016-07-25)
 
 ### 改进(Improvement)
@@ -53,6 +66,7 @@
 3. **专题类别模版和URL地址修改。**`/specials.jspx`改为`/special_category.jspx`，`/specials/{id}.jspx`改为`/special_category/{id}.jspx`，`sys_specials.html`改为`sys_special_category_list.html`，`sys_specials_list.html`改为`sys_special_category.html`。
 4. **Tag模版和URL地址修改。**`/tags.jspx`改为`/tag.jspx`，`/tags/{id}.jspx`改为`/tag/{id}.jspx`；`sys_tags.html`改为`sys_tag_list.html`。
 5. **配置文件路径修改。**`/WEB-INF/conf`改为`/WEB-INF/classes/conf`，**国际化文件路径**`/WEB-INF/messages`改为`/WEB-INF/classes/messages`，**数据库连接文件**`/WEB-INF/custom.propertis`改为`/WEB-INF/classes/custom.propertis`。
+6. **执行数据库升级脚本：upgrade-6.0to6.5.sql。**
 
 
 ## jspxcms-6.0.1-release (2016-02-22)

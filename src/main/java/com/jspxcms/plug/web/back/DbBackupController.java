@@ -27,19 +27,16 @@ import com.jspxcms.plug.dbbackup.DbBackupExcutor;
 @Controller
 @RequestMapping("/plug/db_backup")
 public class DbBackupController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(DbBackupController.class);
+	private static final Logger logger = LoggerFactory.getLogger(DbBackupController.class);
 	public static final String BACKUP_PATH = "/WEB-INF/db_backup";
 
 	@RequiresRoles("super")
 	@RequiresPermissions("plug:db_backup:list")
 	@RequestMapping("list.do")
-	public String list(HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String list(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		String realPath = pathResolver.getPath(BACKUP_PATH);
 		File parent = new File(realPath);
-		WebFile parentWebFile = new WebFile(parent, parent.getAbsolutePath(),
-				request.getContextPath());
+		WebFile parentWebFile = new WebFile(parent, parent.getAbsolutePath(), request.getContextPath());
 		List<WebFile> list = parentWebFile.listFiles();
 		modelMap.addAttribute("list", list);
 		return "plug/db_backup/db_backup_list";
@@ -58,36 +55,13 @@ public class DbBackupController {
 	}
 
 	@RequiresRoles("super")
-	@RequiresPermissions("plug:db_backup:restore")
-	@RequestMapping("restore.do")
-	public String restore(String id, HttpServletRequest request,
-			RedirectAttributes ra) {
-		File file = new File(pathResolver.getPath(BACKUP_PATH), id);
-		excutor.restore(file);
-		logService.operation("opr.dbBackup.restore", id, null, null, request);
-		logger.info("database restore id={}", id);
-		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
-		return "redirect:list.do";
-	}
-
-	@RequiresRoles("super")
-	@RequiresPermissions("plug:db_backup:download")
-	@RequestMapping("download.do")
-	public String download(String id, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
-		return null;
-	}
-
-	@RequiresRoles("super")
 	@RequiresPermissions("plug:db_backup:delete")
 	@RequestMapping("delete.do")
-	public String delete(String[] ids, Integer querySlotId,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String delete(String[] ids, Integer querySlotId, HttpServletRequest request, RedirectAttributes ra) {
 		for (String id : ids) {
 			File file = new File(pathResolver.getPath(BACKUP_PATH), id);
 			FileUtils.deleteQuietly(file);
-			logService
-					.operation("opr.dbBackup.delete", id, null, null, request);
+			logService.operation("opr.dbBackup.delete", id, null, null, request);
 			logger.info("database delete id={}", id);
 		}
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);

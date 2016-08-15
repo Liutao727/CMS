@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>6.5.1</version>
+	<version>6.5.2</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
@@ -18,7 +18,7 @@
 	</organization>
 
 	<properties>
-		<jspxcms.version>6.5.1</jspxcms.version>
+		<jspxcms.version>6.5.2</jspxcms.version>
 
 		<spring.version>4.2.5.RELEASE</spring.version>
 
@@ -77,12 +77,6 @@
 		<tomcat-jsp-api.version>6.0.44</tomcat-jsp-api.version>
 
 		<tomcat-jdbc.version>7.0.67</tomcat-jdbc.version>
-		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
-		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
-		<jdbc.driver.version>5.1.38</jdbc.driver.version>
-		<!-- <jdbc.driver.version>5.1.22</jdbc.driver.version> -->
-		<!-- <jdbc.driver.groupId>net.sourceforge.jtds</jdbc.driver.groupId> <jdbc.driver.artifactId>jtds</jdbc.driver.artifactId> 
-			<jdbc.driver.version>1.3.1</jdbc.driver.version> -->
 
 		<!-- 测试 -->
 		<junit.version>4.12</junit.version>
@@ -734,7 +728,7 @@
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.38</version>
+				<version>5.1.24</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
@@ -771,15 +765,11 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat6-maven-plugin</artifactId>
-				<configuration>
-					<path>/</path>
-					<port>8080</port>
-					<uriEncoding>UTF-8</uriEncoding>
-					<server>tomcat6</server>
-					<contextReloadable>false</contextReloadable>
-					<useTestClasspath>true</useTestClasspath>
-				</configuration>
 			</plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+      </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -824,51 +814,6 @@
 					<configuration>
 						<!-- <packagingExcludes>WEB-INF/web.xml</packagingExcludes> -->
 						<failOnMissingWebXml>false</failOnMissingWebXml>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>7.6.16.v20140903</version>
-					<!-- <version>8.1.16.v20140903</version> -->
-					<configuration>
-						<scanIntervalSeconds>0</scanIntervalSeconds>
-						<!-- <stopPort>9966</stopPort> <stopKey>foo</stopKey> -->
-						<useTestClasspath>false</useTestClasspath>
-						<connectors>
-							<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-								<port>8080</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
-						<webApp>
-							<contextPath>/</contextPath>
-							<defaultsDescriptor>src/test/resources/jetty/webdefault7.xml</defaultsDescriptor>
-						</webApp>
-						<jvmArgs>-Xmx512m -Dfile.encoding=UTF-8</jvmArgs>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>9.3.6.v20151106</version>
-					<!-- <version>9.2.14.v20151106</version> -->
-					<configuration>
-						<scanIntervalSeconds>0</scanIntervalSeconds>
-						<!-- <stopPort>9966</stopPort> <stopKey>foo</stopKey> -->
-						<useTestClasspath>false</useTestClasspath>
-						<connectors>
-							<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-								<port>8080</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
-						<webApp>
-							<contextPath>/</contextPath>
-							<defaultsDescriptor>src/test/resources/jetty/webdefault9.xml</defaultsDescriptor>
-						</webApp>
-						<jvmArgs>-Xmx512m -Dfile.encoding=UTF-8</jvmArgs>
 					</configuration>
 				</plugin>
 
