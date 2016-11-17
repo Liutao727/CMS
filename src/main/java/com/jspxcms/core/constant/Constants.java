@@ -136,7 +136,6 @@ public class Constants implements ConstantConfigurer {
 	 * 用户个人空间路径。作为上传目录的子目录，与上传路径结合后通常为/uploads/users。
 	 */
 	public static String UPLOADS_USERS = "/users";
-	public static String OPENOFFICE_HOST = null;
 	public static int OPENOFFICE_PORT = -1;
 	public static String SWFTOOLS_PDF2SWF = null;
 	public static String SWFTOOLS_LANGUAGEDIR = null;
@@ -165,10 +164,6 @@ public class Constants implements ConstantConfigurer {
 				.getProperty("templateDisplayPath");
 		if (templateDisplayPath != null) {
 			TEMPLATE_DISPLAY_PATH = templateDisplayPath;
-		}
-		String openofficeHost = properties.getProperty("openofficeHost");
-		if (openofficeHost != null) {
-			OPENOFFICE_HOST = openofficeHost;
 		}
 		String openofficePort = properties.getProperty("openofficePort");
 		if (StringUtils.isNotBlank(openofficePort)) {

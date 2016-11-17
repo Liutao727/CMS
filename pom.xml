@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>6.5.2</version>
+	<version>6.5.3</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
 	<description>Jspxcms是灵活的、易扩展的、企业级开源网站内容管理系统，支持多组织、多站点、独立管理的网站群，支持MySQL、Oracle、SQLServer等数据库。</description>
 	<url>http://www.jspxcms.com/</url>
-	<inceptionYear>2011-2016</inceptionYear>
+	<inceptionYear>2011-2017</inceptionYear>
 
 	<organization>
 		<name>Jspxcms</name>
@@ -18,8 +18,6 @@
 	</organization>
 
 	<properties>
-		<jspxcms.version>6.5.2</jspxcms.version>
-
 		<spring.version>4.2.5.RELEASE</spring.version>
 
 		<spring-data-jpa.version>1.9.2.RELEASE</spring-data-jpa.version>
@@ -56,7 +54,7 @@
 		<aspectj.version>1.8.7</aspectj.version>
 		<slf4j.version>1.7.13</slf4j.version>
 		<freemarker.version>2.3.23</freemarker.version>
-		<jodconverter.version>2.2.1</jodconverter.version>
+		<jodconverter-core.version>1.0.5</jodconverter-core.version>
 		<owasp-java-html-sanitizer.version>20150501.1</owasp-java-html-sanitizer.version>
 		<!-- <owasp-java-html-sanitizer.version>20160203.1</owasp-java-html-sanitizer.version> -->
 		<weixin4j.version>1.6.9</weixin4j.version>
@@ -68,6 +66,7 @@
 		<!-- <weibo4j-oauth2.version>2.1.1-beta2-3</weibo4j-oauth2.version> -->
 		<logback.version>1.1.3</logback.version>
 
+    <javax.mail-api.version>1.5.5</javax.mail-api.version>
 		<log4jdbc.version>1.2</log4jdbc.version>
 		<jstl.version>1.2</jstl.version>
 		<!--<jstl.version>1.1.2</jstl.version> <standard.version>1.1.2</standard.version> -->
@@ -174,8 +173,8 @@
 			<artifactId>imgscalr-lib</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.artofsolving</groupId>
-			<artifactId>jodconverter</artifactId>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>jodconverter-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
@@ -235,6 +234,10 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>javax.mail-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
 		</dependency>
 		<!-- <dependency> <groupId>javax.activation</groupId> <artifactId>activation</artifactId> 
 			</dependency> -->
@@ -586,9 +589,9 @@
 				<version>${imgscalr.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.artofsolving</groupId>
-				<artifactId>jodconverter</artifactId>
-				<version>${jodconverter.version}</version>
+				<groupId>com.github.livesense</groupId>
+				<artifactId>jodconverter-core</artifactId>
+				<version>${jodconverter-core.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
@@ -679,7 +682,12 @@
 			<dependency>
 				<groupId>javax.mail</groupId>
 				<artifactId>javax.mail-api</artifactId>
-				<version>1.5.5</version>
+				<version>${javax.mail-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.mail</groupId>
+				<artifactId>javax.mail</artifactId>
+				<version>${javax.mail-api.version}</version>
 			</dependency>
 			<!-- <dependency> <groupId>javax.activation</groupId> <artifactId>activation</artifactId> 
 				<version>1.1.1</version> </dependency> -->
@@ -766,10 +774,10 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat6-maven-plugin</artifactId>
 			</plugin>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -844,7 +852,7 @@
 						<useTestClasspath>true</useTestClasspath>
 					</configuration>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>com.mysema.maven</groupId>
 					<artifactId>apt-maven-plugin</artifactId>

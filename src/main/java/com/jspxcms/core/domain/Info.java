@@ -1404,6 +1404,11 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	}
 
 	@Transient
+	public String getFileExtension() {
+		return FilenameUtils.getExtension(getFile());
+	}
+
+	@Transient
 	public String getDoc() {
 		return getDetail() != null ? getDetail().getDoc() : null;
 	}
@@ -1436,11 +1441,6 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	@Transient
 	public String getStepName() {
 		return getDetail() != null ? getDetail().getStepName() : null;
-	}
-
-	@Transient
-	public String getFileExtension() {
-		return FilenameUtils.getExtension(getFile());
 	}
 
 	@Transient

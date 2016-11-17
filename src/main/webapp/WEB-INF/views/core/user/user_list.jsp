@@ -151,8 +151,10 @@ function optDeletePassword(form) {
 	</shiro:hasPermission>
 	<shiro:hasPermission name="core:user:delete_password">
 	<div class="ls-btn"><input type="button" value="<s:message code="user.deletePassword"/>" onclick="return optDeletePassword(this.form);"/></div>
-	</shiro:hasPermission>	
+	</shiro:hasPermission>
+	<shiro:hasPermission name="core:user:delete">	
 	<div class="ls-btn"><input type="button" value="<s:message code="delete"/>" onclick="return optDelete(this.form);"/></div>
+	</shiro:hasPermission>
 	<div style="clear:both"></div>
 </div>
 <table id="pagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb margin-top5">
@@ -186,11 +188,11 @@ function optDeletePassword(form) {
       </shiro:hasPermission>
 			<shiro:hasPermission name="core:user:delete">
 			<c:choose>
-			<c:when test="${bean.id gt 1}">
-			<a href="delete.do?ids=${bean.id}&${searchstring}" onclick="return confirmDelete();" class="ls-opt"><s:message code="delete"/></a>
+			<c:when test="${bean.id gt 1 && bean.id!=currentUser.id}">
+				<a href="delete.do?ids=${bean.id}&${searchstring}" onclick="return confirmDelete();" class="ls-opt"><s:message code="delete"/></a>
 			</c:when>
 			<c:otherwise>
-			<a class="disabled"><s:message code="delete"/></a>
+				<a class="disabled"><s:message code="delete"/></a>
 			</c:otherwise>
 			</c:choose>      
       </shiro:hasPermission>

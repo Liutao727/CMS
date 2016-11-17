@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Special;
 import com.jspxcms.core.service.SpecialService;
@@ -49,6 +51,35 @@ public class SpecialController {
 		ForeContext.setData(data, request);
 		ForeContext.setPage(data, page);
 		return special.getTemplate();
+	}
+
+	@RequestMapping(value = "/special_views/{id:[0-9]+}.jspx")
+	public void views(@PathVariable Integer id,
+			@RequestParam(defaultValue = "true") boolean isUpdate,
+			HttpServletRequest request, HttpServletResponse response) {
+		views(null, id, isUpdate, request, response);
+	}
+
+	@RequestMapping(Constants.SITE_PREFIX_PATH
+			+ "/special_views/{id:[0-9]+}.jspx")
+	public void views(@PathVariable String siteNumber,
+			@PathVariable Integer id,
+			@RequestParam(defaultValue = "true") boolean isUpdate,
+			HttpServletRequest request, HttpServletResponse response) {
+		siteResolver.resolveSite(siteNumber);
+		Special bean = service.get(id);
+		if (bean == null) {
+			Servlets.writeHtml(response, "0");
+			return;
+		}
+		Integer views;
+		if (isUpdate) {
+			views = service.updateViews(id);
+		} else {
+			views = bean.getViews();
+		}
+		String result = Integer.toString(views);
+		Servlets.writeHtml(response, result);
 	}
 
 	@Autowired

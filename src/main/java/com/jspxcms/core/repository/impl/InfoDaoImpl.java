@@ -302,7 +302,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		} else if (siteId != null) {
 			exp = exp.and(info.site.id.eq(siteId));
 		}
-		exp = exp.and(info.publishDate.goe(publishDate));
+		exp = exp.and(info.publishDate.gt(publishDate));
 		exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
 		exp = exp.and(info.status.eq(Info.NORMAL));
 		query.where(exp);
@@ -323,7 +323,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		} else if (siteId != null) {
 			exp = exp.and(info.site.id.eq(siteId));
 		}
-		exp = exp.and(info.publishDate.loe(publishDate));
+		exp = exp.and(info.publishDate.lt(publishDate));
 		exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
 		exp = exp.and(info.status.eq(Info.NORMAL));
 		query.where(exp);

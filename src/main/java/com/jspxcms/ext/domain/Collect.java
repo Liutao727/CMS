@@ -255,6 +255,7 @@ public class Collect implements Siteable, java.io.Serializable {
 		List<String> items = find(itemArea, getItemPattern(), getItemReg());
 		List<URI> uris = new ArrayList<URI>(items.size());
 		for (String item : items) {
+			item = StringUtils.trim(item);
 			uris.add(source.resolve(item));
 		}
 		if (getDesc()) {

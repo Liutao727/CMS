@@ -56,21 +56,26 @@ import com.jspxcms.core.support.Context;
 @Controller
 @RequestMapping("/core/user")
 public class UserController {
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserController.class);
 
 	@RequiresPermissions("core:user:list")
 	@RequestMapping("list.do")
-	public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+	public String list(
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Integer siteId = site.getId();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
 		User user = Context.getCurrentUser();
-		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
-		Page<User> pagedList = service.findPage(user.getRank(), null, orgTreeNumber, params, pageable);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request,
+				Constants.SEARCH_PREFIX);
+		Page<User> pagedList = service.findPage(user.getRank(), null,
+				orgTreeNumber, params, pageable);
 		List<Org> orgList = orgService.findList(orgTreeNumber);
 		List<Role> roleList = roleService.findList(siteId);
 		List<MemberGroup> groupList = groupService.findRealGroups();
+		modelMap.addAttribute("currentUser", user);
 		modelMap.addAttribute("pagedList", pagedList);
 		modelMap.addAttribute("orgList", orgList);
 		modelMap.addAttribute("roleList", roleList);
@@ -80,7 +85,8 @@ public class UserController {
 
 	@RequiresPermissions("core:user:create")
 	@RequestMapping("create.do")
-	public String create(Integer id, Integer orgId, HttpServletRequest request, org.springframework.ui.Model modelMap) {
+	public String create(Integer id, Integer orgId, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
 		User user = Context.getCurrentUser();
@@ -113,9 +119,11 @@ public class UserController {
 
 	@RequiresPermissions("core:user:edit")
 	@RequestMapping("edit.do")
-	public String edit(Integer id, Integer position,
-			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String edit(
+			Integer id,
+			Integer position,
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
+			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
 		User user = Context.getCurrentUser();
@@ -126,9 +134,10 @@ public class UserController {
 		if (user.getRank() > bean.getRank()) {
 			throw new CmsException("error.forbiddenData");
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
-		RowSide<User> side = service.findSide(user.getRank(), null, orgTreeNumber, params, bean, position,
-				pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request,
+				Constants.SEARCH_PREFIX);
+		RowSide<User> side = service.findSide(user.getRank(), null,
+				orgTreeNumber, params, bean, position, pageable.getSort());
 		List<Role> roleList = roleService.findList(site.getId());
 		modelMap.addAttribute("roleList", roleList);
 		List<MemberGroup> groupList = groupService.findRealGroups();
@@ -145,8 +154,10 @@ public class UserController {
 
 	@RequiresPermissions("core:user:save")
 	@RequestMapping("save.do")
-	public String save(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
-			Integer orgId, Integer groupId, String redirect, HttpServletRequest request, RedirectAttributes ra) {
+	public String save(User bean, UserDetail detail, Integer[] roleIds,
+			Integer[] orgIds, Integer[] groupIds, Integer orgId,
+			Integer groupId, String redirect, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -162,8 +173,10 @@ public class UserController {
 			bean.setRank(currRank);
 		}
 		String ip = Servlets.getRemoteAddr(request);
-		service.save(bean, detail, roleIds, orgIds, groupIds, orgId, groupId, ip);
-		logService.operation("opr.user.add", bean.getUsername(), null, bean.getId(), ip, user.getId(), site.getId());
+		service.save(bean, detail, roleIds, orgIds, groupIds, orgId, groupId,
+				ip);
+		logService.operation("opr.user.add", bean.getUsername(), null,
+				bean.getId(), ip, user.getId(), site.getId());
 		logger.info("save User, username={}.", bean.getUsername());
 
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -179,9 +192,11 @@ public class UserController {
 
 	@RequiresPermissions("core:user:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") User bean, @ModelAttribute("detail") UserDetail detail,
-			Integer[] roleIds, Integer[] orgIds, Integer[] groupIds, Integer orgId, Integer groupId, Integer position,
-			String redirect, HttpServletRequest request, RedirectAttributes ra) {
+	public String update(@ModelAttribute("bean") User bean,
+			@ModelAttribute("detail") UserDetail detail, Integer[] roleIds,
+			Integer[] orgIds, Integer[] groupIds, Integer orgId,
+			Integer groupId, Integer position, String redirect,
+			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User currUser = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -197,10 +212,11 @@ public class UserController {
 			bean.setRank(currRank);
 		}
 		Integer topOrgId = site.getOrg().getId();
-		service.update(bean, detail, roleIds, orgIds, groupIds, orgId, groupId, topOrgId, site.getId());
+		service.update(bean, detail, roleIds, orgIds, groupIds, orgId, groupId,
+				topOrgId, site.getId());
 		String ip = Servlets.getRemoteAddr(request);
-		logService.operation("opr.user.edit", bean.getUsername(), null, bean.getId(), ip, currUser.getId(),
-				site.getId());
+		logService.operation("opr.user.edit", bean.getUsername(), null,
+				bean.getId(), ip, currUser.getId(), site.getId());
 		logger.info("update User, username={}.", bean.getUsername());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -214,7 +230,8 @@ public class UserController {
 
 	@RequiresPermissions("core:user:delete")
 	@RequestMapping("delete.do")
-	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+	public String delete(Integer[] ids, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -222,16 +239,17 @@ public class UserController {
 		validateIds(ids, orgTreeNumber, currRank);
 		for (Integer id : ids) {
 			User bean = service.get(id);
-			if (bean.getId() == 0 || bean.getId() == 1) {
-				// 匿名用户（ID=0）和根用户（ID=1）不能删除
+			if (bean.getId() == user.getId() || bean.getId() == 0
+					|| bean.getId() == 1) {
+				// 当前用户、匿名用户（ID=0）和根用户（ID=1）不能删除
 				throw new CmsException("user.error.systemUserCannotBeDeleted");
 			}
 		}
 		User[] beans = service.delete(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (User bean : beans) {
-			logService.operation("opr.user.delete", bean.getUsername(), null, bean.getId(), ip, user.getId(),
-					site.getId());
+			logService.operation("opr.user.delete", bean.getUsername(), null,
+					bean.getId(), ip, user.getId(), site.getId());
 			logger.info("delete User, username={}.", bean.getUsername());
 		}
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
@@ -241,7 +259,8 @@ public class UserController {
 	// 删除密码
 	@RequiresPermissions("core:user:delete_password")
 	@RequestMapping("delete_password.do")
-	public String deletePassword(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+	public String deletePassword(Integer[] ids, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -250,9 +269,10 @@ public class UserController {
 		User[] beans = service.deletePassword(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (User bean : beans) {
-			logService.operation("opr.user.deletePassword", bean.getUsername(), null, bean.getId(), ip, user.getId(),
-					site.getId());
-			logger.info("delete User password, username={}..", bean.getUsername());
+			logService.operation("opr.user.deletePassword", bean.getUsername(),
+					null, bean.getId(), ip, user.getId(), site.getId());
+			logger.info("delete User password, username={}..",
+					bean.getUsername());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
 		return "redirect:list.do";
@@ -261,7 +281,8 @@ public class UserController {
 	// 审核账户
 	@RequiresPermissions("core:user:check")
 	@RequestMapping("check.do")
-	public String check(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+	public String check(Integer[] ids, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -269,7 +290,8 @@ public class UserController {
 		validateIds(ids, orgTreeNumber, currRank);
 		User[] beans = service.check(ids);
 		for (User bean : beans) {
-			logService.operation("opr.user.check", bean.getUsername(), null, bean.getId(), request);
+			logService.operation("opr.user.check", bean.getUsername(), null,
+					bean.getId(), request);
 			logger.info("check Member, username={}.", bean.getUsername());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
@@ -279,7 +301,8 @@ public class UserController {
 	// 禁用账户
 	@RequiresPermissions("core:user:lock")
 	@RequestMapping("lock.do")
-	public String lock(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+	public String lock(Integer[] ids, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -287,7 +310,8 @@ public class UserController {
 		validateIds(ids, orgTreeNumber, currRank);
 		User[] beans = service.lock(ids);
 		for (User bean : beans) {
-			logService.operation("opr.user.lock", bean.getUsername(), null, bean.getId(), request);
+			logService.operation("opr.user.lock", bean.getUsername(), null,
+					bean.getId(), request);
 			logger.info("disable User, username={}..", bean.getUsername());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
@@ -297,7 +321,8 @@ public class UserController {
 	// 解禁账户
 	@RequiresPermissions("core:user:unlock")
 	@RequestMapping("unlock.do")
-	public String unlock(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+	public String unlock(Integer[] ids, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		String orgTreeNumber = site.getOrg().getTreeNumber();
@@ -305,7 +330,8 @@ public class UserController {
 		validateIds(ids, orgTreeNumber, currRank);
 		User[] beans = service.unlock(ids);
 		for (User bean : beans) {
-			logService.operation("opr.user.unlock", bean.getUsername(), null, bean.getId(), request);
+			logService.operation("opr.user.unlock", bean.getUsername(), null,
+					bean.getId(), request);
 			logger.info("undisable User, username={}..", bean.getUsername());
 		}
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
@@ -316,7 +342,8 @@ public class UserController {
 	 * 检查用户名是否存在
 	 */
 	@RequestMapping("check_username.do")
-	public void checkUsername(String username, String original, HttpServletResponse response) {
+	public void checkUsername(String username, String original,
+			HttpServletResponse response) {
 		if (StringUtils.isBlank(username)) {
 			Servlets.writeHtml(response, "false");
 			return;
@@ -335,7 +362,8 @@ public class UserController {
 	}
 
 	@ModelAttribute
-	public void preloadBean(@RequestParam(required = false) Integer oid, org.springframework.ui.Model modelMap) {
+	public void preloadBean(@RequestParam(required = false) Integer oid,
+			org.springframework.ui.Model modelMap) {
 		if (oid != null) {
 			User bean = service.get(oid);
 			if (bean != null) {
@@ -357,7 +385,8 @@ public class UserController {
 		}
 	}
 
-	private void validateIds(Integer[] ids, String orgTreeNumber, Integer currRank) {
+	private void validateIds(Integer[] ids, String orgTreeNumber,
+			Integer currRank) {
 		for (Integer id : ids) {
 			User bean = service.get(id);
 			if (currRank > bean.getRank()) {

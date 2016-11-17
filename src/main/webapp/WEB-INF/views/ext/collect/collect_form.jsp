@@ -118,8 +118,8 @@ function patternDialog(itemId, areaId) {
     </td>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="collect.allowDuplicate"/>:</td>
     <td class="in-ctt" width="35%">
-      <label><f:radio name="allowDuplicate" value="true" checked="${bean.allowDuplicate}"/><s:message code="yes"/></label>
-      <label><f:radio name="allowDuplicate" value="false" checked="${bean.allowDuplicate}" default="true"/><s:message code="no"/></label>
+      <label><f:radio name="allowDuplicate" value="true" checked="${bean.allowDuplicate}" default="false" class="required"/><s:message code="yes"/></label>
+      <label><f:radio name="allowDuplicate" value="false" checked="${bean.allowDuplicate}" default="false" class="required"/><s:message code="no"/></label>
     </td>
   </tr>
   <tr>

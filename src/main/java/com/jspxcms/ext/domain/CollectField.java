@@ -113,6 +113,7 @@ public class CollectField implements Siteable, java.io.Serializable {
 			throws ClientProtocolException, IOException {
 		String url = getSourceUrl();
 		url = StringUtils.replace(url, "{id}", itemId);
+		url = StringUtils.trim(url);
 		URI uri = source.resolve(url);
 		HttpGet httpget = new HttpGet(uri);
 		CloseableHttpResponse response = httpclient.execute(httpget);

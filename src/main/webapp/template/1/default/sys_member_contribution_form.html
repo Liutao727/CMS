@@ -117,7 +117,7 @@ $(function(){
 							getMovieUrl:"${dy}/get_movie.jspx"
 						});
 						editor_text.ready(function() {
-							editor_text.setContent("${bean.text!?js_string}");
+				       editor_text.setContent("[#noescape]${(bean.text)!?js_string}[/#noescape]");
 				    });
 					});
 					</script>

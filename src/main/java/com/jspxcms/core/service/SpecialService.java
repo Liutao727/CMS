@@ -52,6 +52,8 @@ public interface SpecialService {
 
 	public Special[] delete(Integer[] ids);
 
+	public int updateViews(Integer id);
+
 	public Special refer(Integer beanId);
 
 	public List<Special> refer(Integer[] beanIds);

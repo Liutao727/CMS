@@ -76,7 +76,7 @@ public class ImageCropController {
 		}
 
 		BufferedImage buff = fileHandler.readImage(id);
-		buff = Scalr.crop(buff, left, top, width, height);
+		buff = Images.crop(buff, left, top, width, height);
 		if (targetWidth < width || targetHeight < height) {
 			buff = Scalr.resize(buff, Scalr.Method.QUALITY, targetWidth,
 					targetHeight);

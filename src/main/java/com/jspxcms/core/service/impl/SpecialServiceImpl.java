@@ -189,6 +189,13 @@ public class SpecialServiceImpl implements SpecialService, ModelDeleteListener,
 	}
 
 	@Transactional
+	public int updateViews(Integer id) {
+		Special bean = get(id);
+		bean.setViews(bean.getViews() + 1);
+		return bean.getViews();
+	}
+
+	@Transactional
 	public Special refer(Integer beanId) {
 		Special bean = get(beanId);
 		bean.setRefers(bean.getRefers() + 1);

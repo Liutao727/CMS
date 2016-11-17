@@ -28,6 +28,10 @@
 	<div class="w center">
 		<div style="border-left:5px solid #1F3B7B;padding-left:20px;">
 			<h1 style="color:#1F3B7B;font-family:'Microsoft YaHei';font-size:36px;font-weight:bold;line-height:60px;margin:0;padding:0;">${special.title}</h1>
+			<span class="c-666 ml5"><span id="special_views"></span>次阅读</span>
+			<script>
+				$("#special_views").load("${dy}/special_views/${special.id}.jspx?d="+new Date()*1);
+			</script>
 		</div>
 		<div class="ml30 mt10 ff-yh fs14">${special.metaDescription}</div>
 	</div>

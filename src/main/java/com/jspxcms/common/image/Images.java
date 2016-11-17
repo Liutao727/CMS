@@ -70,16 +70,52 @@ public class Images {
 			}
 		}
 		return null;
-
 	}
 
-	public static BufferedImage resize(BufferedImage buff, ScaleParam scaleInfo) {
-		if (buff == null || !scaleInfo.getScale()) {
+	public static BufferedImage crop(BufferedImage buff, Integer left,
+			Integer top, Integer width, Integer height) {
+		if (buff == null || left == null || top == null || width == null
+				|| height == null) {
 			return buff;
 		}
-		Boolean exact = scaleInfo.getExact();
-		Integer scaleWidth = scaleInfo.getWidth();
-		Integer scaleHeight = scaleInfo.getHeight();
+		int origWidth = buff.getWidth();
+		int origHeight = buff.getHeight();
+		if (left < 0) {
+			left = 0;
+		}
+		if (top < 0) {
+			top = 0;
+		}
+		if (left + width > origWidth) {
+			if (width > origWidth) {
+				width = origWidth;
+				left = 0;
+			} else {
+				left = origWidth - width;
+			}
+		}
+		if (top + height > origHeight) {
+			if (height > origHeight) {
+				height = origHeight;
+				top = 0;
+			} else {
+				top = origHeight - height;
+			}
+		}
+		// 宽高与原图一致，不做处理
+		if (width == origWidth && height == origHeight) {
+			return buff;
+		}
+		return Scalr.crop(buff, left, top, width, height);
+	}
+
+	public static BufferedImage resize(BufferedImage buff, ScaleParam scaleParam) {
+		if (buff == null || !scaleParam.getScale()) {
+			return buff;
+		}
+		Boolean exact = scaleParam.getExact();
+		Integer scaleWidth = scaleParam.getWidth();
+		Integer scaleHeight = scaleParam.getHeight();
 		int width = buff.getWidth();
 		int height = buff.getHeight();
 		if ((scaleHeight == null && scaleWidth >= width)

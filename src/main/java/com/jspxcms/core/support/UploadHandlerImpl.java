@@ -67,7 +67,7 @@ public class UploadHandlerImpl implements UploadHandler {
 		String pathname = UploadUtils.getUrl(site.getId(), Uploader.IMAGE,
 				extension);
 		try {
-			storeImage(buff, scaleParam, thumbnailParam, watermarkParam,
+			storeImage(null, buff, scaleParam, thumbnailParam, watermarkParam,
 					formatName, pathname, fileHandler, ip, userId, siteId);
 			long length = buff.getWidth() * buff.getHeight() / 3;
 			attachmentService.save(pathname, length, ip, userId, siteId);
@@ -268,7 +268,7 @@ public class UploadHandlerImpl implements UploadHandler {
 		if (StringUtils.isNotBlank(formatName)) {
 			// 可以且需要处理的图片
 			BufferedImage buff = ImageIO.read(file);
-			storeImage(buff, scaleParam, thumbnailParam, watermarkParam,
+			storeImage(file, buff, scaleParam, thumbnailParam, watermarkParam,
 					formatName, pathname, fileHandler, ip, userId, siteId);
 		} else {
 			// 不可处理的图片
@@ -276,14 +276,21 @@ public class UploadHandlerImpl implements UploadHandler {
 		}
 	}
 
-	private void storeImage(BufferedImage buff, ScaleParam scaleParam,
-			ThumbnailParam thumbnailParam, WatermarkParam watermarkParam,
-			String formatName, String pathname, FileHandler fileHandler,
-			String ip, Integer userId, Integer siteId) throws IOException {
+	private void storeImage(File file, BufferedImage buff,
+			ScaleParam scaleParam, ThumbnailParam thumbnailParam,
+			WatermarkParam watermarkParam, String formatName, String pathname,
+			FileHandler fileHandler, String ip, Integer userId, Integer siteId)
+			throws IOException {
 		List<BufferedImage> images = new ArrayList<BufferedImage>();
 		List<String> filenames = new ArrayList<String>();
+		// 是否保存原始图片（未经过java程序处理过的图片，gif图经过java处理后，只会保留第一张图，失去动态效果）
+		boolean origImage = true;
+		if (file == null) {
+			origImage = false;
+		}
 		if (scaleParam.getScale()) {
 			buff = Images.resize(buff, scaleParam);
+			origImage = false;
 		}
 		BufferedImage thumbnailBuff = null;
 		String thumbnailName = null;
@@ -303,10 +310,15 @@ public class UploadHandlerImpl implements UploadHandler {
 			BufferedImage watermarkBuff = handler.readImage(imagePath);
 			if (watermarkBuff != null) {
 				Images.watermark(buff, watermarkBuff, watermarkParam);
+				origImage = false;
 			}
 		}
-		images.add(buff);
-		filenames.add(pathname);
+		if (origImage) {
+			fileHandler.storeFile(file, pathname);
+		} else {
+			images.add(buff);
+			filenames.add(pathname);
+		}
 		fileHandler.storeImages(images, formatName, filenames);
 		if (thumbnailName != null) {
 			long length = thumbnailBuff.getWidth() * thumbnailBuff.getHeight()

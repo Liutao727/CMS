@@ -22,7 +22,7 @@ html,body{height:100%;margin:0;padding:0;overflow:auto;}
 #logout{float:right;width:50px;height:100%;display:block;background:url('${ctx}/static/back/images/logout.png') no-repeat center center;}
 #homepage{float:right;width:50px;height:100%;display:block;background:url('${ctx}/static/back/images/home.png') no-repeat center center;}
 #welcome{float:right;height:100%;line-height:46px;padding:0 10px 0 20px;background:url('${ctx}/static/back/images/user.png') no-repeat 0 center;}
-#sites{float:right;padding:12px 10px 0 0;}
+#sites{float:right;padding:8px 10px 0 0;}
 
 #nav-menu{height:30px;padding-left:15px;overflow:hidden;background:url("${ctx}/static/back/images/top_menu_bg.png");}
 .nav-menu-li{float:left;height:30px;line-height:30px;}
@@ -135,7 +135,7 @@ setInterval("keepSession()",600000);
 	  <div id="sites">
 	  	<c:choose>
 	  	<c:when test="${fn:length(siteList) le 1}">
-	  		<div style="padding-top:2px;">${site.name}(${site.org.name})</div>
+	  		<div style="padding-top:6px;">${site.name}(${site.org.name})</div>
 	  	</c:when>
 	  	<c:otherwise>
 		  	<select onchange="location.href='index.do?_site='+$(this).val();">

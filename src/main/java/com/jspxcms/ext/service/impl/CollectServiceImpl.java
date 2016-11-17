@@ -27,7 +27,6 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 import org.htmlparser.util.SimpleNodeIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,6 +261,7 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 			while (it.hasMoreNodes()) {
 				ImageTag tag = (ImageTag) it.nextNode();
 				String src = tag.getAttribute("src");
+				src = StringUtils.trim(src);
 				if (StringUtils.isBlank(src)) {
 					continue;
 				}
@@ -280,7 +280,7 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 				begin = tag.getEndPosition();
 			}
 			buff.append(html.subSequence(begin, html.length()));
-		} catch (ParserException e) {
+		} catch (Exception e) {
 			logger.error(null, e);
 		}
 		return buff.toString();

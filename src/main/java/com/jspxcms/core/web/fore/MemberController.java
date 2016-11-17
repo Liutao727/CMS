@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.jspxcms.common.file.FileHandler;
+import com.jspxcms.common.image.Images;
 import com.jspxcms.common.security.CredentialsDigest;
 import com.jspxcms.common.upload.UploadResult;
 import com.jspxcms.common.upload.Uploader;
@@ -171,9 +172,7 @@ public class MemberController {
 		String pathnameOrig = "/users/" + user.getId() + "/" + User.AVATAR;
 		fileHandler.storeImage(buff, "jpg", pathnameOrig);
 		// 裁剪头像
-		if (left != null && top != null && width != null && height != null) {
-			buff = Scalr.crop(buff, left, top, width, height);
-		}
+		buff = Images.crop(buff, left, top, width, height);
 		// 保存大头像
 		String pathnameLarge = "/users/" + user.getId() + "/"
 				+ User.AVATAR_LARGE;

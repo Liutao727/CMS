@@ -67,7 +67,10 @@ $(function() {
     	<div class="line"><label class="label" for="testTo"><s:message code="global.mail.testTo"/>:</label><f:text id="testTo" name="testTo" value="${bean.mail.testTo}" maxlength="255" style="width:300px;"/></div>
     	<div class="line"><label class="label" for="testSubject"><s:message code="global.mail.testSubject"/>:</label><f:text id="testSubject" name="testSubject" value="${bean.mail.testSubject}" maxlength="255" style="width:300px;"/></div>
     	<div class="line"><label class="label" for="testText"><s:message code="global.mail.testText"/>:</label><f:textarea id="testText" name="testText" value="${bean.mail.testText}" maxlength="2000" style="width:300px;height:50px;"/></div>
-    	<div class="line"><label class="label" for="testText">&nbsp;</label><input type="button" value="<s:message code="global.mail.testSend"/>" onclick="location.href='mail_send.do?to='+encodeURI($('#testTo').val())+'&subject='+encodeURI($('#testSubject').val())+'&text='+encodeURI($('#testText').val())"/></div>
+    	<div class="line">
+    		<label class="label" for="testText">&nbsp;</label><input type="button" value="<s:message code="global.mail.testSend"/>" onclick="location.href='mail_send.do?to='+encodeURI($('#testTo').val())+'&subject='+encodeURI($('#testSubject').val())+'&text='+encodeURI($('#testText').val())"/>
+    		<span style="color:red;"><s:message code="global.mail.testSend.prompt"/></span>
+    	</div>
     </td>
   </tr>
   <tr>

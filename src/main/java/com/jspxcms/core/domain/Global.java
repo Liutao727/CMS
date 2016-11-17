@@ -82,8 +82,7 @@ public class Global implements java.io.Serializable {
 
 	@Transient
 	public boolean isDocEnabled() {
-		if (StringUtils.isBlank(Constants.OPENOFFICE_HOST)
-				|| Constants.OPENOFFICE_PORT <= 0
+		if (Constants.OPENOFFICE_PORT <= 0
 				|| StringUtils.isBlank(Constants.SWFTOOLS_PDF2SWF)) {
 			return false;
 		} else {
