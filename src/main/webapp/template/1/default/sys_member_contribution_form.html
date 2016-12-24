@@ -102,19 +102,19 @@ $(function(){
 					$(function() {
 						window.UEDITOR_HOME_URL = "${ctx}/static/vendor/ueditor/";
 						var fileUrl,videoUrl;
-						fileUrl = "${dy}/upload_file.jspx;jsessionid=${jsessionid}?ueditor=true";
-						videoUrl = "${dy}/upload_video.jspx;jsessionid=${jsessionid}?ueditor=true";
+						fileUrl = "${ctx}/upload_file.jspx;jsessionid=${jsessionid}?ueditor=true";
+						videoUrl = "${ctx}/upload_video.jspx;jsessionid=${jsessionid}?ueditor=true";
 						var editor_text = UE.getEditor('text',{
 							toolbars: window.UEDITOR_CONFIG.toolbars_BasicPage,
 							//initialFrameWidth:700,
 							initialFrameHeight:300,
-							imageUrl:"${dy}/upload_image.jspx?ueditor=true",
-							wordImageUrl:"${dy}/upload_image.jspx?ueditor=true",
+							imageUrl:"${ctx}/upload_image.jspx?ueditor=true",
+							wordImageUrl:"${ctx}/upload_image.jspx?ueditor=true",
 							fileUrl:fileUrl,
 							videoUrl:videoUrl,
-							catcherUrl:"${dy}/get_remote_image.jspx?ueditor=true",
-							imageManagerUrl:"${dy}/image_manager.jspx",
-							getMovieUrl:"${dy}/get_movie.jspx"
+							catcherUrl:"${ctx}/get_remote_image.jspx?ueditor=true",
+							imageManagerUrl:"${ctx}/image_manager.jspx",
+							getMovieUrl:"${ctx}/get_movie.jspx"
 						});
 						editor_text.ready(function() {
 				       editor_text.setContent("[#noescape]${(bean.text)!?js_string}[/#noescape]");

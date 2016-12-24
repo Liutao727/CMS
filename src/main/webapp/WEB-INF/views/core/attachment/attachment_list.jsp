@@ -102,7 +102,7 @@ function optDelete(form) {
     <th class="ls-th-sort"><span class="ls-sort" pagesort="user.username"><s:message code="attachment.user"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="time"><s:message code="attachment.time"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="ip"><s:message code="attachment.ip"/></span></th>
-    <th class="ls-th-sort"><span class="ls-sort" pagesort="used"><s:message code="attachment.used"/></span></th>
+    <th><s:message code="attachment.used"/></th>
   </tr>
   </thead>
   <tbody>

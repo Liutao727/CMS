@@ -223,10 +223,10 @@ $(function() {
 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
 'customstyle', 'paragraph', 'fontfamily', 'fontsize', 'insertcode', '|',
 'link', 'unlink', 'anchor', '|',
-'insertimage', 'attachment', 'insertvideo', 'music', '|', 
-'template', 'wordimage', 'pasteplain', '|',
-'map', 'gmap', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
-'print', 'preview', 'searchreplace', 'cleardoc', 'drafts', '|','pagebreak']]
+'insertimage', 'attachment', 'insertvideo', '|', 
+'wordimage', 'pasteplain', '|',
+'map', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
+'print', 'preview', 'searchreplace', 'drafts', '|','pagebreak']]
     	</c:set>
     	<f:textarea name="customs_editorToolbarCustomUeditor" value="${bean.customs['editorToolbarCustomUeditor']}" default="${defaultEditorToolbarCustomUeditor}" style="width:98%;height:120px;" spellcheck="false"/>
     </td>

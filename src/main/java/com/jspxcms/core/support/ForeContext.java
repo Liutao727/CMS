@@ -1,7 +1,9 @@
 package com.jspxcms.core.support;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import freemarker.core.Environment;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateSequenceModel;
 
 /**
  * ForeContext
@@ -206,6 +209,14 @@ public abstract class ForeContext {
 		if (model instanceof AdapterTemplateModel) {
 			return (Collection<MemberGroup>) ((AdapterTemplateModel) model)
 					.getAdaptedObject(Collection.class);
+		} else if(model instanceof TemplateSequenceModel) {
+			TemplateSequenceModel sequence = (TemplateSequenceModel) model;
+			List<MemberGroup> list = new ArrayList<MemberGroup>(sequence.size());
+			for(int i=0,len=sequence.size();i<len;i++) {
+				list.add((MemberGroup) ((AdapterTemplateModel) sequence.get(i))
+						.getAdaptedObject(MemberGroup.class));
+			}
+			return list;
 		} else {
 			return null;
 		}
@@ -228,6 +239,14 @@ public abstract class ForeContext {
 		if (model instanceof AdapterTemplateModel) {
 			return (Collection<Org>) ((AdapterTemplateModel) model)
 					.getAdaptedObject(Collection.class);
+		} else if(model instanceof TemplateSequenceModel) {
+			TemplateSequenceModel sequence = (TemplateSequenceModel) model;
+			List<Org> list = new ArrayList<Org>(sequence.size());
+			for(int i=0,len=sequence.size();i<len;i++) {
+				list.add((Org) ((AdapterTemplateModel) sequence.get(i))
+						.getAdaptedObject(Org.class));
+			}
+			return list;
 		} else {
 			return null;
 		}

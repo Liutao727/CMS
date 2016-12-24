@@ -200,6 +200,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 				query.leftJoin(info.infoGroups, infoGroup);
 				e = e.or(infoGroup.group.id.in(viewGroupId).and(
 						infoGroup.viewPerm.eq(true)));
+				isDistinct = true;
 			}
 			if (viewOrgId != null && viewOrgId.length > 0) {
 				QNodeOrg nodeOrg = QNodeOrg.nodeOrg;
@@ -210,7 +211,9 @@ public class InfoDaoImpl implements InfoDaoPlus {
 				query.leftJoin(info.infoOrgs, infoOrg);
 				e = e.or(infoOrg.org.id.in(viewOrgId).and(
 						infoOrg.viewPerm.eq(true)));
+				isDistinct = true;
 			}
+			exp = exp.and(e);
 		}
 		boolean isTreeNumber = ArrayUtils.isNotEmpty(treeNumber);
 		boolean isExcludeTreeNumber = ArrayUtils.isNotEmpty(excludeTreeNumber);

@@ -205,8 +205,8 @@ public abstract class UploadControllerAbstract {
 			// message : "提示的信息，上传成功或上传失败及错误信息等。",
 			// url : "图片地址" // 上传成功时才返回
 			// }
-			Map<String, String> umap = new HashMap<String, String>();
-			umap.put("success", result.isSuccess() ? "1" : "0");
+			Map<String, Object> umap = new HashMap<String, Object>();
+			umap.put("success", result.isSuccess() ? 1 : 0);
 			umap.put("message", result.getMessage());
 			umap.put("url", result.getFileUrl());
 			JsonMapper mapper = new JsonMapper();

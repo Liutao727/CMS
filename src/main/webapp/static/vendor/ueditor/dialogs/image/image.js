@@ -19,19 +19,23 @@ var imageUploader = {},
         switchTab("imageTab");
         createAlignButton(["remoteFloat", "localFloat"]);
         createFlash(opt, callbacks);
-        var srcImg = editor.selection.getRange().getClosedNode();
-        if (srcImg) {
-            showImageInfo(srcImg);
-            showPreviewImage(srcImg, true);
-            var tabElements = g("imageTab").children,
-                tabHeads = tabElements[0].children,
-                tabBodys = tabElements[1].children;
-            for (var i = 0, ci; ci = tabHeads[i++];) {
-                if (ci.getAttribute("tabSrc") == "remote") {
-                    clickHandler(tabHeads, tabBodys, ci);
+        try{
+            var srcImg = editor.selection.getRange().getClosedNode();
+            if (srcImg) {
+                showImageInfo(srcImg);
+                showPreviewImage(srcImg, true);
+                var tabElements = g("imageTab").children,
+                    tabHeads = tabElements[0].children,
+                    tabBodys = tabElements[1].children;
+                for (var i = 0, ci; ci = tabHeads[i++];) {
+                    if (ci.getAttribute("tabSrc") == "remote") {
+                        clickHandler(tabHeads, tabBodys, ci);
+                    }
                 }
-            }
 
+            }
+        }catch(e) {
+        	// do nothing
         }
         addUrlChangeListener();
         addOKListener();
@@ -111,6 +115,7 @@ var imageUploader = {},
     }
 
     function addSearchListener() {
+    	/*
         g("imgSearchTxt").onclick = function () {
             selectTxt(this);
             this.setAttribute("hasClick", true);
@@ -141,6 +146,7 @@ var imageUploader = {},
                 searchImage();
             }
         })
+        */
 
     }
 
@@ -148,7 +154,7 @@ var imageUploader = {},
      * 延迟加载
      */
     function addScrollListener() {
-
+    	/*
         g("imageList").onscroll = function () {
             var imgs = this.getElementsByTagName("img"),
                 top = Math.ceil(this.scrollTop / 100) - 1;
@@ -161,6 +167,7 @@ var imageUploader = {},
                 }
             }
         }
+        */
     }
 
     /**
@@ -584,8 +591,8 @@ var imageUploader = {},
                     maskIframe.style.display = "";
                     dialog.buttons[0].setDisabled(false);
                 }
-                var list = g("imageList");
-                list.style.display = "none";
+                //var list = g("imageList");
+                //list.style.display = "none";
                 //切换到图片管理时，ajax请求后台图片列表
                 if (id == "imgManager") {
                     list.style.display = "";

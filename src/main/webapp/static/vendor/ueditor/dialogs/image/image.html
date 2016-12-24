@@ -13,8 +13,10 @@
             <div id="tabHeads" class="tabhead">
                 <span tabSrc="remote"  class="focus"><var id="lang_tab_remote"></var></span>
                 <span tabSrc="local"><var id="lang_tab_local"></var></span>
+                <!-- 
                 <span tabSrc="imgManager"><var id="lang_tab_imgManager"></var></span>
                 <span tabSrc="imgSearch"><var id="lang_tab_imgSearch"></var></span>
+                 -->
             </div>
             <div id="tabBodys" class="tabbody">
                 <div id="remote" class="panel">
@@ -60,6 +62,7 @@
                         <var id="lang_savePath" ></var><span id="saveDirSelector"><var id="lang_load_savePath"></var></span>
                     </div>
                 </div>
+                <!--
                 <div id="imgManager" class="panel">
                     <div id="imageList"><var id="lang_imgLoading"></var></div>
                 </div>
@@ -69,7 +72,6 @@
                             <td width="200"><input id="imgSearchTxt" type="text" /></td>
                             <td width="65">
                                 <select id="imgType">
-                                    <!--具体内容值将由国际化组件动态填充-->
                                     <option value="&s=4&z=0"></option>
                                     <option value="&s=1&z=19"></option>
                                     <option value="&s=2&z=0"></option>
@@ -82,6 +84,7 @@
                     </table>
                     <div id="searchList"></div>
                 </div>
+                  -->
                 <iframe id="maskIframe" src="about:blank" scrolling="no" frameborder="no"></iframe>
             </div>
         </div>
@@ -119,8 +122,8 @@
                 picHeight:100,     // 单张预览图片的高度
                 uploadDataFieldName:editor.options.imageFieldName,    // POST请求中图片数据的key
                 picDescFieldName:'pictitle',      // POST请求中图片描述的key
-                maxSize:4,                         // 文件的最大体积,单位M
-                compressSize:2,                   // 上传前如果图片体积超过该值，会先压缩,单位M
+                maxSize:100,                         // 文件的最大体积,单位M
+                compressSize:100,                   // 上传前如果图片体积超过该值，会先压缩,单位M
                 maxNum:32,                         // 单次最大可上传多少个文件
                 compressSide:editor.options.compressSide,                 //等比压缩的基准，0为按照最长边，1为按照宽度，2为按照高度
                 compressLength:editor.options.maxImageSideLength        //能接受的最大边长，超过该值Flash会自动等比压缩

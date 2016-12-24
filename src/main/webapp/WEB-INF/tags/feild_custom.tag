@@ -231,8 +231,8 @@
 			<c:choose>
 			  <c:when test="${(empty bean.customs[fnx:concat(field.name,'_editor_type')] && 'editormd' eq field.customs['editorDefault']) || 'editormd' eq bean.customs[fnx:concat(field.name,'_editor_type')]}">
 		      <c:choose>
-		  		  <c:when test="${!empty bean.clobs[fnx:concat(bean.text,'_markdown')]}">
-		          create_editormd_${field.name}("${fnx:escapeEcmaScript(bean.clobs[fnx:concat(bean.text,'_markdown')])}");
+		  		  <c:when test="${!empty bean.clobs[fnx:concat(field.name,'_markdown')]}">
+		          create_editormd_${field.name}("${fnx:escapeEcmaScript(bean.clobs[fnx:concat(field.name,'_markdown')])}");
 		        </c:when>
 		        <c:otherwise>
 		          create_editormd_${field.name}(toMarkdown("${field.name=='text' ? fnx:escapeEcmaScript(bean.text) : fnx:escapeEcmaScript(bean.clobs[field.name])}"));

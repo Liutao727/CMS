@@ -1,6 +1,18 @@
 # Jspxcms 发版说明
 
 
+## jspxcms-6.5.4-release (2016-12-22)
+
+### 缺陷(Bug)
+
+1. 修复：附件管理点击“是否使用”列头排序会报错。
+2. 修复：文档管理对HTML过滤会导致一些正常的HTML无法录入。取消过滤。
+3. 修复：editormd无法上传图片。
+4. 修复：ueditor上传图片最大为4M，以及超过2M的图片会压缩。全部修改为100M。
+5. 修复：InfoList(InfoPage)的isPerm参数无效。
+6. 修复：前台投稿编辑器上传图片提示网络错误。
+
+
 ## jspxcms-6.5.3-release (2016-11-02)
 
 ### 改进(Improvement)

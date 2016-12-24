@@ -92,10 +92,10 @@
 			'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
 			'customstyle', 'paragraph', 'fontfamily', 'fontsize', 'insertcode', '|',
 			'link', 'unlink', 'anchor', '|',
-			'insertimage', 'attachment', 'insertvideo', 'music', '|', 
-			'template', 'wordimage', 'pasteplain', '|',
-			'map', 'gmap', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
-			'print', 'preview', 'searchreplace', 'cleardoc', 'drafts', '|','pagebreak']
+			'insertimage', 'attachment', 'insertvideo', '|', 
+			'wordimage', 'pasteplain', '|',
+			'map', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
+			'print', 'preview', 'searchreplace', 'drafts', '|','pagebreak']
         ]
     	, toolbars_Standard:[
            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
@@ -110,10 +110,10 @@
 			'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
 			'customstyle', 'paragraph', 'fontfamily', 'fontsize', 'insertcode', '|',
 			'link', 'unlink', 'anchor', '|',
-			'insertimage', 'attachment', 'insertvideo', 'music', '|', 
-			'template', 'wordimage', 'pasteplain', '|',
-			'map', 'gmap', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
-			'print', 'preview', 'searchreplace', 'cleardoc', 'drafts']
+			'insertimage', 'attachment', 'insertvideo', '|', 
+			'wordimage', 'pasteplain', '|',
+			'map', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
+			'print', 'preview', 'searchreplace', 'drafts']
     	]
 		, toolbars_StandardPage:[
            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
@@ -128,10 +128,10 @@
 			'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
 			'customstyle', 'paragraph', 'fontfamily', 'fontsize', 'insertcode', '|',
 			'link', 'unlink', 'anchor', '|',
-			'insertimage', 'attachment', 'insertvideo', 'music', '|', 
-			'template', 'wordimage', 'pasteplain', '|',
-			'map', 'gmap', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
-			'print', 'preview', 'searchreplace', 'cleardoc', 'drafts', '|','pagebreak']
+			'insertimage', 'attachment', 'insertvideo', '|', 
+			'wordimage', 'pasteplain', '|',
+			'map', 'emotion', 'blockquote', 'date', 'time', 'horizontal', 'spechars', '|',
+			'print', 'preview', 'searchreplace', 'drafts', '|','pagebreak']
 	    ]
 		, toolbars_Basic:[
            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
