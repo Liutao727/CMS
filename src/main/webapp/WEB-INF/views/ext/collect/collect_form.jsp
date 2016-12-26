@@ -120,12 +120,21 @@ function patternDialog(itemId, areaId) {
     <td class="in-ctt" width="35%">
       <label><f:radio name="allowDuplicate" value="true" checked="${bean.allowDuplicate}" default="false" class="required"/><s:message code="yes"/></label>
       <label><f:radio name="allowDuplicate" value="false" checked="${bean.allowDuplicate}" default="false" class="required"/><s:message code="no"/></label>
+      <span class="in-prompt" title="<s:message code='collect.allowDuplicate.prompt' htmlEscape='true'/>"></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="collect.downloadImage"/>:</td>
+    <td class="in-ctt" width="85%" colspan="3">
+      <label><f:radio name="downloadImage" value="true" checked="${bean.downloadImage}" default="true" class="required"/><s:message code="yes"/></label>
+      <label><f:radio name="downloadImage" value="false" checked="${bean.downloadImage}" default="true" class="required"/><s:message code="no"/></label>
     </td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="collect.userAgent"/>:</td>
     <td class="in-ctt" width="85%" colspan="3">
       <f:text id="userAgent" name="userAgent" value="${bean.userAgent}" default="Mozilla/5.0" class="required" maxlength="255" style="width:500px;"/>
+      <span class="in-prompt" title="<s:message code='collect.userAgent.prompt' htmlEscape='true'/>"></span>
     </td>
   </tr>
   <tr>

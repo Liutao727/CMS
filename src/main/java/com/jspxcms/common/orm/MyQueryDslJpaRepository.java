@@ -12,10 +12,10 @@ import org.springframework.data.jpa.repository.support.Querydsl;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 
-import com.mysema.query.jpa.JPQLQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.path.PathBuilder;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.JPQLQuery;
 
 /**
  * QueryDsl JpaRepository
@@ -49,13 +49,13 @@ public class MyQueryDslJpaRepository<T, ID extends Serializable> extends
 	}
 
 	public List<T> findAll(Predicate predicate, Sort sort) {
-		JPQLQuery query = createQuery(predicate);
+		JPQLQuery<T> query = createQuery(predicate).select(path);
 		querydsl.applySorting(sort, query);
-		return query.list(path);
+		return query.fetch();
 	}
 
 	public List<T> findAll(Predicate predicate, Limitable limitable) {
-		JPQLQuery query = createQuery(predicate);
+		JPQLQuery<T> query = createQuery(predicate).select(path);
 		if (limitable != null) {
 			querydsl.applySorting(limitable.getSort(), query);
 			Integer offset = limitable.getFirstResult();
@@ -67,7 +67,7 @@ public class MyQueryDslJpaRepository<T, ID extends Serializable> extends
 				query.limit(limit);
 			}
 		}
-		return query.list(path);
+		return query.fetch();
 	}
 
 }

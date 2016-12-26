@@ -21,7 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.jspxcms.common.file.Files;
+import com.jspxcms.common.file.FilesEx;
 import com.jspxcms.core.support.Siteable;
 
 /**
@@ -44,7 +44,7 @@ public class Attachment implements Siteable, java.io.Serializable {
 	@Transient
 	public String getSize() {
 		Long length = getLength();
-		return Files.getSize(length);
+		return FilesEx.getSize(length);
 	}
 
 	@Transient

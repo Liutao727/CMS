@@ -50,7 +50,6 @@ public class UserDetail implements java.io.Serializable {
 	private Integer id;
 	private User user;
 	private Date validationDate;
-	private String validationValue;
 	private Date loginErrorDate;
 	private Integer loginErrorCount;
 	private Date prevLoginDate;
@@ -96,16 +95,6 @@ public class UserDetail implements java.io.Serializable {
 
 	public void setValidationDate(Date validationDate) {
 		this.validationDate = validationDate;
-	}
-
-	@Length(max = 255)
-	@Column(name = "f_validation_value", length = 255)
-	public String getValidationValue() {
-		return validationValue;
-	}
-
-	public void setValidationValue(String validationValue) {
-		this.validationValue = validationValue;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

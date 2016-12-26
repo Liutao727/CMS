@@ -37,7 +37,7 @@ import org.springframework.web.util.WebUtils;
  * 
  */
 public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
-	private static final int DEFAULT_PAGE_SIZE = 10;
+	private static final int DEFAULT_PAGE_SIZE = 20;
 	private static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0,
 			DEFAULT_PAGE_SIZE);
 	private static final String DEFAULT_PREFIX = "page";

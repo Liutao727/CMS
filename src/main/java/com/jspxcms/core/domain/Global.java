@@ -27,6 +27,7 @@ import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
+import com.jspxcms.core.commercial.Enterprise;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.constant.Versions;
 
@@ -80,10 +81,19 @@ public class Global implements java.io.Serializable {
 		return Versions.getVersion();
 	}
 
+	/**
+	 * 是否商业版
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isEnterpriseEdition() {
+		return Enterprise.isEp();
+	}
+
 	@Transient
 	public boolean isDocEnabled() {
-		if (Constants.OPENOFFICE_PORT <= 0
-				|| StringUtils.isBlank(Constants.SWFTOOLS_PDF2SWF)) {
+		if (Constants.OPENOFFICE_PORT <= 0 || StringUtils.isBlank(Constants.SWFTOOLS_PDF2SWF)) {
 			return false;
 		} else {
 			return true;
@@ -100,9 +110,7 @@ public class Global implements java.io.Serializable {
 		String ctx = getContextPath();
 		StringBuilder sb = new StringBuilder();
 		// 存储路径是file:开头代表模版在独立应用里部署，不需加上下文路径。
-		if (StringUtils.isNotBlank(ctx)
-				&& !StringUtils.startsWith(Constants.TEMPLATE_STORE_PATH,
-						"file:")) {
+		if (StringUtils.isNotBlank(ctx) && !StringUtils.startsWith(Constants.TEMPLATE_STORE_PATH, "file:")) {
 			sb.append(ctx);
 		}
 		if (StringUtils.isNotBlank(Constants.TEMPLATE_DISPLAY_PATH)) {
@@ -149,11 +157,9 @@ public class Global implements java.io.Serializable {
 	@Transient
 	public Object getConf(String className) {
 		try {
-			return Class.forName(className).getConstructor(Map.class)
-					.newInstance(getCustoms());
+			return Class.forName(className).getConstructor(Map.class).newInstance(getCustoms());
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Class '" + className
-					+ "' is not Conf Class", e);
+			throw new IllegalArgumentException("Class '" + className + "' is not Conf Class", e);
 		}
 	}
 

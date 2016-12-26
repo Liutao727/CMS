@@ -10,10 +10,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.QueryHints;
 
 import com.jspxcms.core.domain.Attribute;
-import com.jspxcms.core.domaindsl.QAttribute;
-import com.jspxcms.core.repository.AttributeDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.domain.QAttribute;
+import com.jspxcms.core.repository.plus.AttributeDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * AttributeDaoImpl
@@ -26,7 +26,7 @@ public class AttributeDaoImpl implements AttributeDaoPlus {
 		if (ArrayUtils.isEmpty(numbers)) {
 			return Collections.emptyList();
 		}
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Attribute> query = new JPAQuery<Attribute>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QAttribute attribute = QAttribute.attribute;
 		query.from(attribute);
@@ -46,7 +46,7 @@ public class AttributeDaoImpl implements AttributeDaoPlus {
 			exp = exp.and(e);
 		}
 		query.where(exp);
-		return query.list(attribute);
+		return query.fetch();
 	}
 
 	private EntityManager em;

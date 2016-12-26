@@ -59,7 +59,8 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.SimpleNodeIterator;
 
-import com.jspxcms.common.file.Files;
+import com.google.common.base.Objects;
+import com.jspxcms.common.file.FilesEx;
 import com.jspxcms.common.util.Reflections;
 import com.jspxcms.common.util.Strings;
 import com.jspxcms.common.web.Anchor;
@@ -81,8 +82,7 @@ import com.jspxcms.core.support.TitleText;
  */
 @Entity
 @Table(name = "cms_info")
-public class Info implements java.io.Serializable, Anchor, Siteable,
-		Commentable, PageUrlResolver {
+public class Info implements java.io.Serializable, Anchor, Siteable, Commentable, PageUrlResolver {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 附件类型
@@ -313,8 +313,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	@Transient
 	public void adjustStatus() {
 		String status = getStatus();
-		if (NORMAL.equals(status) || TOBE_PUBLISH.equals(status)
-				|| EXPIRED.equals(status)) {
+		if (NORMAL.equals(status) || TOBE_PUBLISH.equals(status) || EXPIRED.equals(status)) {
 			if (isBeforeOnline()) {
 				setStatus(TOBE_PUBLISH);
 			} else if (isAfterOnline()) {
@@ -419,9 +418,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	public boolean isDataPerm(User user) {
 		Integer siteId = getSite().getId();
 		Node node = getNode();
-		if (user.getAllInfoPerm(siteId)
-				|| Reflections.contains(user.getInfoPerms(siteId),
-						node.getId(), "id")) {
+		if (user.getAllInfoPerm(siteId) || Reflections.contains(user.getInfoPerms(siteId), node.getId(), "id")) {
 			Integer permType = user.getInfoPermType(siteId);
 			if (permType == Role.INFO_PERM_SELF) {
 				Integer creatorId = getCreator().getId();
@@ -482,8 +479,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 			return Reflections.containsAny(stepRoles, userRoles, "id");
 		} else if (isAuditing()) {
 			Integer currStepId = null;
-			if (process != null && !process.getEnd()
-					&& process.getStep() != null) {
+			if (process != null && !process.getEnd() && process.getStep() != null) {
 				currStepId = process.getStep().getId();
 			}
 			for (int i = size - 1; i >= 0; i--) {
@@ -519,16 +515,14 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	}
 
 	@Transient
-	public boolean isViewPerm(Collection<MemberGroup> groups,
-			Collection<Org> orgs) {
+	public boolean isViewPerm(Collection<MemberGroup> groups, Collection<Org> orgs) {
 		if (getNode().isViewPerm(groups, orgs)) {
 			return true;
 		}
 		if (Reflections.containsAny(getViewGroups(), groups, "id")) {
 			return true;
 		}
-		if (CollectionUtils.isNotEmpty(orgs)
-				&& Reflections.containsAny(getViewOrgs(), orgs, "id")) {
+		if (CollectionUtils.isNotEmpty(orgs) && Reflections.containsAny(getViewOrgs(), orgs, "id")) {
 			return true;
 		}
 		return false;
@@ -576,8 +570,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 
 	@Transient
 	public String getUrlDynamic(Integer page) {
-		boolean isFull = getSite().getWithDomain()
-				|| getSite().getIdentifyDomain();
+		boolean isFull = getSite().getWithDomain() || getSite().getIdentifyDomain();
 		return getUrlDynamic(page, isFull);
 	}
 
@@ -724,8 +717,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		// 根据设置处理缓冲。
 		Integer origComments = getComments();
 		Integer bufferComments = buffer.getComments() + comments;
-		if (bufferComments >= getSite().getGlobal().getOther()
-				.getBufferInfoComments()) {
+		if (bufferComments >= getSite().getGlobal().getOther().getBufferInfoComments()) {
 			buffer.setComments(0);
 			setComments(origComments + bufferComments);
 		} else {
@@ -1003,8 +995,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		Attribute attr;
 		for (InfoAttribute infoAttr : infoAttrs) {
 			attr = infoAttr.getAttribute();
-			if ((attrId == null && attr.getWithImage())
-					|| attr.getId().equals(attrId)) {
+			if ((attrId == null && attr.getWithImage()) || attr.getId().equals(attrId)) {
 				return infoAttr.getImage();
 			}
 		}
@@ -1374,7 +1365,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	@Transient
 	public String getVideoSize() {
 		Long length = getVideoLength();
-		return Files.getSize(length);
+		return FilesEx.getSize(length);
 	}
 
 	@Transient
@@ -1400,7 +1391,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	@Transient
 	public String getFileSize() {
 		Long length = getFileLength();
-		return Files.getSize(length);
+		return FilesEx.getSize(length);
 	}
 
 	@Transient
@@ -1740,6 +1731,23 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Info)) {
+			return false;
+		}
+		Info that = (Info) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
 	private List<InfoNode> infoNodes = new ArrayList<InfoNode>(0);
 	private List<InfoTag> infoTags = new ArrayList<InfoTag>(0);
@@ -1751,8 +1759,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 	private Map<String, String> clobs = new HashMap<String, String>(0);
 	private Set<InfoBuffer> buffers = new HashSet<InfoBuffer>(0);
 	private Set<InfoMemberGroup> infoGroups = new HashSet<InfoMemberGroup>(0);
-	private SortedSet<InfoOrg> infoOrgs = new TreeSet<InfoOrg>(
-			new InfoOrgComparator());
+	private SortedSet<InfoOrg> infoOrgs = new TreeSet<InfoOrg>(new InfoOrgComparator());
 	private Set<InfoProcess> processes = new HashSet<InfoProcess>(0);
 
 	private Node node;
@@ -1804,8 +1811,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.id = id;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "info")
-	@OrderBy("nodeIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
+	@OrderColumn(name = "f_node_index")
 	public List<InfoNode> getInfoNodes() {
 		return infoNodes;
 	}
@@ -1814,8 +1821,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.infoNodes = infoNodes;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "info")
-	@OrderBy("tagIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
+	@OrderColumn(name = "f_tag_index")
 	public List<InfoTag> getInfoTags() {
 		return infoTags;
 	}
@@ -1824,8 +1831,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.infoTags = infoTags;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "info")
-	@OrderBy("specialIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
+	@OrderColumn(name = "f_special_index")
 	public List<InfoSpecial> getInfoSpecials() {
 		return infoSpecials;
 	}
@@ -1834,7 +1841,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.infoSpecials = infoSpecials;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "info")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
 	@OrderBy("attribute asc")
 	public List<InfoAttribute> getInfoAttrs() {
 		return infoAttrs;
@@ -1902,7 +1909,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.buffers = buffers;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "info")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
 	public Set<InfoMemberGroup> getInfoGroups() {
 		return infoGroups;
 	}
@@ -1911,8 +1918,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.infoGroups = infoGroups;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "info")
-	// @Sort(type = SortType.COMPARATOR, comparator = InfoOrgComparator.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
 	@SortComparator(InfoOrgComparator.class)
 	public SortedSet<InfoOrg> getInfoOrgs() {
 		return infoOrgs;
@@ -1931,7 +1937,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable,
 		this.processes = processes;
 	}
 
-	@OneToOne(cascade = { REMOVE }, mappedBy = "info")
+	@OneToOne(cascade = { REMOVE }, mappedBy = "info", fetch = FetchType.LAZY)
 	public InfoDetail getDetail() {
 		return detail;
 	}

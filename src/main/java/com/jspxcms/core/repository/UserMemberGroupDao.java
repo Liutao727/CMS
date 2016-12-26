@@ -5,16 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.UserMemberGroup;
+import com.jspxcms.core.domain.UserMemberGroup.UserMemberGroupId;
 
-public interface UserMemberGroupDao extends
-		Repository<UserMemberGroup, Integer> {
-	public UserMemberGroup findOne(Integer id);
-
-	public UserMemberGroup save(UserMemberGroup bean);
-
-	public void delete(UserMemberGroup bean);
-
-	public void delete(Iterable<UserMemberGroup> beans);
+public interface UserMemberGroupDao extends Repository<UserMemberGroup, UserMemberGroupId> {
+	public UserMemberGroup findOne(UserMemberGroupId id);
 
 	// --------------------
 

@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.User;
+import com.jspxcms.core.repository.plus.UserDaoPlus;
 
 /**
  * UserDao

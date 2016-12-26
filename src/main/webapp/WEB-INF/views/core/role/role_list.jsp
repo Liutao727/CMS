@@ -53,6 +53,10 @@ function optDelete(form) {
 	form.submit();
 	return true;
 }
+
+$(function() {
+	$("#validForm").validate();
+});
 </script>
 </head>
 <body class="c-body">
@@ -68,7 +72,7 @@ function optDelete(form) {
 	  <label class="c-lab"><input type="submit" value="<s:message code="search"/>"/></label>
   </fieldset>
 </form>
-<form action="batch_update.do" method="post">
+<form id="validForm" action="batch_update.do" method="post">
 <tags:search_params/>
 <div class="ls-bc-opt">
 	<shiro:hasPermission name="core:role:create">
@@ -104,6 +108,7 @@ function optDelete(form) {
     <th width="110"><s:message code="operate"/></th>
     <th width="30" class="ls-th-sort"><span class="ls-sort" pagesort="id">ID</span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="name"><s:message code="role.name"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="rank"><s:message code="role.rank"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="description"><s:message code="role.description"/></span></th>
   </tr>
   </thead>
@@ -123,8 +128,9 @@ function optDelete(form) {
       </shiro:hasPermission>
      </td>
     <td><c:out value="${bean.id}"/><f:hidden name="id" value="${bean.id}"/></td>
-    <td align="center"><f:text name="name" value="${bean.name}" style="width:150px;"/></td>
-    <td align="center"><f:text name="description" value="${bean.description}" style="width:200px;"/></td>
+    <td align="center"><f:text id="name_${status.index}" name="name" value="${bean.name}" class="required" maxlength="100" style="width:150px;"/></td>
+    <td align="center"><f:text id="rank_${status.index}" name="rank" value="${bean.rank}" class="required digits" maxlength="10" style="width:150px;"/></td>
+    <td align="center"><f:text id="description_${status.index}" name="description" value="${bean.description}" maxlength="255" style="width:200px;"/></td>
   </tr>
   </c:forEach>
   </tbody>

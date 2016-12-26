@@ -12,6 +12,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Attachment;
+import com.jspxcms.core.repository.plus.AttachmentDaoPlus;
 
 public interface AttachmentDao extends Repository<Attachment, Integer>,
 		AttachmentDaoPlus {

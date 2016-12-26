@@ -11,6 +11,9 @@
 
 	<bean id="pathResolver" class="com.jspxcms.common.web.ServletContextPathResolver" />
 	<bean id="credentialsDigest" class="com.jspxcms.common.security.SHA1CredentialsDigest" />
-  <bean id="uploadHandler" class="com.jspxcms.core.support.UploadHandlerImpl" />
-	
+	<bean id="uploadHandler" class="com.jspxcms.core.support.UploadHandlerImpl" />
+	<bean id="ipSeeker" class="com.jspxcms.common.ip.IPSeeker">
+		<constructor-arg value="classpath:qqwry.dat" />
+	</bean>
+
 </beans>

@@ -12,6 +12,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Guestbook;
+import com.jspxcms.ext.repository.plus.GuestbookDaoPlus;
 
 /**
  * GuestbookDao

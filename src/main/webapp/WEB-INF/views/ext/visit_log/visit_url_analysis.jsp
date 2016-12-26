@@ -65,14 +65,23 @@ function optDelete(form) {
   <span class="c-position"><s:message code="visitLog.urlAnalysis"/></span>
 	<span class="c-total">(<s:message code="totalElements" arguments="${fn:length(list)}"/>)</span>
 </div>
-<form action="url_analysis.do" method="get">
-	<fieldset class="c-fieldset">
-    <legend><s:message code="search"/></legend>
-	  <label class="c-lab"><s:message code="beginDate"/>: <f:text name="begin" value="${begin}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
-	  <label class="c-lab"><s:message code="endDate"/>: <f:text name="end" value="${end}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
+<fieldset class="c-fieldset">
+  <legend><s:message code="search"/></legend>
+  <span id="radio">
+    <input type="radio" id="radioToday" onclick="location.href='url_analysis.do?period=today';"<c:if test="${period eq 'today'}"> checked="checked"</c:if>/><label for="radioToday"><s:message code="visitLog.trafficAnalysis.today"/></label>
+		<input type="radio" id="radioYesterday" onclick="location.href='url_analysis.do?period=yesterday';"<c:if test="${period eq 'yesterday'}"> checked="checked"</c:if>/><label for="radioYesterday"><s:message code="visitLog.trafficAnalysis.yesterday"/></label>
+		<input type="radio" id="radioLast7Day" onclick="location.href='url_analysis.do?period=last7Day';"<c:if test="${period eq 'last7Day'}"> checked="checked"</c:if>/><label for="radioLast7Day"><s:message code="visitLog.trafficAnalysis.last7Day"/></label>
+		<input type="radio" id="radioLast30Day" onclick="location.href='url_analysis.do?period=last30Day';"<c:if test="${period eq 'last30Day'}"> checked="checked"</c:if>/><label for="radioLast30Day"><s:message code="visitLog.trafficAnalysis.last30Day"/></label>
+	</span>
+	<script type="text/javascript">
+	$("#radio").buttonset();
+	</script>
+  <form action="url_analysis.do" method="get" style="display:inline;">
+	  <label class="c-lab"><s:message code="beginDate"/>: <input type="text" name="begin" value="<fmt:formatDate value='${begin}' pattern='yyyy-MM-dd'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
+	  <label class="c-lab"><s:message code="endDate"/>: <input type="text" name="end" value="<fmt:formatDate value='${end}' pattern='yyyy-MM-dd'/>" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
 	  <label class="c-lab"><input type="submit" value="<s:message code="search"/>"/></label>
-  </fieldset>
-</form>
+  </form>
+</fieldset>
 <form action="url_analysis.do" method="post">
 <table id="pagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb margin-top5">
   <thead>
@@ -85,10 +94,10 @@ function optDelete(form) {
   </tr>
   </thead>
   <tbody>
-  <c:forEach var="bean" varStatus="status" items="${list}">
+  <c:forEach var="bean" varStatus="status" items="${pagedList.content}">
   <tr>
     <td>${status.count}</td>
-    <td><c:out value="${bean[0]}"/></td>
+    <td><a href="<c:out value="${bean[0]}"/>" target="_blank" style="color:blue;"><c:out value="${bean[0]}"/></td>
     <td align="right"><c:out value="${bean[1]}"/></td>
     <td align="right"><c:out value="${bean[2]}"/></td>
     <td align="right"><c:out value="${bean[3]}"/></td>
@@ -96,14 +105,14 @@ function optDelete(form) {
   </c:forEach>
   </tbody>
 </table>
-<c:if test="${fn:length(list) le 0}"> 
+<c:if test="${fn:length(pagedList.content) le 0}"> 
 <div class="ls-norecord margin-top5"><s:message code="recordNotFound"/></div>
 </c:if>
 </form>
 <form action="url_analysis.do" method="get" class="ls-page">
-	<f:hidden name="begin" value="${begin}"/>
-	<f:hidden name="end" value="${end}"/>
-  <%-- <tags:pagination pagedList="${pagedList}"/> --%>
+	<input type="hidden" name="begin" value="<fmt:formatDate value='${begin}' pattern='yyyy-MM-dd'/>"/>
+	<input type="hidden" name="end" value="<fmt:formatDate value='${end}' pattern='yyyy-MM-dd'/>"/>
+  <tags:pagination pagedList="${pagedList}"/>
 </form>
 </body>
 </html>

@@ -6,7 +6,7 @@ import com.jspxcms.common.file.FileHandler;
 import com.jspxcms.core.service.AttachmentService;
 
 /**
- * 上传DOC文件。将doc文件转换成pdf，将pdf文件转化成swf文件。
+ * 上传DOC文件。将doc文件转换成pdf，将pdf文件转化成swf文件。本功能在商业版中提供。
  * 
  * @author liufang
  *

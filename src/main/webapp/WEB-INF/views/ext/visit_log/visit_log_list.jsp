@@ -85,9 +85,14 @@ function optDelete(form) {
 <form action="list.do" method="get">
 	<fieldset class="c-fieldset">
     <legend><s:message code="search"/></legend>
+	  <label class="c-lab"><s:message code="visitLog.username"/>: <input type="text" name="search_LIKE_user.username" value="${requestScope['search_LIKE_user.username'][0]}" style="width:150px;"/></label>
 	  <label class="c-lab"><s:message code="visitLog.url"/>: <input type="text" name="search_CONTAIN_url" value="${search_CONTAIN_url[0]}" style="width:150px;"/></label>
 	  <label class="c-lab"><s:message code="visitLog.referrer"/>: <input type="text" name="search_CONTAIN_referrer" value="${search_CONTAIN_referrer[0]}" style="width:150px;"/></label>
 	  <label class="c-lab"><s:message code="visitLog.ip"/>: <input type="text" name="search_CONTAIN_ip" value="${search_CONTAIN_ip[0]}" style="width:120px;"/></label>
+	  <label class="c-lab"><s:message code="visitLog.country"/>: <input type="text" name="search_LIKE_country" value="${search_LIKE_country[0]}" style="width:120px;"/></label>
+	  <label class="c-lab"><s:message code="visitLog.area"/>: <input type="text" name="search_LIKE_area" value="${search_LIKE_area[0]}" style="width:120px;"/></label>
+	  <label class="c-lab"><s:message code="visitLog.browser"/>: <input type="text" name="search_CONTAIN_browser" value="${search_CONTAIN_browser[0]}" style="width:120px;"/></label>
+	  <label class="c-lab"><s:message code="visitLog.os"/>: <input type="text" name="search_CONTAIN_os" value="${search_CONTAIN_os[0]}" style="width:120px;"/></label>
 	  <label class="c-lab"><s:message code="beginTime"/>: <f:text name="search_GTE_time_Date" value="${search_GTE_time_Date[0]}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
 	  <label class="c-lab"><s:message code="endTime"/>: <f:text name="search_LTE_time_Date" value="${search_LTE_time_Date[0]}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" style="width:80px;"/></label>
 	  <label class="c-lab"><input type="submit" value="<s:message code="search"/>"/></label>
@@ -118,6 +123,11 @@ function optDelete(form) {
     <th class="ls-th-sort"><span class="ls-sort" pagesort="url"><s:message code="visitLog.url"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="referrer"><s:message code="visitLog.referrer"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="ip"><s:message code="visitLog.ip"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="user.username"><s:message code="visitLog.username"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="country"><s:message code="visitLog.country"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="area"><s:message code="visitLog.area"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="browser"><s:message code="visitLog.browser"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="os"><s:message code="visitLog.os"/></span></th>
   </tr>
   </thead>
   <tbody>
@@ -137,11 +147,16 @@ function optDelete(form) {
     <td><c:out value="${bean.url}"/></td>
     <td><c:out value="${bean.referrer}"/></td>
     <td><c:out value="${bean.ip}"/></td>
+    <td><c:out value="${bean.user.username}"/></td>
+    <td><c:out value="${bean.country}"/></td>
+    <td><c:out value="${bean.area}"/></td>
+    <td><c:out value="${bean.browser}"/></td>
+    <td><c:out value="${bean.os}"/></td>
   </tr>
   </c:forEach>
   </tbody>
 </table>
-<c:if test="${fn:length(pagedList.content) le 0}"> 
+<c:if test="${fn:length(pagedList.content) le 0}">
 <div class="ls-norecord margin-top5"><s:message code="recordNotFound"/></div>
 </c:if>
 </form>

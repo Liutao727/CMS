@@ -30,7 +30,7 @@ import com.jspxcms.common.file.CommonFile;
 import com.jspxcms.common.file.CommonFileFilter;
 import com.jspxcms.common.file.DirCommonFileFilter;
 import com.jspxcms.common.file.FileHandler;
-import com.jspxcms.common.file.Files;
+import com.jspxcms.common.file.FilesEx;
 import com.jspxcms.common.file.LocalFileHandler;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.common.web.Servlets;
@@ -497,7 +497,7 @@ public abstract class WebFileControllerAbstractor {
 			throw new CmsException("invalidURI");
 		}
 		File parentFile = localFileHandler.getFile(parentId);
-		File tempFile = Files.getTempFile();
+		File tempFile = FilesEx.getTempFile();
 		file.transferTo(tempFile);
 		AntZipUtils.unzip(tempFile, parentFile);
 		tempFile.delete();

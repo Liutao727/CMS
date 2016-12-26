@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Question;
+import com.jspxcms.ext.repository.plus.QuestionDaoPlus;
 
 public interface QuestionDao extends Repository<Question, Integer>,
 		QuestionDaoPlus {

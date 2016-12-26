@@ -13,11 +13,11 @@ import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
+import com.jspxcms.core.domain.QSpecial;
 import com.jspxcms.core.domain.Special;
-import com.jspxcms.core.domaindsl.QSpecial;
-import com.jspxcms.core.repository.SpecialDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.repository.plus.SpecialDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * SpecialDaoImpl
@@ -29,7 +29,7 @@ public class SpecialDaoImpl implements SpecialDaoPlus {
 	public List<Special> findList(Integer[] siteId, Integer[] categoryId,
 			Date beginDate, Date endDate, Boolean isWithImage,
 			Boolean isRecommend, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Special> query = new JPAQuery<Special>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QSpecial special = QSpecial.special;
 		predicate(query, special, siteId, categoryId, beginDate, endDate,
@@ -40,7 +40,7 @@ public class SpecialDaoImpl implements SpecialDaoPlus {
 	public Page<Special> findPage(Integer[] siteId, Integer[] categoryId,
 			Date beginDate, Date endDate, Boolean isWithImage,
 			Boolean isRecommend, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Special> query = new JPAQuery<Special>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QSpecial special = QSpecial.special;
 		predicate(query, special, siteId, categoryId, beginDate, endDate,
@@ -48,7 +48,7 @@ public class SpecialDaoImpl implements SpecialDaoPlus {
 		return QuerydslUtils.page(query, special, pageable);
 	}
 
-	private void predicate(JPAQuery query, QSpecial special, Integer[] siteId,
+	private void predicate(JPAQuery<Special> query, QSpecial special, Integer[] siteId,
 			Integer[] categoryId, Date beginDate, Date endDate,
 			Boolean isWithImage, Boolean isRecommend) {
 		query.from(special);

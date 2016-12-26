@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -62,6 +63,26 @@ public abstract class ElFunction {
 			return false;
 		}
 		return container.contains(element);
+	}
+
+	public static boolean contains(Collection<?> container, String property,
+			Object element) {
+		if (container == null || StringUtils.isBlank(property)
+				|| element == null) {
+			return false;
+		}
+		boolean contains = false;
+		try {
+			for (Object obj : container) {
+				Object value = PropertyUtils.getProperty(obj, property);
+				if (element.equals(value)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			return contains;
+		}
+		return contains;
 	}
 
 	public static Object invoke(Object obj, String method)

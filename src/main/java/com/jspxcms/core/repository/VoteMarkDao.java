@@ -10,6 +10,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.VoteMark;
+import com.jspxcms.core.repository.plus.VoteMarkDaoPlus;
 
 public interface VoteMarkDao extends Repository<VoteMark, Integer>,
 		VoteMarkDaoPlus {

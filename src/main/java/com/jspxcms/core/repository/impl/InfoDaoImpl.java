@@ -17,24 +17,24 @@ import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domaindsl.QAttribute;
-import com.jspxcms.core.domaindsl.QInfo;
-import com.jspxcms.core.domaindsl.QInfoAttribute;
-import com.jspxcms.core.domaindsl.QInfoDetail;
-import com.jspxcms.core.domaindsl.QInfoMemberGroup;
-import com.jspxcms.core.domaindsl.QInfoNode;
-import com.jspxcms.core.domaindsl.QInfoOrg;
-import com.jspxcms.core.domaindsl.QInfoSpecial;
-import com.jspxcms.core.domaindsl.QInfoTag;
-import com.jspxcms.core.domaindsl.QNode;
-import com.jspxcms.core.domaindsl.QNodeMemberGroup;
-import com.jspxcms.core.domaindsl.QNodeOrg;
-import com.jspxcms.core.domaindsl.QSpecial;
-import com.jspxcms.core.domaindsl.QTag;
-import com.jspxcms.core.repository.InfoDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.path.StringPath;
+import com.jspxcms.core.domain.QAttribute;
+import com.jspxcms.core.domain.QInfo;
+import com.jspxcms.core.domain.QInfoAttribute;
+import com.jspxcms.core.domain.QInfoDetail;
+import com.jspxcms.core.domain.QInfoMemberGroup;
+import com.jspxcms.core.domain.QInfoNode;
+import com.jspxcms.core.domain.QInfoOrg;
+import com.jspxcms.core.domain.QInfoSpecial;
+import com.jspxcms.core.domain.QInfoTag;
+import com.jspxcms.core.domain.QNode;
+import com.jspxcms.core.domain.QNodeMemberGroup;
+import com.jspxcms.core.domain.QNodeOrg;
+import com.jspxcms.core.domain.QSpecial;
+import com.jspxcms.core.domain.QTag;
+import com.jspxcms.core.repository.plus.InfoDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * InfoDaoImpl
@@ -43,58 +43,42 @@ import com.mysema.query.types.path.StringPath;
  * 
  */
 public class InfoDaoImpl implements InfoDaoPlus {
-	public List<Info> findList(Integer[] modelId, Integer[] nodeId,
-			Integer[] attrId, Integer[] specialId, Integer[] tagId,
-			Integer[] siteId, Integer[] mainNodeId, Integer[] userId,
-			Integer[] viewGroupId, Integer[] viewOrgId, String[] treeNumber,
-			String[] specialTitle, String[] tagName, Integer[] priority,
-			Date beginDate, Date endDate, String[] title, Integer[] includeId,
-			Integer[] excludeId, Integer[] excludeMainNodeId,
-			String[] excludeTreeNumber, Boolean isWithImage, String[] status,
-			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
-			Integer[] p5, Integer[] p6, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+	public List<Info> findList(Integer[] modelId, Integer[] nodeId, Integer[] attrId, Integer[] specialId,
+			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
+			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
+			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Limitable limitable) {
+		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QInfo info = QInfo.info;
-		predicate(query, info, modelId, nodeId, attrId, specialId, tagId,
-				siteId, mainNodeId, userId, viewGroupId, viewOrgId, treeNumber,
-				specialTitle, tagName, priority, beginDate, endDate, title,
-				includeId, excludeId, excludeMainNodeId, excludeTreeNumber,
-				isWithImage, status, p1, p2, p3, p4, p5, p6);
+		predicate(query, info, modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
+				viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
+				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.list(query, info, limitable);
 	}
 
-	public Page<Info> findPage(Integer[] modelId, Integer[] nodeId,
-			Integer[] attrId, Integer[] specialId, Integer[] tagId,
-			Integer[] siteId, Integer[] mainNodeId, Integer[] userId,
-			Integer[] viewGroupId, Integer[] viewOrgId, String[] treeNumber,
-			String[] specialTitle, String[] tagName, Integer[] priority,
-			Date beginDate, Date endDate, String[] title, Integer[] includeId,
-			Integer[] excludeId, Integer[] excludeMainNodeId,
-			String[] excludeTreeNumber, Boolean isWithImage, String[] status,
-			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
-			Integer[] p5, Integer[] p6, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+	public Page<Info> findPage(Integer[] modelId, Integer[] nodeId, Integer[] attrId, Integer[] specialId,
+			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
+			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
+			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Pageable pageable) {
+		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QInfo info = QInfo.info;
-		predicate(query, info, modelId, nodeId, attrId, specialId, tagId,
-				siteId, mainNodeId, userId, viewGroupId, viewOrgId, treeNumber,
-				specialTitle, tagName, priority, beginDate, endDate, title,
-				includeId, excludeId, excludeMainNodeId, excludeTreeNumber,
-				isWithImage, status, p1, p2, p3, p4, p5, p6);
+		predicate(query, info, modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
+				viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
+				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.page(query, info, pageable);
 	}
 
-	private void predicate(JPAQuery query, QInfo info, Integer[] modelId,
-			Integer[] nodeId, Integer[] attrId, Integer[] specialId,
-			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId,
-			Integer[] userId, Integer[] viewGroupId, Integer[] viewOrgId,
-			String[] treeNumber, String[] specialTitle, String[] tagName,
-			Integer[] priority, Date beginDate, Date endDate, String[] title,
-			Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber,
-			Boolean isWithImage, String[] status, Integer[] p1, Integer[] p2,
-			Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6) {
+	private void predicate(JPAQuery<Info> query, QInfo info, Integer[] modelId, Integer[] nodeId, Integer[] attrId,
+			Integer[] specialId, Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId,
+			Integer[] viewGroupId, Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName,
+			Integer[] priority, Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6) {
 		boolean isDistinct = false;
 		query.from(info);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -114,8 +98,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		if (ArrayUtils.isNotEmpty(attrId)) {
 			QInfoAttribute infoAttr = QInfoAttribute.infoAttribute;
 			QAttribute attr = QAttribute.attribute;
-			query.innerJoin(info.infoAttrs, infoAttr).innerJoin(
-					infoAttr.attribute, attr);
+			query.innerJoin(info.infoAttrs, infoAttr).innerJoin(infoAttr.attribute, attr);
 			exp = exp.and(attr.id.in(attrId));
 			if (attrId.length > 1) {
 				isDistinct = true;
@@ -194,23 +177,19 @@ public class InfoDaoImpl implements InfoDaoPlus {
 			if (viewGroupId != null && viewGroupId.length > 0) {
 				QNodeMemberGroup nodeGroup = QNodeMemberGroup.nodeMemberGroup;
 				query.leftJoin(info.node.nodeGroups, nodeGroup);
-				e = e.or(nodeGroup.group.id.in(viewGroupId).and(
-						nodeGroup.viewPerm.eq(true)));
+				e = e.or(nodeGroup.group.id.in(viewGroupId).and(nodeGroup.viewPerm.eq(true)));
 				QInfoMemberGroup infoGroup = QInfoMemberGroup.infoMemberGroup;
 				query.leftJoin(info.infoGroups, infoGroup);
-				e = e.or(infoGroup.group.id.in(viewGroupId).and(
-						infoGroup.viewPerm.eq(true)));
+				e = e.or(infoGroup.group.id.in(viewGroupId).and(infoGroup.viewPerm.eq(true)));
 				isDistinct = true;
 			}
 			if (viewOrgId != null && viewOrgId.length > 0) {
 				QNodeOrg nodeOrg = QNodeOrg.nodeOrg;
 				query.leftJoin(info.node.nodeOrgs, nodeOrg);
-				e = e.or(nodeOrg.org.id.in(viewOrgId).and(
-						nodeOrg.viewPerm.eq(true)));
+				e = e.or(nodeOrg.org.id.in(viewOrgId).and(nodeOrg.viewPerm.eq(true)));
 				QInfoOrg infoOrg = QInfoOrg.infoOrg;
 				query.leftJoin(info.infoOrgs, infoOrg);
-				e = e.or(infoOrg.org.id.in(viewOrgId).and(
-						infoOrg.viewPerm.eq(true)));
+				e = e.or(infoOrg.org.id.in(viewOrgId).and(infoOrg.viewPerm.eq(true)));
 				isDistinct = true;
 			}
 			exp = exp.and(e);
@@ -228,8 +207,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 			}
 			if (isExcludeTreeNumber) {
 				for (int i = 0, len = excludeTreeNumber.length; i < len; i++) {
-					exp = exp
-							.and(tnPath.startsWith(excludeTreeNumber[i]).not());
+					exp = exp.and(tnPath.startsWith(excludeTreeNumber[i]).not());
 				}
 			}
 		}
@@ -294,9 +272,8 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		}
 	}
 
-	public Info findNext(Integer siteId, Integer nodeId, Integer id,
-			Date publishDate) {
-		JPAQuery query = new JPAQuery(this.em);
+	public Info findNext(Integer siteId, Integer nodeId, Integer id, Date publishDate) {
+		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		QInfo info = QInfo.info;
 		query.from(info);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -305,19 +282,18 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		} else if (siteId != null) {
 			exp = exp.and(info.site.id.eq(siteId));
 		}
-		exp = exp.and(info.publishDate.gt(publishDate));
-		exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
+		exp = exp.and(info.publishDate.gt(publishDate).or(info.publishDate.eq(publishDate).and(info.id.gt(id))));
+		// exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
 		exp = exp.and(info.status.eq(Info.NORMAL));
 		query.where(exp);
 		query.orderBy(info.publishDate.asc(), info.id.asc());
 		query.limit(1);
-		List<Info> list = query.list(info);
+		List<Info> list = query.fetch();
 		return list.isEmpty() ? null : list.get(0);
 	}
 
-	public Info findPrev(Integer siteId, Integer nodeId, Integer id,
-			Date publishDate) {
-		JPAQuery query = new JPAQuery(this.em);
+	public Info findPrev(Integer siteId, Integer nodeId, Integer id, Date publishDate) {
+		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		QInfo info = QInfo.info;
 		query.from(info);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -326,18 +302,18 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		} else if (siteId != null) {
 			exp = exp.and(info.site.id.eq(siteId));
 		}
-		exp = exp.and(info.publishDate.lt(publishDate));
-		exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
+		exp = exp.and(info.publishDate.lt(publishDate).or(info.publishDate.eq(publishDate).and(info.id.lt(id))));
+		// exp = exp.and(info.id.lt(id).or(info.id.gt(id)));
 		exp = exp.and(info.status.eq(Info.NORMAL));
 		query.where(exp);
 		query.orderBy(info.publishDate.desc(), info.id.desc());
 		query.limit(1);
-		List<Info> list = query.list(info);
+		List<Info> list = query.fetch();
 		return list.isEmpty() ? null : list.get(0);
 	}
 
-	public List<Info> findForHtml(Integer siteId, Integer nodeId,
-			String treeNumber, boolean forUpdate, Integer lastId, int maxResult) {
+	public List<Info> findForHtml(Integer siteId, Integer nodeId, String treeNumber, boolean forUpdate, Integer lastId,
+			int maxResult) {
 		JpqlBuilder jb = new JpqlBuilder("from Info bean where 1=1");
 		jb.append(" and bean.site.id = :siteId");
 		if (lastId != null) {

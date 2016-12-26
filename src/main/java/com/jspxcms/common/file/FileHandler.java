@@ -20,13 +20,11 @@ import freemarker.template.Template;
  */
 public abstract class FileHandler {
 
-	public static FileHandler getFileHandler(PathResolver pathResolver,
-			String prefix) {
+	public static LocalFileHandler getLocalFileHandler(PathResolver pathResolver, String prefix) {
 		return new LocalFileHandler(pathResolver, prefix);
 	}
 
-	public static FileHandler getFileHandler(FtpTemplate ftpTemplate,
-			String prefix) {
+	public static FileHandler getFileHandler(FtpTemplate ftpTemplate, String prefix) {
 		return new FtpFileHandler(ftpTemplate, prefix);
 	}
 
@@ -48,36 +46,30 @@ public abstract class FileHandler {
 
 	public abstract void move(String dest, String id);
 
-	public abstract void store(String text, String name, String path)
+	public abstract void store(String text, String name, String path) throws IOException;
+
+	public abstract void store(MultipartFile file, String path) throws IllegalStateException, IOException;
+
+	public abstract void storeFile(InputStream source, String filename) throws IllegalStateException, IOException;
+
+	public abstract void storeFile(MultipartFile file, String filename) throws IllegalStateException, IOException;
+
+	public abstract void storeFile(File file, String filename) throws IllegalStateException, IOException;
+
+	public abstract void storeFile(List<File> files, List<String> filenames) throws IllegalStateException, IOException;
+
+	public abstract void storeFile(final Template template, final Object rootMap, final String filename);
+
+	public abstract void storeImage(BufferedImage image, String extension, String filename) throws IOException;
+
+	public abstract void storeImages(List<BufferedImage> images, String formatName, List<String> filenames)
 			throws IOException;
-
-	public abstract void store(MultipartFile file, String path)
-			throws IllegalStateException, IOException;
-
-	public abstract void storeFile(InputStream source, String filename)
-			throws IllegalStateException, IOException;
-
-	public abstract void storeFile(MultipartFile file, String filename)
-			throws IllegalStateException, IOException;
-
-	public abstract void storeFile(File file, String filename)
-			throws IllegalStateException, IOException;
-
-	public abstract void storeFile(List<File> files, List<String> filenames)
-			throws IllegalStateException, IOException;
-
-	public abstract void storeFile(final Template template,
-			final Object rootMap, final String filename);
-
-	public abstract void storeImage(BufferedImage image, String extension,
-			String filename) throws IOException;
-
-	public abstract void storeImages(List<BufferedImage> images,
-			String formatName, List<String> filenames) throws IOException;
 
 	public abstract boolean delete(String[] ids);
 
 	public abstract boolean delete(String id);
+
+	public abstract File getFile(String id);
 
 	public abstract CommonFile get(String id, String displayPath);
 
@@ -91,10 +83,8 @@ public abstract class FileHandler {
 
 	public abstract List<CommonFile> listFiles(String path, String displayPath);
 
-	public abstract List<CommonFile> listFiles(String search, String path,
-			String displayPath);
+	public abstract List<CommonFile> listFiles(String search, String path, String displayPath);
 
-	public abstract List<CommonFile> listFiles(CommonFileFilter filter,
-			String path, String displayPath);
+	public abstract List<CommonFile> listFiles(CommonFileFilter filter, String path, String displayPath);
 
 }

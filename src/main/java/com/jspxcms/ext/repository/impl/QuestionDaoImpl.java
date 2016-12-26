@@ -16,7 +16,7 @@ import org.springframework.data.domain.Sort.Order;
 import com.jspxcms.common.orm.JpqlBuilder;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Question;
-import com.jspxcms.ext.repository.QuestionDaoPlus;
+import com.jspxcms.ext.repository.plus.QuestionDaoPlus;
 
 public class QuestionDaoImpl implements QuestionDaoPlus {
 	public List<Question> findList(Integer userId, Integer historyUserId, Boolean inPeriod, Integer[] status,

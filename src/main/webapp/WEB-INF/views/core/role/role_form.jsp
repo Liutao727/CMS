@@ -61,9 +61,16 @@ function confirmDelete() {
   </tr>
   <tr>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="role.name"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="name" value="${oprt=='edit' ? bean.name : ''}" class="required" maxlength="255" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text name="name" value="${oprt=='edit' ? bean.name : ''}" class="required" maxlength="100" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="role.rank"/>:</td>
+    <td class="in-ctt" width="35%">
+    	<f:text name="rank" value="${bean.rank}" class="required digits" maxlength="10" default="999" style="width:180px;"/>
+    	<span class="in-prompt" title="<s:message code='role.rank.prompt' htmlEscape='true'/>"></span>
+		</td>
+  </tr>
+  <tr>
     <td class="in-lab" width="15%"><s:message code="role.description"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="description" value="${bean.description}" maxlength="255" style="width:180px;"/></td>
+    <td class="in-ctt" width="85%" colspan="3"><f:text name="description" value="${bean.description}" maxlength="255" style="width:500px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="role.perms"/>:</td>

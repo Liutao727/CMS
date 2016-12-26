@@ -9,10 +9,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.QueryHints;
 
 import com.jspxcms.core.domain.Model;
-import com.jspxcms.core.domaindsl.QModel;
-import com.jspxcms.core.repository.ModelDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.domain.QModel;
+import com.jspxcms.core.repository.plus.ModelDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * ModelDaoImpl
@@ -22,7 +22,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
  */
 public class ModelDaoImpl implements ModelDaoPlus {
 	public List<Model> findList(Integer siteId, String type) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Model> query = new JPAQuery<Model>(this.em);
 		QModel model = QModel.model;
 		query.from(model);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -32,11 +32,11 @@ public class ModelDaoImpl implements ModelDaoPlus {
 		}
 		query.where(exp);
 		query.orderBy(model.seq.asc());
-		return query.list(model);
+		return query.fetch();
 	}
 
 	public Model findDefault(Integer siteId, String type) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Model> query = new JPAQuery<Model>(this.em);
 		QModel model = QModel.model;
 		query.from(model);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -47,7 +47,7 @@ public class ModelDaoImpl implements ModelDaoPlus {
 		query.where(exp);
 		query.orderBy(model.seq.asc());
 		query.limit(1);
-		List<Model> list = query.list(model);
+		List<Model> list = query.fetch();
 		return !list.isEmpty() ? list.get(0) : null;
 	}
 
@@ -55,7 +55,7 @@ public class ModelDaoImpl implements ModelDaoPlus {
 		if (ArrayUtils.isEmpty(numbers)) {
 			return Collections.emptyList();
 		}
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Model> query = new JPAQuery<Model>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QModel model = QModel.model;
 		query.from(model);
@@ -76,7 +76,7 @@ public class ModelDaoImpl implements ModelDaoPlus {
 			exp = exp.and(e);
 		}
 		query.where(exp);
-		return query.list(model);
+		return query.fetch();
 	}
 
 	private EntityManager em;

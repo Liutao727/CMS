@@ -1,0 +1,183 @@
+package com.jspxcms.core.service.impl;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.core.domain.Message;
+import com.jspxcms.core.domain.MessageText;
+import com.jspxcms.core.domain.User;
+import com.jspxcms.core.repository.MessageDao;
+import com.jspxcms.core.service.MessageService;
+import com.jspxcms.core.service.UserService;
+
+@Service
+@Transactional(readOnly = true)
+public class MessageServiceImpl implements MessageService {
+	@Override
+	public Page<Message> findAll(Map<String, String[]> params, Pageable pageable) {
+		return dao.findAll(spec(params), pageable);
+	}
+
+	@Override
+	public RowSide<Message> findSide(Map<String, String[]> params, Message bean, Integer position, Sort sort) {
+		if (position == null) {
+			return new RowSide<Message>();
+		}
+		Limitable limit = RowSide.limitable(position, sort);
+		List<Message> list = dao.findAll(spec(params), limit);
+		return RowSide.create(list, bean);
+	}
+
+	private Specification<Message> spec(Map<String, String[]> params) {
+		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
+		Specification<Message> sp = SearchFilter.spec(filters, Message.class);
+		return sp;
+	}
+
+	@Override
+	public Page<Object[]> findByUserId(Integer userId, boolean unread, Pageable pageable) {
+		Page<Object[]> page = dao.groupByUserId(userId, unread, pageable);
+		List<Object[]> content = page.getContent();
+		List<Object[]> resultList = new ArrayList<Object[]>();
+		for (int i = 0, len = content.size(); i < len; i++) {
+			Message message = get((Integer) content.get(i)[0]);
+			User user = userService.get((Integer) content.get(i)[1]);
+			resultList.add(i, ArrayUtils.addAll(new Object[] { message, user }, content.get(i)));
+		}
+		return new PageImpl<Object[]>(resultList, pageable, page.getTotalElements());
+	}
+
+	@Override
+	public Page<Message> findByContactId(Integer userId, Integer contactId, Pageable pageable) {
+		return dao.findByContactId(userId, contactId, pageable);
+	}
+
+	@Override
+	public Message get(Integer id) {
+		return dao.findOne(id);
+	}
+
+	@Override
+	@Transactional
+	public Message save(Message bean) {
+		bean.applyDefaultValue();
+		bean = dao.save(bean);
+		return bean;
+	}
+
+	@Override
+	@Transactional
+	public Message send(Integer senderId, Integer receiverId, MessageText messageText) {
+		Message bean = new Message();
+		User sender = userService.get(senderId);
+		bean.setSender(sender);
+		User receiver = userService.get(receiverId);
+		bean.setReceiver(receiver);
+		bean.setMessageText(messageText);
+		messageText.setMessage(bean);
+		return save(bean);
+	}
+
+	@Override
+	@Transactional
+	public Message update(Message bean) {
+		bean.applyDefaultValue();
+		bean = dao.save(bean);
+		return bean;
+	}
+
+	@Override
+	@Transactional
+	public int setRead(Integer userId, Integer senderId) {
+		return dao.setRead(userId, senderId);
+	}
+
+	@Override
+	@Transactional
+	public int deleteByContactId(Integer userId, Integer contactId) {
+		int number = dao.deleteByContactId(userId, contactId);
+		number += dao.setDeleteFlagBySender(userId, contactId);
+		number += dao.setDeleteFlagByReceiver(contactId, userId);
+		return number;
+	}
+
+	@Override
+	@Transactional
+	public int deleteById(Integer[] ids, Integer userId) {
+		int number = 0;
+		for (Integer id : ids) {
+			Message bean = get(id);
+			if (bean.getReceiver().getId().equals(userId)) {
+				// 接收方删除
+				if (bean.getDeletionFlag() == Message.DELETION_SEND) {
+					// 发送方已经删除，则彻底删除
+					dao.delete(bean);
+					number++;
+				} else {
+					// 发送方未删除，则标记接收方删除
+					bean.setDeletionFlag(Message.DELETION_RECEIVE);
+				}
+			} else if (bean.getSender().getId().equals(userId)) {
+				// 发送方删除
+				if (bean.getDeletionFlag() == Message.DELETION_RECEIVE) {
+					// 接收方已经删除，则彻底删除
+					dao.delete(bean);
+					number++;
+				} else {
+					// 接收方未删除，则标记发送方删除
+					bean.setDeletionFlag(Message.DELETION_SEND);
+				}
+			} else {
+				// 该用户与信息无关，不能删除，所以不作处理
+			}
+		}
+		return number;
+	}
+
+	@Override
+	@Transactional
+	public Message delete(Integer id) {
+		Message bean = dao.findOne(id);
+		dao.delete(bean);
+		return bean;
+	}
+
+	@Override
+	@Transactional
+	public List<Message> delete(Integer[] ids) {
+		List<Message> beans = new ArrayList<Message>(ids.length);
+		for (Integer id : ids) {
+			beans.add(delete(id));
+		}
+		return beans;
+	}
+
+	private UserService userService;
+
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	private MessageDao dao;
+
+	@Autowired
+	public void setDao(MessageDao dao) {
+		this.dao = dao;
+	}
+}

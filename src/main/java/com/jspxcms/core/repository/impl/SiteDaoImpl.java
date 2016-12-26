@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,7 +12,7 @@ import org.hibernate.jpa.QueryHints;
 
 import com.jspxcms.common.orm.JpqlBuilder;
 import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.repository.SiteDaoPlus;
+import com.jspxcms.core.repository.plus.SiteDaoPlus;
 
 /**
  * SiteDaoImpl
@@ -47,7 +48,7 @@ public class SiteDaoImpl implements SiteDaoPlus {
 
 	private EntityManager em;
 
-	@javax.persistence.PersistenceContext
+	@PersistenceContext
 	public void setEm(EntityManager em) {
 		this.em = em;
 	}

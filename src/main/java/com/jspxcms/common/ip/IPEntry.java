@@ -9,6 +9,6 @@ public class IPEntry {
         beginIp = endIp = country = area = "";
     }
     public String toString() {
-        return this.area + "  " + this.country + "IP范围:" + this.beginIp + "-" + this.endIp;
+        return this.area + " " + this.country + " IP:" + this.beginIp + "-" + this.endIp;
     }
 }

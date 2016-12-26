@@ -8,6 +8,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.CollectField;
+import com.jspxcms.ext.repository.plus.CollectFieldDaoPlus;
 
 public interface CollectFieldDao extends Repository<CollectField, Integer>, CollectFieldDaoPlus {
 	public List<CollectField> findAll(Specification<CollectField> spec, Sort sort);

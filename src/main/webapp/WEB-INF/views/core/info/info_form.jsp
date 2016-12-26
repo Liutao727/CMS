@@ -60,10 +60,13 @@ function confirmDelete() {
 			<shiro:hasPermission name="core:info:copy">
 			<div class="in-btn"><input type="button" value="<s:message code="copy"/>" onclick="location.href='create.do?id=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"<c:if test="${oprt=='create'}"> disabled="disabled"</c:if>/></div>
 			</shiro:hasPermission>
-      <div class="in-btn"><input type="button" value="<s:message code="view"/>" onclick="location.href='view.do?id=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"<c:if test="${oprt=='create'}"> disabled="disabled"</c:if>/></div>
+      <div class="in-btn"><input type="button" value="<s:message code="view"/>" onclick="location.href='view.do?id=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&position=${position}&${searchstring}';"<c:if test="${oprt=='create'}"> disabled="disabled"</c:if>/></div>
       <div class="in-btn"><input type="button" value="<s:message code="info.foreView"/>" onclick="window.open('${bean.url}');"<c:if test="${oprt=='create'||bean.status ne 'A'}"> disabled="disabled"</c:if>/></div>
+			<shiro:hasPermission name="core:info:logic_delete">
+			<div class="in-btn"><input type="button" value="<s:message code="delete"/>" onclick="if(confirmDelete()){location.href='logic_delete.do?ids=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';}"<c:if test="${oprt=='create' || !bean.auditPerm}"> disabled="disabled"</c:if>/></div>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="core:info:delete">
-			<div class="in-btn"><input type="button" value="<s:message code="delete"/>" onclick="if(confirmDelete()){location.href='delete.do?ids=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';}"<c:if test="${oprt=='create' || !bean.auditPerm}"> disabled="disabled"</c:if>/></div>
+			<div class="in-btn"><input type="button" value="<s:message code="completelyDelete"/>" onclick="if(confirmDelete()){location.href='delete.do?ids=${bean.id}&queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';}"<c:if test="${oprt=='create' || !bean.auditPerm}"> disabled="disabled"</c:if>/></div>
 			</shiro:hasPermission>
 			<div class="in-btn"></div>
 			<shiro:hasPermission name="core:info:audit_pass">
@@ -361,20 +364,23 @@ function confirmDelete() {
     <div style="padding-top:3px;">
       <span style="padding:0 7px;"><s:message code="fileLength"/>:</span><f:text id="docLength" name="docLength" value="${bean.docLength}" class="{digits:true,max:2147483647}" maxlength="10" style="width:70px;"/>
       <c:choose>
-      <c:when test="${GLOBAL.docEnabled}">
-      <span id="docSwfButton"></span><input type="button" value="<s:message code="upload"/>" class="swfbutton"/>
-      <input id="docSwfCancel" type="button" value="<s:message code="cancel"/>" onclick="fileSwfUpload.cancelQueue();" disabled="disabled"/>
-      <script type="text/javascript">
-      var docSwfUpload = Cms.swfUploadDoc("doc",{
-        jsessionid: "<%=request.getSession().getId()%>",
-        file_size_limit: "${GLOBAL.upload.docLimit}",
-        file_types: "${GLOBAL.upload.docTypes}"
-      });
-      </script>
-      <div id="docSwfProgress"></div>
+      <c:when test="${GLOBAL.enterpriseEdition&&GLOBAL.docEnabled}">
+	      <span id="docSwfButton"></span><input type="button" value="<s:message code="upload"/>" class="swfbutton"/>
+	      <input id="docSwfCancel" type="button" value="<s:message code="cancel"/>" onclick="fileSwfUpload.cancelQueue();" disabled="disabled"/>
+	      <script type="text/javascript">
+	      var docSwfUpload = Cms.swfUploadDoc("doc",{
+	        jsessionid: "<%=request.getSession().getId()%>",
+	        file_size_limit: "${GLOBAL.upload.docLimit}",
+	        file_types: "${GLOBAL.upload.docTypes}"
+	      });
+	      </script>
+	      <div id="docSwfProgress"></div>
       </c:when>
+			<c:when test="${!GLOBAL.enterpriseEdition}">
+				<span style="color:red;"><s:message code="info.error.docEnterpriseSupport"/></span>		
+			</c:when>
       <c:otherwise>
-      <span>文库功能未开启</span>
+      	<span style="color:red;"><s:message code="info.error.docNotEnabled"/></span>
       </c:otherwise>
       </c:choose>
     </div>
@@ -596,6 +602,46 @@ function confirmDelete() {
 			<f:radio id="editorRadioEditormd_${field.name}" name="customs_${field.name}_editor_type" checked="${bean.customs[fnx:concat(field.name,'_editor_type')]}" default="${field.customs['editorDefault']}" value="editormd" onclick="create_editormd_${field.name}(delete_ueditor_${field.name}());"/><label for="editorRadioEditormd_${field.name}">Editor.md</label>
 		</span>
 		<script type="text/javascript">$("#editorRadio_${field.name}").buttonset();</script>
+		<c:choose>
+    <c:when test="${GLOBAL.enterpriseEdition&&GLOBAL.docEnabled}">
+			<span id="editor_${field.name}SwfButton"></span><input type="button" value="<s:message code="info.docImport"/>" class="swfbutton"/>
+	    <input id="editor_${field.name}SwfCancel" type="button" value="<s:message code="cancel"/>" onclick="editor_${field.name}SwfUpload.cancelQueue();" disabled="disabled"/>
+	    <div id="editor_${field.name}SwfProgress"></div>
+			<script type="text/javascript">
+	    var editor_${field.name}SwfUpload = Cms.swfUpload("editor_${field.name}",{
+	    	button_action: SWFUpload.BUTTON_ACTION.SELECT_FILE,
+	    	upload_url: "import_office.do?_site=" + ($.cookie("_site")||""),
+	  	  jsessionid: "<%=request.getSession().getId()%>",
+	      file_size_limit: "0",
+	      file_types: "*.doc;*.docx",
+	      upload_success_handler: function(file, serverData) {
+		  		doUploadSuccess(file,serverData,this);
+		  		//使用非html编辑器（如markdown）无法正确显示
+		  		if($("input[name='customs_${field.name}_editor_type']:checked").val() != "ueditor") {
+						$("#editorRadioUeditor_${field.name}").click();
+						//切换编辑器后要延迟执行设置数据，否则可能因为编辑器还未创建导致设置数据失败
+						setTimeout(function(){ueditor_${field.name}.setContent(serverData);},500);
+					} else {
+						ueditor_${field.name}.setContent(serverData);
+					}
+	    		/*
+		  		if($("input[name='customs_${field.name}_editor_type']:checked").val() == "editormd") {
+		  			editormd_${field.name}.setMarkdown(toMarkdown(serverData));
+		  		} else {
+		  			ueditor_${field.name}.setContent(serverData);
+		  		}
+	    		*/
+		  	}
+	    });
+	    </script>
+		</c:when>
+		<c:when test="${!GLOBAL.enterpriseEdition}">
+			<span style="color:red;"><s:message code="info.error.docImportEnterpriseSupport"/></span>		
+		</c:when>
+		<c:otherwise>
+			<span style="color:red;"><s:message code="info.error.docImportNotEnabled"/></span>
+		</c:otherwise>
+	  </c:choose>
 	</div>
 	<div>
 	 <tags:feild_custom bean="${bean}" field="${field}"/>

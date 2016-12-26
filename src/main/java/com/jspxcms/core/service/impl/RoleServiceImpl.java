@@ -101,7 +101,7 @@ public class RoleServiceImpl implements RoleService, SiteDeleteListener {
 	}
 
 	@Transactional
-	public List<Role> batchUpdate(Integer[] id, String[] name,
+	public List<Role> batchUpdate(Integer[] id, String[] name, Integer[] rank,
 			String[] description) {
 		List<Role> beans = new ArrayList<Role>();
 		if (ArrayUtils.isEmpty(id)) {
@@ -111,6 +111,7 @@ public class RoleServiceImpl implements RoleService, SiteDeleteListener {
 		for (int i = 0, len = id.length; i < len; i++) {
 			bean = get(id[i]);
 			bean.setName(name[i]);
+			bean.setRank(rank[i]);
 			bean.setDescription(description[i]);
 			bean.setSeq(i);
 			beans.add(bean);
@@ -147,11 +148,11 @@ public class RoleServiceImpl implements RoleService, SiteDeleteListener {
 			for (Role role : dao.findBySiteIdIn(Arrays.asList(ids))) {
 				delete(role.getId());
 			}
-//			for (Integer id : ids) {
-//				for (Role role : dao.findBySiteId(id)) {
-//					delete(role.getId());
-//				}
-//			}
+			// for (Integer id : ids) {
+			// for (Role role : dao.findBySiteId(id)) {
+			// delete(role.getId());
+			// }
+			// }
 		}
 	}
 

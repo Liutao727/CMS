@@ -45,6 +45,7 @@ import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.SortComparator;
 import org.hibernate.annotations.Type;
 
+import com.google.common.base.Objects;
 import com.jspxcms.common.util.Reflections;
 import com.jspxcms.common.web.Anchor;
 import com.jspxcms.common.web.ImageAnchor;
@@ -580,6 +581,11 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		return getNodeModel();
 	}
 
+	/**
+	 * 获取栏目层级列表。从最顶层到当前层，如当前为国内新闻，则为“首页”-“新闻”-“国内新闻”。
+	 * 
+	 * @return
+	 */
 	@Transient
 	public List<Node> getHierarchy() {
 		List<Node> hierarchy = new LinkedList<Node>();
@@ -890,6 +896,16 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 	}
 
 	@Transient
+	public Integer getBufferViews() {
+		NodeBuffer buffer = getBuffer();
+		if (buffer != null) {
+			return getViews() + buffer.getViews();
+		} else {
+			return getViews();
+		}
+	}
+
+	@Transient
 	public NodeBuffer getBuffer() {
 		Set<NodeBuffer> set = getBuffers();
 		if (!CollectionUtils.isEmpty(set)) {
@@ -1043,6 +1059,23 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		if (getHtmlStatus() == null) {
 			setHtmlStatus(HTML_DISABLED);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Node)) {
+			return false;
+		}
+		Node that = (Node) o;
+		return Objects.equal(id, that.id);
 	}
 
 	private Integer id;
@@ -1226,7 +1259,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		this.buffers = buffers;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "node")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "node")
 	public Set<NodeRole> getNodeRoles() {
 		return nodeRoles;
 	}
@@ -1235,7 +1268,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		this.nodeRoles = nodeRoles;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "node")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "node")
 	public Set<NodeMemberGroup> getNodeGroups() {
 		return nodeGroups;
 	}
@@ -1244,8 +1277,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		this.nodeGroups = nodeGroups;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "node")
-	// @Sort(type = SortType.COMPARATOR, comparator = NodeOrgComparator.class)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "node")
 	@SortComparator(NodeOrgComparator.class)
 	public SortedSet<NodeOrg> getNodeOrgs() {
 		return nodeOrgs;

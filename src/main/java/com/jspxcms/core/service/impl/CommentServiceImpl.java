@@ -12,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jspxcms.common.ip.IPSeeker;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
@@ -108,6 +110,11 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener,
 			Comment parent = get(parentId);
 			bean.setParent(parent);
 		}
+		if (StringUtils.isNotBlank(bean.getIp())) {
+			bean.setCountry(ipSeeker.getCountry(bean.getIp()));
+			bean.setArea(ipSeeker.getArea(bean.getIp()));
+		}
+
 		bean.applyDefaultValue();
 		bean = dao.save(bean);
 		dao.flushAndRefresh(bean);
@@ -199,8 +206,14 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener,
 		dao.deleteByAuditorId(Arrays.asList(ids));
 	}
 
+	private IPSeeker ipSeeker;
 	private UserService userService;
 	private SiteService siteService;
+
+	@Autowired
+	public void setIpSeeker(IPSeeker ipSeeker) {
+		this.ipSeeker = ipSeeker;
+	}
 
 	@Autowired
 	public void setUserService(UserService userService) {

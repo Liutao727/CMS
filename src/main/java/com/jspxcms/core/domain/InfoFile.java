@@ -8,7 +8,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.jspxcms.common.file.Files;
+import com.jspxcms.common.file.FilesEx;
 
 /**
  * InfoFile
@@ -33,7 +33,7 @@ public class InfoFile implements Serializable {
 	@Transient
 	public String getSize() {
 		Long length = getLength();
-		return Files.getSize(length);
+		return FilesEx.getSize(length);
 	}
 
 	@Transient

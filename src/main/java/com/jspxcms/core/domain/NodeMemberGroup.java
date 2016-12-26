@@ -1,19 +1,23 @@
 package com.jspxcms.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.NodeMemberGroup.NodeMemberGroupId;
 
 @Entity
 @Table(name = "cms_node_membergroup")
+@IdClass(NodeMemberGroupId.class)
 public class NodeMemberGroup implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -30,27 +34,33 @@ public class NodeMemberGroup implements java.io.Serializable {
 		}
 	}
 
-	private Integer id;
-	private Node node;
-	private MemberGroup group;
-	private Boolean viewPerm;
-	private Boolean contriPerm;
-	private Boolean commentPerm;
+	public NodeMemberGroup() {
+	}
+
+	public NodeMemberGroup(Node node, MemberGroup group) {
+		this.node = node;
+		this.group = group;
+	}
 
 	@Id
-	@Column(name = "f_nodemgroup_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_node_membergroup", pkColumnValue = "cms_node_membergroup", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_node_membergroup")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_node_id", nullable = false)
+	private Node node;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_membergroup_id", nullable = false)
+	private MemberGroup group;
+
+	@Column(name = "f_is_view_perm", nullable = false, length = 1)
+	private Boolean viewPerm;
+
+	@Column(name = "f_is_contri_perm", nullable = false, length = 1)
+	private Boolean contriPerm;
+
+	@Column(name = "f_is_comment_perm", nullable = false, length = 1)
+	private Boolean commentPerm;
+
 	public Node getNode() {
 		return node;
 	}
@@ -59,8 +69,6 @@ public class NodeMemberGroup implements java.io.Serializable {
 		this.node = node;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_membergroup_id", nullable = false)
 	public MemberGroup getGroup() {
 		return group;
 	}
@@ -69,7 +77,6 @@ public class NodeMemberGroup implements java.io.Serializable {
 		this.group = group;
 	}
 
-	@Column(name = "f_is_view_perm", nullable = false, length = 1)
 	public Boolean getViewPerm() {
 		return this.viewPerm;
 	}
@@ -78,7 +85,6 @@ public class NodeMemberGroup implements java.io.Serializable {
 		this.viewPerm = viewPerm;
 	}
 
-	@Column(name = "f_is_contri_perm", nullable = false, length = 1)
 	public Boolean getContriPerm() {
 		return this.contriPerm;
 	}
@@ -87,7 +93,6 @@ public class NodeMemberGroup implements java.io.Serializable {
 		this.contriPerm = contriPerm;
 	}
 
-	@Column(name = "f_is_comment_perm", nullable = false, length = 1)
 	public Boolean getCommentPerm() {
 		return this.commentPerm;
 	}
@@ -96,4 +101,53 @@ public class NodeMemberGroup implements java.io.Serializable {
 		this.commentPerm = commentPerm;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof NodeMemberGroup)) {
+			return false;
+		}
+		NodeMemberGroup that = (NodeMemberGroup) o;
+		return Objects.equal(node, that.node) && Objects.equal(group, that.group);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(node, group);
+	}
+
+	public static class NodeMemberGroupId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer node;
+		Integer group;
+
+		public NodeMemberGroupId() {
+		}
+
+		public NodeMemberGroupId(Integer node, Integer group) {
+			this.node = node;
+			this.group = group;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof NodeMemberGroupId)) {
+				return false;
+			}
+			NodeMemberGroupId that = (NodeMemberGroupId) o;
+			return Objects.equal(node, that.node) && Objects.equal(group, that.group);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(node, group);
+		}
+
+	}
 }

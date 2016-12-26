@@ -70,10 +70,9 @@ public class MemberController {
 	 * @param modelMap
 	 * @return
 	 */
-	@RequestMapping(value = { "/space/{id}.jspx",
-			Constants.SITE_PREFIX_PATH + "/space/{id}.jspx" })
-	public String space(@PathVariable Integer id, HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/space/{id}.jspx", Constants.SITE_PREFIX_PATH + "/space/{id}.jspx" })
+	public String space(@PathVariable Integer id, HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
 		List<String> messages = resp.getMessages();
 		User targetUser = null;
@@ -95,10 +94,8 @@ public class MemberController {
 		return site.getTemplate(SPACE_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/my.jspx",
-			Constants.SITE_PREFIX_PATH + "/my.jspx" })
-	public String my(HttpServletRequest request, HttpServletResponse response,
-			org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my.jspx", Constants.SITE_PREFIX_PATH + "/my.jspx" })
+	public String my(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
 		User user = Context.getCurrentUser();
 		if (user == null) {
@@ -112,21 +109,18 @@ public class MemberController {
 		return site.getTemplate(MY_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/my/profile.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/profile.jspx" })
-	public String profileForm(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/profile.jspx", Constants.SITE_PREFIX_PATH + "/my/profile.jspx" })
+	public String profileForm(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Map<String, Object> data = modelMap.asMap();
 		ForeContext.setData(data, request);
 		return site.getTemplate(PROFILE_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/my/profile.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/profile.jspx" }, method = RequestMethod.POST)
-	public String profileSubmit(String gender, Date birthDate, String bio,
-			String comeFrom, String qq, String msn, String weixin,
-			HttpServletRequest request, HttpServletResponse response,
+	@RequestMapping(value = { "/my/profile.jspx", Constants.SITE_PREFIX_PATH + "/my/profile.jspx" }, method = RequestMethod.POST)
+	public String profileSubmit(String gender, Date birthDate, String bio, String comeFrom, String qq, String msn,
+			String weixin, HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
 		User user = Context.getCurrentUser();
@@ -142,10 +136,9 @@ public class MemberController {
 		return resp.post();
 	}
 
-	@RequestMapping(value = { "/my/avatar.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/avatar.jspx" })
-	public String avatarForm(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/avatar.jspx", Constants.SITE_PREFIX_PATH + "/my/avatar.jspx" })
+	public String avatarForm(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Integer avatarLarge = site.getGlobal().getRegister().getAvatarLarge();
 		modelMap.addAttribute("avatarLarge", avatarLarge);
@@ -154,12 +147,9 @@ public class MemberController {
 		return site.getTemplate(AVATAR_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/my/avatar.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/avatar.jspx" }, method = RequestMethod.POST)
-	public String avatarSubmit(Integer top, Integer left, Integer width,
-			Integer height, HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	@RequestMapping(value = { "/my/avatar.jspx", Constants.SITE_PREFIX_PATH + "/my/avatar.jspx" }, method = RequestMethod.POST)
+	public String avatarSubmit(Integer top, Integer left, Integer width, Integer height, HttpServletRequest request,
+			HttpServletResponse response, org.springframework.ui.Model modelMap) throws IOException {
 		Response resp = new Response(request, response, modelMap);
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -174,18 +164,14 @@ public class MemberController {
 		// 裁剪头像
 		buff = Images.crop(buff, left, top, width, height);
 		// 保存大头像
-		String pathnameLarge = "/users/" + user.getId() + "/"
-				+ User.AVATAR_LARGE;
+		String pathnameLarge = "/users/" + user.getId() + "/" + User.AVATAR_LARGE;
 		Integer avatarLarge = site.getGlobal().getRegister().getAvatarLarge();
-		BufferedImage buffLarge = Scalr.resize(buff, Scalr.Method.QUALITY,
-				avatarLarge, avatarLarge);
+		BufferedImage buffLarge = Scalr.resize(buff, Scalr.Method.QUALITY, avatarLarge, avatarLarge);
 		fileHandler.storeImage(buffLarge, "jpg", pathnameLarge);
 		// 保存小头像
-		String pathnameSmall = "/users/" + user.getId() + "/"
-				+ User.AVATAR_SMALL;
+		String pathnameSmall = "/users/" + user.getId() + "/" + User.AVATAR_SMALL;
 		Integer avatarSmall = site.getGlobal().getRegister().getAvatarSmall();
-		BufferedImage buffSmall = Scalr.resize(buff, Scalr.Method.QUALITY,
-				avatarSmall, avatarSmall);
+		BufferedImage buffSmall = Scalr.resize(buff, Scalr.Method.QUALITY, avatarSmall, avatarSmall);
 		fileHandler.storeImage(buffSmall, "jpg", pathnameSmall);
 		// 删除临时头像
 		fileHandler.delete(pathnameTemp);
@@ -196,12 +182,9 @@ public class MemberController {
 		return resp.post();
 	}
 
-	@RequestMapping(value = { "/my/avatar_upload.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/avatar_upload.jspx" }, method = RequestMethod.POST)
-	public void avatarUpload(
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response,
-			org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/avatar_upload.jspx", Constants.SITE_PREFIX_PATH + "/my/avatar_upload.jspx" }, method = RequestMethod.POST)
+	public void avatarUpload(@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		JsonMapper mapper = new JsonMapper();
 		UploadResult result = new UploadResult();
 		Locale locale = RequestContextUtils.getLocale(request);
@@ -219,9 +202,8 @@ public class MemberController {
 		return;
 	}
 
-	private void doAvatarUpload(MultipartFile file, UploadResult result,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	private void doAvatarUpload(MultipartFile file, UploadResult result, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		// 文件是否存在
 		if (!validateFile(file, result)) {
 			return;
@@ -257,46 +239,39 @@ public class MemberController {
 		return true;
 	}
 
-	private boolean validateExt(String extension, String type, GlobalUpload gu,
-			UploadResult result) {
+	private boolean validateExt(String extension, String type, GlobalUpload gu, UploadResult result) {
 		if (!gu.isExtensionValid(extension, type)) {
 			logger.debug("image extension not allowed: " + extension);
-			result.setErrorCode("imageExtensionNotAllowed",
-					new String[] { extension });
+			result.setErrorCode("imageExtensionNotAllowed", new String[] { extension });
 			return false;
 		}
 		return true;
 	}
 
-	@RequestMapping(value = { "/my/password.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/password.jspx" })
-	public String passwordForm(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/password.jspx", Constants.SITE_PREFIX_PATH + "/my/password.jspx" })
+	public String passwordForm(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Map<String, Object> data = modelMap.asMap();
 		ForeContext.setData(data, request);
 		return site.getTemplate(PASSWORD_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/my/password.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/password.jspx" }, method = RequestMethod.POST)
-	public String passwordSubmit(String password, String rawPassword,
-			HttpServletRequest request, HttpServletResponse response,
-			org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/password.jspx", Constants.SITE_PREFIX_PATH + "/my/password.jspx" }, method = RequestMethod.POST)
+	public String passwordSubmit(String password, String rawPassword, HttpServletRequest request,
+			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
 		User user = Context.getCurrentUser();
-		if (!credentialsDigest.matches(user.getPassword(), password,
-				user.getSaltBytes())) {
+		if (!credentialsDigest.matches(user.getPassword(), password, user.getSaltBytes())) {
 			return resp.post(501, "member.passwordError");
 		}
 		userService.updatePassword(user.getId(), rawPassword);
 		return resp.post();
 	}
 
-	@RequestMapping(value = { "/my/email.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/email.jspx" })
-	public String emailForm(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap) {
+	@RequestMapping(value = { "/my/email.jspx", Constants.SITE_PREFIX_PATH + "/my/email.jspx" })
+	public String emailForm(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		Map<String, Object> data = modelMap.asMap();
 		ForeContext.setData(data, request);
@@ -311,10 +286,8 @@ public class MemberController {
 	 * @param modelMap
 	 * @return
 	 */
-	@RequestMapping(value = { "/my/email.jspx",
-			Constants.SITE_PREFIX_PATH + "/my/email.jspx" }, method = RequestMethod.POST)
-	public String emailSubmit(String password, String email,
-			HttpServletRequest request, HttpServletResponse response,
+	@RequestMapping(value = { "/my/email.jspx", Constants.SITE_PREFIX_PATH + "/my/email.jspx" }, method = RequestMethod.POST)
+	public String emailSubmit(String password, String email, HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		// TODO 修改邮箱后需重新激活才能生效
 		Response resp = new Response(request, response, modelMap);
@@ -326,8 +299,7 @@ public class MemberController {
 			return resp.post(402);
 		}
 		User user = Context.getCurrentUser();
-		if (!credentialsDigest.matches(user.getPassword(), password,
-				user.getSaltBytes())) {
+		if (!credentialsDigest.matches(user.getPassword(), password, user.getSaltBytes())) {
 			return resp.post(501, "member.passwordError");
 		}
 		userService.updateEmail(user.getId(), email);

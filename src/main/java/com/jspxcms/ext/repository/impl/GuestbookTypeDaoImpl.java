@@ -11,10 +11,10 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.GuestbookType;
-import com.jspxcms.ext.domaindsl.QGuestbookType;
-import com.jspxcms.ext.repository.GuestbookTypeDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.ext.domain.QGuestbookType;
+import com.jspxcms.ext.repository.plus.GuestbookTypeDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * GuestbookTypeDaoImpl
@@ -24,7 +24,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
  */
 public class GuestbookTypeDaoImpl implements GuestbookTypeDaoPlus {
 	public List<GuestbookType> getList(Integer[] siteId, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<GuestbookType> query = new JPAQuery<GuestbookType>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QGuestbookType guestbookType = QGuestbookType.guestbookType;
 		query.from(guestbookType);

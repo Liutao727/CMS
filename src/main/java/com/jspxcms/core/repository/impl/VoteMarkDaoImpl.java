@@ -7,16 +7,17 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.jspxcms.core.domaindsl.QVoteMark;
-import com.jspxcms.core.repository.VoteMarkDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.domain.QVoteMark;
+import com.jspxcms.core.repository.plus.VoteMarkDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 public class VoteMarkDaoImpl implements VoteMarkDaoPlus {
 	public int countMark(String ftype, Integer fid, Integer userId, String ip,
 			String cookie, Date after) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Long> query = new JPAQuery<Long>(this.em);
 		QVoteMark bean = QVoteMark.voteMark;
+		query.select(bean.count());
 		query.from(bean);
 		BooleanBuilder exp = new BooleanBuilder();
 		exp = exp.and(bean.ftype.eq(ftype));
@@ -35,7 +36,7 @@ public class VoteMarkDaoImpl implements VoteMarkDaoPlus {
 			exp = exp.and(bean.date.after(after));
 		}
 		query.where(exp);
-		return query.list(bean.count()).iterator().next().intValue();
+		return query.fetch().iterator().next().intValue();
 	}
 
 	private EntityManager em;

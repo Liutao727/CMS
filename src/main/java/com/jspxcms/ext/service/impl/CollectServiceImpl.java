@@ -202,7 +202,8 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 					uploadHandler);
 			if (text != null) {
 				// 采集图片
-				text = collectImage(text, uri, site, userId);
+				text = collectImage(text, uri, site, userId,
+						collect.getDownloadImage());
 				textBuilder.append(text);
 			}
 
@@ -230,7 +231,8 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 					textBuilder.append(Info.PAGEBREAK_OPEN);
 					textBuilder.append(Info.PAGEBREAK_CLOSE);
 					// 采集图片
-					text = collectImage(text, uri, site, userId);
+					text = collectImage(text, uri, site, userId,
+							collect.getDownloadImage());
 					textBuilder.append(text);
 				}
 				next = collect.getFieldNext(html, item, id, uri, httpclient,
@@ -247,7 +249,8 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 		}
 	}
 
-	private String collectImage(String html, URI uri, Site site, Integer userId) {
+	private String collectImage(String html, URI uri, Site site,
+			Integer userId, boolean isDownload) {
 		if (StringUtils.isBlank(html)) {
 			return html;
 		}
@@ -266,14 +269,15 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 					continue;
 				}
 				String srcUrl = uri.resolve(src).toString();
-				UploadResult result = new UploadResult();
-				uploadHandler.upload(srcUrl, Uploader.IMAGE, site, userId,
-						null, result);
-				if (result.isSuccess()) {
-					String url = result.getFileUrl();
-					tag.setAttribute("src", url);
-					// html = StringUtils.replace(html, src, url);
+				if (isDownload) {
+					UploadResult result = new UploadResult();
+					uploadHandler.upload(srcUrl, Uploader.IMAGE, site, userId,
+							null, result);
+					if (result.isSuccess()) {
+						srcUrl = result.getFileUrl();
+					}
 				}
+				tag.setAttribute("src", srcUrl);
 				end = tag.getStartPosition();
 				buff.append(html.subSequence(begin, end));
 				buff.append(tag.toHtml());

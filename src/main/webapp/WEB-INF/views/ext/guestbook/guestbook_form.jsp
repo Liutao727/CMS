@@ -89,7 +89,13 @@ function confirmDelete() {
     <td class="in-lab" width="15%"><s:message code="guestbook.creationDate"/>:</td>
     <td class="in-ctt" width="35%"><input type="text" name="creationDate" value="<fmt:formatDate value="${bean.creationDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-ddTHH:mm:ss'});" style="width:180px;"/></td>
     <td class="in-lab" width="15%"><s:message code="guestbook.creationIp"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="creationIp" value="${bean.creationIp}" maxlength="100" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text name="creationIp" disabled="disabled" value="${bean.creationIp}" maxlength="100" style="width:180px;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="guestbook.creationCountry"/>:</td>
+    <td class="in-ctt" width="35%"><input type="text" name="creationCountry" value="${bean.creationCountry}" disabled="disabled" maxlength="100" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="guestbook.creationArea"/>:</td>
+    <td class="in-ctt" width="35%"><f:text name="creationArea" value="${bean.creationArea}" disabled="disabled" maxlength="100" style="width:180px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="guestbook.title"/>:</td>
@@ -111,7 +117,13 @@ function confirmDelete() {
     <td class="in-lab" width="15%"><s:message code="guestbook.replyDate"/>:</td>
     <td class="in-ctt" width="35%"><input type="text" name="replyDate" value="<fmt:formatDate value="${bean.replyDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-ddTHH:mm:ss'});" style="width:180px;"/></td>
     <td class="in-lab" width="15%"><s:message code="guestbook.replyIp"/>:</td>
-    <td class="in-ctt" width="35%"><f:text value="${bean.replyIp}" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.replyIp}" disabled="disabled" style="width:180px;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="guestbook.replyCountry"/>:</td>
+    <td class="in-ctt" width="35%"><input type="text" name="replyCountry" value="${bean.replyCountry}" disabled="disabled" maxlength="100" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="guestbook.replyArea"/>:</td>
+    <td class="in-ctt" width="35%"><f:text name="replyArea" value="${bean.replyArea}" disabled="disabled" maxlength="100" style="width:180px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="guestbook.recommend"/>:</td>

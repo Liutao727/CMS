@@ -157,14 +157,7 @@
 		    	</c:if>
 	        <c:if test="${!empty field.customs['width']}">initialFrameWidth:${field.customs['width']},</c:if>
 	        <c:if test="${!empty field.customs['height']}">initialFrameHeight:${field.customs['height']},</c:if>
-		      imageUrl:"${ctx}${cmscp}/core/upload_image.do?ueditor=true",
-		      wordImageUrl:"${ctx}${cmscp}/core/upload_image.do?ueditor=true",
-		      fileUrl:"${ctx}${cmscp}/core/upload_file.do;jsessionid=<%=request.getSession().getId()%>?ueditor=true",
-		      videoUrl:"${ctx}${cmscp}/core/upload_video.do;jsessionid=<%=request.getSession().getId()%>?ueditor=true",
-		      catcherUrl:"${ctx}${cmscp}/core/get_remote_image.do?ueditor=true",
-		      imageManagerUrl:"${ctx}${cmscp}/core/image_manager.do",
-		      getMovieUrl:"${ctx}${cmscp}/core/get_movie.do",
-		    	localDomain:['${!empty GLOBAL.uploadsDomain ? GLOBAL.uploadsDomain : ""}']
+	        serverUrl:"${ctx}${cmscp}/core/ueditor.do?ueditor=true"
 		    });
 		    ueditor_${field.name}.ready(function() {
 		    	ueditor_${field.name}.setContent(content);
@@ -201,6 +194,7 @@
 					width:<c:choose><c:when test="${!empty field.customs['width']}">${field.customs['width']}</c:when><c:otherwise>"100%"</c:otherwise></c:choose>,
 					height:<c:choose><c:when test="${!empty field.customs['height']}">${field.customs['height']}</c:when><c:otherwise>360</c:otherwise></c:choose>,
 					watch : false,
+					autoFocus: false,
 					lineNumbers : false,
 					styleActiveLine : true,
 					styleSelectedText : true,
@@ -210,8 +204,8 @@
 					path : "${ctx}/static/vendor/editormd/lib/",
 					saveHTMLToTextarea : true,
 					imageUpload : true,
-					imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
-					imageUploadURL : "${ctx}/cmscp/core/upload_image.do?editormd=true",
+					imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp"],
+					imageUploadURL : "${ctx}${cmscp}/core/upload_image.do?editormd=true",
 					onfullscreen : function() {
 						this.watch();
 					},
@@ -219,7 +213,7 @@
 						this.unwatch();
 					},
 					onload : function() {
-						base64UploadPlugin(this, "${ctx}/cmscp/core/upload_image.do");
+						base64UploadPlugin(this, "${ctx}${cmscp}/core/upload_image.do");
 					}
 				});
 		  }

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+import com.google.common.base.Objects;
 import com.jspxcms.core.support.Siteable;
 
 /**
@@ -39,6 +40,23 @@ public class Attribute implements Siteable, java.io.Serializable {
 		if (getWatermark() == null) {
 			setWatermark(false);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Attribute)) {
+			return false;
+		}
+		Attribute that = (Attribute) o;
+		return Objects.equal(id, that.id);
 	}
 
 	private Integer id;

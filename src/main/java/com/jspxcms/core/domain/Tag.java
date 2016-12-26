@@ -18,7 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import com.google.common.base.Objects;
 import com.jspxcms.core.support.Siteable;
 
 /**
@@ -41,14 +43,21 @@ public class Tag implements Siteable, java.io.Serializable {
 		}
 	}
 
-	private Integer id;
-	private Set<InfoTag> infoTags = new HashSet<InfoTag>(0);
+	@Transient
+	public int refer() {
+		if (refers == null) {
+			refers = 0;
+		}
+		return ++refers;
+	}
 
-	private Site site;
-
-	private String name;
-	private Date creationDate;
-	private Integer refers;
+	@Transient
+	public int derefer() {
+		if (refers == null) {
+			refers = 0;
+		}
+		return --refers;
+	}
 
 	public Tag() {
 	}
@@ -57,6 +66,32 @@ public class Tag implements Siteable, java.io.Serializable {
 		this.site = site;
 		this.name = name;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Tag)) {
+			return false;
+		}
+		Tag that = (Tag) o;
+		return Objects.equal(id, that.id);
+	}
+
+	private Integer id;
+	private Set<InfoTag> infoTags = new HashSet<InfoTag>(0);
+
+	private Site site;
+
+	private String name;
+	private Date creationDate;
+	private Integer refers;
 
 	@Id
 	@Column(name = "f_tag_id", unique = true, nullable = false)

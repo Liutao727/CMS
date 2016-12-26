@@ -1,19 +1,23 @@
 package com.jspxcms.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.InfoMemberGroup.InfoMemberGroupId;
 
 @Entity
 @Table(name = "cms_info_membergroup")
+@IdClass(InfoMemberGroupId.class)
 public class InfoMemberGroup implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -24,27 +28,27 @@ public class InfoMemberGroup implements java.io.Serializable {
 		}
 	}
 
-	private Integer id;
+	public InfoMemberGroup() {
+	}
 
-	private Info info;
-	private MemberGroup group;
-
-	private Boolean viewPerm;
+	public InfoMemberGroup(Info info, MemberGroup group) {
+		this.info = info;
+		this.group = group;
+	}
 
 	@Id
-	@Column(name = "f_infomgroup_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info_membergroup", pkColumnValue = "cms_info_membergroup", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info_membergroup")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_info_id", nullable = false)
+	private Info info;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_membergroup_id", nullable = false)
+	private MemberGroup group;
+
+	@Column(name = "f_is_view_perm", nullable = false, length = 1)
+	private Boolean viewPerm;
+
 	public Info getInfo() {
 		return info;
 	}
@@ -53,8 +57,6 @@ public class InfoMemberGroup implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_membergroup_id", nullable = false)
 	public MemberGroup getGroup() {
 		return group;
 	}
@@ -63,12 +65,60 @@ public class InfoMemberGroup implements java.io.Serializable {
 		this.group = group;
 	}
 
-	@Column(name = "f_is_view_perm", nullable = false, length = 1)
 	public Boolean getViewPerm() {
 		return this.viewPerm;
 	}
 
 	public void setViewPerm(Boolean viewPerm) {
 		this.viewPerm = viewPerm;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof InfoMemberGroup)) {
+			return false;
+		}
+		InfoMemberGroup that = (InfoMemberGroup) o;
+		return Objects.equal(info, that.info) && Objects.equal(group, that.group);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(info, group);
+	}
+
+	public static class InfoMemberGroupId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer info;
+		Integer group;
+
+		public InfoMemberGroupId() {
+		}
+
+		public InfoMemberGroupId(Integer info, Integer group) {
+			this.info = info;
+			this.group = group;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof InfoMemberGroupId)) {
+				return false;
+			}
+			InfoMemberGroupId that = (InfoMemberGroupId) o;
+			return Objects.equal(info, that.info) && Objects.equal(group, that.group);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(info, group);
+		}
 	}
 }

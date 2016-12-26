@@ -5,16 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.UserOrg;
+import com.jspxcms.core.domain.UserOrg.UserOrgId;
 
-public interface UserOrgDao extends Repository<UserOrg, Integer> {
-
-	public UserOrg findOne(Integer id);
-
-	public UserOrg save(UserOrg bean);
-
-	public void delete(UserOrg bean);
-
-	public void delete(Iterable<UserOrg> beans);
+public interface UserOrgDao extends Repository<UserOrg, UserOrgId> {
+	public UserOrg findOne(UserOrgId id);
 
 	// --------------------
 

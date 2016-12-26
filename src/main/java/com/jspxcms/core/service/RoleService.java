@@ -30,7 +30,7 @@ public interface RoleService {
 
 	public Role update(Role bean, Integer[] infoPermIds, Integer[] nodePermIds);
 
-	public List<Role> batchUpdate(Integer[] id, String[] name,
+	public List<Role> batchUpdate(Integer[] id, String[] name, Integer[] rank,
 			String[] description);
 
 	public Role delete(Integer id);

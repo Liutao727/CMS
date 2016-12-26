@@ -101,20 +101,11 @@ $(function(){
 					<script type="text/javascript">
 					$(function() {
 						window.UEDITOR_HOME_URL = "${ctx}/static/vendor/ueditor/";
-						var fileUrl,videoUrl;
-						fileUrl = "${ctx}/upload_file.jspx;jsessionid=${jsessionid}?ueditor=true";
-						videoUrl = "${ctx}/upload_video.jspx;jsessionid=${jsessionid}?ueditor=true";
 						var editor_text = UE.getEditor('text',{
 							toolbars: window.UEDITOR_CONFIG.toolbars_BasicPage,
 							//initialFrameWidth:700,
 							initialFrameHeight:300,
-							imageUrl:"${ctx}/upload_image.jspx?ueditor=true",
-							wordImageUrl:"${ctx}/upload_image.jspx?ueditor=true",
-							fileUrl:fileUrl,
-							videoUrl:videoUrl,
-							catcherUrl:"${ctx}/get_remote_image.jspx?ueditor=true",
-							imageManagerUrl:"${ctx}/image_manager.jspx",
-							getMovieUrl:"${ctx}/get_movie.jspx"
+					    serverUrl:"${dy}/ueditor.jspx?ueditor=true"
 						});
 						editor_text.ready(function() {
 				       editor_text.setContent("[#noescape]${(bean.text)!?js_string}[/#noescape]");
@@ -133,7 +124,7 @@ $(function(){
 <div class="w center text-center">
 	<div class="powered">    
 		<span>Powered by <strong style="font-size:12px"><a href="http://www.jspxcms.com" target="_blank" class="c-666 a-hover">Jspxcms</a></strong></span>
-    <span>&copy; 2010-2016 Jspxcms All Rights Reserved</span>
+    <span>&copy; 2010-2017 Jspxcms All Rights Reserved</span>
 	</div>
 	<div class="copyright">
 		<span>${site.customs['company']} 版权所有</span>

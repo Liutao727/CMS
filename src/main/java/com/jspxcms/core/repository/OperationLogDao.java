@@ -12,6 +12,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.OperationLog;
+import com.jspxcms.core.repository.plus.OperationLogDaoPlus;
 
 public interface OperationLogDao extends Repository<OperationLog, Integer>,
 		OperationLogDaoPlus {

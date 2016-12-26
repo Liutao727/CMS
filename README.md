@@ -4,7 +4,7 @@
 
 ## 环境要求
 
-- JDK6或更高版本（支持JDK7、JDK8）。
+- JDK6或更高版本（支持JDK7、JDK8）。建议使用JDK8，有更好的内存管理。更低版本的JDK6、JDK7可能需要设置Java内存`-XX:PermSize=128M -XX:MaxPermSize=512M`，否则可能出现这种类型的内存溢出：`java.lang.OutOfMemoryError: PermGen space`。
 - Servlet2.5或更高版本（如Tomcat6或更高版本）。
 - MySQL5.0或更高版本；Oracle10g或更高版本；SQLServer2005或更高版本。
 - Maven3.0或更高版本。

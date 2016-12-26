@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 
+import com.google.common.base.Objects;
 import com.jspxcms.common.web.Anchor;
 import com.jspxcms.common.web.ImageAnchor;
 import com.jspxcms.common.web.ImageAnchorBean;
@@ -184,6 +185,23 @@ public class Special implements java.io.Serializable, Anchor, Siteable {
 		if (getRecommend() == null) {
 			setRecommend(false);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Special)) {
+			return false;
+		}
+		Special that = (Special) o;
+		return Objects.equal(id, that.id);
 	}
 
 	private Integer id;

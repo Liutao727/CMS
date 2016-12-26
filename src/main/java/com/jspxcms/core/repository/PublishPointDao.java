@@ -8,6 +8,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.PublishPoint;
+import com.jspxcms.core.repository.plus.PublishPointDaoPlus;
 
 public interface PublishPointDao extends Repository<PublishPoint, Integer>,
 		PublishPointDaoPlus {

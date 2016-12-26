@@ -9,9 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jspxcms.core.domain.Node;
 import com.jspxcms.core.domain.NodeRole;
+import com.jspxcms.core.domain.NodeRole.NodeRoleId;
 import com.jspxcms.core.domain.Role;
-import com.jspxcms.core.listener.NodeDeleteListener;
-import com.jspxcms.core.listener.RoleDeleteListener;
 import com.jspxcms.core.repository.NodeRoleDao;
 import com.jspxcms.core.service.NodeQueryService;
 import com.jspxcms.core.service.NodeRoleService;
@@ -19,104 +18,53 @@ import com.jspxcms.core.service.RoleService;
 
 @Service
 @Transactional(readOnly = true)
-public class NodeRoleServiceImpl implements NodeRoleService,
-		NodeDeleteListener, RoleDeleteListener {
-	@Transactional
-	public NodeRole save(Node node, Role role, Boolean infoPerm,
-			Boolean nodePerm) {
-		NodeRole bean = new NodeRole();
-		bean.setNode(node);
-		bean.setRole(role);
-		bean.setInfoPerm(infoPerm);
-		bean.setNodePerm(nodePerm);
+public class NodeRoleServiceImpl implements NodeRoleService {
+	private NodeRole findOrCreate(Node node, Role role, Boolean infoPerm, Boolean nodePerm) {
+		NodeRole bean = dao.findOne(new NodeRoleId(node.getId(), role.getId()));
+		if (bean == null) {
+			bean = new NodeRole(node, role);
+		}
+		if (infoPerm != null) {
+			bean.setInfoPerm(infoPerm);
+		}
+		if (nodePerm != null) {
+			bean.setNodePerm(nodePerm);
+		}
 		bean.applyDefaultValue();
-		bean = dao.save(bean);
 		return bean;
 	}
 
 	@Transactional
 	public void update(Role role, Integer[] infoPermIds, Integer[] nodePermIds) {
 		Integer siteId = role.getSite().getId();
-		Integer roleId = role.getId();
-		List<Node> nodes = nodeQueryService.findList(siteId, null);
-		List<NodeRole> nrs = dao.findByRoleId(roleId);
-		Integer nodeId;
-		boolean contains, infoPerm, nodePerm;
+		List<Node> nodes = nodeService.findList(siteId, null);
 		for (Node node : nodes) {
-			contains = false;
-			nodeId = node.getId();
-			infoPerm = ArrayUtils.contains(infoPermIds, nodeId);
-			nodePerm = ArrayUtils.contains(nodePermIds, nodeId);
-			for (NodeRole nr : nrs) {
-				if (nr.getNode().getId().equals(nodeId)) {
-					if (infoPermIds != null) {
-						nr.setInfoPerm(infoPerm);
-					}
-					if (nodePermIds != null) {
-						nr.setNodePerm(nodePerm);
-					}
-					contains = true;
-					break;
-				}
-			}
-			if (!contains) {
-				save(node, role, infoPerm, nodePerm);
-			}
+			Boolean infoPerm = infoPermIds == null ? null : ArrayUtils.contains(infoPermIds, node.getId());
+			Boolean nodePerm = nodePermIds == null ? null : ArrayUtils.contains(nodePermIds, node.getId());
+			NodeRole nodeRole = findOrCreate(node, role, infoPerm, nodePerm);
+			role.getNodeRoles().add(nodeRole);
+			node.getNodeRoles().add(nodeRole);
 		}
 	}
 
 	@Transactional
 	public void update(Node node, Integer[] infoPermIds, Integer[] nodePermIds) {
-		Integer nodeId = node.getId();
 		List<Role> roles = roleService.findList(node.getSite().getId());
-		List<NodeRole> nrs = dao.findByNodeId(nodeId);
-		Integer roleId;
-		boolean contains, infoPerm, nodePerm;
 		for (Role role : roles) {
-			contains = false;
-			roleId = role.getId();
-			infoPerm = ArrayUtils.contains(infoPermIds, roleId);
-			nodePerm = ArrayUtils.contains(nodePermIds, roleId);
-			for (NodeRole nr : nrs) {
-				if (nr.getRole().getId().equals(roleId)) {
-					if (infoPermIds != null) {
-						nr.setInfoPerm(infoPerm);
-					}
-					if (nodePermIds != null) {
-						nr.setNodePerm(nodePerm);
-					}
-					contains = true;
-					break;
-				}
-			}
-			if (!contains) {
-				save(node, role, infoPerm, nodePerm);
-			}
+			Boolean infoPerm = infoPermIds == null ? null : ArrayUtils.contains(infoPermIds, role.getId());
+			Boolean nodePerm = nodePermIds == null ? null : ArrayUtils.contains(nodePermIds, role.getId());
+			NodeRole nodeRole = findOrCreate(node, role, infoPerm, nodePerm);
+			role.getNodeRoles().add(nodeRole);
+			node.getNodeRoles().add(nodeRole);
 		}
 	}
 
-	public void preNodeDelete(Integer[] ids) {
-		if (ids != null) {
-			for (Integer id : ids) {
-				dao.deleteByNodeId(id);
-			}
-		}
-	}
-
-	public void preRoleDelete(Integer[] ids) {
-		if (ids != null) {
-			for (Integer id : ids) {
-				dao.deleteByRoleId(id);
-			}
-		}
-	}
-
-	private NodeQueryService nodeQueryService;
+	private NodeQueryService nodeService;
 	private RoleService roleService;
 
 	@Autowired
-	public void setNodeQueryService(NodeQueryService nodeQueryService) {
-		this.nodeQueryService = nodeQueryService;
+	public void setNodeService(NodeQueryService nodeService) {
+		this.nodeService = nodeService;
 	}
 
 	@Autowired

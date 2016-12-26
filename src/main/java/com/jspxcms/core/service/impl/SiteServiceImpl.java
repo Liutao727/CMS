@@ -40,7 +40,6 @@ import com.jspxcms.core.service.OrgService;
 import com.jspxcms.core.service.PublishPointService;
 import com.jspxcms.core.service.RoleService;
 import com.jspxcms.core.service.SiteService;
-import com.jspxcms.core.service.UserRoleService;
 import com.jspxcms.core.service.UserService;
 import com.jspxcms.core.support.Configurable;
 import com.jspxcms.core.support.DeleteException;
@@ -54,15 +53,13 @@ import com.jspxcms.core.support.DeleteException;
 @Service
 @Transactional(readOnly = true)
 public class SiteServiceImpl implements SiteService, OrgDeleteListener {
-	private static final Logger logger = LoggerFactory
-			.getLogger(SiteServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SiteServiceImpl.class);
 
 	public List<Site> findList(Map<String, String[]> params, Sort sort) {
 		return dao.findAll(spec(params), sort);
 	}
 
-	public RowSide<Site> findSide(Map<String, String[]> params, Site bean,
-			Integer position, Sort sort) {
+	public RowSide<Site> findSide(Map<String, String[]> params, Site bean, Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<Site>();
 		}
@@ -122,8 +119,8 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public Site save(Site bean, Integer parentId, Integer orgId,
-			Integer htmlPublishPointId, Integer userId, Site srcSite) {
+	public Site save(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId, Integer userId,
+			Site srcSite) {
 		Site parent = null;
 		if (parentId != null) {
 			parent = dao.findOne(parentId);
@@ -148,7 +145,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 		roleService.save(role, null, null, bean.getId());
 
 		User user = userService.get(userId);
-		userRoleService.save(user, role, 0);
+		user.addRole(role);
 
 		Integer srcSiteId = srcSite.getId();
 		// 复制站点模型
@@ -157,14 +154,12 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 			modelService.clone(siteModel, bean.getId());
 		}
 		// 复制首页模型
-		Model homeModel = modelService.findDefault(srcSiteId,
-				Node.HOME_MODEL_TYPE);
+		Model homeModel = modelService.findDefault(srcSiteId, Node.HOME_MODEL_TYPE);
 		if (homeModel != null) {
 			modelService.clone(homeModel, bean.getId());
 		}
 		// 复制节点模型
-		Model nodeModel = modelService.findDefault(srcSiteId,
-				Node.NODE_MODEL_TYPE);
+		Model nodeModel = modelService.findDefault(srcSiteId, Node.NODE_MODEL_TYPE);
 		if (nodeModel != null) {
 			modelService.clone(nodeModel, bean.getId());
 		}
@@ -177,10 +172,8 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 		// 复制模版
 		String srcTemplate = srcSite.getSiteBase("");
 		String destTemplate = bean.getSiteBase("");
-		File srcDir = new File(pathResolver.getPath(srcTemplate,
-				Constants.TEMPLATE_STORE_PATH));
-		File destDir = new File(pathResolver.getPath(destTemplate,
-				Constants.TEMPLATE_STORE_PATH));
+		File srcDir = new File(pathResolver.getPath(srcTemplate, Constants.TEMPLATE_STORE_PATH));
+		File destDir = new File(pathResolver.getPath(destTemplate, Constants.TEMPLATE_STORE_PATH));
 		try {
 			destDir.mkdirs();
 			FileUtils.copyDirectory(srcDir, destDir);
@@ -218,8 +211,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public Site update(Site bean, Integer parentId, Integer orgId,
-			Integer htmlPublishPointId) {
+	public Site update(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId) {
 		PublishPoint publishPoint = publishPointService.get(htmlPublishPointId);
 		bean.setHtmlPublishPoint(publishPoint);
 		bean.setOrg(orgService.get(orgId));
@@ -227,8 +219,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 		bean = dao.save(bean);
 
 		Site parent = bean.getParent();
-		if ((parent != null && !parent.getId().equals(parentId))
-				|| (parent == null && parentId != null)) {
+		if ((parent != null && !parent.getId().equals(parentId)) || (parent == null && parentId != null)) {
 			move(new Integer[] { bean.getId() }, parentId);
 		}
 
@@ -244,8 +235,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 			for (int i = 0, len = ids.length; i < len; i++) {
 				treeNumber = dao.findTreeNumber(ids[i]);
 				modifiedTreeNumber = Site.long2hex(treeMax++);
-				count += dao.updateTreeNumber(treeNumber + "%",
-						modifiedTreeNumber, treeNumber.length() + 1);
+				count += dao.updateTreeNumber(treeNumber + "%", modifiedTreeNumber, treeNumber.length() + 1);
 				dao.updateParentId(ids[i], id);
 			}
 		} else {
@@ -255,10 +245,8 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 			for (int i = 0, len = ids.length; i < len; i++) {
 				dao.updateTreeMax(id, Site.long2hex(treeMax + 1));
 				treeNumber = dao.findTreeNumber(ids[i]);
-				modifiedTreeNumber = parentTreeNumber + "-"
-						+ Site.long2hex(treeMax++);
-				count += dao.updateTreeNumber(treeNumber + "%",
-						modifiedTreeNumber, treeNumber.length() + 1);
+				modifiedTreeNumber = parentTreeNumber + "-" + Site.long2hex(treeMax++);
+				count += dao.updateTreeNumber(treeNumber + "%", modifiedTreeNumber, treeNumber.length() + 1);
 				dao.updateParentId(ids[i], id);
 			}
 		}
@@ -273,8 +261,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public void updateCustoms(Site site, Map<String, String> map,
-			Map<String, String> clobMap) {
+	public void updateCustoms(Site site, Map<String, String> map, Map<String, String> clobMap) {
 		Map<String, String> customs = site.getCustoms();
 		Global.removeAttrExcludeSys(customs);
 		customs.putAll(map);
@@ -335,7 +322,6 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	private ModelService modelService;
 	// private NodeService nodeService;
 	// private NodeQueryService nodeQuery;
-	private UserRoleService userRoleService;
 	private RoleService roleService;
 	private UserService userService;
 	private GlobalService globalService;
@@ -365,11 +351,6 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	// public void setNodeQuery(NodeQueryService nodeQuery) {
 	// this.nodeQuery = nodeQuery;
 	// }
-
-	@Autowired
-	public void setUserRoleService(UserRoleService userRoleService) {
-		this.userRoleService = userRoleService;
-	}
 
 	@Autowired
 	public void setRoleService(RoleService roleService) {

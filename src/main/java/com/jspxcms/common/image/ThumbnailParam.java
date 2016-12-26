@@ -12,9 +12,8 @@ public class ThumbnailParam {
 		this.height = height;
 	}
 
-	public Boolean getThumbnail() {
-		return thumbnail != null && thumbnail
-				&& (width != null || height != null);
+	public boolean isThumbnail() {
+		return thumbnail != null && thumbnail && (width != null || height != null);
 	}
 
 	public void setThumbnail(Boolean thumbnail) {

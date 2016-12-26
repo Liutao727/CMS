@@ -11,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.orm.Limitable;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Predicate;
 
 /**
  * Lucene索引模板接口
@@ -26,12 +24,6 @@ public interface LuceneIndexTemplate {
 
 	public Page<String> page(Query query, String field, Pageable pageable,
 			Sort sort);
-
-//	public List<Document> list(Predicate predicate,
-//			EntityPath<Document> entityPath, Limitable limitable);
-//
-//	public Page<Document> page(Predicate predicate,
-//			EntityPath<Document> entityPath, Pageable pageable);
 
 	public void addDocument(Document document);
 

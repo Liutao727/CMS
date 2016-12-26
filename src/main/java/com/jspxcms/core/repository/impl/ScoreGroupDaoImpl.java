@@ -7,16 +7,16 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.jpa.QueryHints;
 
+import com.jspxcms.core.domain.QScoreGroup;
 import com.jspxcms.core.domain.ScoreGroup;
-import com.jspxcms.core.domaindsl.QScoreGroup;
-import com.jspxcms.core.repository.ScoreGroupDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.repository.plus.ScoreGroupDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 public class ScoreGroupDaoImpl implements ScoreGroupDaoPlus {
 
 	public ScoreGroup findTopOne(Integer siteId) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<ScoreGroup> query = new JPAQuery<ScoreGroup>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QScoreGroup bean = QScoreGroup.scoreGroup;
 		query.from(bean);
@@ -27,7 +27,7 @@ public class ScoreGroupDaoImpl implements ScoreGroupDaoPlus {
 		query.where(exp);
 		query.orderBy(bean.seq.asc(), bean.id.asc());
 		query.limit(1);
-		List<ScoreGroup> list = query.list(bean);
+		List<ScoreGroup> list = query.fetch();
 		return list.isEmpty() ? null : list.get(0);
 	}
 

@@ -120,6 +120,8 @@ function optDelete(form) {
     <th class="ls-th-sort"><span class="ls-sort" pagesort="title"><s:message code="guestbook.title"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="text"><s:message code="guestbook.text"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="creationDate"><s:message code="guestbook.creationDate"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="creationIp"><s:message code="guestbook.creationIp"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="creationCountry"><s:message code="guestbook.creationCountry"/>(<s:message code="guestbook.creationArea"/>)</span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="reply"><s:message code="guestbook.reply"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="status"><s:message code="guestbook.status"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="recommend"><s:message code="guestbook.recommend"/></span></th>
@@ -144,6 +146,8 @@ function optDelete(form) {
     <td><c:out value="${bean.title}"/></td>
     <td><c:out value="${bean.text}"/></td>
     <td><fmt:formatDate value="${bean.creationDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+    <td><c:out value="${bean.creationIp}"/></td>
+    <td><c:out value="${bean.creationCountry}"/><c:if test="${!empty bean.creationArea}">(<c:out value="${bean.creationArea}"/>)</c:if></td>
     <td><c:choose><c:when test="${bean.reply}"><s:message code="yes"/></c:when><c:otherwise><b><s:message code="no"/></b></c:otherwise></c:choose></td>
     <td><c:if test="${bean.status == 1}"><b></c:if><s:message code="guestbook.status.${bean.status}"/><c:if test="${bean.status == 1}"></b></c:if></td>
     <td><c:choose><c:when test="${bean.recommend}"><b><s:message code="yes"/></b></c:when><c:otherwise><s:message code="no"/></c:otherwise></c:choose></td> 

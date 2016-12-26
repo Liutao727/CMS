@@ -22,6 +22,8 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.base.Objects;
+
 /**
  * Org
  * 
@@ -83,6 +85,23 @@ public class Org implements java.io.Serializable {
 
 	@Transient
 	public void applyDefaultValue() {
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Org)) {
+			return false;
+		}
+		Org that = (Org) o;
+		return Objects.equal(id, that.id);
 	}
 
 	private Integer id;

@@ -148,12 +148,12 @@ public class RoleController {
 
 	@RequiresPermissions("core:role:update")
 	@RequestMapping("batch_update.do")
-	public String batchUpdate(Integer[] id, String[] name,
+	public String batchUpdate(Integer[] id, String[] name, Integer[] rank,
 			String[] description, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(id, site.getId());
-		List<Role> beans = service.batchUpdate(id, name, description);
+		List<Role> beans = service.batchUpdate(id, name, rank, description);
 		for (Role bean : beans) {
 			logService.operation("opr.role.batchEdit", bean.getName(), null,
 					bean.getId(), request);

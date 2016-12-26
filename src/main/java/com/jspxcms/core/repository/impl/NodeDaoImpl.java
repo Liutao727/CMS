@@ -16,10 +16,10 @@ import com.jspxcms.common.orm.JpqlBuilder;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domaindsl.QNode;
-import com.jspxcms.core.repository.NodeDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.domain.QNode;
+import com.jspxcms.core.repository.plus.NodeDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * NodeDaoImpl
@@ -32,7 +32,7 @@ public class NodeDaoImpl implements NodeDaoPlus {
 			String treeNumber, Boolean isRealNode, Boolean isHidden,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
 		predicate(query, node, siteId, parentId, treeNumber, isRealNode,
@@ -44,7 +44,7 @@ public class NodeDaoImpl implements NodeDaoPlus {
 			String treeNumber, Boolean isRealNode, Boolean isHidden,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
 		predicate(query, node, siteId, parentId, treeNumber, isRealNode,
@@ -52,7 +52,7 @@ public class NodeDaoImpl implements NodeDaoPlus {
 		return QuerydslUtils.page(query, node, pageable);
 	}
 
-	private void predicate(JPAQuery query, QNode node, Integer[] siteId,
+	private void predicate(JPAQuery<Node> query, QNode node, Integer[] siteId,
 			Integer parentId, String treeNumber, Boolean isRealNode,
 			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3,
 			Integer[] p4, Integer[] p5, Integer[] p6) {
@@ -98,7 +98,7 @@ public class NodeDaoImpl implements NodeDaoPlus {
 		if (ArrayUtils.isEmpty(numbers)) {
 			return Collections.emptyList();
 		}
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
 		query.from(node);
@@ -107,14 +107,14 @@ public class NodeDaoImpl implements NodeDaoPlus {
 			exp = exp.or(node.number.like(numbers[i]));
 		}
 		query.where(exp);
-		return query.list(node);
+		return query.fetch();
 	}
 
 	public List<Node> findByNumbers(String[] numbers, Integer[] siteIds) {
 		if (ArrayUtils.isEmpty(numbers)) {
 			return Collections.emptyList();
 		}
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
 		query.from(node);
@@ -135,7 +135,7 @@ public class NodeDaoImpl implements NodeDaoPlus {
 			exp = exp.and(e);
 		}
 		query.where(exp);
-		return query.list(node);
+		return query.fetch();
 	}
 
 	public List<Node> findForHtml(Integer siteId, Integer nodeId,

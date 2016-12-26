@@ -37,8 +37,6 @@ import com.jspxcms.core.domain.Attribute;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.InfoTag;
 import com.jspxcms.core.domain.Node;
-import com.mysema.query.types.PathMetadataFactory;
-import com.mysema.query.types.path.EntityPathBase;
 
 /**
  * 信息实体的全文检索转换类
@@ -46,15 +44,7 @@ import com.mysema.query.types.path.EntityPathBase;
  * @author liufang
  * 
  */
-public class FInfo extends EntityPathBase<Document> {
-	private static final long serialVersionUID = 1L;
-
-	public FInfo(String var) {
-		super(Document.class, PathMetadataFactory.forVariable(var));
-	}
-
-	public static final FInfo info = new FInfo("info");
-
+public class FInfo {
 	public static final String ID = "id";
 	public static final String SITE_ID = "siteId";
 	public static final String NODE_ID = "nodeId";
@@ -69,25 +59,6 @@ public class FInfo extends EntityPathBase<Document> {
 	public static final String CREATOR = "creator";
 	public static final String AUTHOR = "author";
 	public static final String TEXT = "text";
-
-//	public final NumberPath<Integer> id = createNumber(ID, Integer.class);
-//	public final NumberPath<Integer> siteId = createNumber(SITE_ID,
-//			Integer.class);
-//	public final ArrayPath<Integer> nodeId = createArray(NODE_ID,
-//			Integer[].class);
-//	public final ArrayPath<Integer> userId = createArray(USER_ID,
-//			Integer[].class);
-//	public final ArrayPath<Integer> attrId = createArray(ATTR_ID,
-//			Integer[].class);
-//	public final DateTimePath<Date> publishDate = createDateTime(PUBLISH_DATE,
-//			Date.class);
-//	public final StringPath status = createString(STATUS);
-//	public final StringPath title = createString(TITLE);
-//	public final StringPath keyword = createString(KEYWORD);
-//	public final StringPath description = createString(DESCRIPTION);
-//	public final StringPath creator = createString(CREATOR);
-//	public final StringPath author = createString(AUTHOR);
-//	public final StringPath text = createString(TEXT);
 
 	public static List<Integer> idsFromDoc(List<Document> docList) {
 		if (!docList.isEmpty()) {

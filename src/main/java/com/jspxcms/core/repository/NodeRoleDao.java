@@ -7,13 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.NodeRole;
+import com.jspxcms.core.domain.NodeRole.NodeRoleId;
 
-public interface NodeRoleDao extends Repository<NodeRole, Integer> {
-	public NodeRole findOne(Integer id);
-
-	public NodeRole save(NodeRole bean);
-
-	public void delete(NodeRole bean);
+public interface NodeRoleDao extends Repository<NodeRole, NodeRoleId> {
+	public NodeRole findOne(NodeRoleId id);
 
 	// --------------------
 

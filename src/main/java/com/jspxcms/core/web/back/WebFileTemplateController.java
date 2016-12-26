@@ -49,7 +49,7 @@ public class WebFileTemplateController extends WebFileControllerAbstractor {
 
 	@Override
 	protected FileHandler getFileHandler(Site site) {
-		return FileHandler.getFileHandler(pathResolver,
+		return FileHandler.getLocalFileHandler(pathResolver,
 				Constants.TEMPLATE_STORE_PATH);
 	}
 

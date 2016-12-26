@@ -167,14 +167,7 @@ function wxmodeChange(){
 				      var ueditor_content_${status.index} = UE.getEditor('content_${status.index}',{
 				    	  toolbars: window.UEDITOR_CONFIG.toolbars_Basic,
 			          initialFrameHeight:150,
-				        imageUrl: "${ctx}${cmscp}/core/upload_image.do?ueditor=true",
-				        wordImageUrl: "${ctx}${cmscp}/core/upload_image.do?ueditor=true",
-				        fileUrl: "${ctx}${cmscp}/core/upload_file.do;jsessionid=<%=request.getSession().getId()%>?ueditor=true",
-				        videoUrl: "${ctx}${cmscp}/core/upload_video.do;jsessionid=<%=request.getSession().getId()%>?ueditor=true",
-				        catcherUrl: "${ctx}${cmscp}/core/get_remote_image.do?ueditor=true",
-				        imageManagerUrl: "${ctx}${cmscp}/core/image_manager.do",
-				        getMovieUrl: "${ctx}${cmscp}/core/get_movie.do",
-				        localDomain: ['${!empty GLOBAL.uploadsDomain ? GLOBAL.uploadsDomain : ""}']
+				        serverUrl:"${ctx}${cmscp}/core/ueditor.do?ueditor=true"
 				      });
 				      ueditor_content_${status.index}.addListener('contentchange',function(){
                 this.sync();

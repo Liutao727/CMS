@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Collect;
+import com.jspxcms.ext.repository.plus.CollectDaoPlus;
 
 public interface CollectDao extends Repository<Collect, Integer>,
 		CollectDaoPlus {

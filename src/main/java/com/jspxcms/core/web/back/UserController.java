@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -172,6 +173,14 @@ public class UserController {
 		if (bean.getRank() < currRank) {
 			bean.setRank(currRank);
 		}
+		if (ArrayUtils.isNotEmpty(roleIds)) {
+			for (Integer roleId : roleIds) {
+				Role role = roleService.get(roleId);
+				if (role.getRank() < bean.getRank()) {
+					throw new CmsException("user.error.roleRankHigherThenUserRank");
+				}
+			}
+		}
 		String ip = Servlets.getRemoteAddr(request);
 		service.save(bean, detail, roleIds, orgIds, groupIds, orgId, groupId,
 				ip);
@@ -210,6 +219,14 @@ public class UserController {
 		}
 		if (currRank > bean.getRank()) {
 			bean.setRank(currRank);
+		}
+		if (ArrayUtils.isNotEmpty(roleIds)) {
+			for (Integer roleId : roleIds) {
+				Role role = roleService.get(roleId);
+				if (role.getRank() < bean.getRank()) {
+					throw new CmsException("user.error.roleRankHigherThenUserRank");
+				}
+			}
 		}
 		Integer topOrgId = site.getOrg().getId();
 		service.update(bean, detail, roleIds, orgIds, groupIds, orgId, groupId,

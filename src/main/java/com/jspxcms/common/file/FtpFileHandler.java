@@ -2,6 +2,7 @@ package com.jspxcms.common.file;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,8 +37,7 @@ import freemarker.template.TemplateException;
  * 
  */
 public class FtpFileHandler extends FileHandler {
-	private static final Logger logger = LoggerFactory
-			.getLogger(FtpFileHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(FtpFileHandler.class);
 
 	private FtpTemplate ftpTemplate;
 
@@ -98,8 +98,7 @@ public class FtpFileHandler extends FileHandler {
 			public void doInFtp(FTPClient client) throws IOException {
 				String destname = prefix + dest;
 				for (String id : ids) {
-					client.rename(prefix + id,
-							destname + "/" + FilenameUtils.getName(id));
+					client.rename(prefix + id, destname + "/" + FilenameUtils.getName(id));
 				}
 			}
 		});
@@ -110,26 +109,28 @@ public class FtpFileHandler extends FileHandler {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				String pathname = prefix + id;
-				String destname = prefix + dest + "/"
-						+ FilenameUtils.getName(id);
+				String destname = prefix + dest + "/" + FilenameUtils.getName(id);
 				client.rename(pathname, destname);
 			}
 		});
 	}
 
 	@Override
-	public void store(final String text, final String name, final String path)
-			throws IOException {
+	public void store(final String text, final String name, final String path) throws IOException {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				String fullPath = prefix + path;
 				mkdir(client, fullPath);
 				client.changeWorkingDirectory(fullPath);
 				client.setBufferSize(8192);
-				OutputStream os = client.storeFileStream(name);
-				IOUtils.write(text, os, "UTF-8");
-				os.close();
-				client.completePendingCommand();
+				OutputStream os = null;
+				try {
+					os = client.storeFileStream(name);
+					IOUtils.write(text, os, "UTF-8");
+				} finally {
+					IOUtils.closeQuietly(os);
+					client.completePendingCommand();
+				}
 			}
 		});
 	}
@@ -142,59 +143,80 @@ public class FtpFileHandler extends FileHandler {
 				mkdir(client, fullPath);
 				client.changeWorkingDirectory(fullPath);
 				client.setBufferSize(8192);
-				client.storeFile(file.getOriginalFilename(),
-						file.getInputStream());
+				InputStream is = null;
+				try {
+					is = file.getInputStream();
+					client.storeFile(file.getOriginalFilename(), is);
+				} finally {
+					IOUtils.closeQuietly(is);
+				}
 			}
 		});
 	}
 
 	@Override
-	public void storeFile(final InputStream source, final String filename)
-			throws IllegalStateException, IOException {
+	public void storeFile(final InputStream source, final String filename) throws IllegalStateException, IOException {
+		try {
+			ftpTemplate.execute(new FtpClientExtractor() {
+				public void doInFtp(FTPClient client) throws IOException {
+					String fullPathName = prefix + filename;
+					String fullPath = FilenameUtils.getFullPath(fullPathName);
+					mkdir(client, fullPath);
+					client.setBufferSize(8192);
+					OutputStream output = null;
+					try {
+						output = client.storeFileStream(fullPathName);
+						IOUtils.copyLarge(source, output);
+					} finally {
+						IOUtils.closeQuietly(output);
+						client.completePendingCommand();
+					}
+				}
+			});
+		} finally {
+			IOUtils.closeQuietly(source);
+		}
+	}
+
+	@Override
+	public void storeFile(final File file, final String filename) throws IllegalStateException, IOException {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				String fullPathName = prefix + filename;
 				String fullPath = FilenameUtils.getFullPath(fullPathName);
 				mkdir(client, fullPath);
 				client.setBufferSize(8192);
-				OutputStream output = client.storeFileStream(fullPathName);
-				IOUtils.copyLarge(source, output);
-				IOUtils.closeQuietly(source);
-				IOUtils.closeQuietly(output);
-				client.completePendingCommand();
+				InputStream is = null;
+				try {
+					is = FileUtils.openInputStream(file);
+					client.storeFile(fullPathName, is);
+				} finally {
+					IOUtils.closeQuietly(is);
+					FileUtils.deleteQuietly(file);
+				}
 			}
 		});
 	}
 
 	@Override
-	public void storeFile(final File file, final String filename)
-			throws IllegalStateException, IOException {
-		ftpTemplate.execute(new FtpClientExtractor() {
-			public void doInFtp(FTPClient client) throws IOException {
-				String fullPathName = prefix + filename;
-				String fullPath = FilenameUtils.getFullPath(fullPathName);
-				mkdir(client, fullPath);
-				client.setBufferSize(8192);
-				InputStream is = FileUtils.openInputStream(file);
-				client.storeFile(fullPathName, is);
-				is.close();
-			}
-		});
-	}
-
-	@Override
-	public void storeFile(final List<File> files, final List<String> filenames)
-			throws IllegalStateException, IOException {
+	public void storeFile(final List<File> files, final List<String> filenames) throws IllegalStateException,
+			IOException {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				client.setBufferSize(8192);
 				for (int i = 0, len = files.size(); i < len; i++) {
+					File file = files.get(i);
 					String fullPathName = prefix + filenames.get(i);
 					String fullPath = FilenameUtils.getFullPath(fullPathName);
 					mkdir(client, fullPath);
-					InputStream is = FileUtils.openInputStream(files.get(i));
-					client.storeFile(fullPathName, is);
-					is.close();
+					InputStream is = null;
+					try {
+						is = FileUtils.openInputStream(file);
+						client.storeFile(fullPathName, is);
+					} finally {
+						IOUtils.closeQuietly(is);
+						FileUtils.deleteQuietly(file);
+					}
 				}
 			}
 		});
@@ -209,70 +231,83 @@ public class FtpFileHandler extends FileHandler {
 				String fullPath = FilenameUtils.getFullPath(fullPathName);
 				mkdir(client, fullPath);
 				client.setBufferSize(8192);
-				InputStream is = file.getInputStream();
-				client.storeFile(fullPathName, is);
-				is.close();
+				InputStream is = null;
+				try {
+					is = file.getInputStream();
+					client.storeFile(fullPathName, is);
+				} finally {
+					IOUtils.closeQuietly(is);
+				}
 			}
 		});
 	}
 
 	@Override
-	public void storeFile(final Template template, final Object rootMap,
-			final String filename) {
+	public void storeFile(final Template template, final Object rootMap, final String filename) {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				String fullPathName = prefix + filename;
 				String fullPath = FilenameUtils.getFullPath(fullPathName);
 				mkdir(client, fullPath);
 				client.setBufferSize(8192);
-				OutputStream os = client.storeFileStream(fullPathName);
-				Writer writer = new OutputStreamWriter(os, "UTF-8");
 				try {
-					template.process(rootMap, writer);
+					OutputStream os = null;
+					Writer writer = null;
+					try {
+						os = client.storeFileStream(fullPathName);
+						writer = new OutputStreamWriter(os, "UTF-8");
+						template.process(rootMap, writer);
+					} finally {
+						IOUtils.closeQuietly(os);
+						IOUtils.closeQuietly(writer);
+						client.completePendingCommand();
+					}
 				} catch (TemplateException e) {
 					logger.error("Create Template error.", e);
 				}
-				IOUtils.closeQuietly(writer);
-				IOUtils.closeQuietly(os);
-				client.completePendingCommand();
 			}
 		});
 	}
 
 	@Override
-	public void storeImage(final BufferedImage image, final String formatName,
-			final String filename) {
+	public void storeImage(final BufferedImage image, final String formatName, final String filename) {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				String fullPathName = prefix + filename;
 				String fullPath = FilenameUtils.getFullPath(fullPathName);
 				mkdir(client, fullPath);
 				client.setBufferSize(8192);
-				OutputStream os = client.storeFileStream(fullPathName);
-				ImageIO.write(image, formatName, os);
-				IOUtils.closeQuietly(os);
-				client.completePendingCommand();
+				OutputStream os = null;
+				try {
+					os = client.storeFileStream(fullPathName);
+					ImageIO.write(image, formatName, os);
+				} finally {
+					IOUtils.closeQuietly(os);
+					client.completePendingCommand();
+				}
 			}
 		});
 	}
 
 	@Override
-	public void storeImages(final List<BufferedImage> images,
-			final String formatName, final List<String> filenames) {
+	public void storeImages(final List<BufferedImage> images, final String formatName, final List<String> filenames) {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				client.setBufferSize(8192);
-				OutputStream os;
+				OutputStream os = null;
 				String fullPathname;
 				String fullPath;
 				for (int i = 0, len = images.size(); i < len; i++) {
 					fullPathname = prefix + filenames.get(i);
 					fullPath = FilenameUtils.getFullPath(fullPathname);
 					mkdir(client, fullPath);
-					os = client.storeFileStream(fullPathname);
-					ImageIO.write(images.get(i), formatName, os);
-					os.close();
-					client.completePendingCommand();
+					try {
+						os = client.storeFileStream(fullPathname);
+						ImageIO.write(images.get(i), formatName, os);
+					} finally {
+						IOUtils.closeQuietly(os);
+						client.completePendingCommand();
+					}
 				}
 			}
 		});
@@ -304,8 +339,7 @@ public class FtpFileHandler extends FileHandler {
 		return success[0];
 	}
 
-	private boolean delete(String id, String prefix, FTPClient client)
-			throws IOException {
+	private boolean delete(String id, String prefix, FTPClient client) throws IOException {
 		String pathname = prefix + id;
 		String path = FilenameUtils.getFullPath(pathname);
 		String name = FilenameUtils.getName(pathname);
@@ -338,13 +372,31 @@ public class FtpFileHandler extends FileHandler {
 	}
 
 	@Override
+	public File getFile(final String id) {
+		final File[] file = new File[1];
+		ftpTemplate.execute(new FtpClientExtractor() {
+			public void doInFtp(FTPClient client) throws IOException {
+				String ext = FilenameUtils.getExtension(id);
+				file[0] = FilesEx.getTempFile(ext);
+				FileOutputStream os = null;
+				try {
+					os = new FileOutputStream(file[0]);
+					client.retrieveFile(prefix + id, os);
+				} finally {
+					IOUtils.closeQuietly(os);
+				}
+			}
+		});
+		return file[0];
+	}
+
+	@Override
 	public CommonFile get(final String id, final String displayPath) {
 		final CommonFile commonFile = new CommonFile(id, displayPath);
 		if (commonFile.getType() == FileType.text) {
 			ftpTemplate.execute(new FtpClientExtractor() {
 				public void doInFtp(FTPClient client) throws IOException {
-					commonFile.setText(IOUtils.toString(
-							client.retrieveFileStream(prefix + id), "UTF-8"));
+					commonFile.setText(IOUtils.toString(client.retrieveFileStream(prefix + id), "UTF-8"));
 				}
 			});
 		}
@@ -382,8 +434,11 @@ public class FtpFileHandler extends FileHandler {
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {
 				InputStream input = client.retrieveFileStream(prefix + id);
-				formatName[0] = Images.getFormatName(input);
-				IOUtils.closeQuietly(input);
+				try {
+					formatName[0] = Images.getFormatName(input);
+				} finally {
+					IOUtils.closeQuietly(input);
+				}
 			}
 		});
 		return formatName[0];
@@ -409,14 +464,12 @@ public class FtpFileHandler extends FileHandler {
 	}
 
 	@Override
-	public List<CommonFile> listFiles(String search, String path,
-			String displayPath) {
+	public List<CommonFile> listFiles(String search, String path, String displayPath) {
 		return listFiles(new SearchCommonFileFilter(search), path, displayPath);
 	}
 
 	@Override
-	public List<CommonFile> listFiles(final CommonFileFilter filter,
-			final String path, final String displayPath) {
+	public List<CommonFile> listFiles(final CommonFileFilter filter, final String path, final String displayPath) {
 		final List<CommonFile> list = new ArrayList<CommonFile>();
 		ftpTemplate.execute(new FtpClientExtractor() {
 			public void doInFtp(FTPClient client) throws IOException {

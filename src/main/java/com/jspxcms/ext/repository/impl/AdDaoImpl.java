@@ -11,10 +11,10 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Ad;
-import com.jspxcms.ext.domaindsl.QAd;
-import com.jspxcms.ext.repository.AdDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.ext.domain.QAd;
+import com.jspxcms.ext.repository.plus.AdDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * AdDaoImpl
@@ -25,7 +25,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 public class AdDaoImpl implements AdDaoPlus {
 	public List<Ad> findList(Integer[] siteId, String[] slot, Integer[] slotId,
 			Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Ad> query = new JPAQuery<Ad>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QAd ad = QAd.ad;
 		query.from(ad);

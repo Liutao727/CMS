@@ -1,6 +1,6 @@
 package com.jspxcms.core.service.impl;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +30,7 @@ import com.jspxcms.core.domain.InfoDetail;
 import com.jspxcms.core.domain.InfoFile;
 import com.jspxcms.core.domain.InfoImage;
 import com.jspxcms.core.domain.InfoProcess;
+import com.jspxcms.core.domain.InfoTag;
 import com.jspxcms.core.domain.Model;
 import com.jspxcms.core.domain.ModelField;
 import com.jspxcms.core.domain.Node;
@@ -74,16 +75,13 @@ import com.jspxcms.core.support.UploadHandler;
  */
 @Service
 @Transactional
-public class InfoServiceImpl implements InfoService, SiteDeleteListener,
-		OrgDeleteListener, NodeDeleteListener, UserDeleteListener {
-	private static final Logger logger = LoggerFactory
-			.getLogger(InfoServiceImpl.class);
+public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDeleteListener, NodeDeleteListener,
+		UserDeleteListener {
+	private static final Logger logger = LoggerFactory.getLogger(InfoServiceImpl.class);
 
-	public Info save(Info bean, InfoDetail detail, Integer[] nodeIds,
-			Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds,
-			Map<String, String> customs, Map<String, String> clobs,
-			List<InfoImage> images, List<InfoFile> files, Integer[] attrIds,
-			Map<String, String> attrImages, String[] tagNames, Integer nodeId,
+	public Info save(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
+			Integer[] viewOrgIds, Map<String, String> customs, Map<String, String> clobs, List<InfoImage> images,
+			List<InfoFile> files, Integer[] attrIds, Map<String, String> attrImages, String[] tagNames, Integer nodeId,
 			Integer creatorId, String status, Integer siteId) {
 		bean.setSite(siteService.get(siteId));
 		User creator = userService.get(creatorId);
@@ -103,8 +101,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 			bean.setFiles(files);
 		}
 		try {
-			extractImage(bean.getSite(), creatorId, node, detail, images,
-					clobs, attrIds, attrImages);
+			extractImage(bean.getSite(), creatorId, node, detail, images, clobs, attrIds, attrImages);
 		} catch (Exception e) {
 			logger.error("extract image error!", e);
 		}
@@ -115,8 +112,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 			bean.setWithImage(false);
 		}
 		Workflow workflow = null;
-		if (Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status)
-				|| Info.COLLECTED.equals(status)) {
+		if (Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status) || Info.COLLECTED.equals(status)) {
 			// 草稿、投稿、采集
 			bean.setStatus(status);
 		} else {
@@ -134,19 +130,17 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		infoDetailService.save(detail, bean);
 		// 将InfoBuffer对象一并保存，以免在网页浏览时再保存，导致并发保存报错
 		infoBufferService.save(new InfoBuffer(), bean);
-		infoAttrService.save(bean, attrIds, attrImages);
-		infoNodeService.save(bean, nodeIds, nodeId);
-		infoTagService.save(bean, tagNames);
-		infoSpecialService.save(bean, specialIds);
+		infoAttrService.update(bean, attrIds, attrImages);
+		infoNodeService.update(bean, nodeIds, nodeId);
+		infoTagService.update(bean, tagNames);
+		infoSpecialService.update(bean, specialIds);
 		infoMemberGroupService.update(bean, viewGroupIds);
 		infoOrgService.update(bean, viewOrgIds);
-		attachmentRefService.update(bean.getAttachUrls(), Info.ATTACH_TYPE,
-				bean.getId());
+		attachmentRefService.update(bean.getAttachUrls(), Info.ATTACH_TYPE, bean.getId());
 
 		if (workflow != null) {
-			String stepName = workflowService.pass(workflow, creator, creator,
-					new InfoProcess(), Info.WORKFLOW_TYPE, bean.getId(), null,
-					false);
+			String stepName = workflowService.pass(workflow, creator, creator, new InfoProcess(), Info.WORKFLOW_TYPE,
+					bean.getId(), null, false);
 			if (StringUtils.isNotBlank(stepName)) {
 				// 审核中
 				bean.setStatus(Info.AUDITING);
@@ -162,11 +156,9 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		return bean;
 	}
 
-	public Info update(Info bean, InfoDetail detail, Integer[] nodeIds,
-			Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds,
-			Map<String, String> customs, Map<String, String> clobs,
-			List<InfoImage> images, List<InfoFile> files, Integer[] attrIds,
-			Map<String, String> attrImages, String[] tagNames, Integer nodeId,
+	public Info update(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
+			Integer[] viewOrgIds, Map<String, String> customs, Map<String, String> clobs, List<InfoImage> images,
+			List<InfoFile> files, Integer[] attrIds, Map<String, String> attrImages, String[] tagNames, Integer nodeId,
 			User operator, boolean pass) {
 		if (detail == null) {
 			// 允许更新时，不传入detail。
@@ -174,8 +166,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		}
 		Site site = bean.getSite();
 		try {
-			extractImage(site, bean.getCreator().getId(), bean.getNode(),
-					detail, images, clobs, attrIds, attrImages);
+			extractImage(site, bean.getCreator().getId(), bean.getNode(), detail, images, clobs, attrIds, attrImages);
 		} catch (Exception e) {
 			logger.error("extract image error!", e);
 		}
@@ -188,15 +179,12 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		if (pass) {
 			String status = bean.getStatus();
 			// 审核中、草稿、投稿、采集、退稿可审核。
-			if (Info.AUDITING.equals(status) || Info.DRAFT.equals(status)
-					|| Info.CONTRIBUTION.equals(status)
-					|| Info.COLLECTED.equals(status)
-					|| Info.REJECTION.equals(status)) {
+			if (Info.AUDITING.equals(status) || Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status)
+					|| Info.COLLECTED.equals(status) || Info.REJECTION.equals(status)) {
 				Workflow workflow = bean.getNode().getWorkflow();
 				User owner = bean.getCreator();
-				String stepName = workflowService.pass(workflow, owner,
-						operator, new InfoProcess(), Info.WORKFLOW_TYPE,
-						bean.getId(), null, !Info.AUDITING.equals(status));
+				String stepName = workflowService.pass(workflow, owner, operator, new InfoProcess(),
+						Info.WORKFLOW_TYPE, bean.getId(), null, !Info.AUDITING.equals(status));
 				if (StringUtils.isNotBlank(stepName)) {
 					// 审核中
 					bean.setStatus(Info.AUDITING);
@@ -241,18 +229,15 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		infoSpecialService.update(bean, specialIds);
 		infoMemberGroupService.update(bean, viewGroupIds);
 		infoOrgService.update(bean, viewOrgIds);
-		attachmentRefService.update(bean.getAttachUrls(), Info.ATTACH_TYPE,
-				bean.getId());
+		attachmentRefService.update(bean.getAttachUrls(), Info.ATTACH_TYPE, bean.getId());
 		updateHtml(bean, false);
 
 		firePostUpdate(bean);
 		return bean;
 	}
 
-	private void extractImage(Site site, Integer userId, Node node,
-			InfoDetail detail, List<InfoImage> images,
-			Map<String, String> clobs, Integer[] attrIds,
-			Map<String, String> attrImages) throws IOException {
+	private void extractImage(Site site, Integer userId, Node node, InfoDetail detail, List<InfoImage> images,
+			Map<String, String> clobs, Integer[] attrIds, Map<String, String> attrImages) throws IOException {
 		PublishPoint point = site.getUploadsPublishPoint();
 		String urlPrefix = point.getUrlPrefix();
 		String srcImage;
@@ -288,8 +273,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		if (StringUtils.isBlank(formatName)) {
 			return;
 		}
-
-		BufferedImage srcBuff = fileHandler.readImage(srcImage);
+		File src = fileHandler.getFile(srcImage);
 		String extension = FilenameUtils.getExtension(srcImage).toLowerCase();
 
 		boolean scale, exact;
@@ -317,9 +301,8 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 					height = null;
 				}
 				// 复制图片，压缩，得到新图片地址。
-				targetImage = uploadHandler.copyImage(srcBuff, extension,
-						formatName, site, scale, exact, width, height, null,
-						null, null, null, null, userId, site.getId());
+				targetImage = uploadHandler.copyImage(src, extension, formatName, site, scale, exact, width, height,
+						null, null, null, null, null, userId, site.getId());
 				detail.setSmallImage(targetImage);
 			}
 		}
@@ -336,9 +319,8 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 					width = attr.getImageWidth();
 					height = attr.getImageHeight();
 					exact = true;
-					targetImage = uploadHandler.copyImage(srcBuff, extension,
-							formatName, site, scale, exact, width, height,
-							null, null, null, null, null, userId, site.getId());
+					targetImage = uploadHandler.copyImage(src, extension, formatName, site, scale, exact, width,
+							height, null, null, null, null, null, userId, site.getId());
 					attrImages.put(attrId.toString(), targetImage);
 				}
 			}
@@ -357,15 +339,12 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 			detail = info.getDetail();
 			String status = info.getStatus();
 			// 审核中、草稿、投稿、采集、退稿可审核。
-			if (Info.AUDITING.equals(status) || Info.DRAFT.equals(status)
-					|| Info.CONTRIBUTION.equals(status)
-					|| Info.COLLECTED.equals(status)
-					|| Info.REJECTION.equals(status)) {
+			if (Info.AUDITING.equals(status) || Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status)
+					|| Info.COLLECTED.equals(status) || Info.REJECTION.equals(status)) {
 				workflow = info.getNode().getWorkflow();
 				owner = info.getCreator();
-				String stepName = workflowService.pass(workflow, owner,
-						operator, new InfoProcess(), Info.WORKFLOW_TYPE,
-						info.getId(), null, !Info.AUDITING.equals(status));
+				String stepName = workflowService.pass(workflow, owner, operator, new InfoProcess(),
+						Info.WORKFLOW_TYPE, info.getId(), null, !Info.AUDITING.equals(status));
 				if (StringUtils.isNotBlank(stepName)) {
 					// 审核中
 					info.setStatus(Info.AUDITING);
@@ -384,8 +363,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		return infos;
 	}
 
-	public List<Info> reject(Integer[] ids, Integer userId, String opinion,
-			boolean rejectEnd) {
+	public List<Info> reject(Integer[] ids, Integer userId, String opinion, boolean rejectEnd) {
 		Info info;
 		InfoDetail detail;
 		Workflow workflow;
@@ -399,16 +377,13 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 			if (Info.CONTRIBUTION.equals(status)) {
 				// 投稿退回。不需要经过工作流。
 				info.setStatus(Info.REJECTION);
-			} else if (Info.AUDITING.equals(status)
-					|| Info.NORMAL.equals(status)
-					|| Info.TOBE_PUBLISH.equals(status)
+			} else if (Info.AUDITING.equals(status) || Info.NORMAL.equals(status) || Info.TOBE_PUBLISH.equals(status)
 					|| Info.EXPIRED.equals(status)) {
 				// 审核中、已发布、待发布、已过期可审核退回。
 				workflow = info.getNode().getWorkflow();
 				owner = info.getCreator();
-				String stepName = workflowService.reject(workflow, owner,
-						operator, new InfoProcess(), Info.WORKFLOW_TYPE,
-						info.getId(), opinion, rejectEnd);
+				String stepName = workflowService.reject(workflow, owner, operator, new InfoProcess(),
+						Info.WORKFLOW_TYPE, info.getId(), opinion, rejectEnd);
 				if (StringUtils.isNotBlank(stepName)) {
 					// 审核中
 					info.setStatus(Info.AUDITING);
@@ -524,11 +499,14 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 	private Info doDelete(Integer id) {
 		Info entity = dao.findOne(id);
 		if (entity != null) {
+			// 删除Tag引用数
+			for (InfoTag infoTag : entity.getInfoTags()) {
+				infoTag.getTag().derefer();
+			}
 			commentService.deleteByFtypeAndFid(Info.COMMENT_TYPE, id);
 			nodeService.derefer(entity.getNode());
 			attachmentRefService.delete(Info.ATTACH_TYPE, entity.getId());
-			PInfo.deleteHtml(entity, entity.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver));
+			PInfo.deleteHtml(entity, entity.getSite().getHtmlPublishPoint().getFileHandler(pathResolver));
 			dao.delete(entity);
 		}
 		return entity;
@@ -621,15 +599,15 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 	}
 
 	private void sanitizeClob(Map<String, String> clobs) {
-//		if (clobs == null) {
-//			return;
-//		}
-//		for (Entry<String, String> entry : clobs.entrySet()) {
-//			String v = entry.getValue();
-//			if (v != null) {
-//				entry.setValue(policyFactory.sanitize(v));
-//			}
-//		}
+		// if (clobs == null) {
+		// return;
+		// }
+		// for (Entry<String, String> entry : clobs.entrySet()) {
+		// String v = entry.getValue();
+		// if (v != null) {
+		// entry.setValue(policyFactory.sanitize(v));
+		// }
+		// }
 	}
 
 	public void preUserDelete(Integer[] ids) {
@@ -761,7 +739,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 		this.deleteListeners = deleteListeners;
 	}
 
-//	private PolicyFactory policyFactory;
+	// private PolicyFactory policyFactory;
 	private HtmlService htmlService;
 	private AttachmentRefService attachmentRefService;
 	private CommentService commentService;
@@ -780,10 +758,10 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 	private SiteService siteService;
 	protected PathResolver pathResolver;
 
-//	@Autowired
-//	public void setPolicyFactory(PolicyFactory policyFactory) {
-//		this.policyFactory = policyFactory;
-//	}
+	// @Autowired
+	// public void setPolicyFactory(PolicyFactory policyFactory) {
+	// this.policyFactory = policyFactory;
+	// }
 
 	@Autowired
 	public void setHtmlService(HtmlService htmlService) {
@@ -791,8 +769,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 	}
 
 	@Autowired
-	public void setAttachmentRefService(
-			AttachmentRefService attachmentRefService) {
+	public void setAttachmentRefService(AttachmentRefService attachmentRefService) {
 		this.attachmentRefService = attachmentRefService;
 	}
 
@@ -807,8 +784,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener,
 	}
 
 	@Autowired
-	public void setInfoMemberGroupService(
-			InfoMemberGroupService infoMemberGroupService) {
+	public void setInfoMemberGroupService(InfoMemberGroupService infoMemberGroupService) {
 		this.infoMemberGroupService = infoMemberGroupService;
 	}
 

@@ -26,8 +26,7 @@ import com.jspxcms.core.support.DeleteException;
  */
 @Service
 @Transactional(readOnly = true)
-public class AttributeServiceImpl implements AttributeService,
-		SiteDeleteListener {
+public class AttributeServiceImpl implements AttributeService, SiteDeleteListener {
 	public List<Attribute> findList(Integer siteId) {
 		return dao.findBySiteId(siteId, new Sort("seq", "id"));
 	}
@@ -73,9 +72,8 @@ public class AttributeServiceImpl implements AttributeService,
 	}
 
 	@Transactional
-	public Attribute[] batchUpdate(Integer[] id, String[] name,
-			String[] number, Integer[] imageWidth, Integer[] imageHeight,
-			Boolean[] scale, Boolean[] exact, Boolean[] watermark) {
+	public Attribute[] batchUpdate(Integer[] id, String[] name, String[] number, Integer[] imageWidth,
+			Integer[] imageHeight, Boolean[] scale, Boolean[] exact, Boolean[] watermark) {
 		Attribute[] beans = new Attribute[id.length];
 		for (int i = 0, len = id.length; i < len; i++) {
 			beans[i] = get(id[i]);
@@ -95,7 +93,7 @@ public class AttributeServiceImpl implements AttributeService,
 	@Transactional
 	public Attribute delete(Integer id) {
 		Attribute entity = dao.findOne(id);
-		infoAttributeService.deleteByAttributeId(id);
+		infoAttrService.deleteByAttributeId(id);
 		dao.delete(entity);
 		return entity;
 	}
@@ -118,12 +116,11 @@ public class AttributeServiceImpl implements AttributeService,
 
 	}
 
-	private InfoAttributeService infoAttributeService;
+	private InfoAttributeService infoAttrService;
 
 	@Autowired
-	public void setInfoAttributeService(
-			InfoAttributeService infoAttributeService) {
-		this.infoAttributeService = infoAttributeService;
+	public void setInfoAttrService(InfoAttributeService infoAttrService) {
+		this.infoAttrService = infoAttrService;
 	}
 
 	private SiteService siteService;

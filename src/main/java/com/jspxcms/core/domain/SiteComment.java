@@ -116,7 +116,7 @@ public class SiteComment implements Configurable {
 						.isAdmin());
 	}
 
-	public Integer getMode() {
+	public int getMode() {
 		String mode = getCustoms().get(MODE);
 		if (StringUtils.isNotBlank(mode)) {
 			return Integer.parseInt(mode);
@@ -167,7 +167,7 @@ public class SiteComment implements Configurable {
 		}
 	}
 
-	public Integer getMaxLength() {
+	public int getMaxLength() {
 		String maxLength = getCustoms().get(MAX_LENGTH);
 		if (StringUtils.isNotBlank(maxLength)) {
 			return Integer.parseInt(maxLength);

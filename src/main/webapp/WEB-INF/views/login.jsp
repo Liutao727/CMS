@@ -92,6 +92,6 @@ if(username!=null) {
 	</form>
 	<div class="clear"></div>
 </div>
-<div class="center div2">&copy; 2010-2016 <a href="http://www.jspxcms.com/" target="_blank">Jspxcms</a> All Rights Reserved</div>
+<div class="center div2">&copy; 2010-2017 <a href="http://www.jspxcms.com/" target="_blank">Jspxcms</a> All Rights Reserved</div>
 </body>
 </html>

@@ -2,16 +2,18 @@ package com.jspxcms.core.domain;
 
 // Generated 2013-6-24 15:12:04 by Hibernate Tools 4.0.0
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.InfoTag.InfoTagId;
 
 /**
  * InfoTag
@@ -21,37 +23,28 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "cms_info_tag")
+@IdClass(InfoTagId.class)
 public class InfoTag implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// @PrePersist
-	// @PreUpdate
-	// public void prepareIndex() {
-	// if (getInfo() != null) {
-	// setTagIndex(getInfo().getInfoTags().indexOf(this));
-	// }
-	// }
+	public InfoTag() {
+	}
 
-	private Integer id;
-	private Info info;
-	private Tag tag;
-	
-	private Integer tagIndex;
+	public InfoTag(Info info, Tag tag) {
+		this.info = info;
+		this.tag = tag;
+	}
 
 	@Id
-	@Column(name = "f_infotag_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info_tag", pkColumnValue = "cms_info_tag", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info_tag")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_info_id", nullable = false)
+	private Info info;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_tag_id", nullable = false)
+	private Tag tag;
+
 	public Info getInfo() {
 		return info;
 	}
@@ -60,8 +53,6 @@ public class InfoTag implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_tag_id", nullable = false)
 	public Tag getTag() {
 		return tag;
 	}
@@ -70,13 +61,52 @@ public class InfoTag implements java.io.Serializable {
 		this.tag = tag;
 	}
 
-	@Column(name = "f_tag_index", nullable = false)
-	public Integer getTagIndex() {
-		return tagIndex;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof InfoTag)) {
+			return false;
+		}
+		InfoTag that = (InfoTag) o;
+		return Objects.equal(info, that.info) && Objects.equal(tag, that.tag);
 	}
 
-	public void setTagIndex(Integer tagIndex) {
-		this.tagIndex = tagIndex;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(info, tag);
 	}
 
+	public static class InfoTagId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer info;
+		Integer tag;
+
+		public InfoTagId() {
+		}
+
+		public InfoTagId(Integer info, Integer tag) {
+			this.info = info;
+			this.tag = tag;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof InfoTagId)) {
+				return false;
+			}
+			InfoTagId that = (InfoTagId) o;
+			return Objects.equal(info, that.info) && Objects.equal(tag, that.tag);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(info, tag);
+		}
+	}
 }

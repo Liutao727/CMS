@@ -33,7 +33,6 @@ public class CollectJob implements Job {
 			JobDataMap map = context.getJobDetail().getJobDataMap();
 			Integer collectId = map.getIntegerFromString(COLLECT_ID);
 			collector.start(collectId);
-			System.out.println("collect ok");
 			logger.info("run collect job: " + collectId);
 		} catch (SchedulerException e) {
 			throw new JobExecutionException("Cannot get ApplicationContext", e);

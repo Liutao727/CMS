@@ -507,6 +507,9 @@ public class Collect implements Siteable, java.io.Serializable {
 		if (getSubmit() == null) {
 			setSubmit(false);
 		}
+		if (getDownloadImage() == null) {
+			setDownloadImage(true);
+		}
 		if (getAllowDuplicate() == null) {
 			setAllowDuplicate(false);
 		}
@@ -543,6 +546,7 @@ public class Collect implements Siteable, java.io.Serializable {
 	private Boolean blockAreaReg;
 	private Boolean blockReg;
 	private Boolean submit;
+	private Boolean downloadImage;
 	private Boolean allowDuplicate;
 	private Integer status;
 
@@ -785,6 +789,15 @@ public class Collect implements Siteable, java.io.Serializable {
 
 	public void setSubmit(Boolean submit) {
 		this.submit = submit;
+	}
+
+	@Column(name = "f_is_download_image", nullable = false, length = 1)
+	public Boolean getDownloadImage() {
+		return downloadImage;
+	}
+
+	public void setDownloadImage(Boolean downloadImage) {
+		this.downloadImage = downloadImage;
 	}
 
 	@Column(name = "f_is_allow_duplicate", nullable = false, length = 1)

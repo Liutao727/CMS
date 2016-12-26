@@ -30,6 +30,7 @@ window.UEDITOR_HOME_URL = "${ctx}/static/vendor/ueditor/";
 <script type="text/javascript" src="${ctx}/static/vendor/editormd/editormd.min.js"></script>
 <script type="text/javascript" src="${ctx}/static/commons/scripts/editormd.plugin.js"></script>
 <script type="text/javascript" src="${ctx}/static/vendor/to-markdown.js"></script>
+<script type="text/javascript" src="${ctx}/static/vendor/echarts.common.min.js"></script>
 
 <script type="text/javascript" src="${ctx}/static/commons/scripts/bluewise.js"></script>
 <script type="text/javascript" src="${ctx}/static/back/scripts/jspxcms.js"></script>

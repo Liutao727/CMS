@@ -19,17 +19,13 @@ import com.jspxcms.core.domain.Tag;
  * 
  */
 public interface TagService {
-	public Page<Tag> findAll(Integer siteId, Map<String, String[]> params,
-			Pageable pageable);
+	public Page<Tag> findAll(Integer siteId, Map<String, String[]> params, Pageable pageable);
 
-	public RowSide<Tag> findSide(Integer siteId, Map<String, String[]> params,
-			Tag bean, Integer position, Sort sort);
+	public RowSide<Tag> findSide(Integer siteId, Map<String, String[]> params, Tag bean, Integer position, Sort sort);
 
-	public List<Tag> findList(Integer[] siteId, String[] node,
-			Integer[] nodeId, Integer refers, Limitable limitable);
+	public List<Tag> findList(Integer[] siteId, String[] node, Integer[] nodeId, Integer refers, Limitable limitable);
 
-	public Page<Tag> findPage(Integer[] siteId, String[] node,
-			Integer[] nodeId, Integer refers, Pageable pageable);
+	public Page<Tag> findPage(Integer[] siteId, String[] node, Integer[] nodeId, Integer refers, Pageable pageable);
 
 	public List<Tag> findByName(String[] names, Integer[] siteIds);
 

@@ -1,59 +1,42 @@
 package com.jspxcms.core.domain;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.UserOrg.UserOrgId;
 
 @Entity
 @Table(name = "cms_user_org")
+@IdClass(UserOrgId.class)
 public class UserOrg implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-
-	// @PrePersist
-	// @PreUpdate
-	// public void prepareIndex() {
-	// if (getUser() != null) {
-	// setOrgIndex(getUser().getUserOrgs().indexOf(this));
-	// }
-	// }
-
-	private Integer id;
-
-	private User user;
-	private Org org;
-
-	private Integer orgIndex;
 
 	public UserOrg() {
 	}
 
-	public UserOrg(User user, Org org, Integer orgIndex) {
+	public UserOrg(User user, Org org) {
 		this.user = user;
 		this.org = org;
-		this.orgIndex = orgIndex;
 	}
 
 	@Id
-	@Column(name = "f_userorg_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_user_org", pkColumnValue = "cms_user_org", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_user_org")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_user_id", nullable = false)
+	private User user;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_org_id", nullable = false)
+	private Org org;
+
 	public User getUser() {
 		return user;
 	}
@@ -62,8 +45,6 @@ public class UserOrg implements java.io.Serializable {
 		this.user = user;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_org_id", nullable = false)
 	public Org getOrg() {
 		return org;
 	}
@@ -72,13 +53,52 @@ public class UserOrg implements java.io.Serializable {
 		this.org = org;
 	}
 
-	@Column(name = "f_org_index", nullable = false)
-	public Integer getOrgIndex() {
-		return this.orgIndex;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof UserOrg)) {
+			return false;
+		}
+		UserOrg that = (UserOrg) o;
+		return Objects.equal(user, that.user) && Objects.equal(org, that.org);
 	}
 
-	public void setOrgIndex(Integer orgIndex) {
-		this.orgIndex = orgIndex;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(user, org);
 	}
 
+	public static class UserOrgId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer user;
+		Integer org;
+
+		public UserOrgId() {
+		}
+
+		public UserOrgId(Integer user, Integer org) {
+			this.user = user;
+			this.org = org;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof UserOrgId)) {
+				return false;
+			}
+			UserOrgId that = (UserOrgId) o;
+			return Objects.equal(user, that.user) && Objects.equal(org, that.org);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(user, org);
+		}
+	}
 }

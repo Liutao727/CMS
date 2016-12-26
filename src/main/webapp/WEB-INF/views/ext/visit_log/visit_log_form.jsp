@@ -56,6 +56,12 @@ function confirmDelete() {
     <td class="in-ctt" width="35%"><f:text value="${bean.ip}" readonly="readonly" style="width:180px;"/></td>
   </tr>
   <tr>
+    <td class="in-lab" width="15%"><s:message code="visitLog.country"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.country}" readonly="readonly" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="visitLog.area"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.area}" readonly="readonly" style="width:180px;"/></td>
+  </tr>
+  <tr>
     <td class="in-lab" width="15%"><s:message code="visitLog.url"/>:</td>
     <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.url}" readonly="readonly" style="width:95%;"/></td>
   </tr>
@@ -64,8 +70,28 @@ function confirmDelete() {
     <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.referrer}" readonly="readonly" style="width:95%;"/></td>
   </tr>
   <tr>
+    <td class="in-lab" width="15%"><s:message code="visitLog.source"/>:</td>
+    <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.source}" readonly="readonly" style="width:95%;"/></td>
+  </tr>
+  <tr>
     <td class="in-lab" width="15%"><s:message code="visitLog.cookie"/>:</td>
     <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.cookie}" readonly="readonly" style="width:95%;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="visitLog.userAgent"/>:</td>
+    <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.userAgent}" readonly="readonly" style="width:95%;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="visitLog.browser"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.browser}" readonly="readonly" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="visitLog.os"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.os}" readonly="readonly" style="width:180px;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="visitLog.device"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.device}" readonly="readonly" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="visitLog.username"/>:</td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.user.username}" readonly="readonly" style="width:180px;"/></td>
   </tr>
 </table>
 </form>

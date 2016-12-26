@@ -66,8 +66,7 @@ public class Site implements java.io.Serializable {
 	 */
 	public static final int TREE_NUMBER_LENGTH = 4;
 
-	public static String getIdentityCookie(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String getIdentityCookie(HttpServletRequest request, HttpServletResponse response) {
 		String value;
 		Cookie cookie = WebUtils.getCookie(request, IDENTITY_COOKIE_NAME);
 		if (cookie != null && StringUtils.isNotBlank(cookie.getValue())) {
@@ -169,8 +168,7 @@ public class Site implements java.io.Serializable {
 			}
 		} else {
 			if (!getIdentifyDomain() && !getDef()) {
-				sb.append(SITE_PREFIX).append(getNumber())
-						.append(DYNAMIC_SUFFIX);
+				sb.append(SITE_PREFIX).append(getNumber()).append(DYNAMIC_SUFFIX);
 			}
 		}
 		if (sb.length() == 0) {
@@ -303,8 +301,7 @@ public class Site implements java.io.Serializable {
 
 	@Transient
 	public PublishPoint getUploadsPublishPoint() {
-		return getGlobal() != null ? getGlobal().getUploadsPublishPoint()
-				: null;
+		return getGlobal() != null ? getGlobal().getUploadsPublishPoint() : null;
 	}
 
 	@Transient
@@ -349,13 +346,16 @@ public class Site implements java.io.Serializable {
 	}
 
 	@Transient
+	public SiteComment getCommment() {
+		return new SiteComment(this);
+	}
+
+	@Transient
 	public Object getConf(String className) {
 		try {
-			return Class.forName(className).getConstructor(Site.class)
-					.newInstance(this);
+			return Class.forName(className).getConstructor(Site.class).newInstance(this);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Class '" + className
-					+ "' is not Conf Class", e);
+			throw new IllegalArgumentException("Class '" + className + "' is not Conf Class", e);
 		}
 	}
 
@@ -364,8 +364,7 @@ public class Site implements java.io.Serializable {
 		try {
 			return clazz.getConstructor(Site.class).newInstance(this);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Class '" + clazz.getName()
-					+ "' is not Conf Class", e);
+			throw new IllegalArgumentException("Class '" + clazz.getName() + "' is not Conf Class", e);
 		}
 	}
 

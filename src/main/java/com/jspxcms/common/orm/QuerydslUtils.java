@@ -9,13 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
-import com.mysema.query.SimpleQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.path.EntityPathBase;
-import com.mysema.query.types.path.PathBuilder;
+import com.querydsl.core.SimpleQuery;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * Querydsl工具类
@@ -24,17 +24,14 @@ import com.mysema.query.types.path.PathBuilder;
  * 
  */
 public abstract class QuerydslUtils {
-	public static <T> List<T> list(JPAQuery query, EntityPathBase<T> entityPath) {
-		return query.list(entityPath);
-	}
 
-	public static <T> List<T> list(JPAQuery query,
+	public static <T> List<T> list(JPAQuery<T> query,
 			EntityPathBase<T> entityPath, Sort sort) {
 		applySorting(query, entityPath, sort);
-		return query.list(entityPath);
+		return query.fetch();
 	}
 
-	public static <T> List<T> list(JPAQuery query,
+	public static <T> List<T> list(JPAQuery<T> query,
 			EntityPathBase<T> entityPath, Limitable limitable) {
 		applySorting(query, entityPath, limitable.getSort());
 		Integer firstResult = limitable.getFirstResult();
@@ -45,18 +42,18 @@ public abstract class QuerydslUtils {
 		if (maxResults != null && maxResults > 0) {
 			query.limit(maxResults);
 		}
-		return query.list(entityPath);
+		return query.fetch();
 	}
 
-	public static <T> Page<T> page(JPAQuery query,
+	public static <T> Page<T> page(JPAQuery<T> query,
 			EntityPathBase<T> entityPath, Pageable pageable) {
-		long total = query.count();
+		long total = query.fetchCount();
 		List<T> content;
 		if (total > pageable.getOffset()) {
 			query.offset(pageable.getOffset());
 			query.limit(pageable.getPageSize());
 			applySorting(query, entityPath, pageable.getSort());
-			content = query.list(entityPath);
+			content = query.fetch();
 		} else {
 			content = Collections.emptyList();
 		}
@@ -80,7 +77,7 @@ public abstract class QuerydslUtils {
 	private static OrderSpecifier<?> toOrder(PathBuilder builder, Order order) {
 		Expression<Object> property = builder.get(order.getProperty());
 		return new OrderSpecifier(
-				order.isAscending() ? com.mysema.query.types.Order.ASC
-						: com.mysema.query.types.Order.DESC, property);
+				order.isAscending() ? com.querydsl.core.types.Order.ASC
+						: com.querydsl.core.types.Order.DESC, property);
 	}
 }

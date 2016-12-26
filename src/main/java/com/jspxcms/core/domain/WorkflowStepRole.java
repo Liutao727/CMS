@@ -1,19 +1,23 @@
 package com.jspxcms.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.WorkflowStepRole.WorkflowStepRoleId;
 
 @Entity
 @Table(name = "cms_workflowstep_role")
+@IdClass(WorkflowStepRoleId.class)
 public class WorkflowStepRole implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -24,35 +28,27 @@ public class WorkflowStepRole implements java.io.Serializable {
 		}
 	}
 
-	private Integer id;
-	private Role role;
-	private WorkflowStep step;
-
-	private Integer roleIndex;
-
 	public WorkflowStepRole() {
 	}
 
-	public WorkflowStepRole(WorkflowStep step, Role role, Integer roleIndex) {
+	public WorkflowStepRole(WorkflowStep step, Role role) {
 		this.step = step;
 		this.role = role;
-		this.roleIndex = roleIndex;
 	}
 
 	@Id
-	@Column(name = "f_wfsteprole_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_workflowstep_role", pkColumnValue = "cms_workflowstep_role", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_workflowstep_role")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_role_id", nullable = false)
+	private Role role;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_workflowstep_id", nullable = false)
+	private WorkflowStep step;
+
+	@Column(name = "f_role_index", nullable = false)
+	private Integer roleIndex;
+
 	public Role getRole() {
 		return role;
 	}
@@ -61,8 +57,6 @@ public class WorkflowStepRole implements java.io.Serializable {
 		this.role = role;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_workflowstep_id", nullable = false)
 	public WorkflowStep getStep() {
 		return step;
 	}
@@ -71,7 +65,6 @@ public class WorkflowStepRole implements java.io.Serializable {
 		this.step = step;
 	}
 
-	@Column(name = "f_role_index", nullable = false)
 	public Integer getRoleIndex() {
 		return roleIndex;
 	}
@@ -80,4 +73,52 @@ public class WorkflowStepRole implements java.io.Serializable {
 		this.roleIndex = roleIndex;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof WorkflowStepRole)) {
+			return false;
+		}
+		WorkflowStepRole that = (WorkflowStepRole) o;
+		return Objects.equal(role, that.role) && Objects.equal(step, that.step);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(role, step);
+	}
+
+	public static class WorkflowStepRoleId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer role;
+		Integer step;
+
+		public WorkflowStepRoleId() {
+		}
+
+		public WorkflowStepRoleId(Integer role, Integer step) {
+			this.role = role;
+			this.step = step;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof WorkflowStepRoleId)) {
+				return false;
+			}
+			WorkflowStepRoleId that = (WorkflowStepRoleId) o;
+			return Objects.equal(role, that.role) && Objects.equal(step, that.step);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(role, step);
+		}
+	}
 }

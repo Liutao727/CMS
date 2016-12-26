@@ -1,15 +1,17 @@
 package com.jspxcms.core.domain;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.InfoSpecial.InfoSpecialId;
 
 /**
  * InfoSpecial
@@ -19,37 +21,28 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "cms_info_special")
+@IdClass(InfoSpecialId.class)
 public class InfoSpecial implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// @PrePersist
-	// @PreUpdate
-	// public void prepareIndex() {
-	// if (getInfo() != null) {
-	// setSpecialIndex(getInfo().getInfoSpecials().indexOf(this));
-	// }
-	// }
-
-	private Integer id;
-	private Info info;
-	private Special special;
-	
-	private Integer specialIndex;
-
 	@Id
-	@Column(name = "f_infospecial_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info_special", pkColumnValue = "cms_info_special", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info_special")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_info_id", nullable = false)
+	private Info info;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_special_id", nullable = false)
+	private Special special;
+
+	public InfoSpecial() {
+	}
+
+	public InfoSpecial(Info info, Special special) {
+		this.info = info;
+		this.special = special;
+	}
+
 	public Info getInfo() {
 		return info;
 	}
@@ -58,8 +51,6 @@ public class InfoSpecial implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_special_id", nullable = false)
 	public Special getSpecial() {
 		return special;
 	}
@@ -68,13 +59,52 @@ public class InfoSpecial implements java.io.Serializable {
 		this.special = special;
 	}
 
-	@Column(name = "f_special_index", nullable = false)
-	public Integer getSpecialIndex() {
-		return this.specialIndex;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof InfoSpecial)) {
+			return false;
+		}
+		InfoSpecial that = (InfoSpecial) o;
+		return Objects.equal(info, that.info) && Objects.equal(special, that.special);
 	}
 
-	public void setSpecialIndex(Integer specialIndex) {
-		this.specialIndex = specialIndex;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(info, special);
 	}
 
+	public static class InfoSpecialId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer info;
+		Integer special;
+
+		public InfoSpecialId() {
+		}
+
+		public InfoSpecialId(Integer infoId, Integer specialId) {
+			this.info = infoId;
+			this.special = specialId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof InfoSpecialId)) {
+				return false;
+			}
+			InfoSpecialId that = (InfoSpecialId) o;
+			return Objects.equal(info, that.info) && Objects.equal(special, that.special);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(info, special);
+		}
+	}
 }

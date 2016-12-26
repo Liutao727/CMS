@@ -1,5 +1,6 @@
 package com.jspxcms.core.web.fore;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.common.web.Validations;
 import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.Org;
 import com.jspxcms.core.domain.Site;
+import com.jspxcms.core.domain.User;
 import com.jspxcms.core.service.NodeBufferService;
 import com.jspxcms.core.service.NodeQueryService;
 import com.jspxcms.core.service.SiteService;
@@ -51,6 +55,16 @@ public class NodeController {
 		Node node = query.findRoot(site.getId());
 		if (!Validations.exist(node, messages, "Node", "root")) {
 			return resp.badRequest();
+		}
+		Collection<MemberGroup> groups = Context.getCurrentGroups(request);
+		Collection<Org> orgs = Context.getCurrentOrgs(request);
+		if (!node.isViewPerm(groups, orgs)) {
+			User user = Context.getCurrentUser();
+			if (user != null) {
+				return resp.forbidden();
+			} else {
+				return resp.unauthorized();
+			}
 		}
 		modelMap.addAttribute("node", node);
 		modelMap.addAttribute("text", node.getText());
@@ -101,6 +115,16 @@ public class NodeController {
 		if (!node.getSite().getId().equals(site.getId())) {
 			site = node.getSite();
 			Context.setCurrentSite(site);
+		}
+		Collection<MemberGroup> groups = Context.getCurrentGroups(request);
+		Collection<Org> orgs = Context.getCurrentOrgs(request);
+		if (!node.isViewPerm(groups, orgs)) {
+			User user = Context.getCurrentUser();
+			if (user != null) {
+				return resp.forbidden();
+			} else {
+				return resp.unauthorized();
+			}
 		}
 		String linkUrl = node.getLinkUrl();
 		if (StringUtils.isNotBlank(linkUrl)) {

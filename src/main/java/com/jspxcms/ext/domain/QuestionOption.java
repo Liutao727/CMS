@@ -1,7 +1,7 @@
 package com.jspxcms.ext.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,10 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.SortComparator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.ext.domain.QuestionOptRec.QuestionOptRecComparator;
 
 @Entity
 @Table(name = "cms_question_option")
@@ -48,8 +52,25 @@ public class QuestionOption implements java.io.Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof QuestionOption)) {
+			return false;
+		}
+		QuestionOption that = (QuestionOption) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
-	private List<QuestionOptRec> optRecs = new ArrayList<QuestionOptRec>(0);
+	private SortedSet<QuestionOptRec> optRecs = new TreeSet<QuestionOptRec>(new QuestionOptRecComparator());
 	private QuestionItem item;
 
 	private String title;
@@ -68,13 +89,13 @@ public class QuestionOption implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "option")
-	@OrderBy(value = "id asc")
-	public List<QuestionOptRec> getOptRecs() {
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "option")
+	@SortComparator(QuestionOptRecComparator.class)
+	public SortedSet<QuestionOptRec> getOptRecs() {
 		return optRecs;
 	}
 
-	public void setOptRecs(List<QuestionOptRec> optRecs) {
+	public void setOptRecs(SortedSet<QuestionOptRec> optRecs) {
 		this.optRecs = optRecs;
 	}
 

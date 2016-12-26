@@ -35,9 +35,7 @@ import com.jspxcms.ext.domain.QuestionOption;
 import com.jspxcms.ext.domain.QuestionRecord;
 import com.jspxcms.ext.listener.QuestionDeleteListener;
 import com.jspxcms.ext.repository.QuestionDao;
-import com.jspxcms.ext.service.QuestionItemRecService;
 import com.jspxcms.ext.service.QuestionItemService;
-import com.jspxcms.ext.service.QuestionOptRecService;
 import com.jspxcms.ext.service.QuestionOptionService;
 import com.jspxcms.ext.service.QuestionRecordService;
 import com.jspxcms.ext.service.QuestionService;
@@ -146,16 +144,14 @@ public class QuestionServiceImpl implements QuestionService, SiteDeleteListener 
 			user = userService.get(userId);
 		}
 		QuestionRecord record = recordService.save(question, user, ip, cookie);
-		QuestionOption option;
 		for (Integer select : selects) {
-			option = optionService.get(select);
+			QuestionOption option = optionService.get(select);
 			option.setCount(option.getCount() + 1);
-			optRecService.save(option, record);
+			record.addOption(option);
 		}
-		QuestionItem item;
 		for (Integer input : inputs.keySet()) {
-			item = itemService.get(input);
-			itemRecService.save(item, record, inputs.get(input));
+			QuestionItem item = itemService.get(input);
+			record.addItem(item, inputs.get(input));
 		}
 	}
 
@@ -182,19 +178,11 @@ public class QuestionServiceImpl implements QuestionService, SiteDeleteListener 
 		this.deleteListeners = deleteListeners;
 	}
 
-	private QuestionItemRecService itemRecService;
 	private QuestionRecordService recordService;
 	private QuestionOptionService optionService;
-	private QuestionOptRecService optRecService;
-
 	private QuestionItemService itemService;
 	private UserService userService;
 	private SiteService siteService;
-
-	@Autowired
-	public void setIrecordService(QuestionItemRecService itemRecService) {
-		this.itemRecService = itemRecService;
-	}
 
 	@Autowired
 	public void setRecordService(QuestionRecordService recordService) {
@@ -209,11 +197,6 @@ public class QuestionServiceImpl implements QuestionService, SiteDeleteListener 
 	@Autowired
 	public void setOptionService(QuestionOptionService optionService) {
 		this.optionService = optionService;
-	}
-
-	@Autowired
-	public void setOptRecService(QuestionOptRecService optRecService) {
-		this.optRecService = optRecService;
 	}
 
 	@Autowired

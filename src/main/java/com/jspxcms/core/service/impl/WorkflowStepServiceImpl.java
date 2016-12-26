@@ -32,14 +32,12 @@ import com.jspxcms.core.service.WorkflowStepService;
 @Service
 @Transactional(readOnly = true)
 public class WorkflowStepServiceImpl implements WorkflowStepService {
-	public List<WorkflowStep> findList(Integer workflowId,
-			Map<String, String[]> params, Sort sort) {
+	public List<WorkflowStep> findList(Integer workflowId, Map<String, String[]> params, Sort sort) {
 		return dao.findAll(spec(workflowId, params), sort);
 	}
 
-	public RowSide<WorkflowStep> findSide(Integer workflowId,
-			Map<String, String[]> params, WorkflowStep bean, Integer position,
-			Sort sort) {
+	public RowSide<WorkflowStep> findSide(Integer workflowId, Map<String, String[]> params, WorkflowStep bean,
+			Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<WorkflowStep>();
 		}
@@ -48,18 +46,14 @@ public class WorkflowStepServiceImpl implements WorkflowStepService {
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<WorkflowStep> spec(final Integer workflowId,
-			Map<String, String[]> params) {
+	private Specification<WorkflowStep> spec(final Integer workflowId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<WorkflowStep> fsp = SearchFilter.spec(filters,
-				WorkflowStep.class);
+		final Specification<WorkflowStep> fsp = SearchFilter.spec(filters, WorkflowStep.class);
 		Specification<WorkflowStep> sp = new Specification<WorkflowStep>() {
-			public Predicate toPredicate(Root<WorkflowStep> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<WorkflowStep> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				if (workflowId != null) {
-					pred = cb.and(pred, cb.equal(
-							root.get("workflow").get("id"), workflowId));
+					pred = cb.and(pred, cb.equal(root.get("workflow").get("id"), workflowId));
 				}
 				return pred;
 			}
@@ -72,13 +66,12 @@ public class WorkflowStepServiceImpl implements WorkflowStepService {
 	}
 
 	@Transactional
-	public WorkflowStep save(WorkflowStep bean, Integer[] roleIds,
-			Integer workflowId) {
+	public WorkflowStep save(WorkflowStep bean, Integer[] roleIds, Integer workflowId) {
 		Workflow workflow = workflowService.get(workflowId);
 		bean.setWorkflow(workflow);
 		bean.applyDefaultValue();
 		bean = dao.save(bean);
-		workflowStepRoleService.save(bean, roleIds);
+		workflowStepRoleService.update(bean, roleIds);
 		return bean;
 	}
 
@@ -154,8 +147,7 @@ public class WorkflowStepServiceImpl implements WorkflowStepService {
 	private List<WorkflowStepDeleteListener> deleteListeners;
 
 	@Autowired(required = false)
-	public void setDeleteListeners(
-			List<WorkflowStepDeleteListener> deleteListeners) {
+	public void setDeleteListeners(List<WorkflowStepDeleteListener> deleteListeners) {
 		this.deleteListeners = deleteListeners;
 	}
 
@@ -168,8 +160,7 @@ public class WorkflowStepServiceImpl implements WorkflowStepService {
 	}
 
 	@Autowired
-	public void setWorkflowStepRoleService(
-			WorkflowStepRoleService workflowStepRoleService) {
+	public void setWorkflowStepRoleService(WorkflowStepRoleService workflowStepRoleService) {
 		this.workflowStepRoleService = workflowStepRoleService;
 	}
 

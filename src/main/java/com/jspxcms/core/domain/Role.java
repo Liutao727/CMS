@@ -3,6 +3,7 @@ package com.jspxcms.core.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+import com.google.common.base.Objects;
 import com.jspxcms.core.support.Siteable;
 
 /**
@@ -80,17 +82,11 @@ public class Role implements Siteable, java.io.Serializable {
 		return users;
 	}
 
-	// public void addUserRole(UserRole userRole) {
-	// Set<UserRole> userRoles = getUserRoles();
-	// if (userRoles == null) {
-	// userRoles = new HashSet<UserRole>();
-	// setUserRoles(userRoles);
-	// }
-	// userRoles.add(userRole);
-	// }
-
 	@Transient
 	public void applyDefaultValue() {
+		if (getRank() == null) {
+			setRank(999);
+		}
 		if (getSeq() == null) {
 			setSeq(Integer.MAX_VALUE);
 		}
@@ -111,6 +107,23 @@ public class Role implements Siteable, java.io.Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Role)) {
+			return false;
+		}
+		Role that = (Role) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
 	private Set<UserRole> userRoles = new HashSet<UserRole>(0);
 	private Set<NodeRole> nodeRoles = new HashSet<NodeRole>(0);
@@ -119,6 +132,7 @@ public class Role implements Siteable, java.io.Serializable {
 
 	private String name;
 	private String description;
+	private Integer rank;
 	private Integer seq;
 	private String perms;
 	private Boolean allPerm;
@@ -148,7 +162,7 @@ public class Role implements Siteable, java.io.Serializable {
 		this.userRoles = userRoles;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "role")
 	public Set<NodeRole> getNodeRoles() {
 		return nodeRoles;
 	}
@@ -183,6 +197,15 @@ public class Role implements Siteable, java.io.Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Column(name = "f_rank", nullable = false)
+	public Integer getRank() {
+		return rank;
+	}
+
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 
 	@Column(name = "f_seq", nullable = false)

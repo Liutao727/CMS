@@ -35,8 +35,7 @@ import freemarker.template.Template;
  * 
  */
 public class LocalFileHandler extends FileHandler {
-	private static final Logger logger = LoggerFactory
-			.getLogger(LocalFileHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(LocalFileHandler.class);
 
 	private PathResolver pathResolver;
 
@@ -94,8 +93,7 @@ public class LocalFileHandler extends FileHandler {
 	}
 
 	@Override
-	public void store(MultipartFile file, String path)
-			throws IllegalStateException, IOException {
+	public void store(MultipartFile file, String path) throws IllegalStateException, IOException {
 		File parent = new File(pathResolver.getPath(path, prefix));
 		if (!parent.exists()) {
 			parent.mkdirs();
@@ -105,30 +103,26 @@ public class LocalFileHandler extends FileHandler {
 	}
 
 	@Override
-	public void storeFile(InputStream source, String filename)
-			throws IllegalStateException, IOException {
+	public void storeFile(InputStream source, String filename) throws IllegalStateException, IOException {
 		File dest = new File(pathResolver.getPath(filename, prefix));
 		FileUtils.copyInputStreamToFile(source, dest);
 	}
 
 	@Override
-	public void storeFile(File file, String filename)
-			throws IllegalStateException, IOException {
+	public void storeFile(File file, String filename) throws IllegalStateException, IOException {
 		File dest = new File(pathResolver.getPath(filename, prefix));
 		FileUtils.moveFile(file, dest);
 	}
 
 	@Override
-	public void storeFile(List<File> files, List<String> filenames)
-			throws IllegalStateException, IOException {
+	public void storeFile(List<File> files, List<String> filenames) throws IllegalStateException, IOException {
 		for (int i = 0, len = files.size(); i < len; i++) {
 			storeFile(files.get(i), filenames.get(i));
 		}
 	}
 
 	@Override
-	public void storeFile(MultipartFile file, String filename)
-			throws IllegalStateException, IOException {
+	public void storeFile(MultipartFile file, String filename) throws IllegalStateException, IOException {
 		File dest = new File(pathResolver.getPath(filename, prefix));
 		File parent = dest.getParentFile();
 		if (!parent.exists()) {
@@ -162,19 +156,14 @@ public class LocalFileHandler extends FileHandler {
 	}
 
 	@Override
-	public void storeImage(BufferedImage image, String formatName,
-			String filename) throws IOException {
+	public void storeImage(BufferedImage image, String formatName, String filename) throws IOException {
 		File dest = new File(pathResolver.getPath(filename, prefix));
-		File parent = dest.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
+		FilesEx.makeParentDir(dest);
 		ImageIO.write(image, formatName, dest);
 	}
 
 	@Override
-	public void storeImages(List<BufferedImage> images, String formatName,
-			List<String> filenames) throws IOException {
+	public void storeImages(List<BufferedImage> images, String formatName, List<String> filenames) throws IOException {
 		for (int i = 0, len = images.size(); i < len; i++) {
 			storeImage(images.get(i), formatName, filenames.get(i));
 		}
@@ -206,7 +195,8 @@ public class LocalFileHandler extends FileHandler {
 		return list;
 	}
 
-	public File getFile(String id) throws IOException {
+	@Override
+	public File getFile(String id) {
 		File file = new File(pathResolver.getPath(id, prefix));
 		return file;
 	}
@@ -252,15 +242,7 @@ public class LocalFileHandler extends FileHandler {
 	@Override
 	public String getFormatName(String id) {
 		File file = new File(pathResolver.getPath(id, prefix));
-		String formatName = null;
-		try {
-			InputStream input = FileUtils.openInputStream(file);
-			formatName = Images.getFormatName(input);
-			IOUtils.closeQuietly(input);
-		} catch (IOException e) {
-			logger.error(null, e);
-		}
-		return formatName;
+		return Images.getFormatName(file);
 	}
 
 	@Override
@@ -269,14 +251,12 @@ public class LocalFileHandler extends FileHandler {
 	}
 
 	@Override
-	public List<CommonFile> listFiles(String search, String path,
-			String displayPath) {
+	public List<CommonFile> listFiles(String search, String path, String displayPath) {
 		return listFiles(new SearchCommonFileFilter(search), path, displayPath);
 	}
 
 	@Override
-	public List<CommonFile> listFiles(CommonFileFilter filter, String path,
-			String displayPath) {
+	public List<CommonFile> listFiles(CommonFileFilter filter, String path, String displayPath) {
 		File parent = new File(pathResolver.getPath(path, prefix));
 		List<CommonFile> list = new ArrayList<CommonFile>();
 		CommonFile commonFile;

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>6.5.4</version>
+	<version>7.0.0</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
@@ -18,15 +18,13 @@
 	</organization>
 
 	<properties>
-		<spring.version>4.2.5.RELEASE</spring.version>
+		<spring.version>4.2.8.RELEASE</spring.version>
 
-		<spring-data-jpa.version>1.9.2.RELEASE</spring-data-jpa.version>
-		<!-- <spring-data-jpa.version>1.5.3.RELEASE</spring-data-jpa.version> -->
-		<!-- <spring-data-jpa.version>1.2.0.RELEASE</spring-data-jpa.version> -->
+		<spring-data-jpa.version>1.10.5.RELEASE</spring-data-jpa.version>
 		<hibernate.version>5.0.7.Final</hibernate.version>
 		<hibernate-validator.version>5.2.2.Final</hibernate-validator.version>
-		<querydsl.version>3.7.4</querydsl.version>
-		<!-- <querydsl.version>4.0.3</querydsl.version> -->
+		<querydsl.version>4.1.4</querydsl.version>
+		<javax.inject.version>1</javax.inject.version>
 		<shiro.version>1.2.4</shiro.version>
 		<lucene.version>3.6.2</lucene.version>
 		<!-- <lucene.version>4.3.1</lucene.version> -->
@@ -55,8 +53,11 @@
 		<slf4j.version>1.7.13</slf4j.version>
 		<freemarker.version>2.3.23</freemarker.version>
 		<jodconverter-core.version>1.0.5</jodconverter-core.version>
+		<jacob.version>1.18</jacob.version>
+		<im4java.version>1.4.0</im4java.version>
 		<owasp-java-html-sanitizer.version>20150501.1</owasp-java-html-sanitizer.version>
 		<!-- <owasp-java-html-sanitizer.version>20160203.1</owasp-java-html-sanitizer.version> -->
+		<UserAgentUtils.version>1.20</UserAgentUtils.version>
 		<weixin4j.version>1.6.9</weixin4j.version>
 		<snakeyaml.version>1.16</snakeyaml.version>
 		<pegdown.version>1.6.0</pegdown.version>
@@ -66,7 +67,7 @@
 		<!-- <weibo4j-oauth2.version>2.1.1-beta2-3</weibo4j-oauth2.version> -->
 		<logback.version>1.1.3</logback.version>
 
-    <javax.mail-api.version>1.5.5</javax.mail-api.version>
+		<javax.mail-api.version>1.5.5</javax.mail-api.version>
 		<log4jdbc.version>1.2</log4jdbc.version>
 		<jstl.version>1.2</jstl.version>
 		<!--<jstl.version>1.1.2</jstl.version> <standard.version>1.1.2</standard.version> -->
@@ -78,7 +79,8 @@
 		<tomcat-jdbc.version>7.0.67</tomcat-jdbc.version>
 
 		<!-- 测试 -->
-		<junit.version>4.12</junit.version>
+		<assertj.version>1.7.1</assertj.version>
+		<powermock.version>1.5.6</powermock.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.6</java.version>
@@ -102,16 +104,17 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
+			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
+			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>com.querydsl</groupId> <artifactId>querydsl-apt</artifactId> 
-			</dependency><dependency> <groupId>com.querydsl</groupId> <artifactId>querydsl-jpa</artifactId> 
-			</dependency> -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
@@ -177,8 +180,20 @@
 			<artifactId>jodconverter-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.hynnet</groupId>
+			<artifactId>jacob</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.im4java</groupId>
+			<artifactId>im4java</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
 			<artifactId>owasp-java-html-sanitizer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.foxinmy</groupId>
@@ -239,8 +254,6 @@
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>javax.activation</groupId> <artifactId>activation</artifactId> 
-			</dependency> -->
 		<dependency>
 			<groupId>com.googlecode.log4jdbc</groupId>
 			<artifactId>log4jdbc</artifactId>
@@ -312,8 +325,16 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -386,20 +407,21 @@
 				<version>${hibernate-validator.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.mysema.querydsl</groupId>
+				<groupId>com.querydsl</groupId>
 				<artifactId>querydsl-apt</artifactId>
 				<version>${querydsl.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.mysema.querydsl</groupId>
+				<groupId>com.querydsl</groupId>
 				<artifactId>querydsl-jpa</artifactId>
 				<version>${querydsl.version}</version>
 			</dependency>
-			<!-- <dependency> <groupId>com.querydsl</groupId> <artifactId>querydsl-apt</artifactId> 
-				<version>${querydsl.version}</version> <scope>provided</scope> </dependency> 
-				<dependency> <groupId>com.querydsl</groupId> <artifactId>querydsl-jpa</artifactId> 
-				<version>${querydsl.version}</version> </dependency> -->
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>javax.inject</artifactId>
+				<version>${javax.inject.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
 				<artifactId>shiro-core</artifactId>
@@ -463,8 +485,6 @@
 				<artifactId>ehcache-core</artifactId>
 				<version>${ehcache.version}</version>
 			</dependency>
-			<!-- <dependency> <groupId>net.sf.ehcache</groupId> <artifactId>ehcache</artifactId> 
-				<version>${ehcache.version}</version> </dependency> -->
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
@@ -594,9 +614,24 @@
 				<version>${jodconverter-core.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.hynnet</groupId>
+				<artifactId>jacob</artifactId>
+				<version>${jacob.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.im4java</groupId>
+				<artifactId>im4java</artifactId>
+				<version>${im4java.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
 				<artifactId>owasp-java-html-sanitizer</artifactId>
 				<version>${owasp-java-html-sanitizer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>eu.bitwalker</groupId>
+				<artifactId>UserAgentUtils</artifactId>
+				<version>${UserAgentUtils.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.foxinmy</groupId>
@@ -689,8 +724,6 @@
 				<artifactId>javax.mail</artifactId>
 				<version>${javax.mail-api.version}</version>
 			</dependency>
-			<!-- <dependency> <groupId>javax.activation</groupId> <artifactId>activation</artifactId> 
-				<version>1.1.1</version> </dependency> -->
 
 			<dependency>
 				<groupId>com.googlecode.log4jdbc</groupId>
@@ -703,8 +736,6 @@
 				<artifactId>jstl</artifactId>
 				<version>${jstl.version}</version>
 			</dependency>
-			<!-- <dependency> <groupId>taglibs</groupId> <artifactId>standard</artifactId> 
-				<version>${standard.version}</version> </dependency> -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
@@ -723,10 +754,6 @@
 				<version>${el-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
-			<!-- <dependency> <groupId>org.apache.tomcat</groupId> <artifactId>jsp-api</artifactId> 
-				<version>${tomcat-jsp-api.version}</version> <scope>provided</scope> </dependency> -->
-			<!-- <dependency> <groupId>org.apache.tomcat</groupId> <artifactId>tomcat-jsp-api</artifactId> 
-				<version>${tomcat-jsp-api.version}</version> <scope>provided</scope> </dependency> -->
 
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>
@@ -739,10 +766,23 @@
 				<version>5.1.24</version>
 				<scope>runtime</scope>
 			</dependency>
+			
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${assertj.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>${powermock.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>${powermock.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -769,6 +809,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -863,8 +907,8 @@
 								<goal>process</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>target/generated-sources/java</outputDirectory>
-								<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+								<outputDirectory>src/generated-sources/java</outputDirectory>
+								<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 							</configuration>
 						</execution>
 					</executions>

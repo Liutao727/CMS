@@ -14,6 +14,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.repository.plus.NodeDaoPlus;
 
 /**
  * NodeDao

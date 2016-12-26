@@ -13,6 +13,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.AdSlot;
+import com.jspxcms.ext.repository.plus.AdSlotDaoPlus;
 
 public interface AdSlotDao extends Repository<AdSlot, Integer>, AdSlotDaoPlus {
 	public List<AdSlot> findAll(Specification<AdSlot> spec, Sort sort);

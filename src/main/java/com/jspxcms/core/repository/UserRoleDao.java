@@ -5,15 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.UserRole;
+import com.jspxcms.core.domain.UserRole.UserRoleId;
 
-public interface UserRoleDao extends Repository<UserRole, Integer> {
-	public UserRole findOne(Integer id);
-
-	public UserRole save(UserRole bean);
-
-	public void delete(UserRole bean);
-
-	public void delete(Iterable<UserRole> beans);
+public interface UserRoleDao extends Repository<UserRole, UserRoleId> {
+	public UserRole findOne(UserRoleId id);
 
 	// --------------------
 

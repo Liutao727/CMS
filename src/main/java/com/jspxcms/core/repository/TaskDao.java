@@ -12,6 +12,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Task;
+import com.jspxcms.core.repository.plus.TaskDaoPlus;
 
 public interface TaskDao extends Repository<Task, Integer>, TaskDaoPlus {
 	public Page<Task> findAll(Specification<Task> spec, Pageable pageable);

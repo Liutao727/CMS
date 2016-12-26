@@ -13,12 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.apache.commons.collections.CollectionUtils;
+
+import com.google.common.base.Objects;
 
 /**
  * WorkflowStep
@@ -30,22 +32,6 @@ import org.apache.commons.collections.CollectionUtils;
 @Table(name = "cms_workflow_step")
 public class WorkflowStep implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-
-	// @Transient
-	// public Set<User> getUsers() {
-	// List<Role> roles = getRoles();
-	// if (CollectionUtils.isNotEmpty(roles)) {
-	// Set<User> users = new HashSet<User>();
-	// for (Role role : roles) {
-	// for (User user : role.getUsers()) {
-	// users.add(user);
-	// }
-	// }
-	// return users;
-	// } else {
-	// return Collections.emptySet();
-	// }
-	// }
 
 	@Transient
 	public Role getRole() {
@@ -77,9 +63,25 @@ public class WorkflowStep implements java.io.Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof WorkflowStep)) {
+			return false;
+		}
+		WorkflowStep that = (WorkflowStep) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
-	private List<WorkflowStepRole> stepRoles = new ArrayList<WorkflowStepRole>(
-			0);
+	private List<WorkflowStepRole> stepRoles = new ArrayList<WorkflowStepRole>(0);
 
 	private Workflow workflow;
 
@@ -98,8 +100,8 @@ public class WorkflowStep implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "step")
-	@OrderBy("roleIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "step")
+	@OrderColumn(name = "f_role_index")
 	public List<WorkflowStepRole> getStepRoles() {
 		return stepRoles;
 	}

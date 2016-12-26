@@ -1,28 +1,14 @@
 package com.jspxcms.core.repository;
 
-import java.util.List;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.InfoTag;
+import com.jspxcms.core.domain.InfoTag.InfoTagId;
 
-public interface InfoTagDao extends Repository<InfoTag, Integer> {
-	public List<InfoTag> findAll(Specification<InfoTag> spec, Sort sort);
-
-	public List<InfoTag> findAll(Specification<InfoTag> spec, Limitable limit);
-
-	public InfoTag findOne(Integer id);
-
-	public InfoTag save(InfoTag bean);
-
-	public void delete(InfoTag bean);
-
-	public void delete(Iterable<InfoTag> beans);
+public interface InfoTagDao extends Repository<InfoTag, InfoTagId> {
+	public InfoTag findOne(InfoTagId id);
 
 	// --------------------
 

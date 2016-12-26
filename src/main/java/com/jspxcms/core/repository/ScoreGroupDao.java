@@ -13,6 +13,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.ScoreGroup;
+import com.jspxcms.core.repository.plus.ScoreGroupDaoPlus;
 
 public interface ScoreGroupDao extends Repository<ScoreGroup, Integer>,
 		ScoreGroupDaoPlus {

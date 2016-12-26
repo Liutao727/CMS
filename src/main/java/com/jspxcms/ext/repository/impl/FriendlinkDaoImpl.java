@@ -11,10 +11,10 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Friendlink;
-import com.jspxcms.ext.domaindsl.QFriendlink;
-import com.jspxcms.ext.repository.FriendlinkDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.ext.domain.QFriendlink;
+import com.jspxcms.ext.repository.plus.FriendlinkDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * FriendlinkDaoImpl
@@ -26,7 +26,7 @@ public class FriendlinkDaoImpl implements FriendlinkDaoPlus {
 	public List<Friendlink> findList(Integer[] siteId, String[] type,
 			Integer[] typeId, Boolean isWithLogo, Boolean isRecommend,
 			Integer[] status, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Friendlink> query = new JPAQuery<Friendlink>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QFriendlink friendlink = QFriendlink.friendlink;
 		predicate(query, friendlink, siteId, type, typeId, isWithLogo,
@@ -34,7 +34,7 @@ public class FriendlinkDaoImpl implements FriendlinkDaoPlus {
 		return QuerydslUtils.list(query, friendlink, limitable);
 	}
 
-	private void predicate(JPAQuery query, QFriendlink friendlink,
+	private void predicate(JPAQuery<Friendlink> query, QFriendlink friendlink,
 			Integer[] siteId, String[] type, Integer[] typeId,
 			Boolean isWithLogo, Boolean isRecommend, Integer[] status) {
 		query.from(friendlink);

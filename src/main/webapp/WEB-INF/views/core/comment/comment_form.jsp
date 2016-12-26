@@ -56,11 +56,11 @@ function confirmDelete() {
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="comment.info"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.anchor.title}" readonly="readonly" style="width:500px;"/></td>
+    <td class="in-ctt" width="85%" colspan="3"><f:text value="${bean.anchor.title}" disabled="disabled" style="width:500px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="comment.creator"/>:</td>
-    <td class="in-ctt" width="35%"><f:text value="${bean.creator.username}" readonly="readonly" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text value="${bean.creator.username}" disabled="disabled" style="width:180px;"/></td>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="comment.creationDate"/>:</td>
     <td class="in-ctt" width="35%"><input type="text" name="creationDate" value="<fmt:formatDate value="${bean.creationDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"/>" onclick="WdatePicker({dateFmt:'yyyy-MM-ddTHH:mm:ss'});" class="required" style="width:180px;"/></td>
   </tr>
@@ -75,7 +75,13 @@ function confirmDelete() {
 			</select>
 		</td>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="comment.ip"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="ip" value="${bean.ip}" readonly="readonly" class="required" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%"><f:text name="ip" value="${bean.ip}"  disabled="disabled" class="required" style="width:180px;"/></td>
+  </tr>
+  <tr>
+    <td class="in-lab" width="15%"><s:message code="comment.country"/>:</td>
+    <td class="in-ctt" width="35%"><f:text name="country" value="${bean.country}" disabled="disabled" class="required" style="width:180px;"/></td>
+    <td class="in-lab" width="15%"><s:message code="comment.area"/>:</td>
+    <td class="in-ctt" width="35%"><f:text name="area" value="${bean.area}" disabled="disabled" class="required" style="width:180px;"/></td>
   </tr>
   <tr>
     <td class="in-lab" width="15%"><em class="required">*</em><s:message code="comment.score"/>:</td>

@@ -1,15 +1,18 @@
 package com.jspxcms.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.InfoAttribute.InfoAttributeId;
 
 /**
  * InfoAttribute
@@ -19,39 +22,31 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "cms_info_attribute")
+@IdClass(InfoAttributeId.class)
 public class InfoAttribute implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private Integer id;
-
-	private Info info;
-	private Attribute attribute;
-
-	private String image;
 
 	public InfoAttribute() {
 	}
 
-	public InfoAttribute(Info info, Attribute attribute, String image) {
+	public InfoAttribute(Info info, Attribute attribute) {
 		this.info = info;
 		this.attribute = attribute;
-		this.image = image;
 	}
 
 	@Id
-	@Column(name = "f_infoattr_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info_attribute", pkColumnValue = "cms_info_attribute", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info_attribute")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_info_id", nullable = false)
+	private Info info;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_attribute_id", nullable = false)
+	private Attribute attribute;
+
+	@Column(name = "f_image")
+	private String image;
+
 	public Info getInfo() {
 		return this.info;
 	}
@@ -60,8 +55,6 @@ public class InfoAttribute implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_attribute_id", nullable = false)
 	public Attribute getAttribute() {
 		return this.attribute;
 	}
@@ -70,7 +63,6 @@ public class InfoAttribute implements java.io.Serializable {
 		this.attribute = attribute;
 	}
 
-	@Column(name = "f_image")
 	public String getImage() {
 		return this.image;
 	}
@@ -79,4 +71,52 @@ public class InfoAttribute implements java.io.Serializable {
 		this.image = image;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof InfoAttribute)) {
+			return false;
+		}
+		InfoAttribute that = (InfoAttribute) o;
+		return Objects.equal(info, that.info) && Objects.equal(attribute, that.attribute);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(info, attribute);
+	}
+
+	public static class InfoAttributeId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer info;
+		Integer attribute;
+
+		public InfoAttributeId() {
+		}
+
+		public InfoAttributeId(Integer info, Integer attribute) {
+			this.info = info;
+			this.attribute = attribute;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof InfoAttributeId)) {
+				return false;
+			}
+			InfoAttributeId that = (InfoAttributeId) o;
+			return Objects.equal(info, that.info) && Objects.equal(attribute, that.attribute);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(info, attribute);
+		}
+	}
 }

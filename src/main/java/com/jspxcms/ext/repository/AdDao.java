@@ -10,6 +10,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Ad;
+import com.jspxcms.ext.repository.plus.AdDaoPlus;
 
 public interface AdDao extends Repository<Ad, Integer>, AdDaoPlus {
 	public List<Ad> findAll(Specification<Ad> spec, Sort sort);

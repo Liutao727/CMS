@@ -13,13 +13,13 @@ import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
+import com.jspxcms.core.domain.QInfo;
+import com.jspxcms.core.domain.QInfoTag;
+import com.jspxcms.core.domain.QTag;
 import com.jspxcms.core.domain.Tag;
-import com.jspxcms.core.domaindsl.QInfo;
-import com.jspxcms.core.domaindsl.QInfoTag;
-import com.jspxcms.core.domaindsl.QTag;
-import com.jspxcms.core.repository.TagDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.repository.plus.TagDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * TagDaoImpl
@@ -30,7 +30,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 public class TagDaoImpl implements TagDaoPlus {
 	public List<Tag> findList(Integer[] siteId, String[] node,
 			Integer[] nodeId, Integer refers, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Tag> query = new JPAQuery<Tag>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QTag tag = QTag.tag;
 		predicate(query, tag, siteId, node, nodeId, refers);
@@ -39,14 +39,14 @@ public class TagDaoImpl implements TagDaoPlus {
 
 	public Page<Tag> findPage(Integer[] siteId, String[] node,
 			Integer[] nodeId, Integer refers, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Tag> query = new JPAQuery<Tag>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QTag tag = QTag.tag;
 		predicate(query, tag, siteId, node, nodeId, refers);
 		return QuerydslUtils.page(query, tag, pageable);
 	}
 
-	private void predicate(JPAQuery query, QTag tag, Integer[] siteId,
+	private void predicate(JPAQuery<Tag> query, QTag tag, Integer[] siteId,
 			String[] node, Integer[] nodeId, Integer refers) {
 		query.from(tag);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -79,7 +79,7 @@ public class TagDaoImpl implements TagDaoPlus {
 		if (ArrayUtils.isEmpty(names)) {
 			return Collections.emptyList();
 		}
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Tag> query = new JPAQuery<Tag>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QTag tag = QTag.tag;
 		query.from(tag);
@@ -99,7 +99,7 @@ public class TagDaoImpl implements TagDaoPlus {
 			exp = exp.and(e);
 		}
 		query.where(exp);
-		return query.list(tag);
+		return query.fetch();
 	}
 
 	private EntityManager em;

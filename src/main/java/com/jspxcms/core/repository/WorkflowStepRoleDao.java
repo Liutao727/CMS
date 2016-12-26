@@ -6,15 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.WorkflowStepRole;
+import com.jspxcms.core.domain.WorkflowStepRole.WorkflowStepRoleId;
 
-public interface WorkflowStepRoleDao extends
-		Repository<WorkflowStepRole, Integer> {
-
-	public WorkflowStepRole findOne(Integer id);
-
-	public WorkflowStepRole save(WorkflowStepRole bean);
-
-	void delete(Iterable<WorkflowStepRole> entities);
+public interface WorkflowStepRoleDao extends Repository<WorkflowStepRole, WorkflowStepRoleId> {
+	public WorkflowStepRole findOne(WorkflowStepRoleId id);
 
 	// --------------------
 

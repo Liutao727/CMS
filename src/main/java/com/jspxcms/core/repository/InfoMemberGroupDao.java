@@ -8,24 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.InfoMemberGroup;
+import com.jspxcms.core.domain.InfoMemberGroup.InfoMemberGroupId;
 
-public interface InfoMemberGroupDao extends
-		Repository<InfoMemberGroup, Integer> {
-	public InfoMemberGroup findOne(Integer id);
-
-	public InfoMemberGroup save(InfoMemberGroup bean);
-
-	public void delete(InfoMemberGroup bean);
+public interface InfoMemberGroupDao extends Repository<InfoMemberGroup, InfoMemberGroupId> {
+	public InfoMemberGroup findOne(InfoMemberGroupId id);
 
 	// --------------------
 
 	public List<InfoMemberGroup> findByInfoId(Integer infoId);
 
 	@Modifying
-	@Query("delete InfoMemberGroup bean where bean.info.id in (?1)")
-	public int deleteByInfoId(Collection<Integer> infoIds);
-
-	@Modifying
-	@Query("delete InfoMemberGroup bean where bean.group.id in (?1)")
+	@Query("delete from InfoMemberGroup bean where bean.group.id in (?1)")
 	public int deleteByGroupId(Collection<Integer> groupIds);
 }

@@ -59,44 +59,37 @@ import com.jspxcms.core.support.DeleteException;
  */
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService, OrgDeleteListener,
-		MemberGroupDeleteListener {
+public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGroupDeleteListener {
 	private static final int SALT_SIZE = 8;
 
-	public Page<User> findPage(Integer rank, Integer[] type,
-			String orgTreeNumber, Map<String, String[]> params,
+	public Page<User> findPage(Integer rank, Integer[] type, String orgTreeNumber, Map<String, String[]> params,
 			Pageable pageable) {
 		return dao.findAll(spec(rank, type, orgTreeNumber, params), pageable);
 	}
 
-	public RowSide<User> findSide(Integer rank, Integer[] type,
-			String orgTreeNumber, Map<String, String[]> params, User bean,
-			Integer position, Sort sort) {
+	public RowSide<User> findSide(Integer rank, Integer[] type, String orgTreeNumber, Map<String, String[]> params,
+			User bean, Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<User>();
 		}
 		Limitable limit = RowSide.limitable(position, sort);
-		List<User> list = dao.findAll(spec(rank, type, orgTreeNumber, params),
-				limit);
+		List<User> list = dao.findAll(spec(rank, type, orgTreeNumber, params), limit);
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<User> spec(final Integer rank, final Integer[] type,
-			final String orgTreeNumber, Map<String, String[]> params) {
+	private Specification<User> spec(final Integer rank, final Integer[] type, final String orgTreeNumber,
+			Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
 		final Specification<User> fsp = SearchFilter.spec(filters, User.class);
 		Specification<User> sp = new Specification<User>() {
-			public Predicate toPredicate(Root<User> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				pred = cb.and(pred, cb.ge(root.<Integer> get("rank"), rank));
 				if (ArrayUtils.isNotEmpty(type)) {
-					pred = cb.and(pred, root.get("type")
-							.in(Arrays.asList(type)));
+					pred = cb.and(pred, root.get("type").in(Arrays.asList(type)));
 				}
 				if (StringUtils.isNotBlank(orgTreeNumber)) {
-					Path<String> orgsPath = root.join("org").<String> get(
-							"treeNumber");
+					Path<String> orgsPath = root.join("org").<String> get("treeNumber");
 					pred = cb.and(pred, cb.like(orgsPath, orgTreeNumber + "%"));
 					query.distinct(true);
 				}
@@ -150,22 +143,18 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 	}
 
 	@Transactional
-	public void sendVerifyEmail(Site site, User user, GlobalMail mail,
-			String subject, String text) {
+	public void sendVerifyEmail(Site site, User user, GlobalMail mail, String subject, String text) {
 		UserDetail detail = user.getDetail();
 		String key = StringUtils.remove(UUID.randomUUID().toString(), '-');
 		user.setValidationKey(key);
 		user.setValidationType(Constants.VERIFY_MEMBER_TYPE);
 		detail.setValidationDate(new Date());
-		detail.setValidationValue(null);
 
-		String url = site.getProtocol() + ":" + site.getUrlFull()
-				+ Constants.VERIFY_MEMBER_URL + key;
+		String url = site.getProtocol() + ":" + site.getUrlFull() + Constants.VERIFY_MEMBER_URL + key;
 		String email = user.getEmail();
 		String username = user.getUsername();
 		String sitename = site.getFullNameOrName();
-		subject = GlobalRegister.replaceVerifyEmail(subject, username,
-				sitename, url);
+		subject = GlobalRegister.replaceVerifyEmail(subject, username, sitename, url);
 		text = GlobalRegister.replaceVerifyEmail(text, username, sitename, url);
 		mail.sendMail(new String[] { email }, subject, text);
 	}
@@ -181,29 +170,23 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 		user.setValidationType(null);
 		UserDetail detail = user.getDetail();
 		detail.setValidationDate(null);
-		detail.setValidationValue(null);
 		return user;
 	}
 
 	@Transactional
-	public void sendPasswordEmail(Site site, User user, GlobalMail mail,
-			String subject, String text) {
+	public void sendPasswordEmail(Site site, User user, GlobalMail mail, String subject, String text) {
 		UserDetail detail = user.getDetail();
 		String key = StringUtils.remove(UUID.randomUUID().toString(), '-');
 		user.setValidationKey(key);
 		user.setValidationType(Constants.RETRIEVE_PASSWORD_TYPE);
 		detail.setValidationDate(new Date());
-		detail.setValidationValue(null);
 
-		String url = site.getProtocol() + ":" + site.getUrlFull()
-				+ Constants.RETRIEVE_PASSWORD_URL + key;
+		String url = site.getProtocol() + ":" + site.getUrlFull() + Constants.RETRIEVE_PASSWORD_URL + key;
 		String email = user.getEmail();
 		String username = user.getUsername();
 		String sitename = site.getFullNameOrName();
-		subject = GlobalRegister.replacePasswordEmail(subject, username,
-				sitename, url);
-		text = GlobalRegister.replacePasswordEmail(text, username, sitename,
-				url);
+		subject = GlobalRegister.replacePasswordEmail(subject, username, sitename, url);
+		text = GlobalRegister.replacePasswordEmail(text, username, sitename, url);
 		mail.sendMail(new String[] { email }, subject, text);
 	}
 
@@ -219,7 +202,6 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 		user.setValidationType(null);
 		UserDetail detail = user.getDetail();
 		detail.setValidationDate(null);
-		detail.setValidationValue(null);
 		return user;
 	}
 
@@ -294,9 +276,8 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 	}
 
 	@Transactional
-	public User save(User bean, UserDetail detail, Integer[] roleIds,
-			Integer[] orgIds, Integer[] groupIds, Integer orgId,
-			Integer groupId, String ip) {
+	public User save(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
+			Integer orgId, Integer groupId, String ip) {
 		bean.setOrg(orgService.get(orgId));
 		bean.setGroup(groupService.get(groupId));
 		bean.setGlobal(globalService.findUnique());
@@ -305,9 +286,9 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 		bean = dao.save(bean);
 
 		detailService.save(detail, bean, ip);
-		userRoleService.save(bean, roleIds);
-		userOrgService.save(bean, orgIds, orgId);
-		userMemberGroupService.save(bean, groupIds, groupId);
+		userRoleService.update(bean, roleIds, null);
+		userOrgService.update(bean, orgIds, orgId, null);
+		userMemberGroupService.update(bean, groupIds, groupId);
 		return bean;
 	}
 
@@ -336,11 +317,9 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 	 * @return
 	 */
 	@Transactional
-	public User register(String ip, int groupId, int orgId, int status,
-			String username, String password, String email, String qqOpenid,
-			String weiboUid, String weixinOpenid, String gender,
-			Date birthDate, String bio, String comeFrom, String qq, String msn,
-			String weixin) {
+	public User register(String ip, int groupId, int orgId, int status, String username, String password, String email,
+			String qqOpenid, String weiboUid, String weixinOpenid, String gender, Date birthDate, String bio,
+			String comeFrom, String qq, String msn, String weixin) {
 		User user = new User();
 		user.setUsername(username);
 		user.setRawPassword(password);
@@ -365,9 +344,8 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 	}
 
 	@Transactional
-	public User update(User bean, UserDetail detail, Integer[] roleIds,
-			Integer[] orgIds, Integer[] groupIds, Integer orgId,
-			Integer groupId, Integer topOrgId, Integer siteId) {
+	public User update(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
+			Integer orgId, Integer groupId, Integer topOrgId, Integer siteId) {
 		if (orgId != null) {
 			bean.setOrg(orgService.get(orgId));
 		}
@@ -387,7 +365,7 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 			userRoleService.update(bean, roleIds, siteId);
 		} else {
 			// 不是管理员则删除所有角色
-			userRoleService.deleteByUserId(bean.getId());
+			bean.getUserRoles().clear();
 		}
 		userOrgService.update(bean, orgIds, orgId, topOrgId);
 		userMemberGroupService.update(bean, groupIds, groupId);
@@ -405,8 +383,7 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 		User entity = dao.findOne(id);
 		if (entity != null) {
 			if (entity.getId() <= 1) {
-				throw new IllegalStateException(
-						"User 0(anonymous) or 1(admin) cannot be delete!");
+				throw new IllegalStateException("User 0(anonymous) or 1(admin) cannot be delete!");
 			}
 			dao.delete(entity);
 		}
@@ -503,8 +480,7 @@ public class UserServiceImpl implements UserService, OrgDeleteListener,
 	}
 
 	@Autowired
-	public void setUserMemberGroupService(
-			UserMemberGroupService userMemberGroupService) {
+	public void setUserMemberGroupService(UserMemberGroupService userMemberGroupService) {
 		this.userMemberGroupService = userMemberGroupService;
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.Attribute;
+import com.jspxcms.core.repository.plus.AttributeDaoPlus;
 
 /**
  * AttributeDao

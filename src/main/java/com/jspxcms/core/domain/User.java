@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -31,6 +31,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.base.Objects;
 import com.jspxcms.common.util.Encodes;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.support.Context;
@@ -148,7 +149,17 @@ public class User implements java.io.Serializable {
 	 */
 	@Transient
 	public boolean isRoot() {
-		return getId() == 1;
+		return getId() != null && getId() == 1;
+	}
+
+	/**
+	 * 是否匿名用户
+	 * 
+	 * @return
+	 */
+	@Transient
+	public boolean isAnonymous() {
+		return getId() != null && getId() == 0;
 	}
 
 	@Transient
@@ -436,12 +447,6 @@ public class User implements java.io.Serializable {
 	}
 
 	@Transient
-	public String getValidationValue() {
-		UserDetail detail = getDetail();
-		return detail != null ? detail.getValidationValue() : null;
-	}
-
-	@Transient
 	public Date getValidationDate() {
 		UserDetail detail = getDetail();
 		return detail != null ? detail.getValidationDate() : null;
@@ -594,6 +599,30 @@ public class User implements java.io.Serializable {
 		return detail != null ? detail.getWithAvatar() : null;
 	}
 
+	public void addMemberGroup(MemberGroup group) {
+		UserMemberGroup userGroup = new UserMemberGroup(this, group);
+		userGroups.add(userGroup);
+	}
+
+	public void removeMemberGroup(MemberGroup group) {
+		UserMemberGroup userGroup = new UserMemberGroup(this, group);
+		userGroups.remove(userGroup);
+		userGroup.setUser(null);
+		userGroup.setGroup(null);
+	}
+
+	public void addRole(Role role) {
+		UserRole userRole = new UserRole(this, role);
+		userRoles.add(userRole);
+	}
+
+	public void removeRole(Role role) {
+		UserRole userRole = new UserRole(this, role);
+		userRoles.remove(userRole);
+		userRole.setUser(null);
+		userRole.setRole(null);
+	}
+
 	@Transient
 	public void applyDefaultValue() {
 		if (getRank() == null) {
@@ -605,6 +634,23 @@ public class User implements java.io.Serializable {
 		if (getStatus() == null) {
 			setStatus(NORMAL);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof User)) {
+			return false;
+		}
+		User that = (User) o;
+		return Objects.equal(id, that.id);
 	}
 
 	private Integer id;
@@ -647,8 +693,8 @@ public class User implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "user")
-	@OrderBy("roleIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	@OrderColumn(name = "f_role_index")
 	public List<UserRole> getUserRoles() {
 		return userRoles;
 	}
@@ -657,8 +703,8 @@ public class User implements java.io.Serializable {
 		this.userRoles = userRoles;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "user")
-	@OrderBy("orgIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	@OrderColumn(name = "f_org_index")
 	public List<UserOrg> getUserOrgs() {
 		return userOrgs;
 	}
@@ -667,8 +713,8 @@ public class User implements java.io.Serializable {
 		this.userOrgs = userOrgs;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "user")
-	@OrderBy("groupIndex")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+	@OrderColumn(name = "f_group_index")
 	public List<UserMemberGroup> getUserGroups() {
 		return userGroups;
 	}

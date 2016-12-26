@@ -10,6 +10,7 @@ import static com.jspxcms.core.constant.Constants.SAVE_SUCCESS;
 import static com.jspxcms.core.constant.Constants.VIEW;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.foxinmy.weixin4j.exception.WeixinException;
@@ -38,6 +41,7 @@ import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.commercial.Weixin;
+import com.jspxcms.core.commercial.WordImporter;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Attribute;
 import com.jspxcms.core.domain.Info;
@@ -47,9 +51,11 @@ import com.jspxcms.core.domain.InfoImage;
 import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Model;
 import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.PublishPoint;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.domain.User;
 import com.jspxcms.core.html.HtmlService;
+import com.jspxcms.core.service.AttachmentService;
 import com.jspxcms.core.service.AttributeService;
 import com.jspxcms.core.service.InfoQueryService;
 import com.jspxcms.core.service.InfoService;
@@ -71,8 +77,7 @@ import freemarker.template.TemplateException;
 @Controller
 @RequestMapping("/core/info")
 public class InfoController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(InfoController.class);
+	private static final Logger logger = LoggerFactory.getLogger(InfoController.class);
 
 	public static final int INCLUDE_CHILDREN = 0;
 	public static final int INCLUDE_MULTI = 1;
@@ -80,8 +85,7 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:left")
 	@RequestMapping("left.do")
-	public String left(HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String left(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
 		Integer siteId = Context.getCurrentSiteId();
 		List<Node> nodeList = nodeQuery.findList(siteId, null, true, null);
@@ -92,11 +96,7 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:list")
 	@RequestMapping("list.do")
-	public String list(
-			Integer queryNodeId,
-			Integer queryNodeType,
-			Integer queryInfoPermType,
-			String queryStatus,
+	public String list(Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType, String queryStatus,
 			@PageableDefault(sort = { "publishDate", "id" }, direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		queryNodeType = queryNodeType == null ? 0 : queryNodeType;
@@ -118,16 +118,14 @@ public class InfoController {
 				treeNumber = queryNode.getTreeNumber();
 			}
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		int infoPermType = user.getInfoPermType(siteId);
 		if (queryInfoPermType != null && queryInfoPermType > infoPermType) {
 			infoPermType = queryInfoPermType;
 		}
 		boolean allInfoPerm = user.getAllInfoPerm(siteId);
-		Page<Info> pagedList = query.findAll(siteId, mainNodeId, nodeId,
-				treeNumber, user.getId(), allInfoPerm, infoPermType,
-				queryStatus, params, pageable);
+		Page<Info> pagedList = query.findAll(siteId, mainNodeId, nodeId, treeNumber, user.getId(), allInfoPerm,
+				infoPermType, queryStatus, params, pageable);
 		List<Attribute> attributeList = attributeService.findList(siteId);
 		modelMap.addAttribute("pagedList", pagedList);
 		modelMap.addAttribute("attributeList", attributeList);
@@ -140,10 +138,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:create")
 	@RequestMapping("create.do")
-	public String create(Integer id, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String create(Integer id, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		if (id != null) {
 			Info bean = query.get(id);
@@ -179,13 +175,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:edit")
 	@RequestMapping("edit.do")
-	public String edit(
-			Integer id,
-			Integer position,
-			Integer queryNodeId,
-			@RequestParam(defaultValue = "0") int queryNodeType,
-			Integer queryInfoPermType,
-			String queryStatus,
+	public String edit(Integer id, Integer position, Integer queryNodeId,
+			@RequestParam(defaultValue = "0") int queryNodeType, Integer queryInfoPermType, String queryStatus,
 			@PageableDefault(sort = { "publishDate", "id" }, direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -211,16 +202,14 @@ public class InfoController {
 				treeNumber = queryNode.getTreeNumber();
 			}
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		Integer infoPermType = user.getInfoPermType(site.getId());
 		if (queryInfoPermType != null && queryInfoPermType > infoPermType) {
 			infoPermType = queryInfoPermType;
 		}
 		boolean allInfoPerm = user.getAllInfoPerm(site.getId());
-		RowSide<Info> side = query.findSide(site.getId(), mainNodeId, nodeId,
-				treeNumber, user.getId(), allInfoPerm, infoPermType,
-				queryStatus, params, bean, position, pageable.getSort());
+		RowSide<Info> side = query.findSide(site.getId(), mainNodeId, nodeId, treeNumber, user.getId(), allInfoPerm,
+				infoPermType, queryStatus, params, bean, position, pageable.getSort());
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("side", side);
 		modelMap.addAttribute("position", position);
@@ -246,14 +235,9 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:edit")
 	@RequestMapping("view.do")
-	public String view(
-			Integer id,
-			Integer position,
-			Integer queryNodeId,
-			@RequestParam(defaultValue = "0") int queryNodeType,
-			Integer queryInfoPermType,
-			String queryStatus,
-			@PageableDefault(sort = "publishDate", direction = Direction.DESC) Pageable pageable,
+	public String view(Integer id, Integer position, Integer queryNodeId,
+			@RequestParam(defaultValue = "0") int queryNodeType, Integer queryInfoPermType, String queryStatus,
+			@PageableDefault(sort = { "publishDate", "id" }, direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -278,16 +262,14 @@ public class InfoController {
 				treeNumber = queryNode.getTreeNumber();
 			}
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		Integer infoPermType = user.getInfoPermType(site.getId());
 		if (queryInfoPermType != null && queryInfoPermType > infoPermType) {
 			infoPermType = queryInfoPermType;
 		}
 		boolean allInfoPerm = user.getAllInfoPerm(site.getId());
-		RowSide<Info> side = query.findSide(site.getId(), mainNodeId, nodeId,
-				treeNumber, user.getId(), allInfoPerm, infoPermType,
-				queryStatus, params, bean, position, pageable.getSort());
+		RowSide<Info> side = query.findSide(site.getId(), mainNodeId, nodeId, treeNumber, user.getId(), allInfoPerm,
+				infoPermType, queryStatus, params, bean, position, pageable.getSort());
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("side", side);
 		modelMap.addAttribute("position", position);
@@ -302,10 +284,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:move_form")
 	@RequestMapping("move_form.do")
-	public String moveForm(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String moveForm(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		Integer siteId = site.getId();
@@ -323,14 +303,11 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:save")
 	@RequestMapping("save.do")
-	public String save(Info bean, InfoDetail detail, Integer[] nodeIds,
-			Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds,
-			Integer[] attrIds, Integer nodeId, String tagKeywords,
-			@RequestParam(defaultValue = "false") boolean draft,
-			String[] imagesName, String[] imagesText, String[] imagesImage,
-			String[] filesName, String[] filesFile, Long[] filesLength,
-			String redirect, Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus,
+	public String save(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
+			Integer[] viewOrgIds, Integer[] attrIds, Integer nodeId, String tagKeywords,
+			@RequestParam(defaultValue = "false") boolean draft, String[] imagesName, String[] imagesText,
+			String[] imagesImage, String[] filesName, String[] filesFile, Long[] filesLength, String redirect,
+			Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType, String queryStatus,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
@@ -341,8 +318,7 @@ public class InfoController {
 			detail.setMetaDescription(Info.getDescription(clobs, title));
 		}
 		String[] tagNames = splitTagKeywords(tagKeywords);
-		Map<String, String> attrImages = Servlets.getParamMap(request,
-				"attrImages_");
+		Map<String, String> attrImages = Servlets.getParamMap(request, "attrImages_");
 		for (Map.Entry<String, String> entry : attrImages.entrySet()) {
 			entry.setValue(StringUtils.trimToNull(entry.getValue()));
 		}
@@ -350,11 +326,9 @@ public class InfoController {
 		if (imagesName != null) {
 			InfoImage infoImage;
 			for (int i = 0, len = imagesName.length; i < len; i++) {
-				if (StringUtils.isNotBlank(imagesName[i])
-						|| StringUtils.isNotBlank(imagesText[i])
+				if (StringUtils.isNotBlank(imagesName[i]) || StringUtils.isNotBlank(imagesText[i])
 						|| StringUtils.isNotBlank(imagesImage[i])) {
-					infoImage = new InfoImage(imagesName[i], imagesText[i],
-							imagesImage[i]);
+					infoImage = new InfoImage(imagesName[i], imagesText[i], imagesImage[i]);
 					images.add(infoImage);
 				}
 			}
@@ -363,21 +337,17 @@ public class InfoController {
 		if (filesName != null) {
 			InfoFile infoFile;
 			for (int i = 0, len = filesFile.length; i < len; i++) {
-				if (StringUtils.isNotBlank(filesName[i])
-						&& StringUtils.isNotBlank(filesFile[i])) {
-					infoFile = new InfoFile(filesName[i], filesFile[i],
-							filesLength[i]);
+				if (StringUtils.isNotBlank(filesName[i]) && StringUtils.isNotBlank(filesFile[i])) {
+					infoFile = new InfoFile(filesName[i], filesFile[i], filesLength[i]);
 					files.add(infoFile);
 				}
 			}
 		}
 		String status = draft ? Info.DRAFT : null;
-		service.save(bean, detail, nodeIds, specialIds, viewGroupIds,
-				viewOrgIds, customs, clobs, images, files, attrIds, attrImages,
-				tagNames, nodeId, userId, status, siteId);
+		service.save(bean, detail, nodeIds, specialIds, viewGroupIds, viewOrgIds, customs, clobs, images, files,
+				attrIds, attrImages, tagNames, nodeId, userId, status, siteId);
 		String ip = Servlets.getRemoteAddr(request);
-		logService.operation("opr.info.add", bean.getTitle(), null,
-				bean.getId(), ip, userId, siteId);
+		logService.operation("opr.info.add", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 		logger.info("save Info, title={}.", bean.getTitle());
 		ra.addAttribute("queryNodeId", queryNodeId);
 		ra.addAttribute("queryNodeType", queryNodeType);
@@ -396,16 +366,12 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") Info bean,
-			@ModelAttribute("detail") InfoDetail detail, Integer[] nodeIds,
-			Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds,
-			Integer[] attrIds, Integer nodeId, String tagKeywords,
-			@RequestParam(defaultValue = "false") boolean pass,
-			@RequestParam(defaultValue = "false") boolean remainDescription,
-			String[] imagesName, String[] imagesText, String[] imagesImage,
-			String[] filesName, String[] filesFile, Long[] filesLength,
-			Integer position, Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus, String redirect,
+	public String update(@ModelAttribute("bean") Info bean, @ModelAttribute("detail") InfoDetail detail,
+			Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds, Integer[] attrIds,
+			Integer nodeId, String tagKeywords, @RequestParam(defaultValue = "false") boolean pass,
+			@RequestParam(defaultValue = "false") boolean remainDescription, String[] imagesName, String[] imagesText,
+			String[] imagesImage, String[] filesName, String[] filesFile, Long[] filesLength, Integer position,
+			Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType, String queryStatus, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -415,14 +381,12 @@ public class InfoController {
 		}
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
 		Map<String, String> clobs = Servlets.getParamMap(request, "clobs_");
-		if (!remainDescription
-				|| StringUtils.isBlank(detail.getMetaDescription())) {
+		if (!remainDescription || StringUtils.isBlank(detail.getMetaDescription())) {
 			String title = detail.getTitle();
 			detail.setMetaDescription(Info.getDescription(clobs, title));
 		}
 		String[] tagNames = splitTagKeywords(tagKeywords);
-		Map<String, String> attrImages = Servlets.getParamMap(request,
-				"attrImages_");
+		Map<String, String> attrImages = Servlets.getParamMap(request, "attrImages_");
 		for (Map.Entry<String, String> entry : attrImages.entrySet()) {
 			entry.setValue(StringUtils.trimToNull(entry.getValue()));
 		}
@@ -430,10 +394,8 @@ public class InfoController {
 		if (imagesName != null) {
 			InfoImage infoImage;
 			for (int i = 0, len = imagesName.length; i < len; i++) {
-				if (StringUtils.isNotBlank(imagesName[i])
-						|| StringUtils.isNotBlank(imagesImage[i])) {
-					infoImage = new InfoImage(imagesName[i], imagesText[i],
-							imagesImage[i]);
+				if (StringUtils.isNotBlank(imagesName[i]) || StringUtils.isNotBlank(imagesImage[i])) {
+					infoImage = new InfoImage(imagesName[i], imagesText[i], imagesImage[i]);
 					images.add(infoImage);
 				}
 			}
@@ -442,10 +404,8 @@ public class InfoController {
 		if (filesName != null) {
 			InfoFile infoFile;
 			for (int i = 0, len = filesFile.length; i < len; i++) {
-				if (StringUtils.isNotBlank(filesName[i])
-						&& StringUtils.isNotBlank(filesFile[i])) {
-					infoFile = new InfoFile(filesName[i], filesFile[i],
-							filesLength[i]);
+				if (StringUtils.isNotBlank(filesName[i]) && StringUtils.isNotBlank(filesFile[i])) {
+					infoFile = new InfoFile(filesName[i], filesFile[i], filesLength[i]);
 					files.add(infoFile);
 				}
 			}
@@ -465,13 +425,11 @@ public class InfoController {
 		if (tagNames == null) {
 			tagNames = new String[0];
 		}
-		service.update(bean, detail, nodeIds, specialIds, viewGroupIds,
-				viewOrgIds, customs, clobs, images, files, attrIds, attrImages,
-				tagNames, nodeId, user, pass);
+		service.update(bean, detail, nodeIds, specialIds, viewGroupIds, viewOrgIds, customs, clobs, images, files,
+				attrIds, attrImages, tagNames, nodeId, user, pass);
 
 		String ip = Servlets.getRemoteAddr(request);
-		logService.operation("opr.info.edit", bean.getTitle(), null,
-				bean.getId(), ip, user.getId(), site.getId());
+		logService.operation("opr.info.edit", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 		logger.info("update Info, title={}.", bean.getTitle());
 		ra.addAttribute("queryNodeId", queryNodeId);
 		ra.addAttribute("queryNodeType", queryNodeType);
@@ -489,18 +447,15 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:move_submit")
 	@RequestMapping("move_submit.do")
-	public String moveSubmit(Integer[] ids, Integer nodeId,
-			Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String moveSubmit(Integer[] ids, Integer nodeId, Integer queryNodeId, Integer queryNodeType,
+			Integer queryInfoPermType, String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
 		List<Info> beans = service.move(ids, nodeId);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.move", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.info.move", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 			logger.info("move Info, title={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -513,9 +468,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:audit_pass")
 	@RequestMapping("audit_pass.do")
-	public String auditPass(Integer[] ids, String opinion, Integer position,
-			Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus, String redirect,
+	public String auditPass(Integer[] ids, String opinion, Integer position, Integer queryNodeId,
+			Integer queryNodeType, Integer queryInfoPermType, String queryStatus, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
@@ -523,8 +477,7 @@ public class InfoController {
 		List<Info> beans = service.pass(ids, userId, opinion);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.auditPass", bean.getTitle(), null,
-					bean.getId(), ip, userId, siteId);
+			logService.operation("opr.info.auditPass", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 			logger.info("audit pass Info, title={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -547,9 +500,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:audit_reject")
 	@RequestMapping("audit_reject.do")
-	public String auditReject(Integer[] ids, String opinion, Integer position,
-			Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus, String redirect,
+	public String auditReject(Integer[] ids, String opinion, Integer position, Integer queryNodeId,
+			Integer queryNodeType, Integer queryInfoPermType, String queryStatus, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
@@ -557,8 +509,7 @@ public class InfoController {
 		List<Info> beans = service.reject(ids, userId, opinion, false);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.auditReject", bean.getTitle(), null,
-					bean.getId(), ip, userId, siteId);
+			logService.operation("opr.info.auditReject", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 			logger.info("audit reject Info, title={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -581,9 +532,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:audit_return")
 	@RequestMapping("audit_return.do")
-	public String auditReturn(Integer[] ids, String opinion, Integer position,
-			Integer queryNodeId, Integer queryNodeType,
-			Integer queryInfoPermType, String queryStatus, String redirect,
+	public String auditReturn(Integer[] ids, String opinion, Integer position, Integer queryNodeId,
+			Integer queryNodeType, Integer queryInfoPermType, String queryStatus, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
@@ -591,8 +541,7 @@ public class InfoController {
 		List<Info> beans = service.reject(ids, userId, opinion, true);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.auditReturn", bean.getTitle(), null,
-					bean.getId(), ip, userId, siteId);
+			logService.operation("opr.info.auditReturn", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
 			logger.info("audit return Info, title={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -615,10 +564,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:archive")
 	@RequestMapping("archive.do")
-	public String archive(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String archive(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
@@ -631,8 +578,8 @@ public class InfoController {
 		String ip = Servlets.getRemoteAddr(request);
 		List<Info> beans = service.archive(ids);
 		for (Info bean : beans) {
-			logService.operation("opr.info.archive", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.info.archive", bean.getTitle(), null, bean.getId(), ip, user.getId(),
+					site.getId());
 			logger.info("archive Info, name={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -645,10 +592,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:anti_archive")
 	@RequestMapping("anti_archive.do")
-	public String antiArchive(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String antiArchive(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
@@ -661,8 +606,8 @@ public class InfoController {
 		List<Info> beans = service.antiArchive(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.antiArchive", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.info.antiArchive", bean.getTitle(), null, bean.getId(), ip, user.getId(),
+					site.getId());
 			logger.info("anti archive Info, name={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -675,10 +620,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:logic_delete")
 	@RequestMapping("logic_delete.do")
-	public String logicDelete(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String logicDelete(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
@@ -691,8 +634,8 @@ public class InfoController {
 		String ip = Servlets.getRemoteAddr(request);
 		List<Info> beans = service.logicDelete(ids);
 		for (Info bean : beans) {
-			logService.operation("opr.info.logicDelete", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService.operation("opr.info.logicDelete", bean.getTitle(), null, bean.getId(), ip, user.getId(),
+					site.getId());
 			logger.info("logic delete Info, name={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -705,10 +648,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:recall")
 	@RequestMapping("recall.do")
-	public String recall(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String recall(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
@@ -721,8 +662,8 @@ public class InfoController {
 		List<Info> beans = service.recall(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.recall", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService
+					.operation("opr.info.recall", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 			logger.info("reacll Info, name={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -735,10 +676,8 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:delete")
 	@RequestMapping("delete.do")
-	public String delete(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String delete(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		validateIds(ids, site.getId());
@@ -751,8 +690,8 @@ public class InfoController {
 		List<Info> beans = service.delete(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Info bean : beans) {
-			logService.operation("opr.info.delete", bean.getTitle(), null,
-					bean.getId(), ip, user.getId(), site.getId());
+			logService
+					.operation("opr.info.delete", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 			logger.info("delete Info, name={}.", bean.getTitle());
 		}
 		ra.addAttribute("queryNodeId", queryNodeId);
@@ -765,10 +704,9 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:make_html")
 	@RequestMapping("make_html.do")
-	public String makeHtml(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			RedirectAttributes ra) throws IOException, TemplateException {
+	public String makeHtml(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, RedirectAttributes ra) throws IOException,
+			TemplateException {
 		// 生成html是否要控制数据权限？不是非常必要。
 		// User user = Context.getCurrentUser();
 		// for (Integer id : ids) {
@@ -790,6 +728,24 @@ public class InfoController {
 		return "redirect:list.do";
 	}
 
+	// 上传不设权限
+	// @RequiresPermissions("core:info:import_office")
+	@RequestMapping("import_office.do")
+	public void importOffice(MultipartFile file, HttpServletRequest request, HttpServletResponse response)
+			throws ParserException, IllegalStateException, URISyntaxException, IOException {
+		Site site = Context.getCurrentSite();
+		User user = Context.getCurrentUser();
+		PublishPoint point = site.getUploadsPublishPoint();
+		String prefix = point.getUrlPrefix();
+		String path = site.getSiteBase(null);
+		String ip = Servlets.getRemoteAddr(request);
+		Integer userId = user.getId();
+		Integer siteId = site.getId();
+		String result = WordImporter.importDoc(file, userId, siteId, ip, prefix, path, point, pathResolver,
+				attachmentService);
+		Servlets.writeHtml(response, result);
+	}
+
 	// @RequiresPermissions("core:info:get_keywords")
 	// @RequestMapping("get_keywords.do")
 	// public void getKeywords(HttpServletRequest request,
@@ -800,35 +756,30 @@ public class InfoController {
 
 	@RequiresPermissions("core:info:mass_weixin_form")
 	@RequestMapping("mass_weixin_form.do")
-	public String massWeixinForm(Integer[] ids, Integer queryNodeId,
-			Integer queryNodeType, Integer queryInfoPermType,
-			String queryStatus, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) throws WeixinException {
+	public String massWeixinForm(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
+			String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap)
+			throws WeixinException {
 		if (tokenHolder == null) {
 			throw new CmsException("info.error.weixinAppNotSet");
 		}
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
-		return Weixin.massWeixinForm(ids, queryNodeId, queryNodeType,
-				queryInfoPermType, queryStatus, request, modelMap, tokenHolder,
-				query);
+		return Weixin.massWeixinForm(ids, queryNodeId, queryNodeType, queryInfoPermType, queryStatus, request,
+				modelMap, tokenHolder, query);
 	}
 
 	@RequiresPermissions("core:info:mass_weixin")
 	@RequestMapping("mass_weixin.do")
-	public void massWeixin(String mode, Integer groupId, String towxname,
-			String[] title, String[] author, String[] contentSourceUrl,
-			String[] digest, Boolean[] showConverPic, String[] thumb,
-			HttpServletRequest request, HttpServletResponse response,
-			org.springframework.ui.Model modelMap) throws IOException {
-		Weixin.massWeixin(mode, groupId, towxname, title, author,
-				contentSourceUrl, digest, showConverPic, thumb, request,
-				response, modelMap, tokenHolder, logService, pathResolver);
+	public void massWeixin(String mode, Integer groupId, String towxname, String[] title, String[] author,
+			String[] contentSourceUrl, String[] digest, Boolean[] showConverPic, String[] thumb,
+			HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
+			throws IOException {
+		Weixin.massWeixin(mode, groupId, towxname, title, author, contentSourceUrl, digest, showConverPic, thumb,
+				request, response, modelMap, tokenHolder, logService, pathResolver);
 	}
 
 	@ModelAttribute
-	public void preloadBean(@RequestParam(required = false) Integer oid,
-			org.springframework.ui.Model modelMap) {
+	public void preloadBean(@RequestParam(required = false) Integer oid, org.springframework.ui.Model modelMap) {
 		if (oid != null) {
 			Info bean = query.get(oid);
 			if (bean != null) {
@@ -848,8 +799,7 @@ public class InfoController {
 		String split = Constants.TAG_KEYWORDS_SPLIT;
 		if (StringUtils.isNotBlank(split)) {
 			for (int i = 0, len = split.length(); i < len; i++) {
-				tagKeywords = StringUtils.replace(tagKeywords,
-						String.valueOf(split.charAt(i)), ",");
+				tagKeywords = StringUtils.replace(tagKeywords, String.valueOf(split.charAt(i)), ",");
 			}
 		}
 		return StringUtils.split(tagKeywords, ',');
@@ -861,6 +811,8 @@ public class InfoController {
 		}
 	}
 
+	@Autowired
+	private AttachmentService attachmentService;
 	@Autowired
 	private TokenHolder tokenHolder;
 	@Autowired

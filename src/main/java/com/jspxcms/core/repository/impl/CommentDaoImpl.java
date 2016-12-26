@@ -16,10 +16,10 @@ import org.springframework.data.domain.Pageable;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.core.domain.Comment;
-import com.jspxcms.core.domaindsl.QComment;
-import com.jspxcms.core.repository.CommentDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.domain.QComment;
+import com.jspxcms.core.repository.plus.CommentDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * CommentDaoImpl
@@ -30,7 +30,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 public class CommentDaoImpl implements CommentDaoPlus {
 	public List<Comment> findList(String ftype, Integer fid, Integer creatorId,
 			Integer[] status, Integer[] siteId, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Comment> query = new JPAQuery<Comment>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QComment comment = QComment.comment;
 		predicate(query, comment, ftype, fid, creatorId, status, siteId);
@@ -39,14 +39,14 @@ public class CommentDaoImpl implements CommentDaoPlus {
 
 	public Page<Comment> findPage(String ftype, Integer fid, Integer creatorId,
 			Integer[] status, Integer[] siteId, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Comment> query = new JPAQuery<Comment>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QComment comment = QComment.comment;
 		predicate(query, comment, ftype, fid, creatorId, status, siteId);
 		return QuerydslUtils.page(query, comment, pageable);
 	}
 
-	private void predicate(JPAQuery query, QComment comment, String ftype,
+	private void predicate(JPAQuery<Comment> query, QComment comment, String ftype,
 			Integer fid, Integer creatorId, Integer[] status, Integer[] siteId) {
 		query.from(comment);
 		BooleanBuilder exp = new BooleanBuilder();

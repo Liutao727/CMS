@@ -1,57 +1,42 @@
 package com.jspxcms.core.domain;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.UserMemberGroup.UserMemberGroupId;
 
 @Entity
 @Table(name = "cms_user_membergroup")
+@IdClass(UserMemberGroupId.class)
 public class UserMemberGroup implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-
-	// @PrePersist
-	// @PreUpdate
-	// public void prepareIndex() {
-	// if (getUser() != null) {
-	// setGroupIndex(getUser().getUserGroups().indexOf(this));
-	// }
-	// }
-
-	private Integer id;
-	private User user;
-	private MemberGroup group;
-	private Integer groupIndex;
 
 	public UserMemberGroup() {
 	}
 
-	public UserMemberGroup(User user, MemberGroup group, Integer groupIndex) {
+	public UserMemberGroup(User user, MemberGroup group) {
 		this.user = user;
 		this.group = group;
-		this.groupIndex = groupIndex;
 	}
 
 	@Id
-	@Column(name = "f_usermgroup_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_user_membergroup", pkColumnValue = "cms_user_membergroup", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_user_membergroup")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_user_id", nullable = false)
+	private User user;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_membergroup_id", nullable = false)
+	private MemberGroup group;
+
 	public User getUser() {
 		return user;
 	}
@@ -60,8 +45,6 @@ public class UserMemberGroup implements java.io.Serializable {
 		this.user = user;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_membergroup_id", nullable = false)
 	public MemberGroup getGroup() {
 		return group;
 	}
@@ -70,13 +53,53 @@ public class UserMemberGroup implements java.io.Serializable {
 		this.group = group;
 	}
 
-	@Column(name = "f_group_index", nullable = false)
-	public Integer getGroupIndex() {
-		return this.groupIndex;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof UserMemberGroup)) {
+			return false;
+		}
+		UserMemberGroup that = (UserMemberGroup) o;
+		return Objects.equal(user, that.user) && Objects.equal(group, that.group);
 	}
 
-	public void setGroupIndex(Integer groupIndex) {
-		this.groupIndex = groupIndex;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(user, group);
+	}
+
+	public static class UserMemberGroupId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer user;
+		Integer group;
+
+		public UserMemberGroupId() {
+		}
+
+		public UserMemberGroupId(Integer user, Integer group) {
+			this.user = user;
+			this.group = group;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof UserMemberGroupId)) {
+				return false;
+			}
+			UserMemberGroupId that = (UserMemberGroupId) o;
+			return Objects.equal(user, that.user) && Objects.equal(group, that.group);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(user, group);
+		}
 	}
 
 }

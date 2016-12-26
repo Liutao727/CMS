@@ -44,13 +44,11 @@ import com.jspxcms.core.support.DeleteException;
 @Service
 @Transactional(readOnly = true)
 public class TagServiceImpl implements TagService, SiteDeleteListener {
-	public Page<Tag> findAll(Integer siteId, Map<String, String[]> params,
-			Pageable pageable) {
+	public Page<Tag> findAll(Integer siteId, Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(siteId, params), pageable);
 	}
 
-	public RowSide<Tag> findSide(Integer siteId, Map<String, String[]> params,
-			Tag bean, Integer position, Sort sort) {
+	public RowSide<Tag> findSide(Integer siteId, Map<String, String[]> params, Tag bean, Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<Tag>();
 		}
@@ -59,17 +57,14 @@ public class TagServiceImpl implements TagService, SiteDeleteListener {
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<Tag> spec(final Integer siteId,
-			Map<String, String[]> params) {
+	private Specification<Tag> spec(final Integer siteId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
 		final Specification<Tag> fsp = SearchFilter.spec(filters, Tag.class);
 		Specification<Tag> sp = new Specification<Tag>() {
-			public Predicate toPredicate(Root<Tag> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Tag> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred,
-							cb.equal(root.get("site").get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").get("id"), siteId));
 				}
 				return pred;
 			}
@@ -77,13 +72,11 @@ public class TagServiceImpl implements TagService, SiteDeleteListener {
 		return sp;
 	}
 
-	public List<Tag> findList(Integer[] siteId, String[] node,
-			Integer[] nodeId, Integer refers, Limitable limitable) {
+	public List<Tag> findList(Integer[] siteId, String[] node, Integer[] nodeId, Integer refers, Limitable limitable) {
 		return dao.findList(siteId, node, nodeId, refers, limitable);
 	}
 
-	public Page<Tag> findPage(Integer[] siteId, String[] node,
-			Integer[] nodeId, Integer refers, Pageable pageable) {
+	public Page<Tag> findPage(Integer[] siteId, String[] node, Integer[] nodeId, Integer refers, Pageable pageable) {
 		return dao.findPage(siteId, node, nodeId, refers, pageable);
 	}
 

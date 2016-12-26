@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jspxcms.common.ip.IPSeeker;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
@@ -108,13 +109,17 @@ public class GuestbookServiceImpl implements GuestbookService,
 		bean.setSite(site);
 		bean.setCreator(user);
 		GuestbookType type = typeService.get(typeId);
-		if (StringUtils.isBlank(bean.getCreationIp())) {
-			bean.setCreationIp(ip);
+		bean.setCreationIp(ip);
+		if (StringUtils.isNotBlank(bean.getCreationIp())) {
+			bean.setCreationCountry(ipSeeker.getCountry(bean.getCreationIp()));
+			bean.setCreationArea(ipSeeker.getArea(bean.getCreationIp()));
 		}
 		bean.setType(type);
 		if (StringUtils.isBlank(bean.getReplyText())) {
 			bean.setReplyer(null);
 			bean.setReplyIp(null);
+			bean.setReplyCountry(null);
+			bean.setReplyArea(null);
 			bean.setReplyDate(null);
 			bean.setReply(false);
 		} else {
@@ -122,6 +127,10 @@ public class GuestbookServiceImpl implements GuestbookService,
 			bean.setReplyIp(ip);
 			bean.setReplyDate(new Timestamp(System.currentTimeMillis()));
 			bean.setReply(true);
+			if (StringUtils.isNotBlank(bean.getReplyIp())) {
+				bean.setReplyCountry(ipSeeker.getCountry(bean.getReplyIp()));
+				bean.setReplyArea(ipSeeker.getArea(bean.getReplyIp()));
+			}
 		}
 		bean.applyDefaultValue();
 		bean = dao.save(bean);
@@ -141,6 +150,8 @@ public class GuestbookServiceImpl implements GuestbookService,
 		if (StringUtils.isBlank(bean.getReplyText())) {
 			bean.setReplyer(null);
 			bean.setReplyIp(null);
+			bean.setReplyCountry(null);
+			bean.setReplyArea(null);
 			bean.setReplyDate(null);
 			bean.setReply(false);
 		} else {
@@ -149,6 +160,8 @@ public class GuestbookServiceImpl implements GuestbookService,
 			}
 			if (StringUtils.isBlank(bean.getReplyIp())) {
 				bean.setReplyIp(ip);
+				bean.setReplyCountry(ipSeeker.getCountry(ip));
+				bean.setReplyArea(ipSeeker.getArea(ip));
 			}
 			if (bean.getReplyDate() == null) {
 				bean.setReplyDate(new Timestamp(System.currentTimeMillis()));
@@ -205,13 +218,35 @@ public class GuestbookServiceImpl implements GuestbookService,
 		}
 	}
 
-	@Autowired
+	private IPSeeker ipSeeker;
 	private SiteService siteService;
-	@Autowired
 	private GuestbookTypeService typeService;
-	@Autowired
 	private UserService userService;
-	@Autowired
 	private GuestbookDao dao;
+
+	@Autowired
+	public void setIpSeeker(IPSeeker ipSeeker) {
+		this.ipSeeker = ipSeeker;
+	}
+
+	@Autowired
+	public void setSiteService(SiteService siteService) {
+		this.siteService = siteService;
+	}
+
+	@Autowired
+	public void setTypeService(GuestbookTypeService typeService) {
+		this.typeService = typeService;
+	}
+
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	@Autowired
+	public void setDao(GuestbookDao dao) {
+		this.dao = dao;
+	}
 
 }

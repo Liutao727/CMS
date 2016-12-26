@@ -1,14 +1,10 @@
 package com.jspxcms.core.web.back;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,116 +47,147 @@ import com.jspxcms.core.support.UploadHandler;
 public abstract class UploadControllerAbstract {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected void imageSavePath(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		if (request.getParameter("fetch") != null) {
-			response.setHeader("Content-Type", "text/javascript");
-			response.getWriter().print("updateSavePath( ['image'] );");
-			return;
+	/**
+	 * ueditor config action，返回空配置，全部配置在前端完整。
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	protected void ueditorConfig(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Site site = Context.getCurrentSite();
+		GlobalUpload gu = site.getGlobal().getUpload();
+		// limit是以KB为单位，要乘以1024
+		int imageLimit = gu.getImageLimit();
+		if (imageLimit <= 0) {
+			imageLimit = Integer.MAX_VALUE;
+		} else {
+			imageLimit *= 1024;
 		}
+		int videoLimit = gu.getVideoLimit();
+		if (videoLimit <= 0) {
+			videoLimit = Integer.MAX_VALUE;
+		} else {
+			videoLimit *= 1024;
+		}
+		int fileLimit = gu.getFileLimit();
+		if (fileLimit <= 0) {
+			fileLimit = Integer.MAX_VALUE;
+		} else {
+			fileLimit *= 1024;
+		}
+		String imageExtensions = getExtensionsForUeditor(gu.getImageExtensions());
+		String videoExtensions = getExtensionsForUeditor(gu.getVideoExtensions());
+		String fileExtensions = getExtensionsForUeditor(gu.getFileExtensions());
+		StringBuilder sb = new StringBuilder("{");
+		sb.append("\"imageMaxSize\":").append(imageLimit).append(",");
+		sb.append("\"scrawlMaxSize\":").append(imageLimit).append(",");
+		sb.append("\"catcherMaxSize\":").append(imageLimit).append(",");
+		sb.append("\"videoMaxSize\":").append(videoLimit).append(",");
+		sb.append("\"fileMaxSize\":").append(fileLimit).append(",");
+
+		sb.append("\"imageAllowFiles\":[").append(imageExtensions).append("],");
+		sb.append("\"catcherAllowFiles\":[").append(imageExtensions).append("],");
+		sb.append("\"videoAllowFiles\":[").append(videoExtensions).append("],");
+		sb.append("\"fileAllowFiles\":[").append(fileExtensions).append("],");
+
+		sb.append("\"imageCompressEnable\": true,");
+		sb.append("\"catcherLocalDomain\":[\"127.0.0.1\", \"0:0:0:0:0:0:0:1\", \"localhost\"");
+		String uploadsDomain = site.getGlobal().getUploadsDomain();
+		if (StringUtils.isNotBlank(uploadsDomain)) {
+			sb.append(",\"+uploadsDomain+\"");
+		}
+		sb.append("]}");
+
+		logger.debug("ueditor config:" + sb.toString());
+		response.setHeader("Content-Type", "text/html");
+		response.getWriter().print(sb.toString());
+		response.flushBuffer();
 	}
 
-	protected void imageManager(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		response.getWriter().print("");
-	}
-
-	protected void getMovie(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		StringBuffer readOneLineBuff = new StringBuffer();
-		String content = "";
-		String searchkey = request.getParameter("searchKey");
-		String videotype = request.getParameter("videoType");
-		try {
-			searchkey = URLEncoder.encode(searchkey, "utf-8");
-			URL url = new URL(
-					"http://api.tudou.com/v3/gw?method=item.search&appKey=myKey&format=json&kw="
-							+ searchkey + "&pageNo=1&pageSize=20&channelId="
-							+ videotype + "&inDays=7&media=v&sort=s");
-			URLConnection conn = url.openConnection();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), "utf-8"));
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				readOneLineBuff.append(line);
+	/**
+	 * 将jpg,png,gif后缀格式转换成ueditor的后缀格式.jpg,.png,.gif
+	 * 
+	 * @param extensions
+	 * @return
+	 */
+	private String getExtensionsForUeditor(String extensions) {
+		StringBuilder sb = new StringBuilder();
+		if (StringUtils.isNotBlank(extensions)) {
+			for (String s : StringUtils.split(extensions, ',')) {
+				sb.append(".").append(s).append(",");
 			}
-			content = readOneLineBuff.toString();
-			reader.close();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
+			if (sb.length() > 0) {
+				sb.setLength(sb.length() - 1);
+			}
 		}
-		response.getWriter().print(content);
+		return sb.toString();
 	}
 
-	protected void getRemoteImage(Site site, String upfile,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	protected void ueditorCatchImage(Site site, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		GlobalUpload gu = site.getGlobal().getUpload();
 		PublishPoint point = site.getUploadsPublishPoint();
 		FileHandler fileHandler = point.getFileHandler(pathResolver);
 		String urlPrefix = point.getUrlPrefix();
 
-		String state = "SUCCESS";
-		String[] arr = upfile.split("ue_separate_ue");
+		StringBuilder result = new StringBuilder("{\"state\": \"SUCCESS\", list: [");
 		List<String> urls = new ArrayList<String>();
 		List<String> srcs = new ArrayList<String>();
-		for (int i = 0; i < arr.length; i++) {
-			String extension = FilenameUtils.getExtension(arr[i]);
+
+		String[] source = request.getParameterValues("source[]");
+		if (source == null) {
+			source = new String[0];
+		}
+		for (int i = 0; i < source.length; i++) {
+			String src = source[i];
+			String extension = FilenameUtils.getExtension(src);
 			// 格式验证
 			if (!gu.isExtensionValid(extension, Uploader.IMAGE)) {
-				state = "Extension Invalid";
+				// state = "Extension Invalid";
 				continue;
 			}
 			HttpURLConnection.setFollowRedirects(false);
-			HttpURLConnection conn = (HttpURLConnection) new URL(arr[i])
-					.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL(src).openConnection();
 			if (conn.getContentType().indexOf("image") == -1) {
-				state = "ContentType Invalid";
+				// state = "ContentType Invalid";
 				continue;
 			}
 			if (conn.getResponseCode() != 200) {
-				state = "Request Error";
+				// state = "Request Error";
 				continue;
 			}
-			String pathname = site.getSiteBase(Uploader.getQuickPathname(
-					Uploader.IMAGE, extension));
-			fileHandler.storeFile(conn.getInputStream(), pathname);
-			urls.add(urlPrefix + pathname);
-			srcs.add(arr[i]);
+			String pathname = site.getSiteBase(Uploader.getQuickPathname(Uploader.IMAGE, extension));
+			InputStream is = null;
+			try {
+				is = conn.getInputStream();
+				fileHandler.storeFile(is, pathname);
+			} finally {
+				IOUtils.closeQuietly(is);
+			}
+			String url = urlPrefix + pathname;
+			urls.add(url);
+			srcs.add(src);
+			result.append("{\"state\": \"SUCCESS\",");
+			result.append("\"url\":\"").append(url).append("\",");
+			result.append("\"source\":\"").append(src).append("\"},");
 		}
-		StringBuilder outstr = new StringBuilder();
-		for (String url : urls) {
-			outstr.append(url).append("ue_separate_ue");
+		if (result.charAt(result.length() - 1) == ',') {
+			result.setLength(result.length() - 1);
 		}
-		StringBuilder srcUrl = new StringBuilder();
-		for (String src : srcs) {
-			srcUrl.append(src).append("ue_separate_ue");
-		}
-		int sepLength = "ue_separate_ue".length();
-		if (outstr.length() > sepLength) {
-			outstr.setLength(outstr.length() - sepLength);
-		}
-		if (srcUrl.length() > sepLength) {
-			srcUrl.setLength(srcUrl.length() - sepLength);
-		}
-		response.getWriter().print(
-				"{'url':'" + outstr + "','tip':'" + state + "','srcUrl':'"
-						+ srcUrl + "'}");
+		result.append("]}");
+		logger.debug(result.toString());
+		response.getWriter().print(result.toString());
 	}
 
-	protected void upload(Site site, HttpServletRequest request,
-			HttpServletResponse response, String type) throws IOException {
-		upload(site, request, response, type, null, null, null, null, null,
-				null, null, null);
-	}
-
-	protected void upload(Site site, HttpServletRequest request,
-			HttpServletResponse response, String type, Boolean scale,
-			Boolean exact, Integer width, Integer height, Boolean thumbnail,
-			Integer thumbnailWidth, Integer thumbnailHeight, Boolean watermark)
+	protected void upload(Site site, HttpServletRequest request, HttpServletResponse response, String type)
 			throws IOException {
+		upload(site, request, response, type, null, null, null, null, null, null, null, null);
+	}
+
+	protected void upload(Site site, HttpServletRequest request, HttpServletResponse response, String type,
+			Boolean scale, Boolean exact, Integer width, Integer height, Boolean thumbnail, Integer thumbnailWidth,
+			Integer thumbnailHeight, Boolean watermark) throws IOException {
 		UploadResult result = new UploadResult();
 		Locale locale = RequestContextUtils.getLocale(request);
 		result.setMessageSource(messageSource, locale);
@@ -166,9 +195,8 @@ public abstract class UploadControllerAbstract {
 		Integer userId = Context.getCurrentUserId();
 		String ip = Servlets.getRemoteAddr(request);
 		MultipartFile partFile = getMultipartFile(request);
-		uploadHandler.upload(partFile, type, site, userId, ip, result, scale,
-				exact, width, height, thumbnail, thumbnailWidth,
-				thumbnailHeight, watermark);
+		uploadHandler.upload(partFile, type, site, userId, ip, result, scale, exact, width, height, thumbnail,
+				thumbnailWidth, thumbnailHeight, watermark);
 
 		if (request.getParameter("CKEditor") != null) {
 			response.setCharacterEncoding("UTF-8");
@@ -179,8 +207,8 @@ public abstract class UploadControllerAbstract {
 			out.println("<script type=\"text/javascript\">");
 			out.println("(function(){var d=document.domain;while (true){try{var A=window.parent.document.domain;break;}catch(e) {};d=d.replace(/.*?(?:\\.|$)/,'');if (d.length==0) break;try{document.domain=d;}catch (e){break;}}})();\n");
 			if (result.isError()) {
-				out.println("window.parent.CKEDITOR.tools.callFunction("
-						+ callback + ",'" + result.getFileUrl() + "',''" + ");");
+				out.println("window.parent.CKEDITOR.tools.callFunction(" + callback + ",'" + result.getFileUrl()
+						+ "',''" + ");");
 			} else {
 				out.println("alert('" + result.getMessage() + "');");
 			}

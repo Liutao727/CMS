@@ -50,7 +50,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 
 	@Override
 	protected FileHandler getFileHandler(Site site) {
-		return FileHandler.getFileHandler(pathResolver, "");
+		return FileHandler.getLocalFileHandler(pathResolver, "");
 	}
 
 	@Override

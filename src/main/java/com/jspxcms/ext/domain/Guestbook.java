@@ -69,9 +69,13 @@ public class Guestbook implements Siteable, java.io.Serializable {
 	private String text;
 	private Date creationDate;
 	private String creationIp;
+	private String creationCountry;
+	private String creationArea;
 	private String replyText;
 	private Date replyDate;
 	private String replyIp;
+	private String replyCountry;
+	private String replyArea;
 	private Boolean reply;
 	private Boolean recommend;
 	private Integer status;
@@ -172,6 +176,24 @@ public class Guestbook implements Siteable, java.io.Serializable {
 		this.creationIp = creationIp;
 	}
 
+	@Column(name = "f_creation_country", length = 100)
+	public String getCreationCountry() {
+		return creationCountry;
+	}
+
+	public void setCreationCountry(String creationCountry) {
+		this.creationCountry = creationCountry;
+	}
+
+	@Column(name = "f_creation_area", length = 100)
+	public String getCreationArea() {
+		return creationArea;
+	}
+
+	public void setCreationArea(String creationArea) {
+		this.creationArea = creationArea;
+	}
+
 	@Lob
 	@Column(name = "f_reply_text")
 	public String getReplyText() {
@@ -199,6 +221,24 @@ public class Guestbook implements Siteable, java.io.Serializable {
 
 	public void setReplyIp(String replyIp) {
 		this.replyIp = replyIp;
+	}
+
+	@Column(name = "f_reply_country", length = 100)
+	public String getReplyCountry() {
+		return replyCountry;
+	}
+
+	public void setReplyCountry(String replyCountry) {
+		this.replyCountry = replyCountry;
+	}
+
+	@Column(name = "f_reply_area", length = 100)
+	public String getReplyArea() {
+		return replyArea;
+	}
+
+	public void setReplyArea(String replyArea) {
+		this.replyArea = replyArea;
 	}
 
 	@Column(name = "f_is_reply", nullable = false, length = 1)

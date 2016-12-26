@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Special;
+import com.jspxcms.core.repository.plus.SpecialDaoPlus;
 
 /**
  * SpecialDao

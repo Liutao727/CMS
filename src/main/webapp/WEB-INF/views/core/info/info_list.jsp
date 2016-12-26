@@ -273,7 +273,7 @@ function optDelete(form) {
     	</div>
     </td>
     <td align="right"><c:out value="${bean.priority}"/></td>
-    <td align="right"><c:out value="${bean.views}"/></td>
+    <td align="right"><c:out value="${bean.bufferViews}"/></td>
     <td align="center">
       <div>
 	    	<c:choose>

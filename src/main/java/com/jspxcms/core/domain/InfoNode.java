@@ -1,49 +1,42 @@
 package com.jspxcms.core.domain;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.core.domain.InfoNode.InfoNodeId;
 
 @Entity
 @Table(name = "cms_info_node")
+@IdClass(InfoNodeId.class)
 public class InfoNode implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// @PrePersist
-	// @PreUpdate
-	// public void prepareIndex() {
-	// if (getInfo() != null) {
-	// setNodeIndex(getInfo().getInfoNodes().indexOf(this));
-	// }
-	// }
+	public InfoNode() {
+	}
 
-	private Integer id;
-	private Info info;
-	private Node node;
-	
-	private Integer nodeIndex;
+	public InfoNode(Info info, Node node) {
+		this.info = info;
+		this.node = node;
+	}
 
 	@Id
-	@Column(name = "f_infonode_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info_node", pkColumnValue = "cms_info_node", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info_node")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_info_id", nullable = false)
+	private Info info;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_node_id", nullable = false)
+	private Node node;
+
 	public Info getInfo() {
 		return this.info;
 	}
@@ -52,8 +45,6 @@ public class InfoNode implements java.io.Serializable {
 		this.info = info;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_node_id", nullable = false)
 	public Node getNode() {
 		return this.node;
 	}
@@ -62,13 +53,52 @@ public class InfoNode implements java.io.Serializable {
 		this.node = node;
 	}
 
-	@Column(name = "f_node_index", nullable = false)
-	public Integer getNodeIndex() {
-		return this.nodeIndex;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof InfoNode)) {
+			return false;
+		}
+		InfoNode that = (InfoNode) o;
+		return Objects.equal(info, that.info) && Objects.equal(node, that.node);
 	}
 
-	public void setNodeIndex(Integer nodeIndex) {
-		this.nodeIndex = nodeIndex;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(info, node);
 	}
 
+	public static class InfoNodeId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer info;
+		Integer node;
+
+		public InfoNodeId() {
+		}
+
+		public InfoNodeId(Integer info, Integer node) {
+			this.info = info;
+			this.node = node;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof InfoNodeId)) {
+				return false;
+			}
+			InfoNodeId that = (InfoNodeId) o;
+			return Objects.equal(info, that.info) && Objects.equal(node, that.node);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(info, node);
+		}
+	}
 }

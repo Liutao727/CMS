@@ -1,17 +1,14 @@
 package com.jspxcms.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.InfoTag;
+import com.jspxcms.core.domain.InfoTag.InfoTagId;
 import com.jspxcms.core.domain.Tag;
 import com.jspxcms.core.repository.InfoTagDao;
 import com.jspxcms.core.service.InfoTagService;
@@ -20,68 +17,29 @@ import com.jspxcms.core.service.TagService;
 @Service
 @Transactional(readOnly = true)
 public class InfoTagServiceImpl implements InfoTagService {
-	@Transactional
-	public List<InfoTag> save(Info info, String[] tagNames) {
-		List<InfoTag> infoTags = info.getInfoTags();
-		if (infoTags == null) {
-			infoTags = new ArrayList<InfoTag>();
-			info.setInfoTags(infoTags);
+	private InfoTag findOrCreate(Info info, Tag tag) {
+		InfoTag bean = dao.findOne(new InfoTagId(info.getId(), tag.getId()));
+		if (bean == null) {
+			bean = new InfoTag(info, tag);
 		}
-		if (ArrayUtils.isEmpty(tagNames)) {
-			return infoTags;
-		}
-		for (int i = 0, len = tagNames.length; i < len; i++) {
-			infoTags.add(save(info, tagNames[i], i));
-		}
-		return infoTags;
-	}
-
-	private InfoTag save(Info info, String tagName, int index) {
-		InfoTag bean = new InfoTag();
-		Tag tag = tagService.refer(tagName, info.getSite().getId());
-		bean.setTag(tag);
-		bean.setInfo(info);
-		bean.setTagIndex(index);
-		dao.save(bean);
 		return bean;
 	}
 
 	@Transactional
-	public List<InfoTag> update(Info info, String[] tagNames) {
+	public void update(Info info, String[] tagNames) {
+		// 为null不更新。要设置为空，请传空数组。
 		if (tagNames == null) {
-			// 为null不更新。要设置为空，传空数组。
-			return info.getInfoTags();
+			return;
 		}
 		List<InfoTag> infoTags = info.getInfoTags();
-		// 先删除
-		Set<InfoTag> tobeDelete = new HashSet<InfoTag>();
 		for (InfoTag infoTag : infoTags) {
-			Tag tag = infoTag.getTag();
-			if (!ArrayUtils.contains(tagNames, tag.getName())) {
-				tagService.derefer(tag);
-				tobeDelete.add(infoTag);
-			}
+			infoTag.getTag().derefer();
 		}
-		infoTags.removeAll(tobeDelete);
-		dao.delete(tobeDelete);
-		// 再新增
-		for (int i = 0, len = tagNames.length; i < len; i++) {
-			boolean contains = false;
-			for (InfoTag infoTag : infoTags) {
-				if (infoTag.getTag().getName().equals(tagNames[i])) {
-					infoTag.setTagIndex(i);
-					infoTags.remove(infoTag);
-					infoTags.add(i, infoTag);
-					contains = true;
-					break;
-				}
-			}
-			if (!contains) {
-				// 新增
-				infoTags.add(i, save(info, tagNames[i], i));
-			}
+		infoTags.clear();
+		Integer siteId = info.getSite().getId();
+		for (String tagName : tagNames) {
+			infoTags.add(findOrCreate(info, tagService.refer(tagName, siteId)));
 		}
-		return infoTags;
 	}
 
 	@Transactional

@@ -8,6 +8,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.VoteOption;
+import com.jspxcms.ext.repository.plus.VoteOptionDaoPlus;
 
 public interface VoteOptionDao extends Repository<VoteOption, Integer>, VoteOptionDaoPlus {
 	public List<VoteOption> findAll(Specification<VoteOption> spec, Sort sort);

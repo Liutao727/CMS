@@ -3,6 +3,7 @@ package com.jspxcms.core.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import com.google.common.base.Objects;
 
 /**
  * MemberGroup
@@ -106,6 +109,23 @@ public class MemberGroup implements java.io.Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof MemberGroup)) {
+			return false;
+		}
+		MemberGroup that = (MemberGroup) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
 
 	private Set<NodeMemberGroup> nodeGroups = new HashSet<NodeMemberGroup>(0);
@@ -128,7 +148,7 @@ public class MemberGroup implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "group")
 	public Set<NodeMemberGroup> getNodeGroups() {
 		return nodeGroups;
 	}

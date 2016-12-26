@@ -7,24 +7,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.NodeOrg;
+import com.jspxcms.core.domain.NodeOrg.NodeOrgId;
 
-public interface NodeOrgDao extends Repository<NodeOrg, Integer> {
-	public NodeOrg findOne(Integer id);
-
-	public NodeOrg save(NodeOrg bean);
-
-	public void delete(NodeOrg bean);
+public interface NodeOrgDao extends Repository<NodeOrg, NodeOrgId> {
+	public NodeOrg findOne(NodeOrgId id);
 
 	// --------------------
 
 	public List<NodeOrg> findByNodeId(Integer nodeId);
 
 	@Modifying
-	@Query("delete NodeOrg bean where bean.node.id = ?1")
+	@Query("delete from NodeOrg bean where bean.node.id = ?1")
 	public int deleteByNodeId(Integer nodeId);
 
 	@Modifying
-	@Query("delete NodeOrg bean where bean.org.id = ?1")
+	@Query("delete from NodeOrg bean where bean.org.id = ?1")
 	public int deleteByOrgId(Integer orgId);
 
 }

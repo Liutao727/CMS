@@ -11,6 +11,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Vote;
+import com.jspxcms.ext.repository.plus.VoteDaoPlus;
 
 public interface VoteDao extends Repository<Vote, Integer>, VoteDaoPlus {
 	public Page<Vote> findAll(Specification<Vote> spec, Pageable pageable);

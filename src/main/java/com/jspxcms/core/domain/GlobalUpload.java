@@ -39,14 +39,12 @@ public class GlobalUpload implements Configurable {
 		this.customs = customs;
 	}
 
-	public ScaleParam getScaleParam(Boolean scale, Boolean exact,
-			Integer width, Integer height) {
+	public ScaleParam getScaleParam(Boolean scale, Boolean exact, Integer width, Integer height) {
 		ScaleParam scaleInfo;
 		if (scale == null) {
 			width = getImageMaxWidth();
 			height = getImageMaxHeight();
-			scale = (width != null && width > 0)
-					|| (height != null && height > 0);
+			scale = (width != null && width > 0) || (height != null && height > 0);
 			scaleInfo = new ScaleParam(scale, false, width, height);
 		} else {
 			scaleInfo = new ScaleParam(scale, exact, width, height);
@@ -190,7 +188,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getFileLimit() {
+	public int getFileLimit() {
 		String value = getCustoms().get(FILE_LIMIT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -207,7 +205,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getImageLimit() {
+	public int getImageLimit() {
 		String value = getCustoms().get(IMAGE_LIMIT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -224,7 +222,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getFlashLimit() {
+	public int getFlashLimit() {
 		String value = getCustoms().get(FLASH_LIMIT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -241,7 +239,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getVideoLimit() {
+	public int getVideoLimit() {
 		String value = getCustoms().get(VIDEO_LIMIT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -258,7 +256,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getDocLimit() {
+	public int getDocLimit() {
 		String value = getCustoms().get(DOC_LIMIT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -275,7 +273,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getImageMaxWidth() {
+	public int getImageMaxWidth() {
 		String value = getCustoms().get(IMAGE_MAX_WIDTH);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);
@@ -292,7 +290,7 @@ public class GlobalUpload implements Configurable {
 		}
 	}
 
-	public Integer getImageMaxHeight() {
+	public int getImageMaxHeight() {
 		String value = getCustoms().get(IMAGE_MAX_HEIGHT);
 		if (StringUtils.isNotBlank(value)) {
 			return Integer.parseInt(value);

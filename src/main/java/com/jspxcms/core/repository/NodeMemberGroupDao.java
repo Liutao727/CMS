@@ -7,19 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import com.jspxcms.core.domain.NodeMemberGroup;
+import com.jspxcms.core.domain.NodeMemberGroup.NodeMemberGroupId;
 
-public interface NodeMemberGroupDao extends
-		Repository<NodeMemberGroup, Integer> {
-	public NodeMemberGroup findOne(Integer id);
-
-	public NodeMemberGroup save(NodeMemberGroup bean);
-
-	public void delete(NodeMemberGroup bean);
+public interface NodeMemberGroupDao extends Repository<NodeMemberGroup, NodeMemberGroupId> {
+	public NodeMemberGroup findOne(NodeMemberGroupId id);
 
 	// --------------------
 
-	public List<NodeMemberGroup> findByNodeIdAndGroupId(Integer nodeId,
-			Integer groupId);
+	public List<NodeMemberGroup> findByNodeIdAndGroupId(Integer nodeId, Integer groupId);
 
 	public List<NodeMemberGroup> findByNodeId(Integer nodeId);
 

@@ -12,7 +12,7 @@ import com.jspxcms.core.service.InfoQueryService;
 import com.jspxcms.core.service.OperationLogService;
 
 /**
- * 微信群发
+ * 微信群发。本功能在商业版中提供。
  * 
  * @author liufang
  *

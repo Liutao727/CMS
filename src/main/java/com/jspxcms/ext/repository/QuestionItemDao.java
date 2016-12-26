@@ -9,6 +9,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.QuestionItem;
+import com.jspxcms.ext.repository.plus.QuestionItemDaoPlus;
 
 public interface QuestionItemDao extends Repository<QuestionItem, Integer>, QuestionItemDaoPlus {
 	public Page<QuestionItem> findAll(Specification<QuestionItem> spec, Pageable pageable);

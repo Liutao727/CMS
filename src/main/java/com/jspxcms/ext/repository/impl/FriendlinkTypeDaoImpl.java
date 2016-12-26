@@ -11,10 +11,10 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.FriendlinkType;
-import com.jspxcms.ext.domaindsl.QFriendlinkType;
-import com.jspxcms.ext.repository.FriendlinkTypeDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.ext.domain.QFriendlinkType;
+import com.jspxcms.ext.repository.plus.FriendlinkTypeDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * FriendlinkTypeDaoImpl
@@ -25,7 +25,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 public class FriendlinkTypeDaoImpl implements FriendlinkTypeDaoPlus {
 
 	public List<FriendlinkType> getList(Integer[] siteId, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<FriendlinkType> query = new JPAQuery<FriendlinkType>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QFriendlinkType friendlinkType = QFriendlinkType.friendlinkType;
 		query.from(friendlinkType);

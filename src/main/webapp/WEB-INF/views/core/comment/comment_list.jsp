@@ -101,6 +101,7 @@ function optDelete(form) {
     <th class="ls-th-sort"><span class="ls-sort" pagesort="creator.id"><s:message code="comment.creator"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="fid"><s:message code="comment.text"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="score"><s:message code="comment.score"/></span></th>
+    <th class="ls-th-sort"><span class="ls-sort" pagesort="country"><s:message code="comment.country"/></span></th>
     <th class="ls-th-sort"><span class="ls-sort" pagesort="creationDate"><s:message code="comment.date"/></span></th>
   </tr>
   </thead>
@@ -134,6 +135,10 @@ function optDelete(form) {
     <td>
     	<div><c:out value="${bean.score}"/></div>
     	<div><c:out value="${bean.ip}"/></div>
+    </td>
+    <td>
+    	<div><c:out value="${bean.country}"/></div>
+    	<div><c:out value="${bean.area}"/></div>
     </td>
     <td>
     	<div><fmt:formatDate value="${bean.creationDate}" pattern="yyyy-MM-dd'T'HH:mm:ss"/></div>

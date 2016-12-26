@@ -2,6 +2,8 @@ package com.jspxcms.ext.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +19,11 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.SortComparator;
+
+import com.google.common.base.Objects;
+import com.jspxcms.ext.domain.QuestionItemRec.QuestionItemRecComparator;
 
 @Entity
 @Table(name = "cms_question_item")
@@ -36,9 +43,26 @@ public class QuestionItem implements java.io.Serializable {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof QuestionItem)) {
+			return false;
+		}
+		QuestionItem that = (QuestionItem) o;
+		return Objects.equal(id, that.id);
+	}
+
 	private Integer id;
 	private List<QuestionOption> options = new ArrayList<QuestionOption>(0);
-	private List<QuestionItemRec> itemRecs = new ArrayList<QuestionItemRec>(0);
+	private SortedSet<QuestionItemRec> itemRecs = new TreeSet<QuestionItemRec>(new QuestionItemRecComparator());
 
 	private Question question;
 
@@ -69,13 +93,13 @@ public class QuestionItem implements java.io.Serializable {
 		this.options = options;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "item")
-	@OrderBy(value = "id asc")
-	public List<QuestionItemRec> getItemRecs() {
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
+	@SortComparator(QuestionItemRecComparator.class)
+	public SortedSet<QuestionItemRec> getItemRecs() {
 		return this.itemRecs;
 	}
 
-	public void setItemRecs(List<QuestionItemRec> itemRecs) {
+	public void setItemRecs(SortedSet<QuestionItemRec> itemRecs) {
 		this.itemRecs = itemRecs;
 	}
 

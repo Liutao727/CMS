@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Site;
+import com.jspxcms.core.domain.User;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.SiteResolver;
 import com.jspxcms.ext.service.VisitLogService;
@@ -36,16 +37,18 @@ public class VisitLogController {
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
+		User user = Context.getCurrentUser();
 		Site site = Context.getCurrentSite();
 		String url = Servlets.getParam(request, "url");
 		String referrer = Servlets.getParam(request, "referrer");
-		// 长度不超过150个字符
+		String userAgent = request.getHeader("user-agent");
+		// 不超过最大长度
 		url = StringUtils.substring(url, 0, 255);
 		referrer = StringUtils.substring(referrer, 0, 255);
-		// String userAgent = request.getHeader("user-agent");
+		userAgent = StringUtils.substring(userAgent, 0, 450);
 		String ip = Servlets.getRemoteAddr(request);
 		String cookie = Site.getIdentityCookie(request, response);
-		service.save(url, referrer, ip, cookie, site);
+		service.save(url, referrer, ip, cookie, userAgent, user, site);
 	}
 
 	@Autowired

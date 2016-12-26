@@ -13,7 +13,7 @@ public class ScaleParam {
 		this.height = height;
 	}
 
-	public Boolean getScale() {
+	public boolean isScale() {
 		return scale != null && scale && (width != null || height != null);
 	}
 
@@ -21,7 +21,7 @@ public class ScaleParam {
 		this.scale = scale;
 	}
 
-	public Boolean getExact() {
+	public boolean isExact() {
 		return exact != null ? exact : false;
 	}
 

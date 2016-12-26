@@ -13,10 +13,10 @@ import org.springframework.data.domain.Pageable;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Guestbook;
-import com.jspxcms.ext.domaindsl.QGuestbook;
-import com.jspxcms.ext.repository.GuestbookDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.ext.domain.QGuestbook;
+import com.jspxcms.ext.repository.plus.GuestbookDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * GuestbookDaoImpl
@@ -28,7 +28,7 @@ public class GuestbookDaoImpl implements GuestbookDaoPlus {
 	public List<Guestbook> findList(Integer[] siteId, String[] type,
 			Integer[] typeId, Boolean isRecommend, Boolean isReply,
 			Integer[] status, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Guestbook> query = new JPAQuery<Guestbook>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QGuestbook guestbook = QGuestbook.guestbook;
 		predicate(query, guestbook, siteId, type, typeId, isRecommend, isReply,
@@ -39,7 +39,7 @@ public class GuestbookDaoImpl implements GuestbookDaoPlus {
 	public Page<Guestbook> findPage(Integer[] siteId, String[] type,
 			Integer[] typeId, Boolean isRecommend, Boolean isReply,
 			Integer[] status, Pageable pageable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Guestbook> query = new JPAQuery<Guestbook>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QGuestbook guestbook = QGuestbook.guestbook;
 		predicate(query, guestbook, siteId, type, typeId, isRecommend, isReply,
@@ -47,7 +47,7 @@ public class GuestbookDaoImpl implements GuestbookDaoPlus {
 		return QuerydslUtils.page(query, guestbook, pageable);
 	}
 
-	private void predicate(JPAQuery query, QGuestbook guestbook,
+	private void predicate(JPAQuery<Guestbook> query, QGuestbook guestbook,
 			Integer[] siteId, String[] type, Integer[] typeId,
 			Boolean isRecommend, Boolean isReply, Integer[] status) {
 		query.from(guestbook);

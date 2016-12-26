@@ -201,6 +201,13 @@ public class RegisterController {
 		Site site = Context.getCurrentSite();
 		User retrieveUser = userService.findByValidation(
 				Constants.RETRIEVE_PASSWORD_TYPE, key);
+		// 找不到用户、验证时间为空或者超过8小时，则验证失效。
+		if (retrieveUser == null
+				|| retrieveUser.getValidationDate() == null
+				|| System.currentTimeMillis()
+						- retrieveUser.getValidationDate().getTime() > 8 * 60 * 60 * 1000) {
+			return resp.post(501, "retrievePassword.invalidKey");
+		}
 		modelMap.addAttribute("retrieveUser", retrieveUser);
 		modelMap.addAttribute("key", key);
 		Map<String, Object> data = modelMap.asMap();
@@ -224,7 +231,11 @@ public class RegisterController {
 
 		User retrieveUser = userService.findByValidation(
 				Constants.RETRIEVE_PASSWORD_TYPE, key);
-		if (retrieveUser == null) {
+		// 找不到用户、验证时间为空或者超过8小时，则验证失效。
+		if (retrieveUser == null
+				|| retrieveUser.getValidationDate() == null
+				|| System.currentTimeMillis()
+						- retrieveUser.getValidationDate().getTime() > 8 * 60 * 60 * 1000) {
 			return resp.post(501, "retrievePassword.invalidKey");
 		}
 		userService.passwordChange(retrieveUser, password);

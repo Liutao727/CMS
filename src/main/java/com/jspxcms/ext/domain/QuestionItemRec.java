@@ -1,56 +1,53 @@
 package com.jspxcms.ext.domain;
 
+import java.io.Serializable;
+import java.util.Comparator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
+
+import com.google.common.base.Objects;
+import com.jspxcms.ext.domain.QuestionItemRec.QuestionItemRecId;
 
 @Entity
 @Table(name = "cms_question_item_rec")
+@IdClass(QuestionItemRecId.class)
 public class QuestionItemRec implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Transient
-	public void applyDefaultValue() {
+	public QuestionItemRec() {
 	}
 
-	private Integer id;
-	private QuestionRecord record;
-	private QuestionItem item;
-
-	private String answer;
-
-	@Id
-	@Column(name = "f_questionitemrec_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_question_item_rec", pkColumnValue = "cms_question_item_rec", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_question_item_rec")
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_questionrecord_id", nullable = false)
-	public QuestionRecord getRecord() {
-		return this.record;
-	}
-
-	public void setRecord(QuestionRecord record) {
+	public QuestionItemRec(QuestionItem item, QuestionRecord record) {
+		this.item = item;
 		this.record = record;
 	}
 
+	public QuestionItemRec(QuestionItem item, QuestionRecord record, String answer) {
+		this.item = item;
+		this.record = record;
+		this.answer = answer;
+	}
+
+	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_questionitem_id", nullable = false)
+	private QuestionItem item;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_questionrecord_id", nullable = false)
+	private QuestionRecord record;
+
+	@Column(name = "f_answer", length = 2000)
+	private String answer;
+
 	public QuestionItem getItem() {
 		return this.item;
 	}
@@ -59,7 +56,14 @@ public class QuestionItemRec implements java.io.Serializable {
 		this.item = item;
 	}
 
-	@Column(name = "f_answer", length = 2000)
+	public QuestionRecord getRecord() {
+		return this.record;
+	}
+
+	public void setRecord(QuestionRecord record) {
+		this.record = record;
+	}
+
 	public String getAnswer() {
 		return this.answer;
 	}
@@ -68,4 +72,58 @@ public class QuestionItemRec implements java.io.Serializable {
 		this.answer = answer;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof QuestionItemRec)) {
+			return false;
+		}
+		QuestionItemRec that = (QuestionItemRec) o;
+		return Objects.equal(item, that.item) && Objects.equal(record, that.record);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(item, record);
+	}
+
+	public static class QuestionItemRecId implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		Integer record;
+		Integer item;
+
+		public QuestionItemRecId() {
+		}
+
+		public QuestionItemRecId(Integer item, Integer record) {
+			this.item = item;
+			this.record = record;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof QuestionItemRecId)) {
+				return false;
+			}
+			QuestionItemRecId that = (QuestionItemRecId) o;
+			return Objects.equal(item, that.item) && Objects.equal(record, that.record);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(item, record);
+		}
+	}
+
+	public static class QuestionItemRecComparator implements Comparator<QuestionItemRec> {
+		public int compare(QuestionItemRec o1, QuestionItemRec o2) {
+			return o1.getRecord().getDate().compareTo(o2.getRecord().getDate());
+		}
+	}
 }

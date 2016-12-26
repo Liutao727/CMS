@@ -9,16 +9,16 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.jpa.QueryHints;
 
+import com.jspxcms.ext.domain.QVote;
 import com.jspxcms.ext.domain.Vote;
-import com.jspxcms.ext.domaindsl.QVote;
-import com.jspxcms.ext.repository.VoteDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.jspxcms.ext.repository.plus.VoteDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 
 public class VoteDaoImpl implements VoteDaoPlus {
 	public Vote findByNumber(String number, Integer[] status, Integer siteId) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Vote> query = new JPAQuery<Vote>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QVote bean = QVote.vote;
 		query.from(bean);
@@ -35,12 +35,12 @@ public class VoteDaoImpl implements VoteDaoPlus {
 		query.where(exp);
 		query.orderBy(bean.seq.asc(), bean.id.desc());
 		query.limit(1);
-		List<Vote> list = query.list(bean);
+		List<Vote> list = query.fetch();
 		return list.isEmpty() ? null : list.get(0);
 	}
 
 	public Vote findLatest(Integer[] status, Integer siteId) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<Vote> query = new JPAQuery<Vote>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QVote bean = QVote.vote;
 		query.from(bean);
@@ -54,7 +54,7 @@ public class VoteDaoImpl implements VoteDaoPlus {
 		query.where(exp);
 		query.orderBy(bean.seq.asc(), bean.id.desc());
 		query.limit(1);
-		List<Vote> list = query.list(bean);
+		List<Vote> list = query.fetch();
 		return list.isEmpty() ? null : list.get(0);
 	}
 

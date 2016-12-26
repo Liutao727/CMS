@@ -119,8 +119,11 @@ function confirmDelete() {
     		<f:option value="1" selected="${bean.type}" default="1"><s:message code="user.type.1"/></f:option>
     	</select> &nbsp;
     	<span id="roles"<c:if test="${!empty bean.type && bean.type==0}"> style="display:none;"</c:if>>
-    		<f:checkboxes name="roleIds" items="${roleList}" checked="${bean.roles}" itemLabel="name" itemValue="id"/>
+    		<c:forEach var="role" items="${roleList}">
+    			<label<c:if test="${role.rank < bean.rank}"> style="color:#bbb;"</c:if>><input type="checkbox" name="roleIds" value="${role.id}"<c:if test="${fnx:contains_cso(bean.roles,'id',role.id)}"> checked="checked"</c:if><c:if test="${role.rank < bean.rank}"> disabled="disabled"</c:if>/>${role.name}(${role.rank})</label>
+    		</c:forEach>
     	</span>
+    	<span class="in-prompt" title="<s:message code='user.roles.prompt' htmlEscape='true'/>"></span>
     </td>
   </tr>
   <tr>
@@ -147,7 +150,10 @@ function confirmDelete() {
   </tr>
   <tr>
     <td class="in-lab" width="15%"><s:message code="user.rank"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="rank" value="${(empty bean.rank) ? (currRank+1) : (bean.rank)}" class="{digits:true,min:${currRank},max:2147483647}" style="width:180px;"/></td>
+    <td class="in-ctt" width="35%">
+    	<f:text name="rank" value="${(empty bean.rank) ? (currRank+1) : (bean.rank)}" class="{digits:true,min:${currRank},max:2147483647}" style="width:180px;"/>
+    	<span class="in-prompt" title="<s:message code='user.rank.prompt' htmlEscape='true'/>"></span>
+    </td>
     <td class="in-lab" width="15%"><s:message code="user.gender"/>:</td>
     <td class="in-ctt" width="35%">
 			<label><f:radio name="gender" value="M" checked="${bean.gender}"/><s:message code="male"/></label>

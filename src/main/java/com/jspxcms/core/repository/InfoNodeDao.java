@@ -1,29 +1,16 @@
 package com.jspxcms.core.repository;
 
 import java.util.Collection;
-import java.util.List;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.InfoNode;
+import com.jspxcms.core.domain.InfoNode.InfoNodeId;
 
-public interface InfoNodeDao extends Repository<InfoNode, Integer> {
-	public List<InfoNode> findAll(Specification<InfoNode> spec, Sort sort);
-
-	public List<InfoNode> findAll(Specification<InfoNode> spec, Limitable limit);
-
-	public InfoNode findOne(Integer id);
-
-	public InfoNode save(InfoNode bean);
-
-	public void delete(InfoNode bean);
-
-	public void delete(Iterable<InfoNode> beans);
+public interface InfoNodeDao extends Repository<InfoNode, InfoNodeId> {
+	public InfoNode findOne(InfoNodeId id);
 
 	// --------------------
 

@@ -1,11 +1,9 @@
 package com.jspxcms.core.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jspxcms.core.domain.Role;
 import com.jspxcms.core.domain.User;
 import com.jspxcms.core.domain.UserRole;
+import com.jspxcms.core.domain.UserRole.UserRoleId;
 import com.jspxcms.core.listener.RoleDeleteListener;
 import com.jspxcms.core.repository.UserRoleDao;
 import com.jspxcms.core.service.RoleService;
@@ -21,36 +20,12 @@ import com.jspxcms.core.service.UserRoleService;
 @Service
 @Transactional(readOnly = true)
 public class UserRoleServiceImpl implements UserRoleService, RoleDeleteListener {
-	@Transactional
-	public List<UserRole> save(User user, Integer[] roleIds) {
-		List<UserRole> userRoles = user.getUserRoles();
-		if (userRoles == null) {
-			userRoles = new ArrayList<UserRole>();
-			user.setUserRoles(userRoles);
+	private UserRole findOrCreate(User user, Role role) {
+		UserRole bean = dao.findOne(new UserRoleId(user.getId(), role.getId()));
+		if (bean == null) {
+			bean = new UserRole(user, role);
 		}
-		if (ArrayUtils.isEmpty(roleIds)) {
-			return userRoles;
-		}
-		for (int i = 0, len = roleIds.length; i < len; i++) {
-			userRoles.add(save(user, roleIds[i], i));
-		}
-		return userRoles;
-	}
-
-	@Transactional
-	public UserRole save(User user, Role role, Integer index) {
-		UserRole bean = new UserRole(user, role, index);
-		bean.applyDefaultValue();
-		dao.save(bean);
-		user.getUserRoles().add(bean);
-		role.getUserRoles().add(bean);
 		return bean;
-	}
-
-	@Transactional
-	private UserRole save(User user, Integer roleId, int index) {
-		Role role = roleService.get(roleId);
-		return save(user, role, index);
 	}
 
 	@Transactional
@@ -59,46 +34,24 @@ public class UserRoleServiceImpl implements UserRoleService, RoleDeleteListener 
 			roleIds = new Integer[0];
 		}
 		List<UserRole> userRoles = user.getUserRoles();
-		// 先删除
-		Set<UserRole> tobeDelete = new HashSet<UserRole>();
-		for (UserRole userRole : userRoles) {
-			Role role = userRole.getRole();
-			Integer rid = role.getId();
-			Integer sid = role.getSite().getId();
-			if ((siteId == null || sid.equals(siteId))
-					&& !ArrayUtils.contains(roleIds, rid)) {
-				tobeDelete.add(userRole);
-			}
-		}
-		userRoles.removeAll(tobeDelete);
-		dao.delete(tobeDelete);
-		// 再新增
-		for (int i = 0, len = roleIds.length; i < len; i++) {
-			boolean contains = false;
+		if (siteId != null) {
+			// 删除本站角色
+			Set<UserRole> tobeDelete = new HashSet<UserRole>();
 			for (UserRole userRole : userRoles) {
-				if (userRole.getRole().getId().equals(roleIds[i])) {
-					userRole.setRoleIndex(i);
-					userRoles.remove(userRole);
-					userRoles.add(i, userRole);
-					contains = true;
-					break;
+				if (userRole.getRole().getSite().getId().equals(siteId)) {
+					tobeDelete.add(userRole);
 				}
 			}
-			if (!contains) {
-				userRoles.add(save(user, roleIds[i], i));
-			}
+			userRoles.removeAll(tobeDelete);
+		} else {
+			// 删除所有角色
+			userRoles.clear();
+		}
+		// 再新增
+		for (Integer id : roleIds) {
+			userRoles.add(findOrCreate(user, roleService.get(id)));
 		}
 		return userRoles;
-	}
-
-	@Transactional
-	public int deleteByUserId(Integer userId) {
-		return dao.deleteByUserId(userId);
-	}
-
-	@Transactional
-	public int deleteByRoleId(Integer roleId) {
-		return dao.deleteByRoleId(roleId);
 	}
 
 	public void preRoleDelete(Integer[] ids) {

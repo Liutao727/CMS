@@ -13,6 +13,7 @@ import org.springframework.data.repository.Repository;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.QuestionRecord;
+import com.jspxcms.ext.repository.plus.QuestionRecordDaoPlus;
 
 public interface QuestionRecordDao extends Repository<QuestionRecord, Integer>,
 		QuestionRecordDaoPlus {

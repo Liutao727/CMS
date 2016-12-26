@@ -86,7 +86,7 @@ public class PublishPoint implements java.io.Serializable {
 		if (isFtpMethod()) {
 			fileHandler = FileHandler.getFileHandler(getFtpTemplate(), prefix);
 		} else {
-			fileHandler = FileHandler.getFileHandler(pathResolver, prefix);
+			fileHandler = FileHandler.getLocalFileHandler(pathResolver, prefix);
 		}
 		return fileHandler;
 	}

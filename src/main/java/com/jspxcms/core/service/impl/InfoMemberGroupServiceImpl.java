@@ -1,7 +1,6 @@
 package com.jspxcms.core.service.impl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.InfoMemberGroup;
+import com.jspxcms.core.domain.InfoMemberGroup.InfoMemberGroupId;
 import com.jspxcms.core.domain.MemberGroup;
-import com.jspxcms.core.listener.InfoDeleteListener;
 import com.jspxcms.core.listener.MemberGroupDeleteListener;
 import com.jspxcms.core.repository.InfoMemberGroupDao;
 import com.jspxcms.core.service.InfoMemberGroupService;
@@ -20,60 +19,35 @@ import com.jspxcms.core.service.MemberGroupService;
 
 @Service
 @Transactional(readOnly = true)
-public class InfoMemberGroupServiceImpl implements InfoMemberGroupService,
-		InfoDeleteListener, MemberGroupDeleteListener {
-	@Transactional
-	public InfoMemberGroup save(Info info, Integer groupId, Boolean viewPerm) {
-		InfoMemberGroup bean = new InfoMemberGroup();
-		bean.setInfo(info);
-		MemberGroup group = memberGroupService.get(groupId);
-		bean.setGroup(group);
+public class InfoMemberGroupServiceImpl implements InfoMemberGroupService, MemberGroupDeleteListener {
+
+	private InfoMemberGroup findOrCreate(Info info, MemberGroup group, Boolean viewPerm) {
+		InfoMemberGroup bean = dao.findOne(new InfoMemberGroupId(info.getId(), group.getId()));
+		if (bean == null) {
+			bean = new InfoMemberGroup(info, group);
+		}
 		bean.setViewPerm(viewPerm);
-		bean.applyDefaultValue();
-		bean = dao.save(bean);
 		return bean;
 	}
 
 	@Transactional
 	public void update(Info info, Integer[] viewGroupIds) {
+		// 为null不更新。要设置为空，请传空数组。
 		if (viewGroupIds == null) {
-			viewGroupIds = new Integer[0];
-		}
-		Set<InfoMemberGroup> infoGroups = info.getInfoGroups();
-		if (infoGroups == null) {
-			infoGroups = new HashSet<InfoMemberGroup>();
-			info.setInfoGroups(infoGroups);
-		}
-		// 先更新
-		for (InfoMemberGroup infoGroup : infoGroups) {
-			if (ArrayUtils.contains(viewGroupIds, infoGroup.getGroup().getId())) {
-				infoGroup.setViewPerm(true);
-			} else {
-				infoGroup.setViewPerm(false);
-			}
-		}
-		// 再新增
-		for (Integer viewGroupId : viewGroupIds) {
-			boolean contains = false;
-			for (InfoMemberGroup infoGroup : infoGroups) {
-				if (infoGroup.getGroup().getId().equals(viewGroupId)) {
-					contains = true;
-					break;
-				}
-			}
-			if (!contains) {
-				infoGroups.add(save(info, viewGroupId, true));
-			}
-		}
-	}
-
-	public void preInfoDelete(Integer[] ids) {
-		if (ArrayUtils.isEmpty(ids)) {
 			return;
 		}
-		dao.deleteByInfoId(Arrays.asList(ids));
+		Set<InfoMemberGroup> infoGroups = info.getInfoGroups();
+		// 先更新
+		for (InfoMemberGroup infoGroup : infoGroups) {
+			infoGroup.setViewPerm(ArrayUtils.contains(viewGroupIds, infoGroup.getGroup().getId()));
+		}
+		// 再新增
+		for (Integer id : viewGroupIds) {
+			infoGroups.add(findOrCreate(info, groupService.get(id), true));
+		}
 	}
 
+	@Override
 	public void preMemberGroupDelete(Integer[] ids) {
 		if (ArrayUtils.isEmpty(ids)) {
 			return;
@@ -81,11 +55,11 @@ public class InfoMemberGroupServiceImpl implements InfoMemberGroupService,
 		dao.deleteByGroupId(Arrays.asList(ids));
 	}
 
-	private MemberGroupService memberGroupService;
+	private MemberGroupService groupService;
 
 	@Autowired
-	public void setMemberGroupService(MemberGroupService memberGroupService) {
-		this.memberGroupService = memberGroupService;
+	public void setMemberGroupService(MemberGroupService groupService) {
+		this.groupService = groupService;
 	}
 
 	private InfoMemberGroupDao dao;

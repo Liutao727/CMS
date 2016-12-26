@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jspxcms.common.ip.IPSeeker;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
@@ -147,6 +149,10 @@ public class OperationLogServiceImpl implements OperationLogService,
 		} else {
 			bean.setSite(siteShiroService.findDefault());
 		}
+		if (StringUtils.isNotBlank(bean.getIp())) {
+			bean.setCountry(ipSeeker.getCountry(bean.getIp()));
+			bean.setArea(ipSeeker.getArea(bean.getIp()));
+		}
 		bean.applyDefaultValue();
 		dao.save(bean);
 		return bean;
@@ -193,6 +199,13 @@ public class OperationLogServiceImpl implements OperationLogService,
 	@Autowired
 	public void setSiteShiroService(SiteShiroService siteShiroService) {
 		this.siteShiroService = siteShiroService;
+	}
+
+	private IPSeeker ipSeeker;
+
+	@Autowired
+	public void setIpSeeker(IPSeeker ipSeeker) {
+		this.ipSeeker = ipSeeker;
 	}
 
 	private OperationLogDao dao;

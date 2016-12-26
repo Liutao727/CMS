@@ -9,11 +9,11 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
+import com.jspxcms.core.domain.QSpecialCategory;
 import com.jspxcms.core.domain.SpecialCategory;
-import com.jspxcms.core.domaindsl.QSpecialCategory;
-import com.jspxcms.core.repository.SpecialCategoryDaoPlus;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.jspxcms.core.repository.plus.SpecialCategoryDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  * SpecialCategoryDaoImpl
@@ -23,7 +23,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
  */
 public class SpecialCategoryDaoImpl implements SpecialCategoryDaoPlus {
 	public List<SpecialCategory> getList(Integer[] siteId, Limitable limitable) {
-		JPAQuery query = new JPAQuery(this.em);
+		JPAQuery<SpecialCategory> query = new JPAQuery<SpecialCategory>(this.em);
 		QSpecialCategory scategory = QSpecialCategory.specialCategory;
 		query.from(scategory);
 		BooleanBuilder exp = new BooleanBuilder();

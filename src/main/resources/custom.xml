@@ -49,12 +49,12 @@
 		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
 		<property name="minIdle" value="0" />
 		<property name="defaultAutoCommit" value="false" />
-		<!-- 如果数据库会自动断开连接，可以开启以下配置。 -->
+		<!-- 如果数据库会自动断开连接，可以开启以下配置。 一般开启validationQuery和testWhileIdle即可。mysql,sqlserver用select 1，oracle数据库用select 1 from dual -->
 		<!-- 
-		<property name="validationQuery" value="SELECT 1" />  
+		<property name="validationQuery" value="select 1" />
+    <property name="testWhileIdle" value="true" />
     <property name="testOnBorrow" value="true" />
     <property name="testOnReturn" value="true" />
-    <property name="testWhileIdle" value="true" />
      -->
 	</bean>
 	
