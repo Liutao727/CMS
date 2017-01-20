@@ -81,6 +81,7 @@ $(function() {
         <option value="9"<c:if test="${bean.type==9}"> selected="selected"</c:if>><s:message code="modelField.type.9"/></option>
       </select> &nbsp;
       <label><f:checkbox name="clob" value="${bean.clob}"/><s:message code="modelField.clob"/></label>
+      <span class="in-prompt" title="<s:message code='modelField.clob.prompt' htmlEscape='true'/>">
       </c:when>
       <c:when test="${bean.innerType==3}">
       <select id="input_type" name="type" class="required">

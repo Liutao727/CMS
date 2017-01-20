@@ -8,6 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.jspxcms.common.image.ScaleParam;
 import com.jspxcms.core.support.Configurable;
 
+/**
+ * 上传配置对象
+ * 
+ * @author liufang
+ *
+ */
 public class GlobalUpload implements Configurable {
 	public static final String PREFIX = "sys_upload_";
 

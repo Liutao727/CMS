@@ -198,6 +198,7 @@
 					lineNumbers : false,
 					styleActiveLine : true,
 					styleSelectedText : true,
+					sequenceDiagram : true,
 					codeFold : false,
 					placeholder : "",
 					syncScrolling : "single",

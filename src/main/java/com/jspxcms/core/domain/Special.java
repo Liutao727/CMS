@@ -33,6 +33,7 @@ import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 
 import com.google.common.base.Objects;
+import com.jspxcms.common.file.FilesEx;
 import com.jspxcms.common.web.Anchor;
 import com.jspxcms.common.web.ImageAnchor;
 import com.jspxcms.common.web.ImageAnchorBean;
@@ -155,6 +156,17 @@ public class Special implements java.io.Serializable, Anchor, Siteable {
 		bean.setUrl(getUrl());
 		bean.setSrc(getLargeImageUrl());
 		return bean;
+	}
+
+	/**
+	 * 视频大小，自动转换为KB、MB或GB
+	 * 
+	 * @return
+	 */
+	@Transient
+	public String getVideoSize() {
+		Long length = getVideoLength();
+		return FilesEx.getSize(length);
 	}
 
 	@Transient

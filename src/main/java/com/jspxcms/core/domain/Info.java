@@ -1362,6 +1362,11 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		return getDetail() != null ? getDetail().getVideoLength() : null;
 	}
 
+	/**
+	 * 视频大小，自动转换为KB、MB或GB
+	 * 
+	 * @return
+	 */
 	@Transient
 	public String getVideoSize() {
 		Long length = getVideoLength();

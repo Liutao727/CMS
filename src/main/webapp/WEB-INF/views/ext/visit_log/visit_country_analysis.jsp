@@ -95,24 +95,36 @@ function optDelete(form) {
 	        left: 'left',
 	        data: [
 	            <c:forEach var="bean" varStatus="status" items="${list}">
-		            <c:choose>
-		    					<c:when test="${'UNKNOWN' eq bean[0]}">'<s:message code="visitLog.UNKNOWN"/>'</c:when>
-		    					<c:when test="${'LAN' eq bean[0]}">'<s:message code="visitLog.LAN"/>'</c:when>
-		    					<c:otherwise>'<c:out value="${bean[0]}"/>'</c:otherwise>
-		    				</c:choose><c:if test="${!status.last}">,</c:if>
+            		<c:if test="${status.count < 10}">
+			            <c:choose>
+			    					<c:when test="${'UNKNOWN' eq bean[0]}">'<s:message code="visitLog.UNKNOWN"/>'</c:when>
+			    					<c:when test="${'LAN' eq bean[0]}">'<s:message code="visitLog.LAN"/>'</c:when>
+			    					<c:otherwise>'<c:out value="${bean[0]}"/>'</c:otherwise>
+			    				</c:choose><c:if test="${!status.last}">,</c:if>
+								</c:if>
 	            </c:forEach>
+	            <c:if test="${fn:length(list)>=10}">'<s:message code="visitLog.OTHER"/>'</c:if>
 	        ]
 	    },
 	    series : [
 	        {
-	            name: '<s:message code="visitLog.source"/>',
+	            name: '<s:message code="visitLog.region"/>',
 	            type: 'pie',
 	            radius : '55%',
 	            center: ['50%', '60%'],
 	            data:[
+		              <c:set var="count" value="${0}"/>
 									<c:forEach var="bean" varStatus="status" items="${list}">
+			            	<c:choose>
+			            	<c:when test="${status.count < 10}">
 										{value:${bean[1]}, name:'<c:choose><c:when test="${'UNKNOWN' eq bean[0]}"><s:message code="visitLog.UNKNOWN"/></c:when><c:when test="${'LAN' eq bean[0]}"><s:message code="visitLog.LAN"/></c:when><c:otherwise><c:out value="${bean[0]}"/></c:otherwise></c:choose>'}<c:if test="${!status.last}">,</c:if>
+										</c:when>
+										<c:otherwise>
+											<c:set var="count" value="${count+bean[1]}"/>
+										</c:otherwise>
+										</c:choose>
 									</c:forEach>
+									<c:if test="${fn:length(list)>=10}">{value:${count}, name:'<s:message code="visitLog.OTHER"/>'}</c:if>
 	            ],
 	            itemStyle: {
 	                emphasis: {

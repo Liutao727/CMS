@@ -2,6 +2,7 @@ package com.jspxcms.common.ip;
 
 import static com.jspxcms.common.ip.IPLocation.UNKNOWN;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -17,8 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IPSeeker {
-	private static final Logger logger = LoggerFactory
-			.getLogger(IPSeeker.class);
+	private static final Logger logger = LoggerFactory.getLogger(IPSeeker.class);
 	// 一些固定常量，比如记录长度等等
 	private static final int IP_RECORD_LENGTH = 7;
 	private static final byte AREA_FOLLOWED = 0x01;
@@ -72,8 +72,7 @@ public class IPSeeker {
 			if (temp != -1) {
 				IPLocation loc = getIPLocation(temp);
 				// 判断是否这个地点里面包含了s子串，如果包含了，添加这个记录到List中，如果没有，继续
-				if (loc.getCountry().indexOf(s) != -1
-						|| loc.getArea().indexOf(s) != -1) {
+				if (loc.getCountry().indexOf(s) != -1 || loc.getArea().indexOf(s) != -1) {
 					IPEntry entry = new IPEntry();
 					entry.country = loc.getCountry();
 					entry.area = loc.getArea();
@@ -106,8 +105,7 @@ public class IPSeeker {
 				if (temp != -1) {
 					IPLocation loc = getIPLocation(temp);
 					// 判断是否这个地点里面包含了s子串，如果包含了，添加这个记录到List中，如果没有，继续
-					if (loc.getCountry().indexOf(s) != -1
-							|| loc.getArea().indexOf(s) != -1) {
+					if (loc.getCountry().indexOf(s) != -1 || loc.getArea().indexOf(s) != -1) {
 						IPEntry entry = new IPEntry();
 						entry.country = loc.getCountry();
 						entry.area = loc.getArea();
@@ -301,8 +299,7 @@ public class IPSeeker {
 	}
 
 	/**
-	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是
-	 * 文件中是little-endian形式，将会进行转换
+	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是 文件中是little-endian形式，将会进行转换
 	 * 
 	 * @param offset
 	 * @param ip
@@ -317,14 +314,15 @@ public class IPSeeker {
 			temp = ip[1];
 			ip[1] = ip[2];
 			ip[2] = temp;
+		} catch (EOFException e) {
+			// 文件结束，找不到内容
 		} catch (IOException e) {
 			logger.error(null, e);
 		}
 	}
 
 	/**
-	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是
-	 * 文件中是little-endian形式，将会进行转换
+	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是 文件中是little-endian形式，将会进行转换
 	 * 
 	 * @param offset
 	 * @param ip
@@ -474,6 +472,9 @@ public class IPSeeker {
 				loc.setArea(readArea(ipFile.getFilePointer()));
 			}
 			return loc;
+		} catch (EOFException e) {
+			// 文件结束，找不到内容
+			return null;
 		} catch (IOException e) {
 			logger.error(null, e);
 			return null;

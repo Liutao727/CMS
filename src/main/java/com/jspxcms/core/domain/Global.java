@@ -32,7 +32,7 @@ import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.constant.Versions;
 
 /**
- * Global
+ * 全局对象
  * 
  * @author liufang
  * 
@@ -76,6 +76,11 @@ public class Global implements java.io.Serializable {
 		}
 	}
 
+	/**
+	 * 获取系统版本号
+	 * 
+	 * @return
+	 */
 	@Transient
 	public String getVersion() {
 		return Versions.getVersion();
@@ -134,26 +139,53 @@ public class Global implements java.io.Serializable {
 		return domains;
 	}
 
+	/**
+	 * 获取邮件配置对象
+	 * 
+	 * @return
+	 */
 	@Transient
 	public GlobalMail getMail() {
 		return new GlobalMail(getCustoms());
 	}
 
+	/**
+	 * 获取注册配置对象
+	 * 
+	 * @return
+	 */
 	@Transient
 	public GlobalRegister getRegister() {
 		return new GlobalRegister(getCustoms());
 	}
 
+	/**
+	 * 获取上传配置对象
+	 * 
+	 * @return
+	 */
 	@Transient
 	public GlobalUpload getUpload() {
 		return new GlobalUpload(getCustoms());
 	}
 
+	/**
+	 * 获取其他配置对象
+	 * 
+	 * @return
+	 */
 	@Transient
 	public GlobalOther getOther() {
 		return new GlobalOther(getCustoms());
 	}
 
+	/**
+	 * 根据配置对象的类名获取配置对象
+	 * 
+	 * @param className
+	 *            类完整名
+	 * @return 类名对应的配置对象
+	 */
 	@Transient
 	public Object getConf(String className) {
 		try {

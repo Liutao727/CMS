@@ -49,8 +49,17 @@ public class Question implements Siteable, java.io.Serializable {
 	 */
 	public static final int MODE_USER = 3;
 
+	/**
+	 * 调查进行中
+	 */
 	public static final int PERIOD_STATUS_UNDERWAY = 0;
+	/**
+	 * 调查还未开始
+	 */
 	public static final int PERIOD_STATUS_BEFORE = 1;
+	/**
+	 * 调查已经结束
+	 */
 	public static final int PERIOD_STATUS_AFTER = 2;
 
 	/**

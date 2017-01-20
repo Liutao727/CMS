@@ -1,7 +1,9 @@
 package com.jspxcms.ext.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,18 +46,14 @@ import eu.bitwalker.useragentutils.UserAgent;
 
 @Service
 @Transactional(readOnly = true)
-public class VisitLogServiceImpl implements VisitLogService,
-		SiteDeleteListener, UserDeleteListener {
-	private static final Logger logger = LoggerFactory
-			.getLogger(VisitLogServiceImpl.class);
+public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener, UserDeleteListener {
+	private static final Logger logger = LoggerFactory.getLogger(VisitLogServiceImpl.class);
 
-	public Page<VisitLog> findAll(Integer siteId, Map<String, String[]> params,
-			Pageable pageable) {
+	public Page<VisitLog> findAll(Integer siteId, Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(siteId, params), pageable);
 	}
 
-	public RowSide<VisitLog> findSide(Integer siteId,
-			Map<String, String[]> params, VisitLog bean, Integer position,
+	public RowSide<VisitLog> findSide(Integer siteId, Map<String, String[]> params, VisitLog bean, Integer position,
 			Sort sort) {
 		if (position == null) {
 			return new RowSide<VisitLog>();
@@ -65,18 +63,14 @@ public class VisitLogServiceImpl implements VisitLogService,
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<VisitLog> spec(final Integer siteId,
-			Map<String, String[]> params) {
+	private Specification<VisitLog> spec(final Integer siteId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<VisitLog> fsp = SearchFilter.spec(filters,
-				VisitLog.class);
+		final Specification<VisitLog> fsp = SearchFilter.spec(filters, VisitLog.class);
 		Specification<VisitLog> sp = new Specification<VisitLog>() {
-			public Predicate toPredicate(Root<VisitLog> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<VisitLog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred, cb.equal(root.get("site")
-							.<Integer> get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").<Integer>get("id"), siteId));
 				}
 				return pred;
 			}
@@ -182,13 +176,11 @@ public class VisitLogServiceImpl implements VisitLogService,
 		return result;
 	}
 
-	public Page<Object[]> sourceByTime(Date begin, Date end, Integer siteId,
-			Pageable pageable) {
+	public Page<Object[]> sourceByTime(Date begin, Date end, Integer siteId, Pageable pageable) {
 		return dao.sourceByTime(begin, end, siteId, pageable);
 	}
 
-	public List<Object[]> sourceCount(Date begin, Date end, Integer siteId,
-			List<Object[]> sourceList, int maxSize) {
+	public List<Object[]> sourceCount(Date begin, Date end, Integer siteId, List<Object[]> sourceList, int maxSize) {
 		List<Object[]> resultList = new ArrayList<Object[]>();
 		List<Object[]> sourceCount = sourceCount(begin, end, siteId);
 		long otherPv = (Long) sourceCount.get(0)[0];
@@ -205,8 +197,7 @@ public class VisitLogServiceImpl implements VisitLogService,
 			resultList.add(source);
 		}
 		if (otherPv > 0) {
-			resultList.add(new Object[] { VisitLog.SOURCE_OTHER, otherPv,
-					otherUv, otherIp });
+			resultList.add(new Object[] { VisitLog.SOURCE_OTHER, otherPv, otherUv, otherIp });
 		}
 		return resultList;
 	}
@@ -215,8 +206,7 @@ public class VisitLogServiceImpl implements VisitLogService,
 		return dao.sourceCount(begin, end, siteId);
 	}
 
-	public Page<Object[]> urlByTime(Date begin, Date end, Integer siteId,
-			Pageable pageable) {
+	public Page<Object[]> urlByTime(Date begin, Date end, Integer siteId, Pageable pageable) {
 		return dao.urlByTime(begin, end, siteId, pageable);
 	}
 
@@ -241,8 +231,7 @@ public class VisitLogServiceImpl implements VisitLogService,
 	}
 
 	@Transactional
-	public VisitLog save(String url, String referrer, String ip, String cookie,
-			String userAgent, User user, Site site) {
+	public VisitLog save(String url, String referrer, String ip, String cookie, String userAgent, User user, Site site) {
 		VisitLog bean = new VisitLog();
 		bean.setUrl(url);
 		bean.setReferrer(referrer);
@@ -264,11 +253,10 @@ public class VisitLogServiceImpl implements VisitLogService,
 			bean.setDevice(ua.getOperatingSystem().getDeviceType().toString());
 		}
 
-		if (StringUtils.isNoneBlank(bean.getReferrer())
-				&& StringUtils.isNoneBlank(bean.getUrl())) {
+		if (StringUtils.isNoneBlank(bean.getReferrer()) && StringUtils.isNoneBlank(bean.getUrl())) {
 			try {
-				URI uri = new URI(url);
-				URI ref = new URI(referrer);
+				URI uri = new URI(URLEncoder.encode(url, "UTF-8"));
+				URI ref = new URI(URLEncoder.encode(referrer, "UTF-8"));
 				String host = ref.getHost();
 				// url和referrer的域名不同，则代表来源不同网站，设置来源域名
 				if (!StringUtils.equals(host, uri.getHost())) {
@@ -279,6 +267,8 @@ public class VisitLogServiceImpl implements VisitLogService,
 					bean.setSource(source);
 				}
 			} catch (URISyntaxException e) {
+				logger.error(null, e);
+			} catch (UnsupportedEncodingException e) {
 				logger.error(null, e);
 			}
 		}

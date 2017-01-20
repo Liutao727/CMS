@@ -19,10 +19,12 @@
 		<property name="password" value="${jdbc.password}" />
 
 		<property name="maxActive" value="${jdbc.pool.maxActive}" />
+		<property name="initialSize" value="10" />		
 		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
+		<property name="minIdle" value="10" />		
 		<property name="defaultAutoCommit" value="false" />
-		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
-		<property name="minEvictableIdleTimeMillis" value="3600000" />
+		<property name="timeBetweenEvictionRunsMillis" value="5000" />
+		<property name="minEvictableIdleTimeMillis" value="60000" />
 	</bean>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
@@ -49,10 +51,10 @@
 		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
 		<property name="minIdle" value="0" />
 		<property name="defaultAutoCommit" value="false" />
-		<!-- 如果数据库会自动断开连接，可以开启以下配置。 一般开启validationQuery和testWhileIdle即可。mysql,sqlserver用select 1，oracle数据库用select 1 from dual -->
-		<!-- 
-		<property name="validationQuery" value="select 1" />
+		<!-- 如果数据库会自动断开连接， 一般开启validationQuery, testWhileIdle即可。mysql,sqlserver用select 1，oracle数据库用select 1 from dual -->
+		<property name="validationQuery" value="${jdbc.pool.validationQuery}" />
     <property name="testWhileIdle" value="true" />
+		<!-- 开启此两项对性能有一定影响
     <property name="testOnBorrow" value="true" />
     <property name="testOnReturn" value="true" />
      -->

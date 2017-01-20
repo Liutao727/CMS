@@ -104,7 +104,7 @@ function optDelete(form) {
 	    },
 	    series : [
 	        {
-	            name: '<s:message code="visitLog.source"/>',
+	            name: '<s:message code="visitLog.device"/>',
 	            type: 'pie',
 	            radius : '55%',
 	            center: ['50%', '60%'],
