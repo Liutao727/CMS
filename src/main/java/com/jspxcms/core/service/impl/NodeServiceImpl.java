@@ -364,18 +364,31 @@ public class NodeServiceImpl implements NodeService, SiteDeleteListener,
 
 	public void preSiteDelete(Integer[] ids) {
 		if (ArrayUtils.isNotEmpty(ids)) {
-			if (dao.countBySiteId(Arrays.asList(ids)) > 0) {
-				throw new DeleteException("node.management");
+			for(Integer id : ids) {
+				for(Node node : dao.findBySiteId(id)) {
+					delete(node.getId());
+				}
 			}
+//			if (dao.countBySiteId(Arrays.asList(ids)) > 0) {
+//				throw new DeleteException("node.management");
+//			}
 		}
 	}
 
 	public void preModelDelete(Integer[] ids) {
 		if (ArrayUtils.isNotEmpty(ids)) {
-			if (dao.countByNodeModelId(Arrays.asList(ids)) > 0
-					|| dao.countByInfoModelId(Arrays.asList(ids)) > 0) {
-				throw new DeleteException("node.management");
+			for(Integer id : ids) {
+				for(Node node : dao.findByNodeModelId(id)) {
+					delete(node.getId());
+				}
+				for(Node node : dao.findByInfoModelId(id)) {
+					delete(node.getId());
+				}
 			}
+//			if (dao.countByNodeModelId(Arrays.asList(ids)) > 0
+//					|| dao.countByInfoModelId(Arrays.asList(ids)) > 0) {
+//				throw new DeleteException("node.management");
+//			}
 		}
 	}
 

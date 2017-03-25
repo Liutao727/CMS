@@ -70,20 +70,15 @@ public class UserOrgServiceImpl implements UserOrgService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public int deleteByUserId(Integer userId) {
-		return dao.deleteByUserId(userId);
-	}
-
-	@Transactional
-	public int deleteByOrgId(Integer orgId) {
-		return dao.deleteByOrgId(orgId);
-	}
-
-	@Transactional
 	public void preOrgDelete(Integer[] ids) {
 		if (ids != null) {
 			for (Integer id : ids) {
-				dao.deleteByOrgId(id);
+				Org org = orgService.get(id);
+				for (User user : dao.findByUserOrgsOrgId(id)) {
+					UserOrg userRole = new UserOrg(user, org);
+					user.getUserOrgs().remove(userRole);
+					dao.delete(userRole);
+				}
 			}
 		}
 	}

@@ -123,7 +123,12 @@ $(function(){
 		var ms = ${avatarLarge}*scale;
 		$("#avatarImg").imgAreaSelect({aspectRatio: "1:1", minWidth: ms, minHeight: ms,x1:0, y1:0, x2:ms, y2:ms, handles: true, onSelectChange: onSelectChange});
 		$("#avatarDiv").show();
-		$("#avatarForm").show();		
+		$("#avatarForm").show();
+		//初始化时需设置这些值
+		$("#left").val(Math.round(0/scale));
+		$("#top").val(Math.round(0/scale));
+		$("#width").val(Math.round(ms/scale));
+		$("#height").val(Math.round(ms/scale));
 	}
 });
 </script>

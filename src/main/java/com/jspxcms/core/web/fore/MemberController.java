@@ -162,7 +162,9 @@ public class MemberController {
 		String pathnameOrig = "/users/" + user.getId() + "/" + User.AVATAR;
 		fileHandler.storeImage(buff, "jpg", pathnameOrig);
 		// 裁剪头像
-		buff = Images.crop(buff, left, top, width, height);
+		if (left != null && top != null && width != null && height != null) {
+			buff = Images.crop(buff, left, top, width, height);
+		}
 		// 保存大头像
 		String pathnameLarge = "/users/" + user.getId() + "/" + User.AVATAR_LARGE;
 		Integer avatarLarge = site.getGlobal().getRegister().getAvatarLarge();

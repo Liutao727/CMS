@@ -1,9 +1,7 @@
 package com.jspxcms.ext.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -255,20 +253,17 @@ public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener,
 
 		if (StringUtils.isNoneBlank(bean.getReferrer()) && StringUtils.isNoneBlank(bean.getUrl())) {
 			try {
-				URI uri = new URI(URLEncoder.encode(url, "UTF-8"));
-				URI ref = new URI(URLEncoder.encode(referrer, "UTF-8"));
-				String host = ref.getHost();
+				URL accessURL = new URL(url);
+				URL referrerURL = new URL(referrer);
 				// url和referrer的域名不同，则代表来源不同网站，设置来源域名
-				if (!StringUtils.equals(host, uri.getHost())) {
-					String source = ref.getScheme() + "://" + host;
-					if (ref.getPort() > 0) {
-						source += ":" + ref.getPort();
+				if (!StringUtils.equals(referrerURL.getHost(), accessURL.getHost())) {
+					String source = referrerURL.getProtocol() + "://" + referrerURL.getHost();
+					if (referrerURL.getPort() >= 0) {
+						source += ":" + referrerURL.getPort();
 					}
 					bean.setSource(source);
 				}
-			} catch (URISyntaxException e) {
-				logger.error(null, e);
-			} catch (UnsupportedEncodingException e) {
+			} catch (MalformedURLException e) {
 				logger.error(null, e);
 			}
 		}

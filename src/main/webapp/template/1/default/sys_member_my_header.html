@@ -1,5 +1,5 @@
 [#escape x as (x)!?html]
-	<div class="left" style="padding:5px;border:1px solid #ccc;background-color:#fff;"><a href="${site.protocol}:${site.urlFull}/space/${(targetUser!user).id}.jspx"><img src="${(targetUser!user).avatarLarge}" width="120" height="120"/></a></div>	
+	<div class="left" style="padding:5px;border:1px solid #ccc;background-color:#fff;"><a href="${site.protocol}:${site.urlFull}/space/${(targetUser!user).id}.jspx"><img src="${(targetUser!user).avatarLarge}?d=${.now?datetime}" width="120" height="120"/></a></div>	
 	<div class="left ml20 mt30">
 		<div class="mt5"><a href="${ctx}/space/${(targetUser!user).id}.jspx" class="a-none fs28 b ff-yh c-333 lh">${(targetUser!user).username}</a></div>
 		<div><a href="${site.protocol}:${site.urlFull}/space/${(targetUser!user).id}.jspx" class="a-hover lh" style="color:#777;">${site.protocol}:${site.urlFull}/space/${(targetUser!user).id}.jspx</a></div>

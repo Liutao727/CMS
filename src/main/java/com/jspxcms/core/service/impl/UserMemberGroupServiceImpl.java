@@ -50,7 +50,12 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService, Membe
 
 	public void preMemberGroupDelete(Integer[] ids) {
 		for (Integer id : ids) {
-			dao.deleteByGroupId(id);
+			MemberGroup group = groupService.get(id);
+			for (User user : dao.findByUserGroupsGroupId(id)) {
+				UserMemberGroup userGroup = new UserMemberGroup(user, group);
+				user.getUserGroups().remove(userGroup);
+				dao.delete(userGroup);
+			}
 		}
 	}
 

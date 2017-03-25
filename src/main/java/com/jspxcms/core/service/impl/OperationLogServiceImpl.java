@@ -29,6 +29,7 @@ import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.domain.OperationLog;
+import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.domain.User;
 import com.jspxcms.core.listener.SiteDeleteListener;
 import com.jspxcms.core.listener.UserDeleteListener;
@@ -40,16 +41,13 @@ import com.jspxcms.core.support.Context;
 
 @Service
 @Transactional(readOnly = true)
-public class OperationLogServiceImpl implements OperationLogService,
-		UserDeleteListener, SiteDeleteListener {
-	public Page<OperationLog> findAll(Integer siteId,
-			Map<String, String[]> params, Pageable pageable) {
+public class OperationLogServiceImpl implements OperationLogService, UserDeleteListener, SiteDeleteListener {
+	public Page<OperationLog> findAll(Integer siteId, Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(siteId, params), pageable);
 	}
 
-	public RowSide<OperationLog> findSide(Integer siteId,
-			Map<String, String[]> params, OperationLog bean, Integer position,
-			Sort sort) {
+	public RowSide<OperationLog> findSide(Integer siteId, Map<String, String[]> params, OperationLog bean,
+			Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<OperationLog>();
 		}
@@ -58,15 +56,12 @@ public class OperationLogServiceImpl implements OperationLogService,
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<OperationLog> spec(final Integer siteId,
-			Map<String, String[]> params) {
+	private Specification<OperationLog> spec(final Integer siteId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<OperationLog> fsp = SearchFilter.spec(filters,
-				OperationLog.class);
+		final Specification<OperationLog> fsp = SearchFilter.spec(filters, OperationLog.class);
 		Specification<OperationLog> sp = new Specification<OperationLog>() {
-			public Predicate toPredicate(Root<OperationLog> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Path<Integer> siteIdPath = root.get("site").<Integer> get("id");
+			public Predicate toPredicate(Root<OperationLog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Path<Integer> siteIdPath = root.get("site").<Integer>get("id");
 				Predicate siteIdPred = cb.equal(siteIdPath, siteId);
 				return cb.and(fsp.toPredicate(root, query, cb), siteIdPred);
 			}
@@ -79,8 +74,8 @@ public class OperationLogServiceImpl implements OperationLogService,
 	}
 
 	@Transactional
-	public OperationLog operation(String name, String description, String text,
-			Integer dataId, String ip, Integer userId, Integer siteId) {
+	public OperationLog operation(String name, String description, String text, Integer dataId, String ip,
+			Integer userId, Integer siteId) {
 		OperationLog bean = new OperationLog();
 		bean.setName(name);
 		bean.setDescription(description);
@@ -93,8 +88,8 @@ public class OperationLogServiceImpl implements OperationLogService,
 	}
 
 	@Transactional
-	public OperationLog operation(String name, String description, String text,
-			Integer dataId, HttpServletRequest request) {
+	public OperationLog operation(String name, String description, String text, Integer dataId,
+			HttpServletRequest request) {
 		Integer siteId = Context.getCurrentSiteId();
 		Integer userId = Context.getCurrentUserId();
 		String ip = Servlets.getRemoteAddr(request);
@@ -144,11 +139,15 @@ public class OperationLogServiceImpl implements OperationLogService,
 		} else {
 			bean.setUser(userShiroService.getAnonymous());
 		}
+		Site site = null;
 		if (siteId != null) {
-			bean.setSite(siteShiroService.get(siteId));
-		} else {
-			bean.setSite(siteShiroService.findDefault());
+			site = siteShiroService.get(siteId);
+
 		}
+		if (site == null) {
+			site = siteShiroService.findDefault();
+		}
+		bean.setSite(site);
 		if (StringUtils.isNotBlank(bean.getIp())) {
 			bean.setCountry(ipSeeker.getCountry(bean.getIp()));
 			bean.setArea(ipSeeker.getArea(bean.getIp()));

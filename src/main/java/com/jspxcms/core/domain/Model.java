@@ -154,8 +154,7 @@ public class Model implements Siteable, java.io.Serializable {
 			return null;
 		}
 		for (ModelField field : getFields()) {
-			if (field.getInnerType() == ModelField.FIELD_CUSTOM
-					&& field.getName().equals(name)) {
+			if (field.getInnerType() == ModelField.FIELD_CUSTOM && field.getName().equals(name)) {
 				return field.getOptions().get(key);
 			}
 		}
@@ -178,16 +177,15 @@ public class Model implements Siteable, java.io.Serializable {
 			return null;
 		}
 		for (ModelField field : getFields()) {
-			if (field.getInnerType() == ModelField.FIELD_QUERYABLE
-					&& field.getName().equals(name)) {
+			if (field.getInnerType() == ModelField.FIELD_QUERYABLE && field.getName().equals(name)) {
 				return field.getOptions().get(key);
 			}
 		}
 		return null;
 	}
 
-	public void getAttachUrls(Set<String> urls, Set<String> clobEditorNames,
-			Map<String, String> clobs, Map<String, String> customs) {
+	public void getAttachUrls(Set<String> urls, Set<String> clobEditorNames, Map<String, String> clobs,
+			Map<String, String> customs) {
 
 		// 自定义字段
 		for (ModelField field : getFields()) {
@@ -199,8 +197,7 @@ public class Model implements Siteable, java.io.Serializable {
 				continue;
 			}
 			int type = field.getType();
-			if (type == ModelField.IMAGE || type == ModelField.VIDEO
-					|| type == ModelField.FILE) {
+			if (type == ModelField.IMAGE || type == ModelField.VIDEO || type == ModelField.FILE) {
 				urls.add(customs.get(field.getName()));
 			}
 		}
@@ -208,27 +205,29 @@ public class Model implements Siteable, java.io.Serializable {
 		NodeFilter imgf = new NodeClassFilter(ImageTag.class);
 		NodeFilter linkf = new NodeClassFilter(LinkTag.class);
 		NodeFilter filter = new OrFilter(imgf, linkf);
-		for (Entry<String, String> clob : clobs.entrySet()) {
-			String name = clob.getKey();
-			String html = clob.getValue();
-			if (!clobEditorNames.contains(name) || StringUtils.isBlank(html)) {
-				continue;
-			}
-			try {
-				Parser parser = new Parser(new Lexer(html));
-				NodeList nodes = parser.extractAllNodesThatMatch(filter);
-				SimpleNodeIterator it = nodes.elements();
-				while (it.hasMoreNodes()) {
-					org.htmlparser.Node n = it.nextNode();
-					if (n instanceof ImageTag) {
-						urls.add(((ImageTag) n).getImageURL());
-					}
-					if (n instanceof LinkTag) {
-						urls.add(((LinkTag) n).extractLink());
-					}
+		if (clobs != null) {
+			for (Entry<String, String> clob : clobs.entrySet()) {
+				String name = clob.getKey();
+				String html = clob.getValue();
+				if (!clobEditorNames.contains(name) || StringUtils.isBlank(html)) {
+					continue;
 				}
-			} catch (ParserException e) {
-				logger.error(null, e);
+				try {
+					Parser parser = new Parser(new Lexer(html));
+					NodeList nodes = parser.extractAllNodesThatMatch(filter);
+					SimpleNodeIterator it = nodes.elements();
+					while (it.hasMoreNodes()) {
+						org.htmlparser.Node n = it.nextNode();
+						if (n instanceof ImageTag) {
+							urls.add(((ImageTag) n).getImageURL());
+						}
+						if (n instanceof LinkTag) {
+							urls.add(((LinkTag) n).extractLink());
+						}
+					}
+				} catch (ParserException e) {
+					logger.error(null, e);
+				}
 			}
 		}
 	}

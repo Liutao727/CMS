@@ -27,9 +27,8 @@ import freemarker.template.TemplateException;
  * 
  */
 public abstract class PNode {
-	public static void makeHtml(Node node, int max, Configuration config,
-			FileHandler fileHandler, TaskService taskService, Integer taskId)
-			throws IOException, TemplateException {
+	public static void makeHtml(Node node, int max, Configuration config, FileHandler fileHandler,
+			TaskService taskService, Integer taskId) throws IOException, TemplateException {
 		if (node == null) {
 			return;
 		}
@@ -49,8 +48,7 @@ public abstract class PNode {
 		rootMap.put("node", node);
 		Integer total = 1;
 		int staticPage = node.getStaticPageOrDef();
-		for (int page = 1; page <= max && page <= total && page <= staticPage
-				&& taskService.isRunning(taskId); page++) {
+		for (int page = 1; page <= max && page <= total && page <= staticPage && taskService.isRunning(taskId); page++) {
 			String filename = node.getUrlStatic(page, false, true);
 			if (page == 1) {
 				node.getDetail().setHtml(filename);
@@ -63,8 +61,7 @@ public abstract class PNode {
 			// TODO like info:InfoText,title,text.
 			rootMap.put("text", node.getText());
 			String url = node.getUrlStatic(page);
-			ForeContext.setData(rootMap, site, null, null, null, null, null,
-					null, url);
+			ForeContext.setData(rootMap, site, null, null, null, null, null, null, url);
 			ForeContext.setPage(rootMap, page, node);
 			fileHandler.storeFile(template, rootMap, filename);
 			taskService.add(taskId, 1);
@@ -78,7 +75,9 @@ public abstract class PNode {
 	public static void deleteHtml(Node node, FileHandler fileHandler) {
 		String html = node.getHtml();
 		PNode.deleteHtml(html, fileHandler);
-		node.getDetail().setHtml(null);
+		if (node.getDetail() != null) {
+			node.getDetail().setHtml(null);
+		}
 	}
 
 	public static void deleteHtml(String html, FileHandler fileHandler) {

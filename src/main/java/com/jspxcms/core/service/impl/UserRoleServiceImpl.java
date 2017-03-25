@@ -57,7 +57,12 @@ public class UserRoleServiceImpl implements UserRoleService, RoleDeleteListener 
 	public void preRoleDelete(Integer[] ids) {
 		if (ids != null) {
 			for (Integer id : ids) {
-				dao.deleteByRoleId(id);
+				Role role = roleService.get(id);
+				for(User user : dao.findByUserRolesRoleId(id)) {
+					UserRole userRole = new UserRole(user,role);
+					user.getUserRoles().remove(userRole);
+					dao.delete(userRole);
+				}
 			}
 		}
 	}

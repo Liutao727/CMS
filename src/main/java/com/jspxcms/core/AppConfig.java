@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 
+import com.foxinmy.weixin4j.http.factory.HttpClientFactory;
+import com.foxinmy.weixin4j.http.factory.HttpComponent4Factory;
 import com.foxinmy.weixin4j.mp.token.WeixinTokenCreator;
 import com.foxinmy.weixin4j.token.FileTokenStorager;
 import com.foxinmy.weixin4j.token.TokenHolder;
@@ -60,6 +62,7 @@ public class AppConfig {
 		if (StringUtils.isBlank(weixinAppid) || StringUtils.isBlank(weixinSecret)) {
 			return null;
 		}
+		HttpClientFactory.setDefaultFactory(new HttpComponent4Factory());
 		WeixinTokenCreator wtc = new WeixinTokenCreator(weixinAppid, weixinSecret);
 		File tempDir = FileUtils.getTempDirectory();
 		File weixinDir = new File(tempDir, "weixin");

@@ -17,12 +17,10 @@ import com.jspxcms.ext.service.QuestionRecordService;
 
 @Service
 @Transactional(readOnly = true)
-public class QuestionRecordServiceImpl implements QuestionRecordService,
-		UserDeleteListener {
+public class QuestionRecordServiceImpl implements QuestionRecordService, UserDeleteListener {
 
-	public long countByUserId(Integer questionId, Integer userId,
-			Integer interval) {
-		if (interval != null) {
+	public long countByUserId(Integer questionId, Integer userId, Integer interval) {
+		if (interval != null && interval > 0) {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR_OF_DAY, -interval);
 			return dao.countByUserId(questionId, userId, cal.getTime());
@@ -31,8 +29,7 @@ public class QuestionRecordServiceImpl implements QuestionRecordService,
 		}
 	}
 
-	public long countByIp(Integer questionId, String ip, String cookie,
-			Integer interval) {
+	public long countByIp(Integer questionId, String ip, String cookie, Integer interval) {
 		if (interval != null) {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR_OF_DAY, -interval);
@@ -42,8 +39,7 @@ public class QuestionRecordServiceImpl implements QuestionRecordService,
 		}
 	}
 
-	public long countByCookie(Integer questionId, String cookie,
-			Integer interval) {
+	public long countByCookie(Integer questionId, String cookie, Integer interval) {
 		if (interval != null) {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.HOUR_OF_DAY, -interval);
@@ -58,8 +54,7 @@ public class QuestionRecordServiceImpl implements QuestionRecordService,
 	}
 
 	@Transactional
-	public QuestionRecord save(Question question, User user, String ip,
-			String cookie) {
+	public QuestionRecord save(Question question, User user, String ip, String cookie) {
 		QuestionRecord bean = new QuestionRecord();
 		bean.setQuestion(question);
 		bean.setUser(user);

@@ -43,13 +43,13 @@ public class InfoTagServiceImpl implements InfoTagService {
 	}
 
 	@Transactional
-	public int deleteByInfoId(Integer infoId) {
-		return dao.deleteByInfoId(infoId);
-	}
-
-	@Transactional
-	public int deleteByTagId(Integer tagId) {
-		return dao.deleteByTagId(tagId);
+	public void deleteByTagId(Integer tagId) {
+		Tag tag = tagService.get(tagId);
+		for(Info info : dao.findByInfoTagsTagId(tagId)) {
+			InfoTag infoTag = new InfoTag(info,tag);
+			info.getInfoTags().remove(infoTag);
+			dao.delete(infoTag);
+		}
 	}
 
 	private TagService tagService;

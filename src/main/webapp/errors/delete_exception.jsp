@@ -25,7 +25,7 @@ strong{font-weight:bold;}
 </style>
 </head>
 <body>
-<h1 class="type"><span class="title">数据不能删除，已被该模块使用：</span><strong class="message"><s:message code="<%=exception.getMessage()%>" text="<%=exception.getMessage()%>"/></strong></h1>
+<h1 class="type"><span class="title">数据已被该模块使用：</span><strong class="message"><s:message code="<%=exception.getMessage()%>" text="<%=exception.getMessage()%>"/>。</strong><span class="title">请先到该模块删除相关数据。</span></h1>
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->

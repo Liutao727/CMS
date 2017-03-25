@@ -39,8 +39,13 @@ public class InfoSpecialServiceImpl implements InfoSpecialService {
 	}
 
 	@Transactional
-	public int deleteBySpecialId(Integer specialId) {
-		return dao.deleteBySpecialId(specialId);
+	public void deleteBySpecialId(Integer specialId) {
+		Special special = specialService.get(specialId);
+		for(Info info : dao.findByInfoSpecialsSpecialId(specialId)) {
+			InfoSpecial infoSpecial = new InfoSpecial(info,special);
+			info.getInfoSpecials().remove(infoSpecial);
+			dao.delete(infoSpecial);
+		}
 	}
 
 	private SpecialService specialService;

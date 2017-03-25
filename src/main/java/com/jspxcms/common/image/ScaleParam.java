@@ -7,10 +7,10 @@ public class ScaleParam {
 	private Integer height;
 
 	public ScaleParam(Boolean scale, Boolean exact, Integer width, Integer height) {
-		this.scale = scale;
-		this.exact = exact;
-		this.width = width;
-		this.height = height;
+		setScale(scale);
+		setExact(exact);
+		setWidth(width);
+		setHeight(height);
 	}
 
 	public boolean isScale() {
@@ -34,6 +34,9 @@ public class ScaleParam {
 	}
 
 	public void setWidth(Integer width) {
+		if (width != null && width <= 0) {
+			width = null;
+		}
 		this.width = width;
 	}
 
@@ -42,6 +45,9 @@ public class ScaleParam {
 	}
 
 	public void setHeight(Integer height) {
+		if (height != null && height <= 0) {
+			height = null;
+		}
 		this.height = height;
 	}
 

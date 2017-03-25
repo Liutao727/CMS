@@ -27,6 +27,7 @@ import com.jspxcms.core.domain.Global;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.Model;
 import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.NodeDetail;
 import com.jspxcms.core.domain.PublishPoint;
 import com.jspxcms.core.domain.Role;
 import com.jspxcms.core.domain.Site;
@@ -36,6 +37,8 @@ import com.jspxcms.core.listener.SiteDeleteListener;
 import com.jspxcms.core.repository.SiteDao;
 import com.jspxcms.core.service.GlobalService;
 import com.jspxcms.core.service.ModelService;
+import com.jspxcms.core.service.NodeQueryService;
+import com.jspxcms.core.service.NodeService;
 import com.jspxcms.core.service.OrgService;
 import com.jspxcms.core.service.PublishPointService;
 import com.jspxcms.core.service.RoleService;
@@ -154,20 +157,28 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 			modelService.clone(siteModel, bean.getId());
 		}
 		// 复制首页模型
-		Model homeModel = modelService.findDefault(srcSiteId, Node.HOME_MODEL_TYPE);
-		if (homeModel != null) {
-			modelService.clone(homeModel, bean.getId());
+		Model srcHomeModel = modelService.findDefault(srcSiteId, Node.HOME_MODEL_TYPE);
+		Model homeMoedel = null;
+		if (srcHomeModel != null) {
+			homeMoedel = modelService.clone(srcHomeModel, bean.getId());
 		}
 		// 复制节点模型
-		Model nodeModel = modelService.findDefault(srcSiteId, Node.NODE_MODEL_TYPE);
-		if (nodeModel != null) {
-			modelService.clone(nodeModel, bean.getId());
+		Model srcNodeModel = modelService.findDefault(srcSiteId, Node.NODE_MODEL_TYPE);
+		if (srcNodeModel != null) {
+			modelService.clone(srcNodeModel, bean.getId());
 		}
 		// 复制信息模型
-		Model infoModel = modelService.findDefault(srcSiteId, Info.MODEL_TYPE);
-		if (infoModel != null) {
-			modelService.clone(infoModel, bean.getId());
+		Model srcInfoModel = modelService.findDefault(srcSiteId, Info.MODEL_TYPE);
+		Model infoModel = null;
+		if (srcInfoModel != null) {
+			infoModel = modelService.clone(srcInfoModel, bean.getId());
 		}
+		Node srcNode = nodeQuery.findRoot(srcSiteId);
+		Node node = new Node();
+		node.setName(srcNode.getName());
+		NodeDetail detail = new NodeDetail();
+		nodeService.save(node, detail, null, null, null, null, null, null, null, null, null, homeMoedel.getId(),
+				infoModel.getId(), null, user.getId(), bean.getId());
 
 		// 复制模版
 		String srcTemplate = srcSite.getSiteBase("");
@@ -320,8 +331,8 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	private PathResolver pathResolver;
 	private PublishPointService publishPointService;
 	private ModelService modelService;
-	// private NodeService nodeService;
-	// private NodeQueryService nodeQuery;
+	private NodeService nodeService;
+	private NodeQueryService nodeQuery;
 	private RoleService roleService;
 	private UserService userService;
 	private GlobalService globalService;
@@ -342,15 +353,15 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 		this.modelService = modelService;
 	}
 
-	// @Autowired
-	// public void setNodeService(NodeService nodeService) {
-	// this.nodeService = nodeService;
-	// }
-	//
-	// @Autowired
-	// public void setNodeQuery(NodeQueryService nodeQuery) {
-	// this.nodeQuery = nodeQuery;
-	// }
+	@Autowired
+	public void setNodeService(NodeService nodeService) {
+		this.nodeService = nodeService;
+	}
+
+	@Autowired
+	public void setNodeQuery(NodeQueryService nodeQuery) {
+		this.nodeQuery = nodeQuery;
+	}
 
 	@Autowired
 	public void setRoleService(RoleService roleService) {

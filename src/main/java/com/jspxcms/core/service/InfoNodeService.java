@@ -11,5 +11,5 @@ public interface InfoNodeService {
 
 	public int moveByNodeId(Collection<Integer> nodeIds, Integer nodeId);
 
-	public int deleteByNodeId(Integer nodeId);
+	public void deleteByNodeId(Integer nodeId);
 }

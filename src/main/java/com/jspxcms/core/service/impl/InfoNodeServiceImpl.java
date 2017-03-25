@@ -54,8 +54,13 @@ public class InfoNodeServiceImpl implements InfoNodeService {
 
 	@Override
 	@Transactional
-	public int deleteByNodeId(Integer nodeId) {
-		return dao.deleteByNodeId(nodeId);
+	public void deleteByNodeId(Integer nodeId) {
+		Node node = nodeService.get(nodeId);
+		for (Info info : dao.findByNodesNodeId(nodeId)) {
+			InfoNode infoNode = new InfoNode(info, node);
+			info.getInfoNodes().remove(infoNode);
+			dao.delete(infoNode);
+		}
 	}
 
 	private NodeQueryService nodeService;
@@ -64,6 +69,13 @@ public class InfoNodeServiceImpl implements InfoNodeService {
 	public void setNodeQueryService(NodeQueryService nodeService) {
 		this.nodeService = nodeService;
 	}
+
+	// private InfoQueryService infoService;
+	//
+	// @Autowired
+	// public void setInfoService(InfoQueryService infoService) {
+	// this.infoService = infoService;
+	// }
 
 	private InfoNodeDao dao;
 

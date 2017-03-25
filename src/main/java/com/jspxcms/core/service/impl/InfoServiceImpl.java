@@ -1,5 +1,6 @@
 package com.jspxcms.core.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -274,12 +277,16 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
 			return;
 		}
 		File src = fileHandler.getFile(srcImage);
-		String extension = FilenameUtils.getExtension(srcImage).toLowerCase();
+		BufferedImage buff = ImageIO.read(src);
+		// 太小图片不获取
+		if (buff.getWidth() < 100 || buff.getHeight() < 100) {
+			return;
+		}
 
+		String extension = FilenameUtils.getExtension(srcImage).toLowerCase();
 		boolean scale, exact;
 		String imageWidth, imageHeight;
 		Integer width, height;
-
 		String targetImage;
 		Model model = node.getInfoModel();
 		if (StringUtils.isBlank(detail.getSmallImage())) {
