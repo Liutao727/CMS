@@ -11,7 +11,7 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Friendlink;
-import com.jspxcms.ext.domain.QFriendlink;
+import com.jspxcms.ext.domain.dsl.QFriendlink;
 import com.jspxcms.ext.repository.plus.FriendlinkDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

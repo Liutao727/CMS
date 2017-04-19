@@ -11,7 +11,6 @@
 </style>
 <script type="text/javascript">
 function init() {
-  $("#f7PagedTable").tableHighlight();
   $("span[imgUrl]").each(function(){
     var span = $(this);
     var img = null;

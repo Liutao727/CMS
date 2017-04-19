@@ -5,12 +5,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.hibernate.jpa.QueryHints;
+import org.apache.commons.lang3.StringUtils;
 
 import com.jspxcms.common.orm.JpqlBuilder;
+import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.repository.plus.SiteDaoPlus;
 
@@ -21,29 +21,28 @@ import com.jspxcms.core.repository.plus.SiteDaoPlus;
  * 
  */
 public class SiteDaoImpl implements SiteDaoPlus {
-	public Site findDefault() {
-		JpqlBuilder jqpl = new JpqlBuilder("from Site bean where 1=1");
-		jqpl.append(" order by bean.def desc, bean.treeNumber asc");
-		TypedQuery<Site> query = jqpl.createQuery(em, Site.class);
-		query.setMaxResults(1);
-		query.setHint(QueryHints.HINT_CACHEABLE, true);
-		List<Site> list = query.getResultList();
-		if (!list.isEmpty()) {
-			return list.get(0);
-		} else {
-			return null;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	public List<Site> findByStatus(Integer[] status) {
-		JpqlBuilder jqpl = new JpqlBuilder("from Site bean where 1=1");
-		if (ArrayUtils.isNotEmpty(status)) {
-			jqpl.append(" and bean.status in (:status)");
-			jqpl.setParameter("status", Arrays.asList(status));
+	public List<Site> findByStatus(Integer parentId, String parentNumber, Integer[] status, Limitable limitable) {
+		JpqlBuilder jb = new JpqlBuilder("from Site bean");
+		if (StringUtils.isNotBlank(parentNumber)) {
+			jb.append(" join bean.parent parent");
 		}
-		jqpl.append(" order by bean.treeNumber");
-		return jqpl.list(em);
+		jb.append(" where 1=1");
+		if (parentId != null) {
+			jb.append(" and bean.parent.id = :parentId");
+			jb.setParameter("parentId", parentId);
+		} else if (StringUtils.isNotBlank(parentNumber)) {
+			jb.append(" and parent.number = :parentNumber");
+			jb.setParameter("parentNumber", parentNumber);
+		}
+		if (ArrayUtils.isNotEmpty(status)) {
+			jb.append(" and bean.status in (:status)");
+			jb.setParameter("status", Arrays.asList(status));
+		}
+		if (limitable == null) {
+			jb.append(" order by bean.treeNumber");
+		}
+		return jb.list(em, limitable);
 	}
 
 	private EntityManager em;

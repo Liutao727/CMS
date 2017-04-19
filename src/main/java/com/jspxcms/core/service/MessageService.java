@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.core.domain.Message;
 import com.jspxcms.core.domain.MessageText;
@@ -24,7 +25,11 @@ public interface MessageService {
 
 	public Page<Object[]> findByUserId(Integer userId, boolean unread, Pageable pageable);
 
+	public List<Object[]> findByUserId(Integer userId, boolean unread, Limitable limitable);
+
 	public Page<Message> findByContactId(Integer userId, Integer contactId, Pageable pageable);
+
+	public List<Message> findByContactId(Integer userId, Integer contactId, Limitable limitable);
 
 	public Message get(Integer id);
 

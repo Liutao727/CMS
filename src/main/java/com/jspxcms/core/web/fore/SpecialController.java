@@ -28,14 +28,14 @@ import com.jspxcms.core.support.SiteResolver;
 @Controller
 public class SpecialController {
 
-	@RequestMapping("/special/{id:[0-9]+}.jspx")
+	@RequestMapping("/special/{id:[0-9]+}")
 	public String special(@PathVariable Integer id, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return special(null, id, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/special/{id:[0-9]+}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/special/{id:[0-9]+}")
 	public String special(@PathVariable String siteNumber,
 			@PathVariable Integer id, Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -53,7 +53,7 @@ public class SpecialController {
 		return special.getTemplate();
 	}
 
-	@RequestMapping(value = "/special_views/{id:[0-9]+}.jspx")
+	@RequestMapping(value = "/special_views/{id:[0-9]+}")
 	public void views(@PathVariable Integer id,
 			@RequestParam(defaultValue = "true") boolean isUpdate,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -61,7 +61,7 @@ public class SpecialController {
 	}
 
 	@RequestMapping(Constants.SITE_PREFIX_PATH
-			+ "/special_views/{id:[0-9]+}.jspx")
+			+ "/special_views/{id:[0-9]+}")
 	public void views(@PathVariable String siteNumber,
 			@PathVariable Integer id,
 			@RequestParam(defaultValue = "true") boolean isUpdate,

@@ -5,13 +5,16 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jspxcms.core.domain.Global;
+//import com.jspxcms.core.domain.Global;
 import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.domain.User;
@@ -28,22 +31,30 @@ import com.jspxcms.core.service.UserService;
  * 
  */
 public class ForeInterceptor implements HandlerInterceptor {
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		Site site = null;
-		Global global = globalService.findUnique();
-		// URL不带域名就不识别域名识别。
-		if (global.getWithDomain()) {
-			site = siteService.findByDomain(request.getServerName());
+		Context.setMobile(false);
+		String serverName = request.getServerName();
+		site = siteService.findByDomain(serverName);
+		if (site != null) {
+			// 域名与站点域名不相同，则为手机访问（手机端域名可能与PC端域名一样）
+			if (!serverName.equals(site.getDomain())) {
+				Context.setMobile(true);
+			}
 		}
 		if (site == null) {
-			site = siteService.findDefault();
+			site = globalService.findUnique().getSite();
 		}
 		if (site == null) {
 			throw new CmsException("site.error.siteNotFound");
 		}
 		Context.setCurrentSite(site);
-
+		
+		Device device = deviceResolver.resolveDevice(request);
+		// 手机域名存在，并且是手机客户端访问
+		if(StringUtils.isNotBlank(site.getMobileDomain()) && device.isMobile()) {
+			Context.setMobile(true);
+		}
 		ShiroUser shiroUser = null;
 		Subject subject = SecurityUtils.getSubject();
 		Object principal = subject.getPrincipal();
@@ -65,29 +76,33 @@ public class ForeInterceptor implements HandlerInterceptor {
 		} else {
 			MemberGroup anon = memberGroupService.getAnonymous();
 			Context.setCurrentGroup(request, anon);
-			Context.setCurrentGroups(request,
-					Arrays.asList(new MemberGroup[] { anon }));
+			Context.setCurrentGroups(request, Arrays.asList(new MemberGroup[] { anon }));
 			// 未登录，组织为空
 		}
 		return true;
 	}
 
-	public void postHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler,
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 	}
 
-	public void afterCompletion(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex)
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 		Context.resetCurrentSite();
 		Context.resetCurrentUser();
+		Context.resetMobile();
 	}
 
+	private DeviceResolver deviceResolver;
 	private SiteService siteService;
 	private GlobalService globalService;
 	private UserService userService;
 	private MemberGroupService memberGroupService;
+
+	@Autowired
+	public void setDeviceResolver(DeviceResolver deviceResolver) {
+		this.deviceResolver = deviceResolver;
+	}
 
 	@Autowired
 	public void setUserService(UserService userService) {

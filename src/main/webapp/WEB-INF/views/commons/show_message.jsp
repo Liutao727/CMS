@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<!-- 用于显示操作结果信息。配合Controller的RedirectAttributes.addFlashAttribute("message","xxx")，可以只在第一次访问页面时显示信息，刷新页面不会重复显示  -->
 <script type="text/javascript">
 var messageOptions = {};
 function messageCallback() {
@@ -24,8 +25,8 @@ $(function() {
 </c:if>
 </script>
 <s:message code="operationSuccess" var="operationSuccess"/>
-<div id="message-toggler" style="display:none;position:absolute;top:5px;background-color:#ccc;">
-	<div id="message-effect" style="font-size:14px;font-weight:bold;padding:6px 20px;_width:50px;word-break:keep-all;white-space:nowrap;text-align:center;color:#6b7e1e;">
+<div id="message-toggler" style="display:none;position:absolute;top:8px;background-color:#ccc;">
+	<div id="message-effect" style="font-size:16px;font-weight:bold;padding:8px 20px;_width:50px;word-break:keep-all;white-space:nowrap;text-align:center;color:#00a65a;">
 		<s:message code="${message}" text="${message}" var="msg"/>
 		<c:choose>
 			<c:when test="${msg!=''}">${msg}</c:when>

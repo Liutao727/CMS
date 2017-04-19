@@ -24,12 +24,13 @@
 		<span class="ml20">发布时间：${info.publishDate?string('yyyy-MM-dd HH:mm')}</span>
 		<span class="ml20">播放数：<span id="info_views"></span></span>
 		<script type="text/javascript">
-			$("#info_views").load("${dy}/info_views/${info.id}.jspx?d="+new Date()*1);
+			$("#info_views").load("${dy}/info_views/${info.id}?d="+new Date()*1);
 		</script>
 		<span class="ml20">评论数：<span id="info_comments"></span></span>
 		<script type="text/javascript">
-			 $("#info_comments").load("${dy}/info_comments/${info.id}.jspx?d="+new Date()*1);
+			 $("#info_comments").load("${dy}/info_comments/${info.id}?d="+new Date()*1);
 		</script>
+		<span class="ml20"><script src="${dy}/app?template=info_favorites&id=${info.id}&d="+new Date()*1></script></span>
 	</div>		
 </div>
 <div class="w center" style="margin-top:12px;">
@@ -51,12 +52,12 @@
 		<table class="digg center mt20"><tr><td>
 			<script type="text/javascript">
 				function digg() {
-					$.post("${dy}/info_digg.jspx",{id:${info.id}},function(data){
+					$.post("${dy}/info_digg",{id:${info.id}},function(data){
 						if(data!="0"){$("#diggs").text(data);}else{alert("你已经顶过一次！")}
 					});
 				}
 				function bury() {
-					$.post("${dy}/info_bury.jspx",{id:${info.id}},function(data){
+					$.post("${dy}/info_bury",{id:${info.id}},function(data){
 						if(data!="0"){$("#burys").text(data);}else{alert("你已经踩过一次！")}
 					});
 				}
@@ -65,7 +66,7 @@
 			<div id="burys" class="digg-item" onclick="bury();"></div>
 			<div class="clear"></div>
 			<script type="text/javascript">
-				$.get("${dy}/info_diggs/${info.id}.jspx?d="+new Date()*1,function(data) {
+				$.get("${dy}/info_diggs/${info.id}?d="+new Date()*1,function(data) {
 					$("#diggs").text(data[0]);$("#burys").text(data[1]);
 				},"json");
 			</script>
@@ -79,7 +80,7 @@
 		
 		<div id="commentDiv" class="mt20"></div>		
 		<script type="text/javascript">
-			$("#commentDiv").load("${dy}/comment_list.jspx?fid=${info.id}&url=${url?url}&d="+new Date()*1);
+			$("#commentDiv").load("${dy}/comment_list?fid=${info.id}&url=${url?url}&d="+new Date()*1);
 		</script>
 	</div>
 	[@InfoFulltextList q=info.title+info.keywords nodeId=node.parent.id excludeId=info.id limit=10;list]

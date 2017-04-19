@@ -23,7 +23,7 @@ function f7OnClick() {
 	$("#f7_id_Name").val(dir);
 }
 $(function(){
-	$("#f7PagedTable").tableHighlight();
+	//$("#f7PagedTable").tableHighlight();
 });
 </script>
 <div id="f7Dir">

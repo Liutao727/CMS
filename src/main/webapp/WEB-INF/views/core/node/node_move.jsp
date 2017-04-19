@@ -8,12 +8,10 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <style type="text/css">
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
@@ -126,42 +124,46 @@ $(function() {
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="node.management"/> - <s:message code="move"/></span>
+<div class="content-header">
+	<h1><s:message code="node.management"/> - <s:message code="move"/></h1>
 </div>
-<form id="validForm" action="move_submit.do" method="post">
-<tags:search_params/>
-<f:hidden name="queryParentId" value="${queryParentId}"/>
-<f:hidden name="showDescendants" value="${showDescendants}"/>
-<f:hidden name="position" value="${position}"/>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td colspan="2" class="in-opt">
-			<div class="in-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?queryParentId=${queryParentId}&showDescendants=${showDescendants}&${searchstring}';"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-  <tr>
-  	<th width="50%" align="center" class="in-ctt"><s:message code="node.moveSrcNode"/></th>
-  	<th width="50%" align="center" class="in-ctt"><s:message code="node.destNode"/></th>
-  </tr>
-  <tr>
-  	<td width="50%" valign="top" class="in-ctt">
-  		<ul id="srcTree" class="ztree"></ul>
-  	</td>
-  	<td width="50%" valign="top" class="in-ctt">
-  		<ul id="destTree" class="ztree"></ul>
-		</td>
-  </tr>
-  <tr>
-    <td colspan="2" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="submit"/>"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-</table>
-</form>
+
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="move_submit.do" method="post">
+			<tags:search_params/>
+			<f:hidden name="queryParentId" value="${queryParentId}"/>
+			<f:hidden name="showDescendants" value="${showDescendants}"/>
+			<f:hidden name="position" value="${position}"/>
+			<div class="box-header">
+				<div class="btn-toolbar">
+					<div class="btn-group">
+						<button class="btn btn-default" type="button" onclick="location.href='list.do?queryParentId=${queryParentId}&showDescendants=${showDescendants}&${searchstring}';"><s:message code="return"/></button>
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+			<table class="table">
+			  <tr>
+			  	<th width="50%" align="center"><s:message code="node.moveSrcNode"/></th>
+			  	<th width="50%" align="center"><s:message code="node.destNode"/></th>
+			  </tr>
+			  <tr>
+			  	<td width="50%" valign="top">
+			  		<ul id="srcTree" class="ztree"></ul>
+			  	</td>
+			  	<td width="50%" valign="top">
+			  		<ul id="destTree" class="ztree"></ul>
+					</td>
+			  </tr>
+			</table>
+			<div class="box-footer">
+				<button class="btn btn-primary" type="submit"><s:message code="submit"/></button>
+			</div>
+		</form>
+	</div>
+</div>
 </body>
 </html>

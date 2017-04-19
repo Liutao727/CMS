@@ -59,7 +59,7 @@ public class ModelFieldController {
 		List<ModelField> list = service.findList(modelId);
 		modelMap.addAttribute("list", list);
 
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(site.getId());
 		modelMap.addAttribute("types", types);
 		modelMap.addAttribute("queryType", model.getType());
 		return "core/model_field/model_field_list";

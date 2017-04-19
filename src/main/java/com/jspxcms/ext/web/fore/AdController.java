@@ -29,13 +29,13 @@ import com.jspxcms.ext.service.AdSlotService;
  */
 @Controller
 public class AdController {
-	@RequestMapping("/dd/{id}.jspx")
+	@RequestMapping("/dd/{id}")
 	public String list(@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return list(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/dd/{id}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/dd/{id}")
 	public String list(@PathVariable String siteNumber,
 			@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -52,13 +52,13 @@ public class AdController {
 		return list(slot, request, response, modelMap);
 	}
 
-	@RequestMapping("/dd_number/{number}.jspx")
+	@RequestMapping("/dd_number/{number}")
 	public String list(@PathVariable String number, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return list(null, number, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/dd_number/{number}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/dd_number/{number}")
 	public String list(@PathVariable String siteNumber,
 			@PathVariable String number, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {

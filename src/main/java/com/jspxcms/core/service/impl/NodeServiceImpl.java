@@ -270,8 +270,7 @@ public class NodeServiceImpl implements NodeService, SiteDeleteListener,
 			}
 			infoNodeService.deleteByNodeId(bean.getId());
 			attachmentRefService.delete(Node.ATTACH_TYPE, bean.getId());
-			PNode.deleteHtml(bean, bean.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver));
+			PNode.deleteHtml(bean, pathResolver);
 			dao.delete(bean);
 			deleted.add(bean);
 		}

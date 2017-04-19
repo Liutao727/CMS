@@ -25,7 +25,7 @@ function confirmDelete() {
 </head>
 <body class="c-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
+<div class="c-bar">
   <span class="c-position"><s:message code="member.management"/> - <s:message code="${oprt=='edit' ? 'edit' : 'create'}"/></span>
 </div>
 <form id="validForm" action="${oprt=='edit' ? 'update' : 'save'}.do" method="post">
@@ -33,7 +33,7 @@ function confirmDelete() {
 <f:hidden name="oid" value="${bean.id}"/>
 <f:hidden name="position" value="${position}"/>
 <input type="hidden" id="redirect" name="redirect" value="edit"/>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
+<table border="0" cellpadding="0" cellspacing="0" class="in-tb">
   <tr>
     <td colspan="4" class="in-opt">
 			<shiro:hasPermission name="core:member:create">

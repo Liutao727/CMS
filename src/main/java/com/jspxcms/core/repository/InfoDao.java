@@ -46,6 +46,18 @@ public interface InfoDao extends Repository<Info, Integer>, InfoDaoPlus {
 
 	// --------------------
 
+	/**
+	 * 查询文档的发布数量
+	 * 
+	 * @param siteId
+	 *            站点ID
+	 * @param beginDate
+	 *            起始时间
+	 * @return
+	 */
+	@Query("select count(*) from Info bean where bean.site.id=?1 and bean.status='A' and bean.publishDate>=?2")
+	public long countByDate(Integer siteId, Date beginDate);
+
 	@Modifying
 	@Query("update Info bean set bean.status='A' where bean.site.id=?1 and (bean.status='F' or bean.status='G') and bean.publishDate<=?2 and (bean.offDate is null or bean.offDate>=?2)")
 	public int publish(Integer siteId, Date now);
@@ -68,16 +80,13 @@ public interface InfoDao extends Repository<Info, Integer>, InfoDaoPlus {
 	@Query("select count(*) from Info bean where bean.creator.id in (?1)")
 	public long countByUserId(Collection<Integer> userIds);
 
-	@Query("select count(*) from Info bean where bean.node.id in (?1) and bean.status!='"
-			+ Info.DELETED + "'")
+	@Query("select count(*) from Info bean where bean.node.id in (?1) and bean.status!='" + Info.DELETED + "'")
 	public long countByNodeIdNotDeleted(Collection<Integer> nodeIds);
 
-	@Query("select count(*) from Info bean where bean.org.id in (?1) and bean.status!='"
-			+ Info.DELETED + "'")
+	@Query("select count(*) from Info bean where bean.org.id in (?1) and bean.status!='" + Info.DELETED + "'")
 	public long countByOrgIdNotDeleted(Collection<Integer> orgIds);
 
-	@Query("select count(*) from Info bean where bean.site.id in (?1) and bean.status!='"
-			+ Info.DELETED + "'")
+	@Query("select count(*) from Info bean where bean.site.id in (?1) and bean.status!='" + Info.DELETED + "'")
 	public long countBySiteIdNotDeleted(Collection<Integer> siteIds);
 
 }

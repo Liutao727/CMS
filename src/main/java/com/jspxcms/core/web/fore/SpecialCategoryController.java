@@ -30,13 +30,13 @@ public class SpecialCategoryController {
 	public static final String TEMPLATE_LIST = "sys_special_category_list.html";
 	public static final String TEMPLATE = "sys_special_category.html";
 
-	@RequestMapping("/special_category.jspx")
+	@RequestMapping("/special_category")
 	public String index(Integer page, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return index(null, page, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/special_category.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/special_category")
 	public String index(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
@@ -47,7 +47,7 @@ public class SpecialCategoryController {
 		return site.getTemplate(TEMPLATE_LIST);
 	}
 
-	@RequestMapping("/special_category/{id:[0-9]+}.jspx")
+	@RequestMapping("/special_category/{id:[0-9]+}")
 	public String show(@PathVariable Integer id, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -55,7 +55,7 @@ public class SpecialCategoryController {
 	}
 
 	@RequestMapping(Constants.SITE_PREFIX_PATH
-			+ "/special_category/{id:[0-9]+}.jspx")
+			+ "/special_category/{id:[0-9]+}")
 	public String show(@PathVariable String siteNumber,
 			@PathVariable Integer id, Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {

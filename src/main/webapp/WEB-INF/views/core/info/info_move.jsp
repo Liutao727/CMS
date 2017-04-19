@@ -7,14 +7,11 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <style type="text/css">
-* html{overflow-y: scroll;}
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
 </style>
@@ -67,42 +64,34 @@ $(function() {
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="info.management"/> - <s:message code="move"/>
+<div class="content-header">
+	<h1><s:message code="info.management"/> - <s:message code="move"/></h1>
 </div>
-<form id="validForm" action="move_submit.do" method="post">
-<tags:search_params/>
-<f:hidden name="queryNodeId" value="${queryNodeId}"/>
-<f:hidden name="queryNodeType" value="${queryNodeType}"/>
-<f:hidden name="queryInfoPermType" value="${queryInfoPermType}"/>
-<f:hidden id="queryStatus" name="queryStatus" value="${queryStatus}"/>
-<c:forEach var="id" items="${ids}">
-<input type="hidden" name="ids" value="${id}"/>
-</c:forEach>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td colspan="4" class="in-opt">
-			<div class="in-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-  <tr>
-    <th colspan="4" align="center" class="in-ctt"><s:message code="info.destNode"/></th>
-  </tr>
-  <tr>
-    <td colspan="4" valign="top" class="in-ctt">
-      <ul id="tree" class="ztree"></ul>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"<c:if test="${oprt=='edit' && !bean.auditPerm}"> disabled="disabled"</c:if>/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-</table>
-</form>
+<div class="content">
+	<div class="box box-primary">
+		<form id="validForm" action="move_submit.do" method="post">
+			<div class="box-header with-border">
+				<tags:search_params/>
+				<f:hidden name="queryNodeId" value="${queryNodeId}"/>
+				<f:hidden name="queryNodeType" value="${queryNodeType}"/>
+				<f:hidden name="queryInfoPermType" value="${queryInfoPermType}"/>
+				<f:hidden id="queryStatus" name="queryStatus" value="${queryStatus}"/>
+				<c:forEach var="id" items="${ids}">
+				<input type="hidden" name="ids" value="${id}"/>
+				</c:forEach>
+				<input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"/>
+			</div>
+			<div class="box-body">
+				<div><label><s:message code="info.destNode"/></label></div>
+				<ul id="tree" class="ztree"></ul>
+			</div>
+			<div class="box-footer">
+				<button class="btn btn-primary" type="submit"<c:if test="${oprt=='edit' && !bean.auditPerm}"> disabled</c:if>><s:message code="save"/></button>
+			</div>
+		</form>
+	</div>
+</div>
 </body>
 </html>

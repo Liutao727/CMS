@@ -8,12 +8,11 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<style type="text/css">
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -21,7 +20,7 @@ $(function() {
 	$("input[name=control][checked!=checked]").each(function(){
 		$(this).parent().parent().find("input,select").not(this).attr("disabled","disabled").addClass("disabled");
 	});
-	$("#pagedTable").tableHighlight();
+	
 	$("#fieldForm").validate();
 	$("input[name='control']").change(function(){
 		if(this.checked) {
@@ -38,32 +37,40 @@ function checkControl(name,checked) {
 }
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <div class="c-position"><s:message code="model.management"/> - <s:message code="model.type.${model.type}"/> - <s:message code="modelField.addPredefinedField"/> - ${model.name}</div>
+<div class="content-header">
+	<h1><s:message code="model.management"/> - <s:message code="model.type.${model.type}"/> - <s:message code="modelField.addPredefinedField"/> - ${model.name}</h1>
 </div>
-<form id="fieldForm" action="batch_save.do" method="post">
-<f:hidden name="modelId" value="${model.id}"/>
-<tags:search_params/>
-<div class="ls-bc-opt">
-	<div class="ls-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-	<div class="ls-btn"></div>
-	<div class="in-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?modelId=${model.id}&${searchstring}';"/></div>
-	<div style="clear:both"></div>
+<div class="content">
+	<div class="box box-primary">
+		<div class="box-body table-responsive">
+			<form id="fieldForm" action="batch_save.do" method="post">
+				<tags:search_params/>
+				<f:hidden name="modelId" value="${model.id}"/>
+				<div class="btn-toolbar ls-btn-bar">
+					<div class="btn-group">
+						<button class="btn btn-default" type="submit"><s:message code="save"/></button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default" type="button" onclick="location.href='list.do?modelId=${model.id}&${searchstring}';"><s:message code="return"/></button>
+					</div>
+				</div>
+				<table id="pagedTable" class="table table-condensed table-bordered table-hover ls-tb form-inline">
+				  <thead>
+				  <tr class="ls_table_th">
+				    <th width="25"><input type="checkbox" checked="checked" onclick="checkControl('control',this.checked);"/></th>
+				    <th><s:message code="modelField.name"/></th>
+				    <th><s:message code="modelField.label"/></th>
+				    <th><s:message code="modelField.dblColumn"/></th>
+				  </tr>
+				  </thead>
+				  <tbody>
+				  </tbody>
+				</table>
+			</form>
+		</div>
+	</div>
 </div>
-<table id="pagedTable" border="0" border="0" cellpadding="0" cellspacing="0" class="ls-tb margin-top5">
-  <thead>
-  <tr class="ls_table_th">
-    <th width="25"><input type="checkbox" checked="checked" onclick="checkControl('control',this.checked);"/></th>
-    <th><s:message code="modelField.name"/></th>
-    <th><s:message code="modelField.label"/></th>
-    <th><s:message code="modelField.dblColumn"/></th>
-  </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</form>
 </body>
 </html>

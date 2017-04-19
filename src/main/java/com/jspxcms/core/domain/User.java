@@ -1,20 +1,28 @@
 package com.jspxcms.core.domain;
 
+import static com.jspxcms.core.constant.Constants.DYNAMIC_SUFFIX;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -27,6 +35,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.MapKeyType;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +56,10 @@ import com.jspxcms.core.support.Context;
 @Table(name = "cms_user", uniqueConstraints = @UniqueConstraint(columnNames = "f_username"))
 public class User implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 模型类型
+	 */
+	public static final String MODEL_TYPE = "user";
 	/**
 	 * 会员
 	 */
@@ -93,6 +107,36 @@ public class User implements java.io.Serializable {
 	public static final String AVATAR_SMALL = "avatar_small.jpg";
 
 	public static final Integer DEFAULT_RANK = 99999;
+
+	@Transient
+	public String getUrl() {
+		return getUrl(false);
+	}
+
+	@Transient
+	public String getFullUrl() {
+		return getUrl(true);
+	}
+
+	@Transient
+	public String getUrl(boolean isFull) {
+		Site site = getGlobal().getSite();
+		StringBuilder sb = new StringBuilder();
+		if (isFull) {
+			sb.append(site.getProtocol()).append("://").append(site.getDomain());
+			if (site.getPort() != null) {
+				sb.append(":").append(site.getPort());
+			}
+		}
+		String ctx = site.getContextPath();
+		if (StringUtils.isNotBlank(ctx)) {
+			sb.append(ctx);
+		}
+		sb.append("/").append(Constants.USER_PATH);
+		sb.append("/").append(getId());
+		sb.append(DYNAMIC_SUFFIX);
+		return sb.toString();
+	}
 
 	/**
 	 * 是否需要验证码
@@ -658,6 +702,8 @@ public class User implements java.io.Serializable {
 	private List<UserOrg> userOrgs = new ArrayList<UserOrg>(0);
 	private List<UserMemberGroup> userGroups = new ArrayList<UserMemberGroup>(0);
 	private Set<UserDetail> details = new HashSet<UserDetail>(0);
+	private Map<String, String> customs = new HashMap<String, String>(0);
+	private Map<String, String> clobs = new HashMap<String, String>(0);
 
 	private Global global;
 	private Org org;
@@ -683,7 +729,7 @@ public class User implements java.io.Serializable {
 
 	@Id
 	@Column(name = "f_user_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_user", pkColumnValue = "cms_user", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_user", pkColumnValue = "cms_user", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_user")
 	public Integer getId() {
 		return this.id;
@@ -730,6 +776,32 @@ public class User implements java.io.Serializable {
 
 	public void setDetails(Set<UserDetail> details) {
 		this.details = details;
+	}
+	
+	@ElementCollection
+	@CollectionTable(name = "cms_user_custom", joinColumns = @JoinColumn(name = "f_user_id"))
+	@MapKeyColumn(name = "f_key", length = 50)
+	@Column(name = "f_value", length = 2000)
+	public Map<String, String> getCustoms() {
+		return this.customs;
+	}
+
+	public void setCustoms(Map<String, String> customs) {
+		this.customs = customs;
+	}
+
+	@ElementCollection
+	@CollectionTable(name = "cms_user_clob", joinColumns = @JoinColumn(name = "f_user_id"))
+	@MapKeyColumn(name = "f_key", length = 50)
+	@MapKeyType(value = @Type(type = "string"))
+	@Lob
+	@Column(name = "f_value", nullable = false)
+	public Map<String, String> getClobs() {
+		return this.clobs;
+	}
+
+	public void setClobs(Map<String, String> clobs) {
+		this.clobs = clobs;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

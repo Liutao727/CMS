@@ -1,14 +1,13 @@
 package com.jspxcms.core.web.back;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,8 +60,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:left")
 	@RequestMapping("left.do")
-	public String left(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	public String left(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -74,9 +72,8 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:left")
 	@RequestMapping("left_tree.do")
-	public String leftTree(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	public String leftTree(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -87,8 +84,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:list")
 	@RequestMapping("list.do")
-	public String list(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	public String list(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -100,8 +96,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:create")
 	@RequestMapping("create.do")
-	public String create(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	public String create(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -113,8 +108,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:edit")
 	@RequestMapping("edit.do")
-	public String edit(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	public String edit(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -126,8 +120,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:mkdir")
 	@RequestMapping(value = "mkdir.do", method = RequestMethod.POST)
-	public String mkdir(String parentId, String dir,
-			HttpServletRequest request, HttpServletResponse response,
+	public String mkdir(String parentId, String dir, HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes ra) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -139,38 +132,31 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:save")
 	@RequestMapping(value = "save.do", method = RequestMethod.POST)
-	public String save(String parentId, String name, String text,
-			String redirect, HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
-			throws IOException {
+	public String save(String parentId, String name, String text, String redirect, HttpServletRequest request,
+			HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
-		return super
-				.save(parentId, name, text, redirect, request, response, ra);
+		return super.save(parentId, name, text, redirect, request, response, ra);
 	}
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:update")
 	@RequestMapping(value = "update.do", method = RequestMethod.POST)
-	public void update(String parentId, String origName, String name,
-			String text, Integer position, String redirect,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void update(String parentId, String origName, String name, String text, Integer position, String redirect,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
-		super.update(parentId, origName, name, text, position, redirect,
-				request, response);
+		super.update(parentId, origName, name, text, position, redirect, request, response);
 	}
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:delete")
 	@RequestMapping("delete.do")
-	public String delete(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	public String delete(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -182,8 +168,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:rename")
 	@RequestMapping("rename.do")
-	public String rename(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	public String rename(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -195,8 +180,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:move")
 	@RequestMapping("move.do")
-	public String move(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	public String move(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -208,8 +192,8 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:zip")
 	@RequestMapping("zip.do")
-	public String zip(HttpServletRequest request, HttpServletResponse response,
-			RedirectAttributes ra) throws IOException {
+	public String zip(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
+			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -220,8 +204,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:zip_download")
 	@RequestMapping("zip_download.do")
-	public void zipDownload(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	public void zipDownload(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -233,8 +216,7 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:unzip")
 	@RequestMapping("unzip.do")
-	public String unzip(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	public String unzip(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -246,35 +228,30 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:upload")
 	@RequestMapping("upload.do")
-	public void upload(
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IllegalStateException, IOException {
+	public void upload(@RequestParam(value = "file", required = false) MultipartFile file, String parentId,
+			HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
-		super.upload(file, request, response);
+		super.upload(file, parentId, request, response);
 	}
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:web_file_3:zip_upload")
 	@RequestMapping("zip_upload.do")
-	public void zipUpload(
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response,
-			RedirectAttributes ra) throws IOException {
+	public void zipUpload(@RequestParam(value = "file", required = false) MultipartFile file, String parentId,
+			HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
-		super.zipUpload(file, request, response, ra);
+		super.zipUpload(file, parentId, request, response, ra);
 	}
 
 	@RequiresRoles("super")
 	@RequestMapping("choose_dir.do")
-	protected String dir(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	protected String dir(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -285,9 +262,8 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 
 	@RequiresRoles("super")
 	@RequestMapping("choose_dir_list.do")
-	public String dirList(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	public String dirList(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		if (!isEnableSiteFile()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -295,16 +271,10 @@ public class WebFileSiteController extends WebFileControllerAbstractor {
 		return super.dirList(request, response, modelMap);
 	}
 
-	public static Boolean enableSiteFile;
-
 	private boolean isEnableSiteFile() {
-		if (enableSiteFile == null) {
-			enableSiteFile = "true".equals(properties
-					.getProperty("webFile.isEnableSiteFile"));
-		}
-		return enableSiteFile;
+		return "true".equals(isEnableSiteFile);
 	}
 
-	@Autowired
-	private Properties properties;
+	@Value("${webFile.isEnableSiteFile}")
+	private String isEnableSiteFile;
 }

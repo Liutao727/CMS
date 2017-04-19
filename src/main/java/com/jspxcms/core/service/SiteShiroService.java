@@ -13,8 +13,6 @@ import com.jspxcms.core.domain.Site;
 public interface SiteShiroService {
 	public List<Site> findByUserId(Integer userId);
 
-	public Site findDefault();
-
 	public Site findByDomain(String domain);
 
 	public Site get(Integer id);

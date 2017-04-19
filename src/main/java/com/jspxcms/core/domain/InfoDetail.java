@@ -34,6 +34,7 @@ public class InfoDetail implements java.io.Serializable {
 
 	private String title;
 	private String html;
+	private String mobileHtml;
 	private String subtitle;
 	private String fullTitle;
 	private String link;
@@ -108,6 +109,15 @@ public class InfoDetail implements java.io.Serializable {
 
 	public void setHtml(String html) {
 		this.html = html;
+	}
+	
+	@Column(name = "f_mobile_html")
+	public String getMobileHtml() {
+		return mobileHtml;
+	}
+
+	public void setMobileHtml(String mobileHtml) {
+		this.mobileHtml = mobileHtml;
 	}
 
 	@Column(name = "f_subtitle", length = 150)

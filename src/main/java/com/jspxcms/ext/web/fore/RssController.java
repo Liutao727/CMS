@@ -28,13 +28,13 @@ public class RssController {
 	public static final String RSS_CENTER_TEMPLATE = "sys_rss_center.html";
 	public static final String RSS_TEMPLATE = "sys_rss.html";
 
-	@RequestMapping("/rss_center.jspx")
+	@RequestMapping("/rss_center")
 	public String center(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return center(null, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/rss_center.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/rss_center")
 	public String center(@PathVariable String siteNumber,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
@@ -44,13 +44,13 @@ public class RssController {
 		return site.getTemplate(RSS_CENTER_TEMPLATE);
 	}
 
-	@RequestMapping("/rss.jspx")
+	@RequestMapping("/rss")
 	public String list(Integer nodeId, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return list(null, nodeId, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/rss.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/rss")
 	public String list(@PathVariable String siteNumber, Integer nodeId,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {

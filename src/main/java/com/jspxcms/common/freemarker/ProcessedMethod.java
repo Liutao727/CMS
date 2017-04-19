@@ -3,7 +3,7 @@ package com.jspxcms.common.freemarker;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.jspxcms.common.web.TimerFilter;
+import com.jspxcms.common.web.TimerInterceptor;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
@@ -21,13 +21,13 @@ public class ProcessedMethod implements TemplateMethodModelEx {
 	public Object exec(List args) throws TemplateModelException {
 		Environment env = Environment.getCurrentEnvironment();
 		TemplateModel beginModel = env
-				.getGlobalVariable(TimerFilter.TIMER_BEGIN);
-		Long begin = Freemarkers.getLong(beginModel, TimerFilter.TIMER_BEGIN);
+				.getGlobalVariable(TimerInterceptor.TIMER_BEGIN);
+		Long begin = Freemarkers.getLong(beginModel, TimerInterceptor.TIMER_BEGIN);
 		if (begin != null) {
 			long end = System.currentTimeMillis();
 			BigDecimal processed = new BigDecimal(end - begin)
 					.divide(new BigDecimal(1000));
-			return TimerFilter.FORMAT.format(processed);
+			return TimerInterceptor.FORMAT.format(processed);
 		} else {
 			return "0";
 		}

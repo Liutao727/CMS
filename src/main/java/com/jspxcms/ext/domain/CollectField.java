@@ -208,7 +208,7 @@ public class CollectField implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_collectfield_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_collect_field", pkColumnValue = "cms_collect_field", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_collect_field", pkColumnValue = "cms_collect_field", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_collect_field")
 	public Integer getId() {
 		return this.id;

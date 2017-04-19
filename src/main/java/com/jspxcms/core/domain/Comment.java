@@ -32,7 +32,7 @@ import com.jspxcms.common.web.Anchor;
 import com.jspxcms.core.support.Siteable;
 
 /**
- * Comment
+ * Comment评论对象
  * 
  * @author liufang
  * 
@@ -115,7 +115,7 @@ public abstract class Comment implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_comment_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_comment", pkColumnValue = "cms_comment", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_comment", pkColumnValue = "cms_comment", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_comment")
 	public Integer getId() {
 		return this.id;

@@ -120,7 +120,7 @@ public class Task implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_task_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_task", pkColumnValue = "cms_task", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_task", pkColumnValue = "cms_task", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_task")
 	public Integer getId() {
 		return this.id;

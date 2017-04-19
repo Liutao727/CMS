@@ -41,21 +41,20 @@ import com.jspxcms.core.service.OperationLogService;
 import com.jspxcms.core.service.OrgService;
 import com.jspxcms.core.service.PublishPointService;
 import com.jspxcms.core.service.SiteService;
+import com.jspxcms.core.support.CmsException;
 import com.jspxcms.core.support.Context;
 
 @Controller
 @RequestMapping("/core/site")
 public class SiteController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(SiteController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
 
 	@RequestMapping("list.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:list")
-	public String list(@PageableDefault(sort = "treeNumber") Pageable pageable,
-			HttpServletRequest request, org.springframework.ui.Model modelMap) {
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
+	public String list(@PageableDefault(sort = "treeNumber") Pageable pageable, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
 		List<Site> list = service.findList(params, pageable.getSort());
 		modelMap.addAttribute("list", list);
 		return "core/site/site_list";
@@ -64,8 +63,7 @@ public class SiteController {
 	@RequestMapping("create.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:create")
-	public String create(Integer id, HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String create(Integer id, HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site bean = null;
 		if (id != null) {
 			bean = service.get(id);
@@ -76,8 +74,7 @@ public class SiteController {
 		Org org = orgService.findRoot();
 		modelMap.addAttribute("org", org);
 
-		List<PublishPoint> publishPointList = publishPointService
-				.findByType(PublishPoint.TYPE_HTML);
+		List<PublishPoint> publishPointList = publishPointService.findByType(PublishPoint.TYPE_HTML);
 		modelMap.addAttribute("publishPointList", publishPointList);
 
 		// List<String> themeList = new ArrayList<String>();
@@ -92,22 +89,17 @@ public class SiteController {
 	@RequestMapping("edit.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:edit")
-	public String edit(Integer id, Integer position,
-			@PageableDefault(sort = "treeNumber") Pageable pageable,
+	public String edit(Integer id, Integer position, @PageableDefault(sort = "treeNumber") Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site bean = service.get(id);
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		RowSide<Site> side = service.findSide(params, bean, position,
-				pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<Site> side = service.findSide(params, bean, position, pageable.getSort());
 
-		List<PublishPoint> publishPointList = publishPointService
-				.findByType(PublishPoint.TYPE_HTML);
+		List<PublishPoint> publishPointList = publishPointService.findByType(PublishPoint.TYPE_HTML);
 		modelMap.addAttribute("publishPointList", publishPointList);
 
 		String templateBase = bean.getSiteBase("");
-		File templateBaseFile = new File(pathResolver.getPath(templateBase,
-				Constants.TEMPLATE_STORE_PATH));
+		File templateBaseFile = new File(pathResolver.getPath(templateBase, Constants.TEMPLATE_STORE_PATH));
 		File[] themeFiles = templateBaseFile.listFiles(new FileFilter() {
 			public boolean accept(File pathname) {
 				return pathname.isDirectory();
@@ -137,13 +129,12 @@ public class SiteController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:save")
 	public String save(Site bean, Integer parentId, Integer orgId,
-			Integer htmlPublishPointId, String redirect,
+			Integer htmlPublishPointId, Integer mobilePublishPointId, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		Integer userId = Context.getCurrentUserId();
-		service.save(bean, parentId, orgId, htmlPublishPointId, userId, site);
-		logService.operation("opr.site.add", bean.getName(), null,
-				bean.getId(), request);
+		service.save(bean, parentId, orgId, htmlPublishPointId,mobilePublishPointId, userId, site);
+		logService.operation("opr.site.add", bean.getName(), null, bean.getId(), request);
 		logger.info("save Site, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -160,11 +151,10 @@ public class SiteController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:update")
 	public String update(@ModelAttribute("bean") Site bean, Integer parentId,
-			Integer orgId, Integer htmlPublishPointId, Integer position,
+			Integer orgId, Integer htmlPublishPointId, Integer mobilePublishPointId, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
-		service.update(bean, parentId, orgId, htmlPublishPointId);
-		logService.operation("opr.site.edit", bean.getName(), null,
-				bean.getId(), request);
+		service.update(bean, parentId, orgId, htmlPublishPointId, mobilePublishPointId);
+		logService.operation("opr.site.edit", bean.getName(), null, bean.getId(), request);
 		logger.info("update Site, name={}.", bean.getName());
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		if (Constants.REDIRECT_LIST.equals(redirect)) {
@@ -179,12 +169,16 @@ public class SiteController {
 	@RequestMapping("delete.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:site:delete")
-	public String delete(Integer[] ids, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+		for (Integer id : ids) {
+			// ID==1的默认站点不能删除
+			if (id == 1) {
+				throw new CmsException("site.error.defaultSiteCannotBeDeleted");
+			}
+		}
 		Site[] beans = service.delete(ids);
 		for (Site bean : beans) {
-			logService.operation("opr.site.delete", bean.getName(), null,
-					bean.getId(), request);
+			logService.operation("opr.site.delete", bean.getName(), null, bean.getId(), request);
 			logger.info("delete Site, name={}.", bean.getName());
 		}
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
@@ -195,8 +189,7 @@ public class SiteController {
 	 * 检查编码是否存在
 	 */
 	@RequestMapping("check_number.do")
-	public void checkUsername(String number, String original,
-			HttpServletResponse response) {
+	public void checkNumber(String number, String original, HttpServletResponse response) {
 		if (StringUtils.isBlank(number)) {
 			Servlets.writeHtml(response, "false");
 			return;

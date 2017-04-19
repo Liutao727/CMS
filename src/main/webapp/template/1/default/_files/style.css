@@ -27,6 +27,13 @@ a.topa:hover{color:#333;}
 a.detaila{font-size:12px;color:#3b639f;}
 a.detaila:hover{text-decoration:underline;}
 
+.notifi{padding:1px 5px 2px 5px;border-radius:3px;border:1px solid #ccc;text-decoration:none;color:#252525;}
+.notifi-curr{background-color:#f39c12;color:#fff;border-color:#f39c12;}
+#notifi-container a.notifi-source{color:#006699;}
+#notifi-container a.notifi-target{}
+#notifi-container a.notifi-view{color:#3E62A6;}
+
+.favorite-icon-curr{color:#ffbb00;}
 
 .search-input{font-size:14px;padding:6px;height:18px;line-height:17px;border-left:2px solid #ccc;border-top:2px solid #ccc;border-bottom:2px solid #ccc;border-right:0;}
 .search-input:focus{border-left:2px solid #3297d8;border-top:2px solid #3297d8;border-bottom:2px solid #3297d8;}

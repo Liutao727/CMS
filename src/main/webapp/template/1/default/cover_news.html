@@ -111,16 +111,16 @@
 			[/@InfoList]
 		</ul>
 		<div class="box2 mt10">
-			<div class="head"><a class="b c-node fs14 a-hover" href="${ctx}/special_category.jspx">专题</a></div>
+			<div class="head"><a class="b c-node fs14 a-hover" href="${ctx}/special_category">专题</a></div>
 			[@SpecialList limit='1';list]
 			[#list list as special]
 			<div style="padding:10px;">
-				<a class="left" style="width:130px;" href="${ctx}/special/${special.id}.jspx" target="_blank" title="${special.title}">
+				<a class="left" style="width:130px;" href="${ctx}/special/${special.id}" target="_blank" title="${special.title}">
 					<img src="${special.smallImageUrl}" width="130" height="87"/>
 				</a>
 				<div class="right" style="width:158px;margin-left:10px;">						
-					<div><a class="fs14 b a-hover c-infoem" href="${ctx}/special/${special.id}.jspx" title="${special.title}" target="_blank">${substring(special.title,10,'...')}</a></div>
-					<div class="mt5 c-desc">${substring(special.description,32,'...')} <a class="c-node a-all" href="${ctx}/special/${special.id}.jspx" target="_blank">[详细]</a></div>
+					<div><a class="fs14 b a-hover c-infoem" href="${ctx}/special/${special.id}" title="${special.title}" target="_blank">${substring(special.title,10,'...')}</a></div>
+					<div class="mt5 c-desc">${substring(special.description,32,'...')} <a class="c-node a-all" href="${ctx}/special/${special.id}" target="_blank">[详细]</a></div>
 				</div>
 				<div class="clear"></div>
 			</div>

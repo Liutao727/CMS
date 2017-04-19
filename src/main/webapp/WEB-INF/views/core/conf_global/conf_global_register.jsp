@@ -3,109 +3,169 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <script type="text/javascript">
 $(function() {
 	$("#validForm").validate();
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="global.configuration"/> - <s:message code="edit"/></span>
+<div class="content-header">
+	<h1><s:message code="global.configuration"/> - <s:message code="edit"/></h1>
 </div>
-<div class="ls-bc-opt margin-top5">
-	 <div id="radio">
-		<jsp:include page="types.jsp"/>
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="register_update.do" method="post">
+			<div class="box-header with-border">
+				<div id="radio">
+					<jsp:include page="types.jsp"/>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.mode"/></label>
+	            <div class="col-sm-8">
+					      <label class="radio-inline"><f:radio name="mode" value="0" checked="${bean.register.mode}"/><s:message code="global.register.mode.0"/></label>
+    						<label class="radio-inline"><f:radio name="mode" value="1" checked="${bean.register.mode}" default="1"/><s:message code="global.register.mode.1"/></label>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.verifyMode"/></label>
+	            <div class="col-sm-8">
+					    	<label class="radio-inline"><f:radio name="verifyMode" value="0" checked="${bean.register.verifyMode}"/><s:message code="global.register.verifyMode.0"/></label>
+					    	<label class="radio-inline"><f:radio name="verifyMode" value="1" checked="${bean.register.verifyMode}" default="1"/><s:message code="global.register.verifyMode.1"/></label>
+					    	<label class="radio-inline"><f:radio name="verifyMode" value="2" checked="${bean.register.verifyMode}" default="1"/><s:message code="global.register.verifyMode.2"/></label>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.group"/></label>
+	            <div class="col-sm-8">
+					      <select class="form-control" name="groupId">
+					    		<f:options items="${groupList}" itemLabel="name" itemValue="id" selected="${bean.register.groupId}"/>
+					    	</select>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.org"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="orgId">
+					    		<c:forEach var="org" items="${orgList}">
+					    		<option value="${org.id}"<c:if test="${org.id==bean.register.orgId}"> selected="selected"</c:if>><c:forEach begin="1" end="${org.treeLevel}">--</c:forEach>${org.name}</option>
+					    		</c:forEach>
+					    	</select>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.minLength"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="minLength" value="${bean.register.minLength}" class="form-control required digits" maxlength="5"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.maxLength"/></label>
+	            <div class="col-sm-8">
+					    	<f:text name="maxLength" value="${bean.register.maxLength}" class="form-control required digits" maxlength="5"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.avatarLarge"/></label>
+	            <div class="col-sm-8">
+	            	<div class="input-group">
+					      	<f:text name="avatarLarge" value="${bean.register.avatarLarge}" class="form-control required digits" maxlength="5"/>
+					      	<span class="input-group-addon">px</span>
+					      </div>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.register.avatarSmall"/></label>
+	            <div class="col-sm-8">
+	            	<div class="input-group">
+					    		<f:text name="avatarSmall" value="${bean.register.avatarSmall}" class="form-control required digits" maxlength="5"/>
+					      	<span class="input-group-addon">px</span>
+					      </div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="global.register.validCharacter"/></label>
+	            <div class="col-sm-10">
+					    	<f:text name="validCharacter" value="${bean.register.validCharacter}" class="form-control required" maxlength="2000"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="global.register.userAgreement"/></label>
+	            <div class="col-sm-10">
+					    	<f:textarea name="userAgreement" value="${bean.register.userAgreement}" class="form-control" maxlength="2000" rows="5"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="global.register.verifyEmail"/></label>
+	            <div class="col-sm-10">
+					    	<div><s:message code="global.register.email.subject"/>:</div>
+					    	<div><f:text name="verifyEmailSubject" value="${bean.register.verifyEmailSubject}" class="form-control required" maxlength="75"/></div>
+					    	<div><s:message code="global.register.email.text"/>:</div>
+					    	<div><f:textarea name="verifyEmailText" value="${bean.register.verifyEmailText}" class="form-control required" maxlength="2000" rows="5"/></div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="global.register.passwordEmail"/></label>
+	            <div class="col-sm-10">
+					    	<div><s:message code="global.register.email.subject"/>:</div>
+					    	<div><f:text name="passwordEmailSubject" value="${bean.register.passwordEmailSubject}" class="form-control required" maxlength="75"/></div>
+					    	<div><s:message code="global.register.email.text"/>:</div>
+					    	<div><f:textarea name="passwordEmailText" value="${bean.register.passwordEmailText}" class="form-control required" maxlength="2000" rows="5"/></div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<div class="box-footer">
+	      <button class="btn btn-primary" type="submit"><s:message code="save"/></button>
+			</div>
+		</form>
 	</div>
 </div>
-<form id="validForm" action="register_update.do" method="post">
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.mode"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<label><f:radio name="mode" value="0" checked="${bean.register.mode}"/><s:message code="global.register.mode.0"/></label> &nbsp;
-    	<label><f:radio name="mode" value="1" checked="${bean.register.mode}" default="1"/><s:message code="global.register.mode.1"/></label>
-    </td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.verifyMode"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<label><f:radio name="verifyMode" value="0" checked="${bean.register.verifyMode}"/><s:message code="global.register.verifyMode.0"/></label> &nbsp;
-    	<label><f:radio name="verifyMode" value="1" checked="${bean.register.verifyMode}" default="1"/><s:message code="global.register.verifyMode.1"/></label> &nbsp;
-    	<label><f:radio name="verifyMode" value="2" checked="${bean.register.verifyMode}" default="1"/><s:message code="global.register.verifyMode.2"/></label>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.group"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="groupId">
-    		<f:options items="${groupList}" itemLabel="name" itemValue="id" selected="${bean.register.groupId}"/>
-    	</select>
-    </td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.org"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="orgId">
-    		<c:forEach var="org" items="${orgList}">
-    		<option value="${org.id}"<c:if test="${org.id==bean.register.orgId}"> selected="selected"</c:if>><c:forEach begin="1" end="${org.treeLevel}">--</c:forEach>${org.name}</option>
-    		</c:forEach>
-    	</select>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.minLength"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="minLength" value="${bean.register.minLength}" class="required digits" maxlength="5" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.maxLength"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="maxLength" value="${bean.register.maxLength}" class="required digits" maxlength="5" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.avatarLarge"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="avatarLarge" value="${bean.register.avatarLarge}" class="required digits" maxlength="5" style="width:180px;"/>px</td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.avatarSmall"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="avatarSmall" value="${bean.register.avatarSmall}" class="required digits" maxlength="5" style="width:180px;"/>px</td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.validCharacter"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:text name="validCharacter" value="${bean.register.validCharacter}" class="required" maxlength="2000" style="width:500px;"/></td>
-  </tr>
-  <%-- 
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="global.register.reservedWords"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:textarea name="reservedWords" value="${bean.register.reservedWords}" maxlength="2000" style="width:500px;height:80px;"/></td>
-  </tr>
-   --%>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="global.register.userAgreement"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:textarea name="userAgreement" value="${bean.register.userAgreement}" maxlength="2000" style="width:500px;height:80px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.verifyEmail"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-    	<div><s:message code="global.register.email.subject"/>:</div>
-    	<div><f:text name="verifyEmailSubject" value="${bean.register.verifyEmailSubject}" class="required" maxlength="75" style="width:500px;"/></div>
-    	<div><s:message code="global.register.email.text"/>:</div>
-    	<div><f:textarea name="verifyEmailText" value="${bean.register.verifyEmailText}" class="required" maxlength="2000" style="width:500px;height:80px;"/></div>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.register.passwordEmail"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-    	<div><s:message code="global.register.email.subject"/>:</div>
-    	<div><f:text name="passwordEmailSubject" value="${bean.register.passwordEmailSubject}" class="required" maxlength="75" style="width:500px;"/></div>
-    	<div><s:message code="global.register.email.text"/>:</div>
-    	<div><f:textarea name="passwordEmailText" value="${bean.register.passwordEmailText}" class="required" maxlength="2000" style="width:500px;height:80px;"/></div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-    </td>
-  </tr>
-</table>
-</form>
 </body>
 </html>

@@ -26,12 +26,12 @@ a.sa{color:#00c;text-decoration:underline;font-size:16px;font-family:"Microsoft 
 <div style="background-color:#fafafa;border-bottom:1px solid #ebebeb;">
 	<div class="w center c999" style="height:28px;line-height:28px;">
 		<div class="left">
-			<a class="topa" href="${ctx}/sitemap.jspx" target="_blank">网站地图</a>
-			<a class="topa" href="${ctx}/rss.jspx" target="_blank">RSS订阅</a>
-			<a class="topa" href="${ctx}/tags.jspx" target="_blank">TAGS标签</a>
+			<a class="topa" href="${ctx}/sitemap" target="_blank">网站地图</a>
+			<a class="topa" href="${ctx}/rss" target="_blank">RSS订阅</a>
+			<a class="topa" href="${ctx}/tags" target="_blank">TAGS标签</a>
 		</div>
 		<div class="right">
-			<script type="text/javascript" src="${ctx}/login_include.jspx?d=${.now?time}"></script>
+			<script type="text/javascript" src="${ctx}/login_include?d=${.now?time}"></script>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -42,7 +42,7 @@ a.sa{color:#00c;text-decoration:underline;font-size:16px;font-family:"Microsoft 
 		<a class="block" style="width:228px;height:90px;background:url(_files/img/logo.png) no-repeat;" href="${ctx}/"></a>
 	</div>
 	<div class="left">
-		<form action="${ctx}/search.jspx" method="get" class="s-form" style="margin:20px 0 0 10px;">
+		<form action="${ctx}/search" method="get" class="s-form" style="margin:20px 0 0 10px;">
 			<div class="oh">
 				<input type="text" id="q" name="[#if Param.part! =='title' || Param.part! =='keyword' || Param.part! =='description' || Param.part! =='text']${Param.part}[#else]q[/#if]" value="[#if Param.part! =='title' || Param.part! =='keyword' || Param.part! =='description' || Param.part! =='text']${Param[Param.part]}[#else]${Param.q}[/#if]" class="left search-input" style="width:600px;" autocomplete="off"/>
 				<button type="submit" class="left" style="width:86px;height:34px;background:url(_files/img/search.png);border:0;"></button>

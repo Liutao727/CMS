@@ -31,13 +31,13 @@ import com.jspxcms.plug.service.ResumeService;
 public class ResumeController {
 	public static final String TEMPLATE = "plug_resume.html";
 
-	@RequestMapping(value = "/resume.jspx")
+	@RequestMapping(value = "/resume")
 	public String form(Integer page, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return form(null, page, request, modelMap);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/resume.jspx")
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/resume")
 	public String form(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
@@ -48,13 +48,13 @@ public class ResumeController {
 		return site.getTemplate(TEMPLATE);
 	}
 
-	@RequestMapping(value = "/resume.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/resume", method = RequestMethod.POST)
 	public String submit(@Valid Resume bean, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return submit(null, bean, request, response, modelMap);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/resume.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/resume", method = RequestMethod.POST)
 	public String submit(@PathVariable String siteNumber, @Valid Resume bean,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {

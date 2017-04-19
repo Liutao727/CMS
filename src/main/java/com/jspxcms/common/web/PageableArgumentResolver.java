@@ -37,34 +37,54 @@ import org.springframework.web.util.WebUtils;
  * 
  */
 public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
-	private static final int DEFAULT_PAGE_SIZE = 20;
-	private static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0,
-			DEFAULT_PAGE_SIZE);
+	public static final int DEFAULT_PAGE_SIZE = 20;
+	public static final int DEFAULT_MAX_PAGE_SIZE = 5000;
+	private static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0, DEFAULT_PAGE_SIZE);
 	private static final String DEFAULT_PREFIX = "page";
 	private static final String DEFAULT_SEPARATOR = "_";
 	private static final String DEFAULT_COOKIE_NAME = "page_size";
 
 	private Pageable fallbackPagable = DEFAULT_PAGE_REQUEST;
+	private int maxPageSize = DEFAULT_MAX_PAGE_SIZE;
 	private String prefix = DEFAULT_PREFIX;
 	private String separator = DEFAULT_SEPARATOR;
 	private String cookieName = DEFAULT_COOKIE_NAME;
 
 	/**
-	 * Setter to configure a fallback instance of {@link Pageable} that is being
-	 * used to back missing parameters. Defaults to
-	 * {@value #DEFAULT_PAGE_REQUEST}.
+	 * Configures the maximum page size to be accepted. This allows to put an upper boundary of the page size to prevent
+	 * potential attacks trying to issue an {@link OutOfMemoryError}. Defaults to {@link #DEFAULT_MAX_PAGE_SIZE}.
+	 * 
+	 * @param maxPageSize
+	 *            the maxPageSize to set
+	 */
+	public void setMaxPageSize(int maxPageSize) {
+		this.maxPageSize = maxPageSize;
+	}
+
+	/**
+	 * Retrieves the maximum page size to be accepted. This allows to put an upper boundary of the page size to prevent
+	 * potential attacks trying to issue an {@link OutOfMemoryError}. Defaults to {@link #DEFAULT_MAX_PAGE_SIZE}.
+	 * 
+	 * @return the maximum page size allowed.
+	 */
+	public int getMaxPageSize() {
+		return this.maxPageSize;
+	}
+
+	/**
+	 * Setter to configure a fallback instance of {@link Pageable} that is being used to back missing parameters.
+	 * Defaults to {@value #DEFAULT_PAGE_REQUEST}.
 	 * 
 	 * @param fallbackPagable
 	 *            the fallbackPagable to set
 	 */
 	public void setFallbackPagable(Pageable fallbackPagable) {
-		this.fallbackPagable = null == fallbackPagable ? DEFAULT_PAGE_REQUEST
-				: fallbackPagable;
+		this.fallbackPagable = null == fallbackPagable ? DEFAULT_PAGE_REQUEST : fallbackPagable;
 	}
 
 	/**
-	 * Setter to configure the prefix of request parameters to be used to
-	 * retrieve paging information. Defaults to {@link #DEFAULT_PREFIX}.
+	 * Setter to configure the prefix of request parameters to be used to retrieve paging information. Defaults to
+	 * {@link #DEFAULT_PREFIX}.
 	 * 
 	 * @param prefix
 	 *            the prefix to set
@@ -74,8 +94,8 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * Setter to configure the separator between prefix and actual property
-	 * value. Defaults to {@link #DEFAULT_SEPARATOR}.
+	 * Setter to configure the separator between prefix and actual property value. Defaults to
+	 * {@link #DEFAULT_SEPARATOR}.
 	 * 
 	 * @param separator
 	 *            the separator to set
@@ -92,21 +112,17 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 		return parameter.getParameterType().equals(Pageable.class);
 	}
 
-	public Object resolveArgument(MethodParameter parameter,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
-			WebDataBinderFactory binderFactory) throws Exception {
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
 		assertPageableUniqueness(parameter);
 
-		HttpServletRequest servletRequest = (HttpServletRequest) webRequest
-				.getNativeRequest();
+		HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
 
-		Pageable request = getDefaultFromCookieOrAnnotationOrFallback(
-				parameter, servletRequest);
+		Pageable request = getDefaultFromCookieOrAnnotationOrFallback(parameter, servletRequest);
 
 		String prefix = getPrefix(parameter);
-		Map<String, Object> map = WebUtils.getParametersStartingWith(
-				servletRequest, prefix + separator);
+		Map<String, Object> map = WebUtils.getParametersStartingWith(servletRequest, prefix + separator);
 		String pageStr = servletRequest.getParameter(prefix);
 		if (StringUtils.isNotBlank(pageStr)) {
 			int page = NumberUtils.toInt(pageStr, 0);
@@ -123,14 +139,15 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 		DataBinder binder = new ServletRequestDataBinder(request);
 
 		binder.initDirectFieldAccess();
-		binder.registerCustomEditor(Sort.class, new SortPropertyEditor(
-				"sort_dir", propertyValues));
+		binder.registerCustomEditor(Sort.class, new SortPropertyEditor("sort_dir", propertyValues));
 		binder.bind(propertyValues);
 
 		int pageNumber = request.getPageNumber();
 		int pageSize = request.getPageSize();
 		if (pageSize <= 0) {
 			pageSize = DEFAULT_PAGE_SIZE;
+		} else if (pageSize > maxPageSize) {
+			pageSize = maxPageSize;
 		}
 		if (pageNumber > 0) {
 			pageNumber = pageNumber - 1;
@@ -139,22 +156,21 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 		return request;
 	}
 
-	private Pageable getDefaultFromCookieOrAnnotationOrFallback(
-			MethodParameter methodParameter, HttpServletRequest servletRequest) {
+	private Pageable getDefaultFromCookieOrAnnotationOrFallback(MethodParameter methodParameter,
+			HttpServletRequest servletRequest) {
 		Cookie cookie = WebUtils.getCookie(servletRequest, cookieName);
 		Integer pageSize = null;
 		if (cookie != null) {
 			String value = cookie.getValue();
 			int ps = NumberUtils.toInt(value, 0);
 			if (ps > 0) {
-				pageSize = ps;
+				pageSize = ps > maxPageSize ? maxPageSize : ps;
 			}
 		}
 		// search for PageableDefault annotation
 		for (Annotation annotation : methodParameter.getParameterAnnotations()) {
 			if (annotation instanceof PageableDefault) {
-				return getDefaultPageRequestFrom((PageableDefault) annotation,
-						pageSize);
+				return getDefaultPageRequestFrom((PageableDefault) annotation, pageSize);
 			}
 		}
 
@@ -164,31 +180,27 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 		if (pageSize == null) {
 			pageSize = fallbackPagable.getPageSize();
 		}
-		return new PageRequest(fallbackPagable.getPageNumber(), pageSize,
-				fallbackPagable.getSort());
+		return new PageRequest(fallbackPagable.getPageNumber(), pageSize, fallbackPagable.getSort());
 	}
 
-	private static Pageable getDefaultPageRequestFrom(PageableDefault defaults,
-			Integer pageSize) {
+	private static Pageable getDefaultPageRequestFrom(PageableDefault defaults, Integer pageSize) {
 
 		// +1 is because we substract 1 later
 		int defaultPageNumber = defaults.page() + 1;
 		if (pageSize == null) {
-			pageSize = defaults.value();
+			pageSize = defaults.size();
 		}
 
 		if (defaults.sort().length == 0) {
 			return new PageRequest(defaultPageNumber, pageSize);
 		}
 
-		return new PageRequest(defaultPageNumber, pageSize,
-				defaults.direction(), defaults.sort());
+		return new PageRequest(defaultPageNumber, pageSize, defaults.direction(), defaults.sort());
 	}
 
 	/**
-	 * Resolves the prefix to use to bind properties from. Will prepend a
-	 * possible {@link Qualifier} if available or return the configured prefix
-	 * otherwise.
+	 * Resolves the prefix to use to bind properties from. Will prepend a possible {@link Qualifier} if available or
+	 * return the configured prefix otherwise.
 	 * 
 	 * @param parameter
 	 * @return
@@ -197,8 +209,7 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 
 		for (Annotation annotation : parameter.getParameterAnnotations()) {
 			if (annotation instanceof Qualifier) {
-				return new StringBuilder(((Qualifier) annotation).value())
-						.append("_").append(prefix).toString();
+				return new StringBuilder(((Qualifier) annotation).value()).append("_").append(prefix).toString();
 			}
 		}
 
@@ -206,8 +217,7 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * Asserts uniqueness of all {@link Pageable} parameters of the method of
-	 * the given {@link MethodParameter}.
+	 * Asserts uniqueness of all {@link Pageable} parameters of the method of the given {@link MethodParameter}.
 	 * 
 	 * @param parameter
 	 */
@@ -222,8 +232,7 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * Returns whether the given {@link Method} has more than one
-	 * {@link Pageable} parameter.
+	 * Returns whether the given {@link Method} has more than one {@link Pageable} parameter.
 	 * 
 	 * @param method
 	 * @return
@@ -247,15 +256,13 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * Asserts that every {@link Pageable} parameter of the given parameters
-	 * carries an {@link Qualifier} annotation to distinguish them from each
-	 * other.
+	 * Asserts that every {@link Pageable} parameter of the given parameters carries an {@link Qualifier} annotation to
+	 * distinguish them from each other.
 	 * 
 	 * @param parameterTypes
 	 * @param annotations
 	 */
-	private void assertQualifiersFor(Class<?>[] parameterTypes,
-			Annotation[][] annotations) {
+	private void assertQualifiersFor(Class<?>[] parameterTypes, Annotation[][] annotations) {
 
 		Set<String> values = new HashSet<String>();
 
@@ -271,8 +278,7 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 				}
 
 				if (values.contains(qualifier.value())) {
-					throw new IllegalStateException(
-							"Values of the user Qualifiers must be unique!");
+					throw new IllegalStateException("Values of the user Qualifiers must be unique!");
 				}
 
 				values.add(qualifier.value());
@@ -281,9 +287,8 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * Returns a {@link Qualifier} annotation from the given array of
-	 * {@link Annotation}s. Returns {@literal null} if the array does not
-	 * contain a {@link Qualifier} annotation.
+	 * Returns a {@link Qualifier} annotation from the given array of {@link Annotation}s. Returns {@literal null} if
+	 * the array does not contain a {@link Qualifier} annotation.
 	 * 
 	 * @param annotations
 	 * @return
@@ -300,9 +305,8 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 	}
 
 	/**
-	 * {@link java.beans.PropertyEditor} to create {@link Sort} instances from
-	 * textual representations. The implementation interprets the string as a
-	 * comma separated list where the first entry is the sort direction (
+	 * {@link java.beans.PropertyEditor} to create {@link Sort} instances from textual representations. The
+	 * implementation interprets the string as a comma separated list where the first entry is the sort direction (
 	 * {@code asc}, {@code desc}) followed by the properties to sort by.
 	 * 
 	 * @author Oliver Gierke
@@ -333,8 +337,7 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
 		public void setAsText(String text) {
 
 			PropertyValue rawOrder = values.getPropertyValue(orderProperty);
-			Direction order = null == rawOrder ? Direction.ASC : Direction
-					.fromString(rawOrder.getValue().toString());
+			Direction order = null == rawOrder ? Direction.ASC : Direction.fromString(rawOrder.getValue().toString());
 
 			setValue(new Sort(order, text));
 		}

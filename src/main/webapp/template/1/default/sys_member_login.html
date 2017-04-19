@@ -54,7 +54,7 @@ $(function() {
 			</div>
 		[/#if]
 		</div>
-		<form id="validForm" action="${ctx}/login.jspx" method="post">
+		<form id="validForm" action="${ctx}/login" method="post">
 			<input type="hidden" name="fallbackUrl" value="${fallbackUrl!Param.fallbackUrl}"/>
 			<div class="oh">
 				<label for="username" class="label">用户名:</label>
@@ -68,8 +68,8 @@ $(function() {
 			<div class="line">
 				<label for="captcha" class="label">验证码:</label>
 				<div class="input">
-					<input type="text" id="captcha" name="captcha" class="text" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha.servlet","type":"post"}' data-msg-remote="验证码错误" style="width:94px;" autocomplete="off"/>
-					<img src="${ctx}/captcha.servlet" onclick="this.src='${ctx}/captcha.servlet?d='+new Date()*1;$('#captcha').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/><label for="captcha" generated="true" class="error"></label>
+					<input type="text" id="captcha" name="captcha" class="text" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha","type":"post"}' data-msg-remote="验证码错误" style="width:94px;" autocomplete="off"/>
+					<img src="${ctx}/captcha" onclick="this.src='${ctx}/captcha?d='+new Date()*1;$('#captcha').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/><label for="captcha" generated="true" class="error"></label>
 				</div>
 			</div>
 			[/#if]
@@ -79,12 +79,12 @@ $(function() {
 			</div>
 			<div class="line">
 				<label class="label">&nbsp;</label>
-				<div class="input"><input type="submit" value="登录" style="height:25px;width:60px;margin-right:20px;"/><a href="${ctx}/forgot_password.jspx" class="a-hover" style="color:#0a8cd2;">忘记密码</a></div>
+				<div class="input"><input type="submit" value="登录" style="height:25px;width:60px;margin-right:20px;"/><a href="${ctx}/forgot_password" class="a-hover" style="color:#0a8cd2;">忘记密码</a></div>
 			</div>
 		</form>
 	</div>
 	<div class="left fs14" style="width:310px;padding:60px 50px 0 50px;">
-		<div>没有账号？<a href="${ctx}/register.jspx" class="a-hover" style="color:#0a8cd2;">注册新账号</a></div>
+		<div>没有账号？<a href="${ctx}/register" class="a-hover" style="color:#0a8cd2;">注册新账号</a></div>
 		[#include 'inc_oauth.html'/]
 	</div>
 </div>

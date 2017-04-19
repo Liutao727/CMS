@@ -17,7 +17,24 @@ import com.jspxcms.core.domain.User;
  */
 public abstract class Context {
 	/**
-	 * 站点线程变量（页数）
+	 * 是否手机访问线程变量
+	 */
+	private static ThreadLocal<Boolean> isMobileHolder = new ThreadLocal<Boolean>();
+
+	public static void setMobile(boolean isMobile) {
+		isMobileHolder.set(isMobile);
+	}
+
+	public static boolean isMobile() {
+		return isMobileHolder.get()!=null && isMobileHolder.get();
+	}
+
+	public static void resetMobile() {
+		isMobileHolder.remove();
+	}
+	
+	/**
+	 * 站点线程变量
 	 */
 	private static ThreadLocal<Site> siteHolder = new ThreadLocal<Site>();
 

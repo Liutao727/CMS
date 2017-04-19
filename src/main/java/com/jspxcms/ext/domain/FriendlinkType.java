@@ -43,7 +43,7 @@ public class FriendlinkType implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_friendlinktype_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_friendlinktype", pkColumnValue = "cms_friendlinktype", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_friendlinktype", pkColumnValue = "cms_friendlinktype", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_friendlinktype")
 	public Integer getId() {
 		return this.id;

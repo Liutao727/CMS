@@ -23,9 +23,8 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 /**
  * Java Persistence Query Language 查询
  * 
- * 由于
- * {@link org.springframework.data.jpa.repository.query.QueryUtils.applySorting}
- * ，查询语句中的表名需要加别名，比如 select * from user t，而不能select * from user。
+ * 由于 {@link org.springframework.data.jpa.repository.query.QueryUtils.applySorting} ，查询语句中的表名需要加别名，比如 select * from user
+ * t，而不能select * from user。
  * 
  * @author liufang
  * 
@@ -220,27 +219,39 @@ public class JpqlBuilder {
 
 	@SuppressWarnings("rawtypes")
 	public List list(EntityManager em, Limitable limitable) {
-		Query query = createQuery(em, limitable.getSort());
-		Integer firstResult = limitable.getFirstResult();
-		if (firstResult != null && firstResult > 0) {
-			query.setFirstResult(firstResult);
+		Sort sort = null;
+		if (limitable != null) {
+			sort = limitable.getSort();
 		}
-		Integer maxResults = limitable.getMaxResults();
-		if (maxResults != null && maxResults > 0) {
-			query.setMaxResults(maxResults);
+		Query query = createQuery(em, sort);
+		if (limitable != null) {
+			Integer firstResult = limitable.getFirstResult();
+			if (firstResult != null && firstResult > 0) {
+				query.setFirstResult(firstResult);
+			}
+			Integer maxResults = limitable.getMaxResults();
+			if (maxResults != null && maxResults > 0) {
+				query.setMaxResults(maxResults);
+			}
 		}
 		return query.getResultList();
 	}
 
 	public <T> List<T> list(EntityManager em, Class<T> resultClass, Limitable limitable) {
-		TypedQuery<T> query = createQuery(em, resultClass, limitable.getSort());
-		Integer firstResult = limitable.getFirstResult();
-		if (firstResult != null && firstResult > 0) {
-			query.setFirstResult(firstResult);
+		Sort sort = null;
+		if (limitable != null) {
+			sort = limitable.getSort();
 		}
-		Integer maxResults = limitable.getMaxResults();
-		if (maxResults != null && maxResults > 0) {
-			query.setMaxResults(maxResults);
+		TypedQuery<T> query = createQuery(em, resultClass, sort);
+		if (limitable != null) {
+			Integer firstResult = limitable.getFirstResult();
+			if (firstResult != null && firstResult > 0) {
+				query.setFirstResult(firstResult);
+			}
+			Integer maxResults = limitable.getMaxResults();
+			if (maxResults != null && maxResults > 0) {
+				query.setMaxResults(maxResults);
+			}
 		}
 		return query.getResultList();
 	}

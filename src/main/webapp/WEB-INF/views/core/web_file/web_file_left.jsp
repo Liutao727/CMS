@@ -8,19 +8,17 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<style type="text/css">
-html{height:100%;}
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<style>
+body{overflow-x:auto;}
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
 </style>
 
-<script type="text/javascript">
+<script>
 function dblClickExpand(treeId, treeNode) {
 	return treeNode.level > 0;
 }
@@ -151,10 +149,8 @@ $(function(){
 	</c:choose>
 });
 </script>
-</head>
-<body class="left-body">
-<div style="padding:7px 0 3px 0;text-align:center;"><s:message code="webFile${type}.management"/></div>
-<hr/>
-<ul id="tree" class="ztree" style="padding-top:5px"></ul>
+<body class="skin-blue content-body">
+<div style="padding:16px 0 2px 12px;font-size:16px;"><s:message code="webFile${type}.management"/>夹</div>
+<ul id="tree" class="ztree" style="margin:7px 0 0 7px;"></ul>
 </body>
 </html>

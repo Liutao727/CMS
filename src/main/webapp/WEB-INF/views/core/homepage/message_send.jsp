@@ -13,7 +13,7 @@ $(function(){
 	$("#sendMessageDialog").dialog({
     autoOpen: false,
     width: 500,
-    height: 380,
+    height: 450,
     modal: true,
     position: { my: "center top", at: "center top", of: window },
     buttons: {

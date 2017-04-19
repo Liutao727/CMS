@@ -42,7 +42,7 @@ public interface SiteDao extends Repository<Site, Integer>, SiteDaoPlus {
 	public long countByNumber(String number);
 
 	@QueryHints(@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true"))
-	@Query("from Site bean where bean.domain = ?1 and bean.identifyDomain = 1 order by bean.treeNumber")
+	@Query("from Site bean where (bean.domain = ?1 or bean.mobileDomain = ?1) and bean.identifyDomain = 1 order by bean.treeNumber")
 	public List<Site> findByDomain(String domain);
 
 	@QueryHints(@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true"))

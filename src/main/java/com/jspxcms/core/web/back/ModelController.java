@@ -47,23 +47,20 @@ import com.jspxcms.core.support.Context;
 @Controller
 @RequestMapping("/core/model")
 public class ModelController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(ModelController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ModelController.class);
 
 	@RequiresPermissions("core:model:list")
 	@RequestMapping("list.do")
-	public String list(String queryType, @PageableDefault(sort = { "type",
-			"seq", "id" }, direction = Direction.ASC) Pageable pageable,
+	public String list(String queryType,
+			@PageableDefault(sort = { "type", "seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(siteId);
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		List<Model> list = service.findList(siteId, queryType, params,
-				pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		List<Model> list = service.findList(siteId, queryType, params, pageable.getSort());
 		modelMap.addAttribute("list", list);
 		modelMap.addAttribute("types", types);
 		modelMap.addAttribute("queryType", queryType);
@@ -72,10 +69,9 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:create")
 	@RequestMapping("create.do")
-	public String create(Integer id, String queryType,
-			org.springframework.ui.Model modelMap) {
+	public String create(Integer id, String queryType, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(site.getId());
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
@@ -93,23 +89,18 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:edit")
 	@RequestMapping("edit.do")
-	public String edit(
-			Integer id,
-			String queryType,
-			Integer position,
+	public String edit(Integer id, String queryType, Integer position,
 			@PageableDefault(sort = { "type", "seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
 		Model bean = service.get(id);
 		Backends.validateDataInSite(bean, siteId);
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(siteId);
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
-		Map<String, String[]> params = Servlets.getParamValuesMap(request,
-				Constants.SEARCH_PREFIX);
-		RowSide<Model> side = service.findSide(siteId, queryType, params, bean,
-				position, pageable.getSort());
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<Model> side = service.findSide(siteId, queryType, params, bean, position, pageable.getSort());
 		modelMap.addAttribute("bean", bean);
 		modelMap.addAttribute("types", types);
 		modelMap.addAttribute("queryType", queryType);
@@ -122,21 +113,20 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:save")
 	@RequestMapping("save.do")
-	public String save(Integer oid, Model bean, String queryType,
-			String redirect, HttpServletRequest request, RedirectAttributes ra) {
-		List<String> types = modelTypeHolder.getTypes();
+	public String save(Integer oid, Model bean, String queryType, String redirect, HttpServletRequest request,
+			RedirectAttributes ra) {
+		Integer siteId = Context.getCurrentSiteId();
+		List<String> types = modelTypeHolder.getTypesBySiteId(siteId);
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
-		Integer siteId = Context.getCurrentSiteId();
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
 		if (oid == null) {
 			service.save(bean, siteId, customs);
 		} else {
 			service.copy(oid, bean, siteId, customs);
 		}
-		logService.operation("opr.model.add", bean.getName(), null,
-				bean.getId(), request);
+		logService.operation("opr.model.add", bean.getName(), null, bean.getId(), request);
 		logger.info("save Model, name={}.", bean.getName());
 		ra.addAttribute("queryType", queryType);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -152,19 +142,17 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") Model bean, String queryType,
-			Integer position, String redirect, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String update(@ModelAttribute("bean") Model bean, String queryType, Integer position, String redirect,
+			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		Backends.validateDataInSite(bean, site.getId());
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(site.getId());
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
 		service.update(bean, customs);
-		logService.operation("opr.model.edit", bean.getName(), null,
-				bean.getId(), request);
+		logService.operation("opr.model.edit", bean.getName(), null, bean.getId(), request);
 		logger.info("update Model, name={}.", bean.getName());
 		ra.addAttribute("queryType", queryType);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -179,19 +167,18 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:batch_update")
 	@RequestMapping("batch_update.do")
-	public String batchUpdate(Integer[] id, String[] name, String[] number,
-			String queryType, HttpServletRequest request, RedirectAttributes ra) {
+	public String batchUpdate(Integer[] id, String[] name, String[] number, String queryType,
+			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(id, site.getId());
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(site.getId());
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
 		if (ArrayUtils.isNotEmpty(id)) {
 			Model[] beans = service.batchUpdate(id, name, number);
 			for (Model bean : beans) {
-				logService.operation("opr.model.batchEdit", bean.getName(),
-						null, bean.getId(), request);
+				logService.operation("opr.model.batchEdit", bean.getName(), null, bean.getId(), request);
 				logger.info("update Model, name={}.", bean.getName());
 			}
 		}
@@ -202,18 +189,16 @@ public class ModelController {
 
 	@RequiresPermissions("core:model:delete")
 	@RequestMapping("delete.do")
-	public String delete(Integer[] ids, String queryType,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String delete(Integer[] ids, String queryType, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
-		List<String> types = modelTypeHolder.getTypes();
+		List<String> types = modelTypeHolder.getTypesBySiteId(site.getId());
 		if (StringUtils.isBlank(queryType)) {
 			queryType = types.get(0);
 		}
 		Model[] beans = service.delete(ids);
 		for (Model bean : beans) {
-			logService.operation("opr.model.delete", bean.getName(), null,
-					bean.getId(), request);
+			logService.operation("opr.model.delete", bean.getName(), null, bean.getId(), request);
 			logger.info("delete Model, name={}.", bean.getName());
 		}
 		ra.addAttribute("queryType", queryType);

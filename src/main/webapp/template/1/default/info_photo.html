@@ -138,12 +138,13 @@ $(function(){
 				<span>${info.publishDate?string('yyyy-MM-dd HH:mm')}</span>
 				<span class="info-detail"><span id="info_views"></span>次阅读</span>
 				<script type="text/javascript">
-					$("#info_views").load("${dy}/info_views/${info.id}.jspx?d="+new Date()*1);
+					$("#info_views").load("${dy}/info_views/${info.id}?d="+new Date()*1);
 				</script>
 				<span class="info-detail"><span id="info_comments"></span>条评论</span>			
 				<script type="text/javascript">
-					 $("#info_comments").load("${dy}/info_comments/${info.id}.jspx?d="+new Date()*1);
+					 $("#info_comments").load("${dy}/info_comments/${info.id}?d="+new Date()*1);
 				</script>
+				<script src="${dy}/app?template=info_favorites&id=${info.id}&d="+new Date()*1></script>
 			</div>
 			<div class="right">			
 				<div class="bdsharebuttonbox"><a href="#" class="bds_more a-none c-666" data-cmd="more">分享到：</a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
@@ -218,7 +219,7 @@ $(function(){
 		</div>
 		<div id="commentDiv" class="mt20"></div>		
 		<script type="text/javascript">
-			$("#commentDiv").load("${dy}/comment_list.jspx?fid=${info.id}&url=${url?url}&d="+new Date()*1);
+			$("#commentDiv").load("${dy}/comment_list?fid=${info.id}&url=${url?url}&d="+new Date()*1);
 		</script>
 	</div>
 </div>

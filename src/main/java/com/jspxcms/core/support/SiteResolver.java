@@ -1,5 +1,6 @@
 package com.jspxcms.core.support;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jspxcms.core.domain.Site;
@@ -28,6 +29,12 @@ public class SiteResolver {
 						+ siteNumber);
 			}
 			Context.setCurrentSite(site);
+			// 手机域名存在，并且是手机客户端访问
+			if(StringUtils.isNotBlank(site.getMobileDomain()) && Context.isMobile()) {
+				Context.setMobile(true);
+			} else {
+				Context.setMobile(false);
+			}
 		} else {
 			site = Context.getCurrentSite();
 		}

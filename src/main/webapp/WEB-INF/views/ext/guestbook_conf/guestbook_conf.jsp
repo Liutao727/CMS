@@ -6,12 +6,10 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <script type="text/javascript">
 $(function() {
 	$("#validForm").validate();
@@ -22,53 +20,72 @@ function confirmDelete() {
 }
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="guestbookConf.setting"/> - <s:message code="edit"/></span>
+<div class="content-header">
+	<h1><s:message code="guestbookConf.setting"/> - <s:message code="edit"/></h1>
 </div>
-<form id="validForm" action="update.do" method="post">
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="guestbookConf.mode"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="mode" class="required">
-    		<f:option value="0" selected="${bean.mode}"><s:message code="guestbookConf.mode.0"/></f:option>
-    		<f:option value="1" selected="${bean.mode}"><s:message code="guestbookConf.mode.1"/></f:option>
-    		<f:option value="2" selected="${bean.mode}"><s:message code="guestbookConf.mode.2"/></f:option>
-    	</select>
-		</td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="guestbookConf.auditMode"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="auditMode" class="required">
-    		<f:option value="0" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.0"/></f:option>
-    		<f:option value="1" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.1"/></f:option>
-    		<f:option value="2" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.2"/></f:option>
-    		<f:option value="3" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.3"/></f:option>
-    	</select>
-   	</td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="guestbookConf.captchaMode"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="captchaMode" class="required">
-    		<f:option value="0" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.0"/></f:option>
-    		<f:option value="1" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.1"/></f:option>
-    		<f:option value="2" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.2"/></f:option>
-    		<f:option value="3" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.3"/></f:option>
-    	</select>		
-		</td>
-		<td class="in-lab" width="15%"><em class="required">*</em><s:message code="guestbookConf.maxLength"/>:</td>
-	  <td class="in-ctt" width="35%">
-	  	<f:text name="maxLength" value="${bean.maxLength}" class="{required:true,digits:true,min:1,max:2147483647}" style="width:180px;"/>
-		</td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-    </td>
-  </tr>
-</table>
-</form>
+
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="update.do" method="post">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="guestbookConf.mode"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="mode" class="required">
+					    		<f:option value="0" selected="${bean.mode}"><s:message code="guestbookConf.mode.0"/></f:option>
+					    		<f:option value="1" selected="${bean.mode}"><s:message code="guestbookConf.mode.1"/></f:option>
+					    		<f:option value="2" selected="${bean.mode}"><s:message code="guestbookConf.mode.2"/></f:option>
+					    	</select>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="guestbookConf.auditMode"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="auditMode" class="required">
+					    		<f:option value="0" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.0"/></f:option>
+					    		<f:option value="1" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.1"/></f:option>
+					    		<f:option value="2" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.2"/></f:option>
+					    		<f:option value="3" selected="${bean.auditMode}"><s:message code="guestbookConf.auditMode.3"/></f:option>
+					    	</select>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="guestbookConf.captchaMode"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="captchaMode" class="required">
+					    		<f:option value="0" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.0"/></f:option>
+					    		<f:option value="1" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.1"/></f:option>
+					    		<f:option value="2" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.2"/></f:option>
+					    		<f:option value="3" selected="${bean.captchaMode}"><s:message code="guestbookConf.captchaMode.3"/></f:option>
+					    	</select>		
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="guestbookConf.maxLength"/></label>
+	            <div class="col-sm-8">
+					    	<f:text name="maxLength" value="${bean.maxLength}" class="form-control {required:true,digits:true,min:1,max:2147483647}"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<div class="box-footer">
+      	<button class="btn btn-primary" type="submit"/><s:message code="save"/></button>
+			</div>
+	  </form>
+	</div>
+</div>
 </body>
 </html>

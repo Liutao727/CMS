@@ -21,7 +21,7 @@ public interface QuestionItemDao extends Repository<QuestionItem, Integer>, Ques
 	public QuestionItem save(QuestionItem bean);
 
 	public void delete(QuestionItem bean);
-	
+
 	// --------------------
-	
+
 }

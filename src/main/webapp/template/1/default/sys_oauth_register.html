@@ -82,11 +82,11 @@ $(function() {
 			<div class="clear"></div>
 		</div>
 		<div class="regtab-body">
-			<form id="validForm" action="${ctx}/oauth/register.jspx" method="post">
+			<form id="validForm" action="${ctx}/oauth/register" method="post">
 				<input type="hidden" name="fallbackUrl" value="${fallbackUrl!Param.fallbackUrl}"/>
 				<div class="line">
 					<label for="username" class="label"><em class="required">*</em>用户名:</label>
-					<div class="input"><input type="text" id="username" name="username" class="text left required" maxlength="${global.register.maxLength}" data-rule-minlength="${global.register.minLength}" data-rule-pattern="${global.register.validCharacter}" data-rule-remote='{"url":"${ctx}/check_username.jspx","type":"post"}' data-msg-remote="用户名已经存在" data-msg-pattern="用户名不能使用非法字符" style="width:200px;"/></div>
+					<div class="input"><input type="text" id="username" name="username" class="text left required" maxlength="${global.register.maxLength}" data-rule-minlength="${global.register.minLength}" data-rule-pattern="${global.register.validCharacter}" data-rule-remote='{"url":"${ctx}/check_username","type":"post"}' data-msg-remote="用户名已经存在" data-msg-pattern="用户名不能使用非法字符" style="width:200px;"/></div>
 					<label id="username-prompt" for="username" class="prompt">${global.register.minLength}~${global.register.maxLength}个字符，支持汉字、字母、数字、下划线</label>
 				</div>
 				<!--
@@ -111,7 +111,7 @@ $(function() {
 					<div class="input"><input type="submit" value="创建新用户" class="button" style="margin-right:20px;"/></div>
 				</div>
 			</form>
-			<form id="bindForm" action="${ctx}/oauth/bind.jspx" method="post" style="display:none;">
+			<form id="bindForm" action="${ctx}/oauth/bind" method="post" style="display:none;">
 				<input type="hidden" name="fallbackUrl" value="${fallbackUrl!Param.fallbackUrl}"/>
 				<div class="line">
 					<label for="username" class="label"><em class="required">*</em>用户名:</label>
@@ -124,8 +124,8 @@ $(function() {
 				<div class="line">
 					<label for="captcha1" class="label"><em class="required">*</em>验证码:</label>
 					<div class="input">
-						<input type="text" id="captcha1" name="captcha" class="text" style="width:94px;" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha.servlet","type":"post"}' data-msg-remote="验证码错误" autocomplete="off"/>
-						<img src="${ctx}/captcha.servlet" onclick="this.src='${ctx}/captcha.servlet?d='+new Date()*1;$('#captcha1').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/>
+						<input type="text" id="captcha1" name="captcha" class="text" style="width:94px;" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha","type":"post"}' data-msg-remote="验证码错误" autocomplete="off"/>
+						<img src="${ctx}/captcha" onclick="this.src='${ctx}/captcha?d='+new Date()*1;$('#captcha1').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/>
 					</div>
 					<label for="captcha1" generated="true" class="hide error"></label>
 				</div>

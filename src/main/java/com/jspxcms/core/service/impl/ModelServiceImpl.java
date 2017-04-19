@@ -27,6 +27,7 @@ import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
 import com.jspxcms.core.domain.Model;
 import com.jspxcms.core.domain.ModelField;
+import com.jspxcms.core.domain.Node;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.listener.ModelDeleteListener;
 import com.jspxcms.core.listener.SiteDeleteListener;
@@ -44,14 +45,12 @@ import com.jspxcms.core.service.SiteService;
 @Service
 @Transactional(readOnly = true)
 public class ModelServiceImpl implements ModelService, SiteDeleteListener {
-	public List<Model> findList(Integer siteId, String type,
-			Map<String, String[]> params, Sort sort) {
+	public List<Model> findList(Integer siteId, String type, Map<String, String[]> params, Sort sort) {
 		return dao.findAll(spec(siteId, type, params), sort);
 	}
 
-	public RowSide<Model> findSide(Integer siteId, String type,
-			Map<String, String[]> params, Model bean, Integer position,
-			Sort sort) {
+	public RowSide<Model> findSide(Integer siteId, String type, Map<String, String[]> params, Model bean,
+			Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<Model>();
 		}
@@ -60,18 +59,14 @@ public class ModelServiceImpl implements ModelService, SiteDeleteListener {
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<Model> spec(final Integer siteId, final String type,
-			Map<String, String[]> params) {
+	private Specification<Model> spec(final Integer siteId, final String type, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<Model> fsp = SearchFilter
-				.spec(filters, Model.class);
+		final Specification<Model> fsp = SearchFilter.spec(filters, Model.class);
 		Specification<Model> sp = new Specification<Model>() {
-			public Predicate toPredicate(Root<Model> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Model> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred, cb.equal(root.get("site")
-							.<Integer> get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").<Integer>get("id"), siteId));
 				}
 				if (StringUtils.isNotBlank(type)) {
 					pred = cb.and(pred, cb.equal(root.get("type"), type));
@@ -99,6 +94,73 @@ public class ModelServiceImpl implements ModelService, SiteDeleteListener {
 	}
 
 	@Transactional
+	public void oneKeyEnableHtml(Integer siteId) {
+		List<Model> list = findList(siteId, Node.NODE_MODEL_TYPE);
+		for (Model model : list) {
+			Map<String, String> customs = model.getCustoms();
+			customs.put(Node.GENERATE_NODE, "true");
+
+			if (StringUtils.isBlank(customs.get(Node.NODE_PATH))) {
+				customs.put(Node.NODE_PATH, "/{node_number}/index");
+			}
+			if (StringUtils.isBlank(customs.get(Node.NODE_EXTENSION))) {
+				customs.put(Node.NODE_EXTENSION, ".html");
+			}
+			if (StringUtils.isBlank(customs.get(Node.DEF_PAGE))) {
+				customs.put(Node.DEF_PAGE, "true");
+			}
+
+			customs.put(Node.GENERATE_INFO, "true");
+			if (StringUtils.isBlank(customs.get(Node.INFO_PATH))) {
+				customs.put(Node.INFO_PATH, "/{node_number}/{info_id}");
+			}
+			if (StringUtils.isBlank(customs.get(Node.INFO_EXTENSION))) {
+				customs.put(Node.INFO_EXTENSION, ".html");
+			}
+		}
+
+		list = findList(siteId, Node.HOME_MODEL_TYPE);
+		for (Model model : list) {
+			Map<String, String> customs = model.getCustoms();
+			customs.put(Node.GENERATE_NODE, "true");
+
+			if (StringUtils.isBlank(customs.get(Node.NODE_PATH))) {
+				customs.put(Node.NODE_PATH, "/index");
+			}
+			if (StringUtils.isBlank(customs.get(Node.NODE_EXTENSION))) {
+				customs.put(Node.NODE_EXTENSION, ".html");
+			}
+			if (StringUtils.isBlank(customs.get(Node.DEF_PAGE))) {
+				customs.put(Node.DEF_PAGE, "true");
+			}
+			
+			customs.put(Node.GENERATE_INFO, "true");
+			if (StringUtils.isBlank(customs.get(Node.INFO_PATH))) {
+				customs.put(Node.INFO_PATH, "/{node_number}/{info_id}");
+			}
+			if (StringUtils.isBlank(customs.get(Node.INFO_EXTENSION))) {
+				customs.put(Node.INFO_EXTENSION, ".html");
+			}
+		}
+	}
+	
+	@Transactional
+	public void oneKeyDisableHtml(Integer siteId) {
+		List<Model> list = findList(siteId, Node.NODE_MODEL_TYPE);
+		for (Model model : list) {
+			Map<String, String> customs = model.getCustoms();
+			customs.put(Node.GENERATE_NODE, "false");
+			customs.put(Node.GENERATE_INFO, "false");
+		}
+		list = findList(siteId, Node.HOME_MODEL_TYPE);
+		for (Model model : list) {
+			Map<String, String> customs = model.getCustoms();
+			customs.put(Node.GENERATE_NODE, "false");
+			customs.put(Node.GENERATE_INFO, "false");
+		}
+	}
+
+	@Transactional
 	public Model save(Model bean, Integer siteId, Map<String, String> customs) {
 		Site site = siteService.get(siteId);
 		bean.setSite(site);
@@ -109,8 +171,7 @@ public class ModelServiceImpl implements ModelService, SiteDeleteListener {
 	}
 
 	@Transactional
-	public Model copy(Integer oid, Model bean, Integer siteId,
-			Map<String, String> customs) {
+	public Model copy(Integer oid, Model bean, Integer siteId, Map<String, String> customs) {
 		save(bean, siteId, customs);
 		if (oid != null) {
 			Model obean = get(oid);
@@ -131,8 +192,7 @@ public class ModelServiceImpl implements ModelService, SiteDeleteListener {
 		BeanUtils.copyProperties(model, dest);
 		dest.setFields(null);
 		dest.setId(null);
-		Map<String, String> mapDest = new HashMap<String, String>(
-				model.getCustoms());
+		Map<String, String> mapDest = new HashMap<String, String>(model.getCustoms());
 		save(dest, siteId, mapDest);
 
 		List<ModelField> fields = model.getFields();

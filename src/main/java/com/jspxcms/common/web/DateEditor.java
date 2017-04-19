@@ -8,10 +8,13 @@ import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 
 /**
- * 日期编辑器
+ * 通用的日期编辑器。使用 {@link DateTime#parse(String)} 格式化，支持多种符合ISO标准日期格式。如'yyyy-MM-dd', 'yyyy-MM-ddTHH:mm:ss'等。
+ * <p>
+ * 一般日期转换必须指定具体某一种格式，比如'yyyy-MM-dd'或'yyyy-MM-dd HH:mm:ss'，如果指定为前一种，则无法处理后一种格式。
  * 
  * @author liufang
  * 
+ * @see DateTime
  */
 public class DateEditor extends PropertyEditorSupport {
 	public static Date parse(String text) {
@@ -20,6 +23,7 @@ public class DateEditor extends PropertyEditorSupport {
 			return null;
 		}
 		DateTime dt = DateTime.parse(text);
+		// 根据日期长度，转换成不同的日期类型
 		if (text.length() > 10) {
 			return new java.sql.Timestamp(dt.getMillis());
 		} else {

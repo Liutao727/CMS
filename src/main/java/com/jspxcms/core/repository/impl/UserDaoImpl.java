@@ -9,8 +9,8 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.QueryHints;
 
-import com.jspxcms.core.domain.QUser;
 import com.jspxcms.core.domain.User;
+import com.jspxcms.core.domain.dsl.QUser;
 import com.jspxcms.core.repository.plus.UserDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

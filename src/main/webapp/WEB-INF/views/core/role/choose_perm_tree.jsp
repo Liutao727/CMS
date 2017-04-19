@@ -42,18 +42,18 @@ $(function() {
 	var perms = $("#permsNumber").val();
 	var isChecked = function(perm) {
 		return perms.indexOf(perm)!=-1;
-	}
+	};
 	var zNodes =[
 		{"name":"<s:message code='role.perms.root'/>","perms":"index,container,nav_homepage,core:homepage:welcome","open":true,"checked":isChecked("index"),"children":[
 		<c:forEach var="menu" items="${menus}" varStatus="status1">
 			{"name":"<s:message code='${menu.name}' text='${menu.name}'/>","perms":"${menu.perms}","checked":isChecked("${menu.perm}"),"children":[
-			<c:forEach var="func" items="${menu.functions}" varStatus="status2">
-				{"name":"<s:message code='${func.name}' text='${func.name}'/>","perms":"${func.perms}","checked":isChecked("${func.perm}")}<c:if test="${!status2.last}">,</c:if>
+			<c:forEach var="op" items="${menu.ops}" varStatus="status2">
+				{"name":"<s:message code='${op.name}' text='${op.name}'/>","perms":"${op.perms}","checked":isChecked("${op.perm}")}<c:if test="${!status2.last}">,</c:if>
 			</c:forEach>
 			<c:forEach var="menu" items="${menu.children}" varStatus="status3">
 				{"name":"<s:message code='${menu.name}' text='${menu.name}'/>","perms":"${menu.perms}","checked":isChecked("${menu.perm}"),"children":[
-				<c:forEach var="func" items="${menu.functions}" varStatus="status4">
-					{"name":"<s:message code='${func.name}' text='${func.name}'/>","perms":"${func.perms}","checked":isChecked("${func.perm}")}<c:if test="${!status4.last}">,</c:if>
+				<c:forEach var="op" items="${menu.ops}" varStatus="status4">
+					{"name":"<s:message code='${op.name}' text='${op.name}'/>","perms":"${op.perms}","checked":isChecked("${op.perm}")}<c:if test="${!status4.last}">,</c:if>
 				</c:forEach>
 				]}<c:if test="${!status3.last}">,</c:if>
 			</c:forEach>

@@ -7,7 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.jspxcms.core.domain.QVoteMark;
+import com.jspxcms.core.domain.dsl.QVoteMark;
 import com.jspxcms.core.repository.plus.VoteMarkDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

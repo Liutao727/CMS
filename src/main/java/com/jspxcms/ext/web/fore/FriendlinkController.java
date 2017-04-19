@@ -25,13 +25,13 @@ import com.jspxcms.core.support.SiteResolver;
 public class FriendlinkController {
 	public static final String TEMPLATE = "sys_friendlink.html";
 
-	@RequestMapping("/friendlink.jspx")
+	@RequestMapping("/friendlink")
 	public String list(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return list(null, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/friendlink.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/friendlink")
 	public String list(@PathVariable String siteNumber,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);

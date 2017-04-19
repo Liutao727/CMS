@@ -26,13 +26,13 @@ import com.jspxcms.core.support.SiteResolver;
 public class SiteMapController {
 	public static final String TEMPLATE = "sys_sitemap.html";
 
-	@RequestMapping("/sitemap.jspx")
+	@RequestMapping("/sitemap")
 	public String index(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return index(null, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/sitemap.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/sitemap")
 	public String index(@PathVariable String siteNumber,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {

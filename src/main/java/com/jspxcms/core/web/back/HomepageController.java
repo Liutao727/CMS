@@ -5,13 +5,16 @@ import static com.jspxcms.core.constant.Constants.MESSAGE;
 import static com.jspxcms.core.constant.Constants.OPERATION_FAILURE;
 import static com.jspxcms.core.constant.Constants.OPERATION_SUCCESS;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +29,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.security.CredentialsDigest;
 import com.jspxcms.common.web.Servlets;
+import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.domain.MailInbox;
 import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Message;
 import com.jspxcms.core.domain.MessageText;
+import com.jspxcms.core.domain.Notification;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.domain.User;
+import com.jspxcms.core.service.CommentService;
 import com.jspxcms.core.service.InfoQueryService;
-import com.jspxcms.core.service.InfoSpecialService;
+import com.jspxcms.core.service.MailInboxService;
 import com.jspxcms.core.service.MemberGroupService;
 import com.jspxcms.core.service.MessageService;
+import com.jspxcms.core.service.NotificationService;
 import com.jspxcms.core.service.OperationLogService;
 import com.jspxcms.core.service.UserService;
 import com.jspxcms.core.support.CmsException;
 import com.jspxcms.core.support.Context;
+import com.jspxcms.ext.service.GuestbookService;
+import com.jspxcms.ext.service.VisitLogService;
 
 /**
  * HomepageController
@@ -60,6 +71,30 @@ public class HomepageController {
 		User user = Context.getCurrentUser();
 		modelMap.addAttribute("site", site);
 		modelMap.addAttribute("user", user);
+
+		Date endNext = new DateTime().plusDays(1).withMillisOfDay(0).toDate();
+		Date begin = new DateTime(endNext.getTime()).minusDays(30).toDate();
+		List<Object[]> visitList = visitService.trafficByDay(begin, endNext, site.getId());
+		String groupBy = "day";
+		modelMap.addAttribute("visitList", visitList);
+		modelMap.addAttribute("groupBy", groupBy);
+
+		List<Object[]> browserList = visitService.browserByTime(begin, endNext, site.getId());
+		modelMap.addAttribute("browserList", browserList);
+
+		Date begin7 = new DateTime(endNext.getTime()).minusDays(7).toDate();
+		long infos = infoQuery.countByDate(site.getId(), begin7);
+		modelMap.addAttribute("infos", infos);
+
+		long users = userService.countByDate(begin7);
+		modelMap.addAttribute("users", users);
+
+		long comments = commentService.countByDate(site.getId(), begin7);
+		modelMap.addAttribute("comments", comments);
+
+		long guestbooks = guestbookService.countByDate(site.getId(), begin7);
+		modelMap.addAttribute("guestbooks", guestbooks);
+
 		return "core/homepage/welcome";
 	}
 
@@ -118,6 +153,34 @@ public class HomepageController {
 		return "redirect:personal_edit.do";
 	}
 
+	@RequiresPermissions("core:homepage:notification:list")
+	@RequestMapping(value = "notification_list.do")
+	public String notificationList(
+			@PageableDefault(sort = "sendTime", direction = Direction.DESC, size = Constants.PAGE_SIZE) Pageable pageable,
+			HttpServletRequest request, org.springframework.ui.Model modelMap) {
+		User user = Context.getCurrentUser();
+		Page<Notification> pagedList = notificationService.findAll(user.getId(), null, pageable);
+		modelMap.addAttribute("pagedList", pagedList);
+		return "core/homepage/notification_list";
+	}
+
+	@RequiresPermissions("core:homepage:notification:delete")
+	@RequestMapping(value = "notification_delete.do")
+	public String notificationDelete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+		User user = Context.getCurrentUser();
+		validateNotificationIds(ids, user.getId());
+		notificationService.delete(ids);
+		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
+		return "redirect:notification_list.do";
+	}
+
+	@RequestMapping(value = "notification_delete_ajax.do")
+	public void notificationView(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+		User user = Context.getCurrentUser();
+		validateNotificationIds(ids, user.getId());
+		notificationService.delete(ids);
+	}
+
 	@RequiresPermissions("core:homepage:message:list")
 	@RequestMapping(value = "message_list.do")
 	public String messageList(@RequestParam(defaultValue = "false") boolean unread,
@@ -131,9 +194,9 @@ public class HomepageController {
 		return "core/homepage/message_list";
 	}
 
-	@RequiresPermissions("core:homepage:message:show")
-	@RequestMapping(value = "message_show.do")
-	public String messageShow(Integer contactId,
+	@RequiresPermissions("core:homepage:message:list")
+	@RequestMapping(value = "message_contact.do")
+	public String messageContact(Integer contactId,
 			@PageableDefault(sort = "sendTime", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
@@ -143,7 +206,7 @@ public class HomepageController {
 		modelMap.addAttribute("contactId", contactId);
 		modelMap.addAttribute("contact", contact);
 		modelMap.addAttribute("pagedList", pagedList);
-		return "core/homepage/message_show";
+		return "core/homepage/message_contact";
 	}
 
 	@RequiresPermissions("core:homepage:message:send")
@@ -151,12 +214,15 @@ public class HomepageController {
 	public String messageSend(String receiverUsername, Integer contactId, MessageText messageText,
 			HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
+		if (!doCheckReceiver(receiverUsername)) {
+			throw new CmsException("message.receiver.reject");
+		}
 		User receiver = userService.findByUsername(receiverUsername);
 		messageService.send(user.getId(), receiver.getId(), messageText);
 		ra.addFlashAttribute(MESSAGE, OPERATION_SUCCESS);
 		if (contactId != null) {
 			ra.addAttribute("contactId", contactId);
-			return "redirect:message_show.do";
+			return "redirect:message_contact.do";
 		}
 		return "redirect:message_list.do";
 	}
@@ -169,7 +235,7 @@ public class HomepageController {
 		messageService.deleteById(ids, user.getId());
 		ra.addAttribute("contactId", contactId);
 		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
-		return "redirect:message_show.do";
+		return "redirect:message_contact.do";
 	}
 
 	@RequiresPermissions("core:homepage:message:delete")
@@ -192,6 +258,50 @@ public class HomepageController {
 	@ResponseBody
 	public String checkReceiver(String receiverUsername) {
 		return String.valueOf(doCheckReceiver(receiverUsername));
+	}
+
+	@RequiresPermissions("core:homepage:mail_inbox:list")
+	@RequestMapping(value = "mail_inbox_list.do")
+	public String mailInboxList(@RequestParam(defaultValue = "false") boolean unread,
+			@PageableDefault(sort = "receiveTime", direction = Direction.DESC) Pageable pageable,
+			HttpServletRequest request, org.springframework.ui.Model modelMap) {
+		User user = Context.getCurrentUser();
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		Page<MailInbox> pagedList = inboxService.findAll(user.getId(), params, pageable);
+		modelMap.addAttribute("pagedList", pagedList);
+		return "core/homepage/mail_inbox_list";
+	}
+
+	@RequiresPermissions("core:homepage:mail_inbox:show")
+	@RequestMapping(value = "mail_inbox_show.do")
+	public String mailInboxShow(Integer id, Integer position,
+			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
+		User user = Context.getCurrentUser();
+		MailInbox bean = inboxService.get(id);
+		if (bean == null) {
+			throw new CmsException("objectNotFound", MailInbox.class.getName(), String.valueOf(id));
+		}
+		if (!user.getId().equals(bean.getReceiver().getId())) {
+			throw new CmsException("accessDenied");
+		}
+		inboxService.read(id);
+		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
+		RowSide<MailInbox> side = inboxService.findSide(user.getId(), params, bean, position, pageable.getSort());
+		modelMap.addAttribute("bean", bean);
+		modelMap.addAttribute("side", side);
+		modelMap.addAttribute("position", position);
+		return "core/homepage/mail_inbox_show";
+	}
+
+	@RequiresPermissions("core:homepage:mail_inbox:delete")
+	@RequestMapping(value = "mail_inbox_delete.do")
+	public String mailInboxDelete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+		User user = Context.getCurrentUser();
+		validateMailInboxIds(ids, user.getId());
+		inboxService.delete(ids);
+		ra.addFlashAttribute(MESSAGE, DELETE_SUCCESS);
+		return "redirect:mail_inbox_list.do";
 	}
 
 	/**
@@ -229,12 +339,40 @@ public class HomepageController {
 		}
 	}
 
-	@Autowired
-	InfoQueryService infoQuery;
-	@Autowired
-	private InfoSpecialService infoSpecialService;
+	private void validateMailInboxIds(Integer[] ids, Integer userId) {
+		for (Integer id : ids) {
+			MailInbox bean = inboxService.get(id);
+			// 不是自己发送的不能删除
+			if (!bean.getReceiver().getId().equals(userId)) {
+				throw new CmsException("error.forbiddenData");
+			}
+		}
+	}
+
+	private void validateNotificationIds(Integer[] ids, Integer userId) {
+		for (Integer id : ids) {
+			Notification bean = notificationService.get(id);
+			// 不是自己发送的不能删除
+			if (!bean.getReceiver().getId().equals(userId)) {
+				throw new CmsException("error.forbiddenData");
+			}
+		}
+	}
+
 	@Autowired
 	private OperationLogService logService;
+	@Autowired
+	private InfoQueryService infoQuery;
+	@Autowired
+	private CommentService commentService;
+	@Autowired
+	private GuestbookService guestbookService;
+	@Autowired
+	private VisitLogService visitService;
+	@Autowired
+	private NotificationService notificationService;
+	@Autowired
+	private MailInboxService inboxService;
 	@Autowired
 	private MessageService messageService;
 	@Autowired

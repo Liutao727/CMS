@@ -21,8 +21,7 @@ import org.springframework.web.util.HtmlUtils;
  * @author liufang
  * 
  */
-public abstract class AbstractMultiCheckedElementTag extends
-		AbstractHtmlInputElementTag {
+public abstract class AbstractMultiCheckedElementTag extends AbstractHtmlInputElementTag {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
@@ -49,18 +48,15 @@ public abstract class AbstractMultiCheckedElementTag extends
 				writeMapEntry(writer, itemValue, itemLabel, entry, itemIndex);
 			}
 		} else {
-			throw new IllegalArgumentException(
-					"Attribute 'items' must be an array, a Collection or a Map");
+			throw new IllegalArgumentException("Attribute 'items' must be an array, a Collection or a Map");
 		}
 		return SKIP_BODY;
 	}
 
-	private void writeObjectEntry(TagWriter tagWriter, String valueProperty,
-			String labelProperty, Object item, int itemIndex)
-			throws JspException {
+	private void writeObjectEntry(TagWriter tagWriter, String valueProperty, String labelProperty, Object item,
+			int itemIndex) throws JspException {
 
-		BeanWrapper wrapper = PropertyAccessorFactory
-				.forBeanPropertyAccess(item);
+		BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(item);
 		Object renderValue;
 		if (valueProperty != null) {
 			renderValue = wrapper.getPropertyValue(valueProperty);
@@ -69,31 +65,26 @@ public abstract class AbstractMultiCheckedElementTag extends
 		} else {
 			renderValue = item;
 		}
-		Object renderLabel = (labelProperty != null ? wrapper
-				.getPropertyValue(labelProperty) : item);
+		Object renderLabel = (labelProperty != null ? wrapper.getPropertyValue(labelProperty) : item);
 		writeElementTag(tagWriter, item, renderValue, renderLabel, itemIndex);
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void writeMapEntry(TagWriter tagWriter, String valueProperty,
-			String labelProperty, Map.Entry entry, int itemIndex)
-			throws JspException {
+	private void writeMapEntry(TagWriter tagWriter, String valueProperty, String labelProperty, Map.Entry entry,
+			int itemIndex) throws JspException {
 
 		Object mapKey = entry.getKey();
 		Object mapValue = entry.getValue();
-		BeanWrapper mapKeyWrapper = PropertyAccessorFactory
-				.forBeanPropertyAccess(mapKey);
-		BeanWrapper mapValueWrapper = PropertyAccessorFactory
-				.forBeanPropertyAccess(mapValue);
-		Object renderValue = (valueProperty != null ? mapKeyWrapper
-				.getPropertyValue(valueProperty) : mapKey.toString());
-		Object renderLabel = (labelProperty != null ? mapValueWrapper
-				.getPropertyValue(labelProperty) : mapValue.toString());
+		BeanWrapper mapKeyWrapper = PropertyAccessorFactory.forBeanPropertyAccess(mapKey);
+		BeanWrapper mapValueWrapper = PropertyAccessorFactory.forBeanPropertyAccess(mapValue);
+		Object renderValue = (valueProperty != null ? mapKeyWrapper.getPropertyValue(valueProperty) : mapKey.toString());
+		Object renderLabel = (labelProperty != null ? mapValueWrapper.getPropertyValue(labelProperty) : mapValue
+				.toString());
 		writeElementTag(tagWriter, mapKey, renderValue, renderLabel, itemIndex);
 	}
 
-	private void writeElementTag(TagWriter writer, Object item, Object value,
-			Object label, int itemIndex) throws JspException {
+	private void writeElementTag(TagWriter writer, Object item, Object value, Object label, int itemIndex)
+			throws JspException {
 
 		if (itemIndex > 0) {
 			if (StringUtils.isNotEmpty(getDelimiter())) {
@@ -105,6 +96,9 @@ public abstract class AbstractMultiCheckedElementTag extends
 			}
 		}
 		writer.startTag("label");
+		if (StringUtils.isNotBlank(labelClass)) {
+			writer.writeAttribute("class", labelClass);
+		}
 		writer.startTag("input");
 		writer.writeAttribute("type", getInputType());
 		writer.writeOptionalAttributeValue("name", getName());
@@ -112,8 +106,7 @@ public abstract class AbstractMultiCheckedElementTag extends
 			writer.writeAttribute("checked", "checked");
 		}
 		if (value != null) {
-			writer.writeOptionalAttributeValue("value",
-					HtmlUtils.htmlEscape(value.toString()));
+			writer.writeOptionalAttributeValue("value", HtmlUtils.htmlEscape(value.toString()));
 		}
 
 		writeOptionalAttributes(writer);
@@ -133,8 +126,7 @@ public abstract class AbstractMultiCheckedElementTag extends
 				return true;
 			}
 			if (item.getClass().equals(checked.getClass())) {
-				BeanWrapper wrapper = PropertyAccessorFactory
-						.forBeanPropertyAccess(checked);
+				BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(checked);
 				if (value.equals(wrapper.getPropertyValue(itemValue))) {
 					return true;
 				}
@@ -165,8 +157,7 @@ public abstract class AbstractMultiCheckedElementTag extends
 	}
 
 	/**
-	 * Return the type of the HTML input element to generate: "checkbox" or
-	 * "radio".
+	 * Return the type of the HTML input element to generate: "checkbox" or "radio".
 	 */
 	protected abstract String getInputType();
 
@@ -178,8 +169,8 @@ public abstract class AbstractMultiCheckedElementTag extends
 	private String itemLabel;
 	private Object checked;
 	private Object def;
-
-	private String delimiter = " &nbsp; ";
+	private String labelClass;
+	private String delimiter = "";
 
 	// private Object[] checkedArray;
 
@@ -232,6 +223,14 @@ public abstract class AbstractMultiCheckedElementTag extends
 
 	public void setDefault(Object def) {
 		this.def = def;
+	}
+
+	public String getLabelClass() {
+		return labelClass;
+	}
+
+	public void setLabelClass(String labelClass) {
+		this.labelClass = labelClass;
 	}
 
 	public void setDelimiter(String delimiter) {

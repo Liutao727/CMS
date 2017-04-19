@@ -5,86 +5,116 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <script type="text/javascript">
 $(function() {
 	$("#validForm").validate();
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="site.configuration"/> - <s:message code="edit"/></span>
+<div class="content-header">
+	<h1><s:message code="site.configuration"/> - <s:message code="edit"/></h1>
 </div>
-<div class="ls-bc-opt margin-top5">
-	<div id="radio">
-		<jsp:include page="types.jsp"/>
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="base_update.do" method="post">
+			<div class="box-header with-border">
+				<div id="radio">
+					<jsp:include page="types.jsp"/>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.name"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="name" value="${bean.name}" class="form-control required" maxlength="100"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="site.fullName"/></label>
+	            <div class="col-sm-8">
+					    	<f:text class="form-control" name="fullName" value="${bean.fullName}" maxlength="100"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.domain"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="domain" value="${bean.domain}" class="form-control required" maxlength="100"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.templateTheme"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="templateTheme">
+					        <f:options items="${themeList}" selected="${bean.templateTheme}"/>
+					      </select>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="site.noPicture"/></label>
+	            <div class="col-sm-10 form-inline">
+					      <script type="text/javascript">
+						      function fn_noPicture(src) {
+						        Cms.scaleImg("img_noPicture",300,100,src);
+						      };
+						      </script>
+						      <table width="80%" border="0" cellpadding="0" cellspacing="0">
+						        <tr>
+						          <td width="50%" height="100" valign="middle">
+						          	<div class="input-group">
+							            <f:text id="noPicture" name="noPicture" value="${bean.noPicture}" class="form-control required" maxlength="255" onchange="fn_noPicture('${bean.filesUrl}'+this.value);" style="width:180px;"/>
+							            <span class="input-group-btn">
+							            	<button class="btn btn-default" id="noPictureButton" type="button"><s:message code='choose'/></button>
+							            </span>
+						            </div>
+						            <script type="text/javascript">
+						            $(function(){
+						              Cms.f7.style("noPicture",{
+						                settings: {"title": "<s:message code="webFile.chooseImage"/>"},
+						                callbacks: {ok: function() {$("#noPicture").change();}}
+						              });
+						            });
+						            </script>
+						          </td>
+						          <td width="50%" align="center">
+						            <img id="img_noPicture" style="display:none;"/>
+						          </td>
+						        </tr>
+						      </table>
+						      <c:if test="${!empty bean.noPicture}">
+						      <script type="text/javascript">
+						        fn_noPicture("${bean.noPictureUrl}");
+						      </script>
+						      </c:if>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<div class="box-footer">
+	      <button class="btn btn-primary" type="submit"><s:message code="save"/></button>
+			</div>
+		</form>
 	</div>
 </div>
-<form id="validForm" action="base_update.do" method="post">
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="site.name"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="name" value="${bean.name}" class="required" maxlength="100" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><s:message code="site.fullName"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="fullName" value="${bean.fullName}" maxlength="100" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="site.domain"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="domain" value="${bean.domain}" class="required" maxlength="100" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="site.templateTheme"/>:</td>
-    <td class="in-ctt" width="35%">
-      <select name="templateTheme">
-        <f:options items="${themeList}" selected="${bean.templateTheme}"/>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="site.noPicture"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-      <script type="text/javascript">
-      function fn_noPicture(src) {
-        Cms.scaleImg("img_noPicture",300,100,src);
-      };
-      </script>
-      <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td width="50%" height="100" valign="middle">
-            <f:text id="noPicture" name="noPicture" value="${bean.noPicture}" class="required" maxlength="255" onchange="fn_noPicture('${bean.filesUrl}'+this.value);" style="width:180px;"/>
-            <input id="noPictureButton" type="button" value="<s:message code='choose'/>"/>
-            <script type="text/javascript">
-            $(function(){
-              Cms.f7.style("noPicture",{
-                settings: {"title": "<s:message code="webFile.chooseImage"/>"},
-                callbacks: {ok: function() {$("#noPicture").change();}}
-              });
-            });
-            </script>
-          </td>
-          <td width="50%" align="center">
-            <img id="img_noPicture" style="display:none;"/>
-          </td>
-        </tr>
-      </table>
-      <c:if test="${!empty bean.noPicture}">
-      <script type="text/javascript">
-        fn_noPicture("${bean.noPictureUrl}");
-      </script>
-      </c:if>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-    </td>
-  </tr>
-</table>
-</form>
 </body>
 </html>

@@ -32,8 +32,7 @@ public class GlobalServiceImpl implements GlobalService {
 
 	@Transactional
 	public Global update(Global bean, Integer uploadsPublishPointId) {
-		PublishPoint uploadsPublishPoint = publisPointService
-				.get(uploadsPublishPointId);
+		PublishPoint uploadsPublishPoint = publisPointService.get(uploadsPublishPointId);
 		bean.setUploadsPublishPoint(uploadsPublishPoint);
 		bean = dao.save(bean);
 		return bean;
@@ -48,8 +47,7 @@ public class GlobalServiceImpl implements GlobalService {
 	}
 
 	@Transactional
-	public void updateCustoms(Global global, Map<String, String> map,
-			Map<String, String> clobMap) {
+	public void updateCustoms(Global global, Map<String, String> map, Map<String, String> clobMap) {
 		Map<String, String> customs = global.getCustoms();
 		Global.removeAttrExcludeSys(customs);
 		customs.putAll(map);

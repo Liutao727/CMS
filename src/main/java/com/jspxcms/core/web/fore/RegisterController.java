@@ -59,8 +59,8 @@ public class RegisterController {
 	 */
 	public static final String RETRIEVE_PASSWORD_TEMPLATE = "sys_member_retrieve_password.html";
 
-	@RequestMapping(value = { "/register.jspx",
-			Constants.SITE_PREFIX_PATH + "/register.jspx" })
+	@RequestMapping(value = { "/register",
+			Constants.SITE_PREFIX_PATH + "/register" })
 	public String registerForm(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
@@ -74,8 +74,8 @@ public class RegisterController {
 		return site.getTemplate(REGISTER_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/register.jspx",
-			Constants.SITE_PREFIX_PATH + "/register.jspx" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/register",
+			Constants.SITE_PREFIX_PATH + "/register" }, method = RequestMethod.POST)
 	public String registerSubmit(String captcha, String username,
 			String password, String email, String gender, Date birthDate,
 			String bio, String comeFrom, String qq, String msn, String weixin,
@@ -112,8 +112,8 @@ public class RegisterController {
 		return resp.post();
 	}
 
-	@RequestMapping(value = { "/register_message.jspx",
-			Constants.SITE_PREFIX_PATH + "/register_message.jspx" })
+	@RequestMapping(value = { "/register_message",
+			Constants.SITE_PREFIX_PATH + "/register_message" })
 	public String registerMessage(String email, Integer verifyMode,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -135,8 +135,8 @@ public class RegisterController {
 		return site.getTemplate(REGISTER_MESSAGE_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/verify_member.jspx",
-			Constants.SITE_PREFIX_PATH + "/verify_member.jspx" })
+	@RequestMapping(value = { "/verify_member",
+			Constants.SITE_PREFIX_PATH + "/verify_member" })
 	public String verifyMember(String key, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
@@ -154,8 +154,8 @@ public class RegisterController {
 		return site.getTemplate(VERIFY_MEMBER_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/forgot_password.jspx",
-			Constants.SITE_PREFIX_PATH + "/forgot_password.jspx" })
+	@RequestMapping(value = { "/forgot_password",
+			Constants.SITE_PREFIX_PATH + "/forgot_password" })
 	public String forgotPasswordForm(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -164,8 +164,8 @@ public class RegisterController {
 		return site.getTemplate(FORGOT_PASSWORD_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/forgot_password.jspx",
-			Constants.SITE_PREFIX_PATH + "/forgot_password.jspx" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/forgot_password",
+			Constants.SITE_PREFIX_PATH + "/forgot_password" }, method = RequestMethod.POST)
 	public String forgotPasswordSubmit(String username, String email,
 			String captcha, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -188,8 +188,8 @@ public class RegisterController {
 		return resp.post();
 	}
 
-	@RequestMapping(value = { "/retrieve_password.jspx",
-			Constants.SITE_PREFIX_PATH + "/retrieve_password.jspx" })
+	@RequestMapping(value = { "/retrieve_password",
+			Constants.SITE_PREFIX_PATH + "/retrieve_password" })
 	public String retrievePasswordForm(String key, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Response resp = new Response(request, response, modelMap);
@@ -215,8 +215,8 @@ public class RegisterController {
 		return site.getTemplate(RETRIEVE_PASSWORD_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/retrieve_password.jspx",
-			Constants.SITE_PREFIX_PATH + "/retrieve_password.jspx" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retrieve_password",
+			Constants.SITE_PREFIX_PATH + "/retrieve_password" }, method = RequestMethod.POST)
 	public String retrievePasswordSubmit(String key, String password,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -243,8 +243,8 @@ public class RegisterController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/check_username.jspx",
-			Constants.SITE_PREFIX_PATH + "/check_username.jspx" })
+	@RequestMapping(value = { "/check_username",
+			Constants.SITE_PREFIX_PATH + "/check_username" })
 	public String checkUsername(String username, String original,
 			HttpServletRequest request, HttpServletResponse response) {
 		Servlets.setNoCacheHeader(response);

@@ -33,12 +33,12 @@
 	<div class="w center c999" style="height:32px;line-height:32px;">
 		<div class="left">
 			<a class="topa ml5" href="${ctx}/" target="_blank">首页</a>
-			<a class="topa ml5" href="${ctx}/sitemap.jspx" target="_blank">网站地图</a>
-			<a class="topa ml5" href="${ctx}/rss.jspx">RSS订阅</a>
-			<a class="topa ml5" href="${ctx}/tags.jspx">TAGS标签</a>
+			<a class="topa ml5" href="${ctx}/sitemap" target="_blank">网站地图</a>
+			<a class="topa ml5" href="${ctx}/rss">RSS订阅</a>
+			<a class="topa ml5" href="${ctx}/tags">TAGS标签</a>
 		</div>
 		<div class="right">
-			<script type="text/javascript" src="${ctx}/login_include.jspx?d=${.now?time}"></script>
+			<script type="text/javascript" src="${ctx}/login_include?d=${.now?time}"></script>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -63,9 +63,9 @@
 	</div>
 	<div class="right" style="width:710px;padding:10px 15px;border:1px solid #ccc;background-color:#fff;">
 		<ul class="user-nav">
-			<li class="user-nav-item[#if !Param.type??] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}.jspx">主页</a></li>
-			<li class="user-nav-item[#if Param.type?? && Param.type='comment'] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}.jspx?type=comment">评论</a></li>
-			<li class="user-nav-item[#if Param.type?? && Param.type='article'] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}.jspx?type=article">文章</a></li>
+			<li class="user-nav-item[#if !Param.type??] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}">主页</a></li>
+			<li class="user-nav-item[#if Param.type?? && Param.type='comment'] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}?type=comment">评论</a></li>
+			<li class="user-nav-item[#if Param.type?? && Param.type='article'] user-nav-item-curr[/#if]"><a href="${ctx}/space/${targetUser.id}?type=article">文章</a></li>
 		</ul>
 		[#if Param.type?? && Param.type=='comment']
 			[#include 'sys_member_space_comment.html'/]

@@ -1,5 +1,5 @@
-.swfupload{position:absolute;z-index:1;}
-.swfbutton{width:67px;}
+.swfupload{position:absolute;z-index:100;}
+/* .swfbutton{width:67px;} */
 .progressWrapper {
 	width: 300px;
 	overflow: hidden;

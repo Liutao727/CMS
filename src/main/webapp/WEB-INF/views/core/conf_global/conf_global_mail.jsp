@@ -3,15 +3,13 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <style type="text/css">
 .line{margin-top:5px;}
-.line .label{width:100px;float:left;text-align:right;}
+.line label{width:80px;float:left;text-align:right;font-weight:normal;line-height:32px;}
 </style>
 <script type="text/javascript">
 $(function() {
@@ -19,66 +17,116 @@ $(function() {
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="global.configuration"/> - <s:message code="edit"/></span>
+<div class="content-header">
+	<h1><s:message code="global.configuration"/> - <s:message code="edit"/></h1>
 </div>
-<div class="ls-bc-opt margin-top5">
-	 <div id="radio">
-		<jsp:include page="types.jsp"/>
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="mail_update.do" method="post">
+			<div class="box-header with-border">
+				<div id="radio">
+					<jsp:include page="types.jsp"/>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.smtpHost"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="smtpHost" value="${bean.mail.smtpHost}" class="form-control required" maxlength="255"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="global.mail.smtpPort"/></label>
+	            <div class="col-sm-8">
+					    	<f:text name="smtpPort" value="${bean.mail.smtpPort}" class="form-control digits" maxlength="11"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.smtpAuth"/></label>
+	            <div class="col-sm-8">
+					      <label class="radio-inline"><f:radio name="smtpAuth" value="true" checked="${bean.mail.smtpAuth}" default="true"/><s:message code="yes"/></label>
+    						<label class="radio-inline"><f:radio name="smtpAuth" value="false" checked="${bean.mail.smtpAuth}"/><s:message code="no"/></label>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="global.mail.smtpTimeout"/></label>
+	            <div class="col-sm-8">
+					    	<f:text name="smtpTimeout" value="${bean.mail.smtpTimeout}" class="form-control digits" maxlength="11"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.smtpUsername"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="smtpUsername" value="${bean.mail.smtpUsername}" class="form-control required" maxlength="255"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.smtpPassword"/></label>
+	            <div class="col-sm-8">
+					    	<input type="password" name="smtpPassword" value="${bean.mail.smtpPassword}" class="form-control required" maxlength="255"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.from"/></label>
+	            <div class="col-sm-8">
+					      <f:text name="from" value="${bean.mail.from}" class="form-control required" maxlength="255"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.mail.smtpSsl"/></label>
+	            <div class="col-sm-8">
+					    	<label class="radio-inline"><f:radio name="smtpSsl" value="true" checked="${bean.mail.smtpSsl}"/><s:message code="yes"/></label>
+      					<label class="radio-inline"><f:radio name="smtpSsl" value="false" checked="${bean.mail.smtpSsl}" default="false"/><s:message code="no"/></label>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group form-inline">
+	            <label class="col-sm-2 control-label"><s:message code="global.mail.test"/></label>
+	            <div class="col-sm-10">
+					      <div class="line"><label for="testTo"><s:message code="global.mail.testTo"/>:</label><f:text class="form-control" id="testTo" name="testTo" value="${bean.mail.testTo}" maxlength="255" style="width:400px;"/></div>
+					    	<div class="line"><label for="testSubject"><s:message code="global.mail.testSubject"/>:</label><f:text class="form-control" id="testSubject" name="testSubject" value="${bean.mail.testSubject}" maxlength="255" style="width:400px;"/></div>
+					    	<div class="line"><label for="testText"><s:message code="global.mail.testText"/>:</label><f:textarea class="form-control" id="testText" name="testText" value="${bean.mail.testText}" maxlength="2000" rows="5" style="width:400px;"/></div>
+					    	<div class="line">
+					    		<label for="testText">&nbsp;</label><input type="button" value="<s:message code="global.mail.testSend"/>" onclick="location.href='mail_send.do?to='+encodeURI($('#testTo').val())+'&subject='+encodeURI($('#testSubject').val())+'&text='+encodeURI($('#testText').val())"/>
+					    		<span style="color:red;"><s:message code="global.mail.testSend.prompt"/></span>
+					    	</div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<div class="box-footer">
+	      <button class="btn btn-primary" type="submit"><s:message code="save"/></button>
+			</div>
+		</form>
 	</div>
 </div>
-<form id="validForm" action="mail_update.do" method="post">
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.smtpHost"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="smtpHost" value="${bean.mail.smtpHost}" class="required" maxlength="255" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><s:message code="global.mail.smtpPort"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="smtpPort" value="${bean.mail.smtpPort}" class="digits" maxlength="11" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.smtpAuth"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<label><f:radio name="smtpAuth" value="true" checked="${bean.mail.smtpAuth}" default="true"/><s:message code="yes"/></label>
-    	<label><f:radio name="smtpAuth" value="false" checked="${bean.mail.smtpAuth}"/><s:message code="no"/></label>
-    </td>
-    <td class="in-lab" width="15%"><s:message code="global.mail.smtpTimeout"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="smtpTimeout" value="${bean.mail.smtpTimeout}" class="digits" maxlength="11" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.smtpUsername"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="smtpUsername" value="${bean.mail.smtpUsername}" class="required" maxlength="255" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.smtpPassword"/>:</td>
-    <td class="in-ctt" width="35%"><input type="password" name="smtpPassword" value="${bean.mail.smtpPassword}" class="required" maxlength="255" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.from"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="from" value="${bean.mail.from}" class="required" maxlength="255" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.mail.smtpSsl"/>:</td>
-    <td class="in-ctt" width="35%">
-      <label><f:radio name="smtpSsl" value="true" checked="${bean.mail.smtpSsl}"/><s:message code="yes"/></label>
-      <label><f:radio name="smtpSsl" value="false" checked="${bean.mail.smtpSsl}" default="false"/><s:message code="no"/></label>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="global.mail.test"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-    	<div class="line"><label class="label" for="testTo"><s:message code="global.mail.testTo"/>:</label><f:text id="testTo" name="testTo" value="${bean.mail.testTo}" maxlength="255" style="width:300px;"/></div>
-    	<div class="line"><label class="label" for="testSubject"><s:message code="global.mail.testSubject"/>:</label><f:text id="testSubject" name="testSubject" value="${bean.mail.testSubject}" maxlength="255" style="width:300px;"/></div>
-    	<div class="line"><label class="label" for="testText"><s:message code="global.mail.testText"/>:</label><f:textarea id="testText" name="testText" value="${bean.mail.testText}" maxlength="2000" style="width:300px;height:50px;"/></div>
-    	<div class="line">
-    		<label class="label" for="testText">&nbsp;</label><input type="button" value="<s:message code="global.mail.testSend"/>" onclick="location.href='mail_send.do?to='+encodeURI($('#testTo').val())+'&subject='+encodeURI($('#testSubject').val())+'&text='+encodeURI($('#testText').val())"/>
-    		<span style="color:red;"><s:message code="global.mail.testSend.prompt"/></span>
-    	</div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-    </td>
-  </tr>
-</table>
-</form>
 </body>
 </html>

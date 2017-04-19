@@ -26,13 +26,13 @@ import com.jspxcms.ext.service.VisitLogService;
 @Controller
 public class VisitLogController {
 
-	@RequestMapping("/visit_log.jspx")
+	@RequestMapping("/visit_log")
 	public void visitLog(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		visitLog(null, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/visit_log.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/visit_log")
 	public void visitLog(@PathVariable String siteNumber,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {

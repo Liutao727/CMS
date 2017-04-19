@@ -30,13 +30,13 @@ public class TagController {
 	public static final String TAG_LIST_TEMPLATE = "sys_tag_list.html";
 	public static final String TAG_TEMPLATE = "sys_tag.html";
 
-	@RequestMapping("/tag.jspx")
+	@RequestMapping("/tag")
 	public String index(Integer page, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return index(null, page, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tag.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tag")
 	public String index(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
@@ -47,14 +47,14 @@ public class TagController {
 		return site.getTemplate(TAG_LIST_TEMPLATE);
 	}
 
-	@RequestMapping("/tag/{id}.jspx")
+	@RequestMapping("/tag/{id}")
 	public String tag(@PathVariable Integer id, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return tag(null, id, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tag/{id}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tag/{id}")
 	public String tag(@PathVariable String siteNumber,
 			@PathVariable Integer id, Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -67,14 +67,14 @@ public class TagController {
 		return tag(tag, page, request, modelMap);
 	}
 
-	@RequestMapping("/tagname/{name}.jspx")
+	@RequestMapping("/tagname/{name}")
 	public String tagname(@PathVariable String name, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return tagname(null, name, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tagname/{name}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/tagname/{name}")
 	public String tagname(@PathVariable String siteNumber,
 			@PathVariable String name, Integer page,
 			HttpServletRequest request, HttpServletResponse response,

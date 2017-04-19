@@ -59,11 +59,11 @@ $(function() {
 </div>
 <div class="center oh" style="width:1200px;background:url(_files/img/member_line_bg.png) 0 -1px no-repeat;">
 	<div class="left" style="width:620px;padding:30px 20px 40px 130px;line-height:30px;border-right:1px solid #ddd;">
-		<form id="validForm" action="${ctx}/register.jspx" method="post">
-			<input type="hidden" name="redirectUrl" value="${ctx}/register_message.jspx?username={username}&email={email}&verifyMode={verifyMode}"/>
+		<form id="validForm" action="${ctx}/register" method="post">
+			<input type="hidden" name="redirectUrl" value="${ctx}/register_message?username={username}&email={email}&verifyMode={verifyMode}"/>
 			<div class="line">
 				<label for="username" class="label"><em class="required">*</em>用户名:</label>
-				<div class="input"><input type="text" id="username" name="username" class="text left required" maxlength="${global.register.maxLength}" data-rule-minlength="${global.register.minLength}" data-rule-pattern="${global.register.validCharacter}" data-rule-remote='{"url":"${ctx}/check_username.jspx","type":"post"}' data-msg-remote="用户名已经存在" data-msg-pattern="用户名不能使用非法字符" style="width:200px;"/></div>
+				<div class="input"><input type="text" id="username" name="username" class="text left required" maxlength="${global.register.maxLength}" data-rule-minlength="${global.register.minLength}" data-rule-pattern="${global.register.validCharacter}" data-rule-remote='{"url":"${ctx}/check_username","type":"post"}' data-msg-remote="用户名已经存在" data-msg-pattern="用户名不能使用非法字符" style="width:200px;"/></div>
 				<label id="username-prompt" for="username" class="prompt">${global.register.minLength}~${global.register.maxLength}个字符，支持汉字、字母、数字、下划线</label>
 			</div>
 			<div class="line">
@@ -84,8 +84,8 @@ $(function() {
 			<div class="line">
 				<label for="captcha" class="label"><em class="required">*</em>验证码:</label>
 				<div class="input">
-					<input type="text" id="captcha" name="captcha" class="text" style="width:94px;" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha.servlet","type":"post"}' data-msg-remote="验证码错误" autocomplete="off"/>
-					<img src="${ctx}/captcha.servlet" onclick="this.src='${ctx}/captcha.servlet?d='+new Date()*1;$('#captcha').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/>
+					<input type="text" id="captcha" name="captcha" class="text" style="width:94px;" data-rule-required="true" data-rule-remote='{"url":"${ctx}/captcha","type":"post"}' data-msg-remote="验证码错误" autocomplete="off"/>
+					<img src="${ctx}/captcha" onclick="this.src='${ctx}/captcha?d='+new Date()*1;$('#captcha').focus();" style="cursor:pointer;border:1px solid #ccc;margin:0;vertical-align:top;" title="点击重新获取验证码"/>
 				</div>
 				<label for="captcha" generated="true" class="hide error"></label>
 				<label id="captcha-prompt" for="captcha" class="prompt">请填写图片中的字符，不区分大小写</label>				
@@ -102,7 +102,7 @@ $(function() {
 		</form>
 	</div>
 	<div class="left fs14" style="width:310px;padding:60px 50px 0 50px;">
-		<div>已有账号，<a href="${ctx}/login.jspx" class="fs14 a-hover" style="color:#0a8cd2;">现在登录</a></div>
+		<div>已有账号，<a href="${ctx}/login" class="fs14 a-hover" style="color:#0a8cd2;">现在登录</a></div>
 		[#include 'inc_oauth.html'/]
 	</div>
 </div>

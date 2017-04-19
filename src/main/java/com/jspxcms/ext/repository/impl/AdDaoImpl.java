@@ -11,7 +11,7 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Ad;
-import com.jspxcms.ext.domain.QAd;
+import com.jspxcms.ext.domain.dsl.QAd;
 import com.jspxcms.ext.repository.plus.AdDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

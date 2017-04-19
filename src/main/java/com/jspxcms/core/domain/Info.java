@@ -73,6 +73,7 @@ import com.jspxcms.core.support.Commentable;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.Siteable;
 import com.jspxcms.core.support.TitleText;
+import com.jspxcms.ext.domain.InfoFavorite;
 
 /**
  * Info
@@ -528,6 +529,19 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		return false;
 	}
 
+	@Transient
+	public boolean isFavorite(User user) {
+		if (user == null) {
+			return false;
+		}
+		for (InfoFavorite bean : getInfoFavorites()) {
+			if (bean.getUser().getId().equals(user.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 获得标题列表
 	 * 
@@ -570,8 +584,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	@Transient
 	public String getUrlDynamic(Integer page) {
-		boolean isFull = getSite().getWithDomain() || getSite().getIdentifyDomain();
-		return getUrlDynamic(page, isFull);
+		boolean isFull = getSite().getIdentifyDomain();
+		return getUrlDynamic(page, isFull, Context.isMobile());
 	}
 
 	@Transient
@@ -581,18 +595,23 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	@Transient
 	public String getUrlDynamicFull(Integer page) {
-		return getUrlDynamic(page, true);
+		return getUrlDynamic(page, true, Context.isMobile());
 	}
 
 	@Transient
-	public String getUrlDynamic(Integer page, boolean isFull) {
+	public String getUrlDynamic(Integer page, boolean isFull, boolean isMobile) {
 		if (isLinked()) {
 			return getLinkUrl();
 		}
 		Site site = getSite();
 		StringBuilder sb = new StringBuilder();
 		if (isFull) {
-			sb.append("//").append(site.getDomain());
+			sb.append(site.getProtocol()).append(":");
+			if (isMobile) {
+				sb.append("//").append(site.getMobileDomain());
+			} else {
+				sb.append("//").append(site.getDomain());
+			}
 			if (site.getPort() != null) {
 				sb.append(":").append(site.getPort());
 			}
@@ -601,7 +620,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		if (StringUtils.isNotBlank(ctx)) {
 			sb.append(ctx);
 		}
-		boolean sitePrefix = !site.getIdentifyDomain() && !site.getDef();
+		boolean sitePrefix = !site.getIdentifyDomain() && !site.isDef();
 		if (sitePrefix) {
 			sb.append(SITE_PREFIX).append(site.getNumber());
 		}
@@ -622,8 +641,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 	@Transient
 	public String getUrlStatic(Integer page) {
 		Site site = getSite();
-		boolean isFull = site.getWithDomain() || site.getIdentifyDomain();
-		return getUrlStatic(page, isFull, false);
+		boolean isFull = site.getIdentifyDomain();
+		return getUrlStatic(page, isFull, false, Context.isMobile());
 	}
 
 	@Transient
@@ -633,11 +652,11 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	@Transient
 	public String getUrlStaticFull(Integer page) {
-		return getUrlStatic(page, true, false);
+		return getUrlStatic(page, true, false, Context.isMobile());
 	}
 
 	@Transient
-	public String getUrlStatic(Integer page, boolean isFull, boolean forRealPath) {
+	public String getUrlStatic(Integer page, boolean isFull, boolean forRealPath, boolean isMobile) {
 		if (isLinked()) {
 			return getLinkUrl();
 		}
@@ -675,15 +694,15 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		StringBuilder sb = new StringBuilder();
 		Site site = getSite();
 		if (isFull && !forRealPath) {
-			sb.append("//");
-			String domain = site.getDomain();
-			sb.append(domain);
+			String domain = isMobile ? site.getMobileDomain() : site.getDomain();
+			sb.append(site.getProtocol()).append("://").append(domain);
 			if (site.getPort() != null) {
 				sb.append(":").append(site.getPort());
 			}
 		}
 		if (!forRealPath) {
-			PublishPoint point = getSite().getHtmlPublishPoint();
+			PublishPoint point = isMobile ? getSite().getMobilePublishPoint() : getSite()
+					.getHtmlPublishPoint();
 			String urlPrefix = point.getUrlPrefix();
 			if (StringUtils.isNotBlank(urlPrefix)) {
 				sb.append(urlPrefix);
@@ -1122,8 +1141,8 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		if (link.startsWith("/") && !link.startsWith("//")) {
 			StringBuilder sb = new StringBuilder();
 			Site site = getSite();
-			if (site.getWithDomain()) {
-				sb.append("//").append(site.getDomain());
+			if (site.getIdentifyDomain()) {
+				sb.append(site.getProtocol()).append("://").append(site.getDomain());
 				if (site.getPort() != null) {
 					sb.append(":").append(site.getPort());
 				}
@@ -1206,6 +1225,11 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 	@Transient
 	public String getHtml() {
 		return getDetail() != null ? getDetail().getHtml() : null;
+	}
+
+	@Transient
+	public String getMobileHtml() {
+		return getDetail() != null ? getDetail().getMobileHtml() : null;
 	}
 
 	@Transient
@@ -1719,6 +1743,9 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		if (getScore() == null) {
 			setScore(0);
 		}
+		if (getFavorites() == null) {
+			setFavorites(0);
+		}
 		if (getWithImage() == null) {
 			setWithImage(false);
 		}
@@ -1766,6 +1793,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 	private Set<InfoMemberGroup> infoGroups = new HashSet<InfoMemberGroup>(0);
 	private SortedSet<InfoOrg> infoOrgs = new TreeSet<InfoOrg>(new InfoOrgComparator());
 	private Set<InfoProcess> processes = new HashSet<InfoProcess>(0);
+	private List<InfoFavorite> infoFavorites = new ArrayList<InfoFavorite>(0);
 
 	private Node node;
 	private Org org;
@@ -1780,6 +1808,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 	private Integer views;
 	private Integer downloads;
 	private Integer comments;
+	private Integer favorites;
 	private Integer diggs;
 	private Integer score;
 	private String status;
@@ -1806,7 +1835,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	@Id
 	@Column(name = "f_info_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_info", pkColumnValue = "cms_info", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_info", pkColumnValue = "cms_info", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_info")
 	public Integer getId() {
 		return this.id;
@@ -1854,6 +1883,16 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	public void setInfoAttrs(List<InfoAttribute> infoAttrs) {
 		this.infoAttrs = infoAttrs;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "info")
+	@OrderBy("created asc")
+	public List<InfoFavorite> getInfoFavorites() {
+		return infoFavorites;
+	}
+
+	public void setInfoFavorites(List<InfoFavorite> infoFavorites) {
+		this.infoFavorites = infoFavorites;
 	}
 
 	@ElementCollection
@@ -2054,6 +2093,15 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 
 	public void setComments(Integer comments) {
 		this.comments = comments;
+	}
+
+	@Column(name = "f_favorites", nullable = false)
+	public Integer getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(Integer favorites) {
+		this.favorites = favorites;
 	}
 
 	@Column(name = "f_diggs", nullable = false)

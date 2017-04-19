@@ -7,15 +7,13 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <script type="text/javascript">
 $(function() {
-	$("#pagedTable").tableHighlight();
+	
 	$("#sortHead").headSort();
 	<shiro:hasPermission name="ext:collect_field:edit">
 	$("#pagedTable tbody tr").dblclick(function(eventObj) {
@@ -84,104 +82,111 @@ function sourceTypeChange(index) {
 }
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="collect.management"/> - <s:message code="collect.fieldList"/> - ${collect.name}</span>
-	<span class="c-total">(<s:message code="totalElements" arguments="${fn:length(list)}"/>)</span>
+<div class="content-header">
+	<h1><s:message code="collect.management"/> - <s:message code="collect.fieldList"/> - ${collect.name} <small>(<s:message code="totalElements" arguments="${fn:length(list)}"/>)</small></h1>
 </div>
-<form action="update.do" method="post">
-<f:hidden name="collectId" value="${collect.id}"/>
-<tags:search_params/>
-<div class="ls-bc-opt">
-	<shiro:hasPermission name="ext:collect_field:delete">
-	<div class="ls-btn" style="padding-left:4px;">
-    <input type="checkbox" onclick="Cms.check('ids',this.checked);"/>
-    <input type="button" value="<s:message code="delete"/>" onclick="return optDelete(this.form);"/>
-  </div>
-	<div class="ls-btn"></div>
-	</shiro:hasPermission>
-  <shiro:hasPermission name="ext:collect_field:create">
-  <div class="ls-btn"><input type="button" value="<s:message code="collect.fieldCreate"/>" onclick="location.href='create.do?collectId=${collect.id}&${searchstring}';"/></div>
-  <div class="ls-btn"></div>
-  </shiro:hasPermission>
-  <shiro:hasPermission name="ext:collect_field:save">
-  <div class="ls-btn"><input type="submit" value="<s:message code="save"/>"<c:if test="${fn:length(list) le 0}"> disabled="disabled"</c:if>/></div>
-  <div class="ls-btn"></div>
-  </shiro:hasPermission>
-  <div class="ls-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='../collect/edit.do?id=${collect.id}&${searchstring}';"/></div>
-	<div style="clear:both"></div>
+<div class="content">
+	<div class="box box-primary">
+		<div class="box-body table-responsive">
+			<form action="update.do" method="post">
+				<f:hidden name="collectId" value="${collect.id}"/>
+				<tags:search_params/>
+				<div class="btn-toolbar ls-btn-bar">
+					<div class="btn-group">
+						<shiro:hasPermission name="ext:collect_field:delete">
+				    <button class="btn btn-default" type="button" onclick="return optDelete(this.form);"><s:message code="delete"/></button>
+						</shiro:hasPermission>	
+					</div>
+					<div class="btn-group">
+					  <shiro:hasPermission name="ext:collect_field:create">
+					  <button class="btn btn-default" type="button" onclick="location.href='create.do?collectId=${collect.id}&${searchstring}';"><s:message code="collect.fieldCreate"/></button>
+					  </shiro:hasPermission>	
+					</div>
+					<div class="btn-group">
+					  <shiro:hasPermission name="ext:collect_field:save">
+					  <button class="btn btn-default" type="submit"<c:if test="${fn:length(list) le 0}"> disabled="disabled"</c:if>><s:message code="save"/></button>
+					  </shiro:hasPermission>
+					</div>
+					<div class="btn-group">
+					  <button class="btn btn-default" type="button" onclick="location.href='../collect/edit.do?id=${collect.id}&${searchstring}';"><s:message code="return"/></button>
+					</div>
+				</div>
+				<input type="checkbox" onclick="Cms.check('ids',this.checked);"/>
+				<table class="table table-condensed table-bordered ls-tb">
+				  <c:forEach var="bean" varStatus="status" items="${list}">
+				  <tr>
+				    <td class="in-lab-bg" width="25" align="center">
+				      <input type="checkbox" name="ids" value="${bean.id}"/>
+				      <input type="hidden" name="id" value="${bean.id}"/>
+				    </td>
+				    <td class="in-lab-bg" width="60" align="center">
+				      <shiro:hasPermission name="ext:collect_field:delete">
+				      <a href="delete.do?ids=${bean.id}&collectId=${collect.id}&${searchstring}" onclick="return confirmDelete();" class="ls-opt"><s:message code="delete"/></a>
+				      </shiro:hasPermission>
+				    </td>    
+				    <td class="in-lab" width="120"><c:out value="${bean.name}"/>:</td>
+				    <td class="in-ctt" >
+				      <div class="form-inline" style="padding-bottom:3px;">
+				        <s:message code="collectField.sourceType"/>:
+				        <select class="form-control" id="sourceType${status.index}" name="sourceType" onchange="sourceTypeChange(${status.index});">
+				          <f:option value="1" selected="${bean.sourceType}" default="1"><s:message code="collectField.sourceType.1"/></f:option>
+				          <f:option value="3" selected="${bean.sourceType}"><s:message code="collectField.sourceType.3"/></f:option>
+				          <f:option value="4" selected="${bean.sourceType}"><s:message code="collectField.sourceType.4"/></f:option>
+				        </select> &nbsp;
+				        <c:choose>
+				        <c:when test="${bean.code=='publishDate'}">
+				          <s:message code="collectField.dateFormat"/>:
+				          <f:text class="form-control" name="dateFormat" value="${bean.dateFormat}" style="width:180px;"/>
+				          <input type="hidden" name="downloadType" value=""/>
+				          <input type="hidden" name="imageParam" value=""/>
+				        </c:when>
+				        <c:otherwise>
+					        <s:message code="collectField.downloadType"/>:
+					        <select class="form-control" id="downloadType${status.index}" name="downloadType">
+					          <f:option value="" selected="${bean.downloadType}"><s:message code="noneSelect"/></f:option>
+					          <f:option value="image" selected="${bean.downloadType}"><s:message code="collectField.downloadType.image"/></f:option>
+					          <f:option value="file" selected="${bean.downloadType}"><s:message code="collectField.downloadType.file"/></f:option>
+					          <f:option value="video" selected="${bean.downloadType}"><s:message code="collectField.downloadType.video"/></f:option>
+					          <f:option value="flash" selected="${bean.downloadType}"><s:message code="collectField.downloadType.flash"/></f:option>
+					        </select>
+				          <input type="hidden" name="dateFormat" value=""/>
+				          <input type="hidden" name="imageParam" value=""/>
+				        </c:otherwise>
+				        </c:choose>
+				      </div>
+				      <div class="type${status.index} type${status.index}_3" style="padding-bottom:3px;<c:if test="${bean.sourceType!=3}"> display:none;</c:if>">
+				        <f:textarea class="form-control" name="sourceText" value="${bean.sourceText}" maxlength="255" rows="5" spellcheck="false"/>
+				      </div>
+				      <div class="type${status.index} type${status.index}_4" style="padding-bottom:3px;<c:if test="${bean.sourceType!=4}"> display:none;</c:if>">
+				        URL: <f:text class="form-control" id="sourceUrl${status.index}" name="sourceUrl" value="${bean.sourceUrl}" maxlength="255" style="width:500px;"/>
+				      </div>
+				      <div class="type${status.index} type${status.index}_1 type${status.index}_2 type${status.index}_4" style="<c:if test="${bean.sourceType!=1 && bean.sourceType!=2 && bean.sourceType!=4}"> display:none;</c:if>">
+					      <div style="padding-bottom:3px;">
+					        <button class="btn btn-default" type="button" onclick="patternDialog('filter${status.index}','data${status.index}');"><s:message code='set'/></button>
+					      </div>
+					      <div style="padding:5px 0 3px 0;"><s:message code="collect.itemHtml"/>:</div>
+				        <input type="hidden" name="dataAreaPattern" value=""/>
+				        <input type="hidden" name="dataAreaReg" value="false"/>
+				        <f:textarea class="form-control" id="data${status.index}Pattern" name="dataPattern" value="${bean.dataPattern}" maxlength="255" rows="5" spellcheck="false"/>
+					      <div style="padding:3px 0 5px 0;">
+					        <label class="checkbox-inline"><f:checkbox id="data${status.index}Reg" name="dataReg" value="${bean.dataReg}"/><s:message code="collect.isReg"/></label>
+					      </div>
+					      <div style="padding:5px 0 3px 0;"><s:message code="collect.filter"/>:</div>
+					      <f:textarea class="form-control" id="filter${status.index}" name="filter" value="${bean.filter}" maxlength="255" rows="5" spellcheck="false"/>
+				      </div>
+				    </td>
+				  </tr>  
+				  </c:forEach>
+				</table>
+				<c:if test="${fn:length(list) le 0}"> 
+				<div class="ls-norecord"><s:message code="recordNotFound"/></div>
+				</c:if>
+			</form>
+		</div>
+	</div>
 </div>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <c:forEach var="bean" varStatus="status" items="${list}">
-  <tr>
-    <td class="in-lab-bg" width="25" align="center">
-      <input type="checkbox" name="ids" value="${bean.id}"/>
-      <input type="hidden" name="id" value="${bean.id}"/>
-    </td>
-    <td class="in-lab-bg" width="40" align="center">
-      <shiro:hasPermission name="ext:collect_field:delete">
-      <a href="delete.do?ids=${bean.id}&collectId=${collect.id}&${searchstring}" onclick="return confirmDelete();" class="ls-opt"><s:message code="delete"/></a>
-      </shiro:hasPermission>
-    </td>    
-    <td class="in-lab" width="120"><c:out value="${bean.name}"/>:</td>
-    <td class="in-ctt" >
-      <div style="padding-bottom:3px;">
-        <s:message code="collectField.sourceType"/>:
-        <select id="sourceType${status.index}" name="sourceType" onchange="sourceTypeChange(${status.index});">
-          <f:option value="1" selected="${bean.sourceType}" default="1"><s:message code="collectField.sourceType.1"/></f:option>
-          <f:option value="3" selected="${bean.sourceType}"><s:message code="collectField.sourceType.3"/></f:option>
-          <f:option value="4" selected="${bean.sourceType}"><s:message code="collectField.sourceType.4"/></f:option>
-        </select> &nbsp;
-        <c:choose>
-        <c:when test="${bean.code=='publishDate'}">
-          <s:message code="collectField.dateFormat"/>:
-          <f:text name="dateFormat" value="${bean.dateFormat}" style="width:180px;"/>
-          <input type="hidden" name="downloadType" value=""/>
-          <input type="hidden" name="imageParam" value=""/>
-        </c:when>
-        <c:otherwise>
-	        <s:message code="collectField.downloadType"/>:
-	        <select id="downloadType${status.index}" name="downloadType">
-	          <f:option value="" selected="${bean.downloadType}"><s:message code="noneSelect"/></f:option>
-	          <f:option value="image" selected="${bean.downloadType}"><s:message code="collectField.downloadType.image"/></f:option>
-	          <f:option value="file" selected="${bean.downloadType}"><s:message code="collectField.downloadType.file"/></f:option>
-	          <f:option value="video" selected="${bean.downloadType}"><s:message code="collectField.downloadType.video"/></f:option>
-	          <f:option value="flash" selected="${bean.downloadType}"><s:message code="collectField.downloadType.flash"/></f:option>
-	        </select>
-          <input type="hidden" name="dateFormat" value=""/>
-          <input type="hidden" name="imageParam" value=""/>
-        </c:otherwise>
-        </c:choose>
-      </div>
-      <div class="type${status.index} type${status.index}_3" style="padding-bottom:3px;<c:if test="${bean.sourceType!=3}"> display:none;</c:if>">
-        <f:textarea name="sourceText" value="${bean.sourceText}" maxlength="255" style="width:95%;height:60px;" spellcheck="false"/>
-      </div>
-      <div class="type${status.index} type${status.index}_4" style="padding-bottom:3px;<c:if test="${bean.sourceType!=4}"> display:none;</c:if>">
-        URL: <f:text id="sourceUrl${status.index}" name="sourceUrl" value="${bean.sourceUrl}" maxlength="255" style="width:500px;"/>
-      </div>
-      <div class="type${status.index} type${status.index}_1 type${status.index}_2 type${status.index}_4" style="<c:if test="${bean.sourceType!=1 && bean.sourceType!=2 && bean.sourceType!=4}"> display:none;</c:if>">
-	      <div style="padding-bottom:3px;">
-	        <input type="button" value="<s:message code='set'/>" onclick="patternDialog('filter${status.index}','data${status.index}');"/>
-	      </div>
-	      <div style="padding:5px 0 3px 0;"><s:message code="collect.itemHtml"/>:</div>
-        <input type="hidden" name="dataAreaPattern" value=""/>
-        <input type="hidden" name="dataAreaReg" value="false"/>
-        <f:textarea id="data${status.index}Pattern" name="dataPattern" value="${bean.dataPattern}" maxlength="255" style="width:95%;height:60px;" spellcheck="false"/>
-	      <div style="padding:3px 0 5px 0;">
-	        <label><f:checkbox id="data${status.index}Reg" name="dataReg" value="${bean.dataReg}"/><s:message code="collect.isReg"/></label>
-	      </div>
-        <div style="border-top:solid 1px #ccc;"></div>
-	      <div style="padding:5px 0 3px 0;"><s:message code="collect.filter"/>:</div>
-	      <f:textarea id="filter${status.index}" name="filter" value="${bean.filter}" maxlength="255" style="width:95%;height:60px;" spellcheck="false"/>
-      </div>
-    </td>
-  </tr>  
-  </c:forEach>
-</table>
-<c:if test="${fn:length(list) le 0}"> 
-<div class="ls-norecord margin-top5"><s:message code="recordNotFound"/></div>
-</c:if>
-</form>
+
 </body>
 </html>

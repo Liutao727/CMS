@@ -3,68 +3,87 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <script type="text/javascript">
 $(function() {
 	$("#validForm").validate();
 });
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="global.configuration"/> - <s:message code="edit"/></span>
+<div class="content-header">
+	<h1><s:message code="global.configuration"/> - <s:message code="edit"/></h1>
 </div>
-<div class="ls-bc-opt margin-top5">
-	<div id="radio">
-		<jsp:include page="types.jsp"/>
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="base_update.do" method="post">
+			<div class="box-header with-border">
+				<div id="radio">
+					<jsp:include page="types.jsp"/>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.protocol"/></label>
+	            <div class="col-sm-8">
+					      <select name="protocol" class="form-control required">
+					    		<option<c:if test="${bean.protocol eq 'http'}"> selected="selected"</c:if>>http</option>
+					    		<option<c:if test="${bean.protocol eq 'https'}"> selected="selected"</c:if><c:if test=""> selected="selected"</c:if>>https</option>
+					    	</select>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="global.port"/></label>
+	            <div class="col-sm-8">
+					    	<f:text name="port" value="${bean.port}" class="form-control {'range':[0,65535]}"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="global.contextPath"/></label>
+	            <div class="col-sm-10">
+					      <f:text class="form-control" name="contextPath" value="${bean.contextPath}"/>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.captchaErrors"/><span class="in-prompt" title="<s:message code='global.captchaErrors.prompt'/>"></span></label>
+	            <div class="col-sm-8">
+					      <f:text name="captchaErrors" value="${bean.captchaErrors}" class="form-control {'range':[0,65535]}"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="global.uploadsPublishPoint"/></label>
+	            <div class="col-sm-8">
+					    	<select class="form-control" name="uploadsPublishPointId">
+					        <f:options itemLabel="name" itemValue="id" selected="${bean.uploadsPublishPoint.id}" items="${uploadsPublishPointList}"/>
+					      </select>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<div class="box-footer">
+	      <button class="btn btn-primary" type="submit"><s:message code="save"/></button>
+			</div>
+		</form>
 	</div>
 </div>
-<form id="validForm" action="base_update.do" method="post">
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.protocol"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<select name="protocol" class="required">
-    		<option<c:if test="${bean.protocol eq 'http'}"> selected="selected"</c:if>>http</option>
-    		<option<c:if test="${bean.protocol eq 'https'}"> selected="selected"</c:if><c:if test=""> selected="selected"</c:if>>https</option>
-    	</select>
-    </td>
-    <td class="in-lab" width="15%"><s:message code="global.port"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="port" value="${bean.port}" class="{'range':[0,65535]}" style="width:180px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="global.contextPath"/>:</td>
-    <td class="in-ctt" width="35%"><f:text name="contextPath" value="${bean.contextPath}" style="width:180px;"/></td>
-    <td class="in-lab" width="15%"><em class="required">*</em><s:message code="global.withDomain"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<label><f:radio name="withDomain" value="true" checked="${bean.withDomain}" class="required" /><s:message code="yes"/></label>
-    	<label><f:radio name="withDomain" value="false" checked="${bean.withDomain}" default="false" class="required" /><s:message code="no"/></label>
-  	</td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="global.uploadsPublishPoint"/>:</td>
-    <td class="in-ctt" width="35%">
-      <select name="uploadsPublishPointId">
-        <f:options itemLabel="name" itemValue="id" selected="${bean.uploadsPublishPoint.id}" items="${uploadsPublishPointList}"/>
-      </select>
-    </td>
-    <td class="in-lab" width="15%"><s:message code="global.captchaErrors"/>:</td>
-    <td class="in-ctt" width="35%">
-    	<f:text name="captchaErrors" value="${bean.captchaErrors}" class="{'range':[0,65535]}" style="width:180px;"/><span class="in-prompt" title="<s:message code='global.captchaErrors.prompt'/>">&nbsp;</span>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="save"/>"/></div>
-    </td>
-  </tr>
-</table>
-</form>
 </body>
 </html>

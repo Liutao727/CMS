@@ -1,6 +1,5 @@
 package com.jspxcms.core.web.back;
 
-import static com.jspxcms.core.constant.Constants.CREATE;
 import static com.jspxcms.core.constant.Constants.DELETE_SUCCESS;
 import static com.jspxcms.core.constant.Constants.EDIT;
 import static com.jspxcms.core.constant.Constants.MESSAGE;
@@ -31,6 +30,7 @@ import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Message;
+import com.jspxcms.core.domain.MessageText;
 import com.jspxcms.core.service.MessageService;
 
 @Controller
@@ -48,17 +48,6 @@ public class MessageController {
 		return "core/message/message_list";
 	}
 
-	@RequiresPermissions("core:message:create")
-	@RequestMapping("create.do")
-	public String create(Integer id, org.springframework.ui.Model modelMap) {
-		if (id != null) {
-			Message bean = service.get(id);
-			modelMap.addAttribute("bean", bean);
-		}
-		modelMap.addAttribute(OPRT, CREATE);
-		return "core/message/message_form";
-	}
-
 	@RequiresPermissions("core:message:edit")
 	@RequestMapping("edit.do")
 	public String edit(Integer id, Integer position,
@@ -74,25 +63,10 @@ public class MessageController {
 		return "core/message/message_form";
 	}
 
-	@RequiresPermissions("core:message:save")
-	@RequestMapping("save.do")
-	public String save(Message bean, String redirect, HttpServletRequest request, RedirectAttributes ra) {
-		service.save(bean);
-		logger.info("save Message, text={}.", StringUtils.substring(bean.getText(), 0, 50));
-		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
-		if (Constants.REDIRECT_LIST.equals(redirect)) {
-			return "redirect:list.do";
-		} else if (Constants.REDIRECT_CREATE.equals(redirect)) {
-			return "redirect:create.do";
-		} else {
-			ra.addAttribute("id", bean.getId());
-			return "redirect:edit.do";
-		}
-	}
-
 	@RequiresPermissions("core:message:update")
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute("bean") Message bean, Integer position, String redirect, RedirectAttributes ra) {
+	public String update(@ModelAttribute("bean") Message bean, @ModelAttribute("messageText") MessageText messageText,
+			Integer position, String redirect, RedirectAttributes ra) {
 		service.update(bean);
 		logger.info("update Message, text={}.", StringUtils.substring(bean.getText(), 0, 50));
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -116,9 +90,16 @@ public class MessageController {
 		return "redirect:list.do";
 	}
 
-	@ModelAttribute("bean")
-	public Message preloadBean(@RequestParam(required = false) Integer oid) {
-		return oid != null ? service.get(oid) : null;
+	@ModelAttribute
+	public void preloadBean(@RequestParam(required = false) Integer oid, org.springframework.ui.Model modelMap) {
+		if (oid != null) {
+			Message bean = service.get(oid);
+			modelMap.addAttribute("bean", bean);
+			if (bean != null) {
+				MessageText messageText = bean.getMessageText();
+				modelMap.addAttribute("messageText", messageText);
+			}
+		}
 	}
 
 	@Autowired

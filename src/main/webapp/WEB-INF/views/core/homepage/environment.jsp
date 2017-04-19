@@ -2,72 +2,68 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<style type="text/css">
-.welcome{padding:10px 0 0 15px;color:#333;}
-.bar{margin-top:5px;padding:5px 5px 5px 15px;background-color:#eaf2fa;border-top:1px solid #cbdaea;border-bottom:1px solid #deeaf7;font-weight:bold;font-size:14px;color:#333;}
-.line{height:32px;line-height:32px;border-bottom:#dde9f5 1px solid;}
-.label{float:left;width:200px;padding-left:15px;color:#333;background-color:#f4f8fc;}
-.content{float:left;color:#666;padding-left:15px;}
-.clear{clear:both;}
-</style>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 </head>
-<body class="c-body">
-<h1 class="bar">系统信息</h1>
-<p class="line">
-	<label class="label">操作系统</label>
-	<span class="content">${props['os.name']} ${props['os.version']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">JAVA运行环境</label>
-	<span class="content">${props['java.runtime.name']} ${props['java.runtime.version']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">JAVA虚拟机</label>
-	<span class="content">${props['java.vm.name']} ${props['java.vm.version']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">系统用户</label>
-	<span class="content">${props['user.name']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">用户主目录</label>
-	<span class="content">${props['user.home']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">用户工作目录</label>
-	<span class="content">${props['user.dir']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">用户临时目录</label>
-	<span class="content">${props['java.io.tmpdir']}</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">最大内存</label>
-	<span class="content"><fmt:formatNumber value="${maxMemoryMB}" pattern="#.00"/> MB</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">已用内存</label>
-	<span class="content"><fmt:formatNumber value="${usedMemoryMB}" pattern="#.00"/> MB</span>
-	<div class="clear"></div>
-</p>
-<p class="line">
-	<label class="label">可用内存</label>
-	<span class="content"><fmt:formatNumber value="${useableMemoryMB}" pattern="#.00"/> MB</span>
-	<div class="clear"></div>
-</p>
+<body class="skin-blue content-body">
+<div class="content-header">
+	<h1>系统信息</h1>
+</div>
+<div class="content">
+	<div class="row">
+		<div class="col-md-6">
+		  <div class="box box-success">
+			  <div class="table-responsive">
+			    <table class="table">
+			    <tbody>
+			    	<tr>
+			        <th style="width:30%">操作系统</th>
+		      		<td>${props['os.name']} ${props['os.version']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">JAVA运行环境</th>
+		      		<td>${props['java.runtime.name']} ${props['java.runtime.version']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">JAVA虚拟机</th>
+		      		<td>${props['java.vm.name']} ${props['java.vm.version']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">系统用户</th>
+		      		<td>${props['user.name']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">用户主目录</th>
+		      		<td>${props['user.home']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">用户工作目录</th>
+		      		<td>${props['user.dir']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">用户临时目录</th>
+		      		<td>${props['java.io.tmpdir']}</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">最大内存</th>
+		      		<td><fmt:formatNumber value="${maxMemoryMB}" pattern="#.00"/> MB</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">已用内存</th>
+		      		<td><fmt:formatNumber value="${usedMemoryMB}" pattern="#.00"/> MB</td>
+				    </tr>
+			    	<tr>
+			        <th style="width:30%">可用内存</th>
+		      		<td><fmt:formatNumber value="${useableMemoryMB}" pattern="#.00"/> MB</td>
+				    </tr>
+				  </tbody>
+				  </table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>

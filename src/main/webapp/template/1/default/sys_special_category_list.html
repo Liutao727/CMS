@@ -19,7 +19,7 @@ a.zt-a1{color:#252525;font-size:20px;font-family:"Microsoft YaHei";text-decorati
 [#include 'inc_header.html'/]
 <div class="w center">
 	<div class="fs20 ff-yh" style="padding:8px 28px;background:url(_files/img/ico-point-red2.png) 10px center no-repeat">
-		<a href="${dy}/special_category.jspx" class="zt-a1">专题</a>
+		<a href="${dy}/special_category" class="zt-a1">专题</a>
 	</div>
 </div>
 <div class="w center">
@@ -27,7 +27,7 @@ a.zt-a1{color:#252525;font-size:20px;font-family:"Microsoft YaHei";text-decorati
 		[@SpecialList isRecommend='true' limit='5';list]
 		[#list list as special]
 		<li class="left" style="[#if (special_index+1) % 5 != 0]margin-right:25px;[/#if]">
-			<a href="${ctx}/special/${special.id}.jspx" target="_blank" class="a fs14">
+			<a href="${ctx}/special/${special.id}" target="_blank" class="a fs14">
 				<div><img src="${special.smallImageUrl}" width="180" height="120"/></div>
 				<div class="text-center" style="padding:5px 0 5px 0;">${substring(special.title,12,'...')}</div>
 			</a>
@@ -42,15 +42,15 @@ a.zt-a1{color:#252525;font-size:20px;font-family:"Microsoft YaHei";text-decorati
 	[#list list as sc]
 	<div class="[#if sc_index % 2 == 0]left[#else]right[/#if] mt20" style="width:490px;">
 		<div style="padding-left:10px;border-top:2px solid #4e4e4e;line-height:32px;">
-			<div class="left"><a href="${ctx}/special_category/${sc.id}.jspx" class="a-none ff-yh fs16" style="color:#d90102;">${sc.name}专题</a></div>
-			<div class="right" style="background:url(_files/img/more.png) right 11px no-repeat;padding-right:15px;"><a href="${ctx}/special_category/${sc.id}.jspx" class="a1">更多</a></div>
+			<div class="left"><a href="${ctx}/special_category/${sc.id}" class="a-none ff-yh fs16" style="color:#d90102;">${sc.name}专题</a></div>
+			<div class="right" style="background:url(_files/img/more.png) right 11px no-repeat;padding-right:15px;"><a href="${ctx}/special_category/${sc.id}" class="a1">更多</a></div>
 			<div class="clear"></div>
 		</div>
 		<ul class="list-unstyled mt5" style="padding-left:10px;line-height:32px;">
 			[@SpecialList categoryId=sc.id limit='5';list]
 			[#list list as special]
 			<li style="padding-left:15px;background:url(_files/img/ico-point-red.png) 0 center no-repeat;">
-				<div class="left"><a href="${ctx}/special/${special.id}.jspx" target="_blank" class="a fs14" style="">${substring(special.title,20,'...')}</a></div>
+				<div class="left"><a href="${ctx}/special/${special.id}" target="_blank" class="a fs14" style="">${substring(special.title,20,'...')}</a></div>
 				<div class="right" style="color:#8d8d8d;">${special.creationDate?string('yyyy-MM-dd')}</div>
 				<div class="clear"></div>
 			</li>

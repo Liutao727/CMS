@@ -74,7 +74,8 @@ public class NodeOrg implements java.io.Serializable {
 		this.viewPerm = viewPerm;
 	}
 
-	public static class NodeOrgComparator implements Comparator<NodeOrg> {
+	@SuppressWarnings("serial")
+	public static class NodeOrgComparator implements Comparator<NodeOrg>,Serializable {
 		public int compare(NodeOrg o1, NodeOrg o2) {
 			return o1.getOrg().getTreeNumber().compareTo(o2.getOrg().getTreeNumber());
 		}

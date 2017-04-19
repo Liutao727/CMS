@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.service.SiteService;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.core.support.SiteResolver;
@@ -26,13 +25,13 @@ import com.jspxcms.core.support.SiteResolver;
 public class SearchController {
 	public static final String TEMPLATE = "sys_search.html";
 
-	@RequestMapping("/search.jspx")
+	@RequestMapping("/search")
 	public String search(Integer page, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		return search(null, page, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/search.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/search")
 	public String search(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		siteResolver.resolveSite(siteNumber);
@@ -45,6 +44,4 @@ public class SearchController {
 
 	@Autowired
 	private SiteResolver siteResolver;
-	@Autowired
-	private SiteService siteService;
 }

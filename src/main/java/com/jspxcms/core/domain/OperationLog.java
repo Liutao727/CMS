@@ -72,7 +72,7 @@ public class OperationLog implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_operation_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_operation_log", pkColumnValue = "cms_operation_log", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_operation_log", pkColumnValue = "cms_operation_log", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_operation_log")
 	public Integer getId() {
 		return this.id;

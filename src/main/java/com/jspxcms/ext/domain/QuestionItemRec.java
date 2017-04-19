@@ -121,7 +121,8 @@ public class QuestionItemRec implements java.io.Serializable {
 		}
 	}
 
-	public static class QuestionItemRecComparator implements Comparator<QuestionItemRec> {
+	@SuppressWarnings("serial")
+	public static class QuestionItemRecComparator implements Comparator<QuestionItemRec>,Serializable {
 		public int compare(QuestionItemRec o1, QuestionItemRec o2) {
 			return o1.getRecord().getDate().compareTo(o2.getRecord().getDate());
 		}

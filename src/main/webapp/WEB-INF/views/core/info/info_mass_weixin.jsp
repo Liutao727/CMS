@@ -7,13 +7,11 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<style type="text/css">
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<style>
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
 </style>
@@ -59,143 +57,151 @@ function wxmodeChange(){
 }
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="info.management"/> - <s:message code="info.massWeixin"/>
+<c:set var="usernameExist"><s:message code="user.username.exist"/></c:set>
+<div class="content-header">
+	<h1><s:message code="info.management"/> - <s:message code="info.massWeixin"/></h1>
 </div>
-<form id="validForm" action="mass_weixin.do" method="post">
-<tags:search_params/>
-<f:hidden name="queryNodeId" value="${queryNodeId}"/>
-<f:hidden name="queryNodeType" value="${queryNodeType}"/>
-<f:hidden name="queryInfoPermType" value="${queryInfoPermType}"/>
-<f:hidden id="queryStatus" name="queryStatus" value="${queryStatus}"/>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td colspan="4" class="in-opt">
-		  <div class="ls-btn"><input type="button" value="<s:message code='moveTop'/>" onclick="Cms.moveTop('ids');"/></div>
-		  <div class="ls-btn"><input type="button" value="<s:message code='moveUp'/>" onclick="Cms.moveUp('ids');"/></div>
-		  <div class="ls-btn"><input type="button" value="<s:message code='moveDown'/>" onclick="Cms.moveDown('ids');"/></div>
-		  <div class="ls-btn"><input type="button" value="<s:message code='moveBottom'/>" onclick="Cms.moveBottom('ids');"/></div>
-    	<div class="in-btn"></div>
-			<div class="in-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="info.weixin.mode"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-   		<label><input type="radio" name="mode" value="all" checked="checked" class="required" onchange="wxmodeChange();"/><s:message code="info.weixin.mode.all"/></label>
-   		<label><input type="radio" name="mode" value="group" class="required" onchange="wxmodeChange();"/><s:message code="info.weixin.mode.group"/></label>
-   		<label><input type="radio" name="mode" value="preview" class="required" onchange="wxmodeChange();"/><s:message code="info.weixin.mode.preview"/></label>
-    </td>
-  </tr>
-  <tr id="wxmode_group" class="wx-mode" style="display:none;">
-    <td class="in-lab" width="15%"><s:message code="info.weixin.group"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-   		<c:forEach var="group" items="${weixinGroups}">
-   		<label><input type="radio" name="groupId" value="${group.id}" class="required"/>${group.name}(${group.count})</label>
-   		</c:forEach>
-    </td>
-  </tr>
-  <tr id="wxmode_preview" class="wx-mode" style="display:none;">
-    <td class="in-lab" width="15%"><s:message code="info.weixin.previewWxname"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:text name="towxname" class="required" style="width:180px;"/>
-    </td>
-  </tr>
-</table>
-<table id="pagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb">
-  <thead>
-  <tr class="ls_table_th">
-    <th width="25"><input type="checkbox" onclick="Cms.check('ids',this.checked);"/></th>
-    <th width="50"><s:message code="operate"/></th>
-    <th width="30" class="ls-th-sort"><span class="ls-sort" pagesort="id">ID</span></th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody>
-  <c:forEach var="bean" varStatus="status" items="${list}">
-  <tr>
-    <td><input type="checkbox" name="ids" value="${bean.id}"/></td>
-    <td align="center">
-      <a href="javascript:;" onclick="$(this).parent().parent().remove();" class="ls-opt"><s:message code="remove"/></a>
-     </td>
-    <td><c:out value="${bean.id}"/></td>
-    <td>
-    	<table border="0" cellpadding="0" cellspacing="0" class="in-tb">
-			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.title"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<input type="text" name="title" value="<c:out value='${bean.title}'/>" style="width:500px;"/>
-			   	</td>
+
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="mass_weixin.do" method="post">
+			<tags:search_params/>
+			<f:hidden name="queryNodeId" value="${queryNodeId}"/>
+			<f:hidden name="queryNodeType" value="${queryNodeType}"/>
+			<f:hidden name="queryInfoPermType" value="${queryInfoPermType}"/>
+			<f:hidden id="queryStatus" name="queryStatus" value="${queryStatus}"/>
+			<div class="box-header with-border">
+				<div class="btn-toolbar">
+					<div class="btn-group">						
+						<button class="btn btn-default" type="button" onclick="Cms.moveTop('ids');"><s:message code='moveTop'/></button>
+					  <button class="btn btn-default" type="button" onclick="Cms.moveUp('ids');"><s:message code='moveUp'/></button>
+					  <button class="btn btn-default" type="button" onclick="Cms.moveDown('ids');"><s:message code='moveDown'/></button>
+					  <button class="btn btn-default" type="button" onclick="Cms.moveBottom('ids');"><s:message code='moveBottom'/></button>
+				  </div>
+					<div class="btn-group">
+						<button class="btn btn-default" type="button" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"><s:message code="return"/></button>
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="info.weixin.mode"/></label>
+	            <div class="col-sm-10">
+					   		<label class="radio-inline"><input type="radio" name="mode" value="all" class="required" onchange="wxmodeChange();" checked/><s:message code="info.weixin.mode.all"/></label>
+					   		<label class="radio-inline"><input type="radio" name="mode" value="group" class="required" onchange="wxmodeChange();"/><s:message code="info.weixin.mode.group"/></label>
+					   		<label class="radio-inline"><input type="radio" name="mode" value="preview" class="required" onchange="wxmodeChange();"/><s:message code="info.weixin.mode.preview"/></label>
+            	</div>
+           	</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="info.weixin.group"/></label>
+	            <div class="col-sm-10">
+					   		<c:forEach var="group" items="${weixinGroups}">
+					   		<label class="radio-inline"><input type="radio" name="groupId" value="${group.id}" class="required"/>${group.name}(${group.count})</label>
+					   		</c:forEach>
+            	</div>
+           	</div>
+					</div>
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="info.weixin.previewWxname"/></label>
+	            <div class="col-sm-10">
+					   		<f:text name="towxname" class="form-control required"/>
+            	</div>
+           	</div>
+					</div>
+				</div>
+			</div>
+			
+			<table id="pagedTable" class="table table-condensed table-bordered ls-tb">
+			  <thead>
+			  <tr class="ls_table_th">
+			    <th width="25"><input type="checkbox" onclick="Cms.check('ids',this.checked);"/></th>
+			    <th width="50"><s:message code="operate"/></th>
+			    <th width="30">ID</th>
+			    <th></th>
 			  </tr>
+			  </thead>
+			  <tbody>
+			  <c:forEach var="bean" varStatus="status" items="${list}">
 			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.author"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<input type="text" name="author" value="<c:out value='${bean.author}'/>" style="width:500px;"/>
-			   	</td>
-			  </tr>
-			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.weixin.sourceUrl"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<input type="text" name="contentSourceUrl" value="<c:out value='${bean.site.protocol}:${bean.urlFull}'/>" style="width:500px;"/>
-			   	</td>
-			  </tr>
-			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.metaDescription"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<f:textarea name="digest" value="${bean.metaDescription}" class="{maxlength:450}" style="width:500px;height:60px;"/>
-			   	</td>
-			  </tr>
-			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.weixin.showConverPic"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<label><f:checkbox name="showConverPic" value="true" checked="checked"/>是</label>
-			   	</td>
-			  </tr>
-			  <tr>
-			    <td class="in-lab" width="15%"><s:message code="info.weixin.thumb"/>:</td>
-			    <td class="in-ctt" width="85%" colspan="3">
-			   		<tags:image_upload id="thumb${status.index}" name="thumb" value="${bean.smallImage}" required="true" watermark="false" scale="false" exact="false"/>
-			   	</td>
-			  </tr>
-			  <tr>
-			    <td class="in-ctt" width="100%" colspan="4">
-			   		<script id="content_${status.index}" name="content_${status.index}" type="text/plain" class="required"></script>
-						<script type="text/javascript">
-				    $(function() {
-				      var ueditor_content_${status.index} = UE.getEditor('content_${status.index}',{
-				    	  toolbars: window.UEDITOR_CONFIG.toolbars_Basic,
-			          initialFrameHeight:150,
-				        serverUrl:"${ctx}${cmscp}/core/ueditor.do?ueditor=true"
-				      });
-				      ueditor_content_${status.index}.addListener('contentchange',function(){
-                this.sync();
-                $("#ueditor_textarea_content_${status.index}").valid();
-	            });
-				      ueditor_content_${status.index}.ready(function() {
-				    	  ueditor_content_${status.index}.setContent("${fnx:escapeEcmaScript(bean.text)}");
-				    	  $("textarea[name=content_${status.index}]").rules("add",{required:true});
+			    <td><input type="checkbox" name="ids" value="${bean.id}"/></td>
+			    <td align="center">
+			      <a href="javascript:;" onclick="$(this).parent().parent().remove();" class="ls-opt"><s:message code="remove"/></a>
+			     </td>
+			    <td><c:out value="${bean.id}"/></td>
+			    <td>
+			    	<div class="box-body">
+				    	<div class="form-group">
+						    <label for="title" class="col-sm-2 control-label"><s:message code="info.title"/></label>
+						    <div class="col-sm-10">
+						      <input class="form-control" type="text" id="title" name="title" value="<c:out value='${bean.title}'/>"/>
+						    </div>
+						  </div>
+				    	<div class="form-group">
+						    <label for="author" class="col-sm-2 control-label"><s:message code="info.author"/></label>
+						    <div class="col-sm-10">
+						      <input class="form-control" type="text" id="author" name="author" value="<c:out value='${bean.author}'/>"/>
+						    </div>
+						  </div>
+				    	<div class="form-group">
+						    <label for="contentSourceUrl" class="col-sm-2 control-label"><s:message code="info.weixin.sourceUrl"/></label>
+						    <div class="col-sm-10">
+						      <input class="form-control" type="text" id="contentSourceUrl" name="contentSourceUrl" value="<c:out value='${bean.urlFull}'/>"/>
+						    </div>
+						  </div>
+				    	<div class="form-group">
+						    <label for="digest" class="col-sm-2 control-label"><s:message code="info.metaDescription"/></label>
+						    <div class="col-sm-10">
+						      <f:textarea class="form-control {maxlength:450}" id="digest" name="digest" value="${bean.metaDescription}" rows="3"/>
+						    </div>
+						  </div>
+				    	<div class="form-group">
+						    <label for="digest" class="col-sm-2 control-label"><s:message code="info.weixin.showConverPic"/></label>
+						    <div class="col-sm-10">
+						      <label class="checkbox-inline"><f:checkbox name="showConverPic" value="true" checked="checked"/>是</label>
+						    </div>
+						  </div>
+				    	<div class="form-group">
+						    <label for="digest" class="col-sm-2 control-label"><s:message code="info.weixin.thumb"/></label>
+						    <div class="col-sm-10">
+						      <tags:image_upload id="thumb${status.index}" name="thumb" value="${bean.smallImage}" required="true" watermark="false" scale="false" exact="false"/>
+						    </div>
+						  </div>
+			    		<script id="content_${status.index}" name="content_${status.index}" type="text/plain" class="required"></script>
+							<script type="text/javascript">
+					    $(function() {
+					      var ueditor_content_${status.index} = UE.getEditor('content_${status.index}',{
+					    	  toolbars: window.UEDITOR_CONFIG.toolbars_Basic,
+				          initialFrameHeight:150,
+					        serverUrl:"${ctx}${cmscp}/core/ueditor.do?ueditor=true"
+					      });
+					      ueditor_content_${status.index}.addListener('contentchange',function(){
+	                this.sync();
+	                $("#ueditor_textarea_content_${status.index}").valid();
+		            });
+					      ueditor_content_${status.index}.ready(function() {
+					    	  ueditor_content_${status.index}.setContent("${fnx:escapeEcmaScript(bean.text)}");
+					    	  $("textarea[name=content_${status.index}]").rules("add",{required:true});
+						    });
 					    });
-				    });
-						</script>
-			   	</td>
+							</script>
+			    	</div>			    	
+			    </td>
 			  </tr>
+			  </c:forEach>
+			  </tbody>
 			</table>
-    	
-    </td>
-  </tr>
-  </c:forEach>
-  </tbody>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb">
-  <tr>
-    <td colspan="4" class="in-opt">
-      <div class="in-btn"><input type="submit" value="<s:message code="submit"/>"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-</table>
-</form>
+			<div class="box-footer">
+				<button class="btn btn-primary" type="submit"><s:message code="submit"/></button>
+			</div>
+		</form>
+	</div>
+</div>
 </body>
 </html>

@@ -9,8 +9,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
-import com.jspxcms.core.domain.QSpecialCategory;
 import com.jspxcms.core.domain.SpecialCategory;
+import com.jspxcms.core.domain.dsl.QSpecialCategory;
 import com.jspxcms.core.repository.plus.SpecialCategoryDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

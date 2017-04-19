@@ -50,12 +50,12 @@ $(function(){
 	<div class="w center c999" style="height:32px;line-height:32px;">
 		<div class="left">
 			<a class="topa ml5" href="${ctx}/" target="_blank">首页</a>
-			<a class="topa ml5" href="${ctx}/sitemap.jspx" target="_blank">网站地图</a>
-			<a class="topa ml5" href="${ctx}/rss.jspx">RSS订阅</a>
-			<a class="topa ml5" href="${ctx}/tags.jspx">TAGS标签</a>
+			<a class="topa ml5" href="${ctx}/sitemap" target="_blank">网站地图</a>
+			<a class="topa ml5" href="${ctx}/rss">RSS订阅</a>
+			<a class="topa ml5" href="${ctx}/tags">TAGS标签</a>
 		</div>
 		<div class="right">
-			<script type="text/javascript" src="${ctx}/login_include.jspx?d=${.now?time}"></script>
+			<script type="text/javascript" src="${ctx}/login_include?d=${.now?time}"></script>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -74,9 +74,11 @@ $(function(){
 	</div>
 	<div class="right user-box" style="width:740px;">
 		<div class="user-box-head">[#if oprt=='edit']稿件修改[#else]稿件发布[/#if]</div>
-		<form id="validForm" action="${ctx}/my/contribution/[#if oprt=='edit']update[#else]create[/#if].jspx" method="post" style="padding:10px 16px;">
-			<input type="hidden" name="nextUrl" value="${ctx}/my/contribution.jspx"/>
+		<form id="validForm" action="${ctx}/my/contribution/[#if oprt=='edit']update[#else]create[/#if]" method="post" style="padding:10px 16px;">
+			<input type="hidden" name="nextUrl" value="${ctx}/my/contribution"/>
 			<input type="hidden" name="id" value="${bean.id}"/>
+			<!-- 对于退回的稿件，修改同时再次提交审核 -->
+			<input type="hidden" name="pass" value="true"/>
 			<div class="form-section">
 				<div class="form-label"><em class="required">*</em>栏目：</div>
 				<div class="form-content">
@@ -105,7 +107,7 @@ $(function(){
 							toolbars: window.UEDITOR_CONFIG.toolbars_BasicPage,
 							//initialFrameWidth:700,
 							initialFrameHeight:300,
-					    serverUrl:"${dy}/ueditor.jspx?ueditor=true"
+					    serverUrl:"${dy}/ueditor?ueditor=true"
 						});
 						editor_text.ready(function() {
 				       editor_text.setContent("[#noescape]${(bean.text)!?js_string}[/#noescape]");

@@ -9,8 +9,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.jpa.QueryHints;
 
-import com.jspxcms.ext.domain.QVote;
 import com.jspxcms.ext.domain.Vote;
+import com.jspxcms.ext.domain.dsl.QVote;
 import com.jspxcms.ext.repository.plus.VoteDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;

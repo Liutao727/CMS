@@ -3,12 +3,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/head.jsp"/>
 <style type="text/css">
 html,body{height:100%;}
 </style>
@@ -85,25 +83,25 @@ function submit() {
 </script>
 </head>
 <body>
-<table width="100%" height="100%" style="" cellpadding="0" cellspacing="0" border="0">
+<table class="form-inline" width="100%" height="100%" style="" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td height="60" colspan="2" style="padding:0 2px;">
       <div>
-	      <select id="urls" style="width:800px;" onchange="urlsChange();">
+	      <select class="form-control" id="urls" style="width:800px;" onchange="urlsChange();">
           <c:forEach var="url" items="${urls}">
 	        <option>${url}</option>
 	        </c:forEach>
 	      </select>
       </div>
       <div>
-        <input id="url" type="text" style="width:800px;"/>
-        <input type="button" value="<s:message code='fetch'/>" onclick="fetchUrl();"/>
+        <input class="form-control" id="url" type="text" style="width:800px;"/>
+        <button class="btn btn-default" type="button" onclick="fetchUrl();"><s:message code='fetch'/></button>
       </div>
     </td>
   </tr>
   <tr>
     <td width="50%" height="100%" valign="top" style="padding:0 2px;">
-      <textarea id="source" spellcheck="false" wrap="off" style="width:98%;height:550px;"></textarea>
+      <textarea class="form-control" id="source" spellcheck="false" wrap="off" style="width:98%;height:550px;"></textarea>
     </td>
     <td width="50%" valign="top">
       <c:if test="${!empty areaId}">      
@@ -112,32 +110,32 @@ function submit() {
 			</script>
       <div style="margin-top:10px;"><s:message code="collect.areaHtml"/>:</div>
       <div style="margin-top:5px;">
-        <textarea id="areaPattern" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
+        <textarea class="form-control" id="areaPattern" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
       </div>
       <div style="margin-top:5px;">
-        <label><input type="checkbox" id="areaReg" name="areaReg"/><s:message code="collect.isReg"/></label>
-        <input type="button" value="<s:message code='collect.match'/>" onclick="findText($('#areaPattern').val(),true,$('#areaReg').prop('checked'));"/>
+        <label class="checkbox-inline"><input type="checkbox" id="areaReg" name="areaReg"/><s:message code="collect.isReg"/></label>
+        <button class="btn btn-default" type="button" onclick="findText($('#areaPattern').val(),true,$('#areaReg').prop('checked'));"><s:message code='collect.match'/></button>
       </div>
       </c:if>
       <div style="margin-top:10px;"><s:message code="collect.itemHtml"/>:</div>
       <div style="margin-top:5px;">
-        <textarea id="itemPattern" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
+        <textarea class="form-control" id="itemPattern" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
       </div>
       <div style="margin-top:5px;">
-        <label><input type="checkbox" id="itemReg" name="itemReg"/><s:message code="collect.isReg"/></label>
-        <input type="button" value="<s:message code='collect.match'/>" onclick="findText($('#itemPattern').val(),isFirst,$('#itemReg').prop('checked'));"/>
+        <label class="checkbox-inline"><input type="checkbox" id="itemReg" name="itemReg"/><s:message code="collect.isReg"/></label>
+        <button class="btn btn-default" type="button" onclick="findText($('#itemPattern').val(),isFirst,$('#itemReg').prop('checked'));"><s:message code='collect.match'/></button>
       </div>
       <c:if test="${!empty filterId}">
       <div style="margin-top:10px;"><s:message code="collect.filter"/>:</div>
       <div style="margin-top:5px;">
-        <textarea id="filter" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
+        <textarea class="form-control" id="filter" spellcheck="false" wrap="off" style="width:95%;height:80px;"></textarea>
       </div>
       <div style="margin-top:5px;">
-        <input type="button" value="<s:message code='filter'/>" onclick="filterText($('#filter').val());"/>
+        <button class="btn btn-default" type="button" onclick="filterText($('#filter').val());"><s:message code='filter'/></button>
       </div>
       </c:if>
       <div style="margin-top:10px;">
-        <input type="button" value="<s:message code='ok'/>" onclick="submit();"/> &nbsp;
+        <button class="btn btn-primary" type="button" onclick="submit();"><s:message code='ok'/></button>
       </div>
     </td>
   </tr>

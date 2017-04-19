@@ -75,7 +75,7 @@ public class Attribute implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_attribute_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_attribute", pkColumnValue = "cms_attribute", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_attribute", pkColumnValue = "cms_attribute", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_attribute")
 	public Integer getId() {
 		return this.id;

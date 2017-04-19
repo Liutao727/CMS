@@ -1,6 +1,7 @@
 package com.jspxcms.core.repository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -35,6 +36,18 @@ public interface CommentDao extends Repository<Comment, Integer>,
 
 	// --------------------
 
+	/**
+	 * 查询评论数量
+	 * 
+	 * @param siteId
+	 *            站点ID
+	 * @param beginDate
+	 *            起始时间
+	 * @return
+	 */
+	@Query("select count(*) from Comment bean where bean.site.id=?1 and bean.creationDate>=?2")
+	public long countByDate(Integer siteId, Date beginDate);
+	
 	@Modifying
 	@Query("delete from Comment bean where bean.ftype=?1 and bean.fid=?2")
 	public int deleteByFtypeAndFid(String ftype, Integer fid);

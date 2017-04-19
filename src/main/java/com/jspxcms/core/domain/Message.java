@@ -1,5 +1,7 @@
 package com.jspxcms.core.domain;
 
+import static com.jspxcms.core.constant.Constants.DYNAMIC_SUFFIX;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -13,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -24,6 +25,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Objects;
+import com.jspxcms.core.constant.Constants;
 
 /**
  * The persistent class for the cms_message database table.
@@ -31,9 +33,12 @@ import com.google.common.base.Objects;
  */
 @Entity
 @Table(name = "cms_message")
-@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m")
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 通知类型
+	 */
+	public static final String NOTIFICATION_TYPE = "CMS_MESSAGE";
 	/**
 	 * 删除标志：未删除
 	 */
@@ -47,11 +52,54 @@ public class Message implements Serializable {
 	 */
 	public static final int DELETION_RECEIVE = 2;
 
+	@Transient
+	public String getUrl() {
+		return getUrl(false, false);
+	}
+
+	@Transient
+	public String getFullUrl() {
+		return getUrl(true, false);
+	}
+
+	@Transient
+	public String getBackendUrl() {
+		return getUrl(false, true);
+	}
+
+	@Transient
+	public String getBackendFullUrl() {
+		return getUrl(true, true);
+	}
+
+	@Transient
+	public String getUrl(boolean isFull, boolean isBackend) {
+		Site site = getReceiver().getGlobal().getSite();
+		StringBuilder sb = new StringBuilder();
+		if (isFull) {
+			sb.append(site.getProtocol()).append("://").append(site.getDomain());
+			if (site.getPort() != null) {
+				sb.append(":").append(site.getPort());
+			}
+		}
+		String ctx = site.getContextPath();
+		if (StringUtils.isNotBlank(ctx)) {
+			sb.append(ctx);
+		}
+		if (isBackend) {
+			sb.append(Constants.CMSCP).append("/core/homepage/message_contact.do?contactId=").append(getSender().getId());
+		} else {
+			sb.append("/my/message/contact/").append(getSender().getId()).append(DYNAMIC_SUFFIX);
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * 获取标题。如果主题存在，则获取主题；如果主题不存在，则获取正文前150字符。
 	 * 
 	 * @return
 	 */
+	@Transient
 	public String getTitle() {
 		if (StringUtils.isNotBlank(getSubject())) {
 			return getSubject();
@@ -103,7 +151,7 @@ public class Message implements Serializable {
 	}
 
 	@Id
-	@TableGenerator(name = "tg_cms_message", pkColumnValue = "cms_message", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_message", pkColumnValue = "cms_message", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_message")
 	@Column(name = "message_id_")
 	private Integer id;

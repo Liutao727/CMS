@@ -264,7 +264,7 @@ public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener,
 					bean.setSource(source);
 				}
 			} catch (MalformedURLException e) {
-				logger.error(null, e);
+				logger.error("url: " + url + "; referrer: " + referrer, e);
 			}
 		}
 		if (StringUtils.isBlank(bean.getSource())) {

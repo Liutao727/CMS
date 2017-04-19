@@ -3,6 +3,7 @@ package com.jspxcms.core.service.impl;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,15 +45,12 @@ import com.jspxcms.core.support.Commentable;
  */
 @Service
 @Transactional(readOnly = true)
-public class CommentServiceImpl implements CommentService, SiteDeleteListener,
-		UserDeleteListener {
-	public Page<Comment> findAll(Integer siteId, Map<String, String[]> params,
-			Pageable pageable) {
+public class CommentServiceImpl implements CommentService, SiteDeleteListener, UserDeleteListener {
+	public Page<Comment> findAll(Integer siteId, Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(siteId, params), pageable);
 	}
 
-	public RowSide<Comment> findSide(Integer siteId,
-			Map<String, String[]> params, Comment bean, Integer position,
+	public RowSide<Comment> findSide(Integer siteId, Map<String, String[]> params, Comment bean, Integer position,
 			Sort sort) {
 		if (position == null) {
 			return new RowSide<Comment>();
@@ -62,18 +60,14 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener,
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<Comment> spec(final Integer siteId,
-			Map<String, String[]> params) {
+	private Specification<Comment> spec(final Integer siteId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<Comment> fsp = SearchFilter.spec(filters,
-				Comment.class);
+		final Specification<Comment> fsp = SearchFilter.spec(filters, Comment.class);
 		Specification<Comment> sp = new Specification<Comment>() {
-			public Predicate toPredicate(Root<Comment> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Comment> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred,
-							cb.equal(root.get("site").get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").get("id"), siteId));
 				}
 				return pred;
 			}
@@ -81,14 +75,18 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener,
 		return sp;
 	}
 
-	public List<Comment> findList(String ftype, Integer fid, Integer creatorId,
-			Integer[] status, Integer[] siteId, Limitable limitable) {
+	public List<Comment> findList(String ftype, Integer fid, Integer creatorId, Integer[] status, Integer[] siteId,
+			Limitable limitable) {
 		return dao.findList(ftype, fid, creatorId, status, siteId, limitable);
 	}
 
-	public Page<Comment> findPage(String ftype, Integer fid, Integer creatorId,
-			Integer[] status, Integer[] siteId, Pageable pageable) {
+	public Page<Comment> findPage(String ftype, Integer fid, Integer creatorId, Integer[] status, Integer[] siteId,
+			Pageable pageable) {
 		return dao.findPage(ftype, fid, creatorId, status, siteId, pageable);
+	}
+
+	public long countByDate(Integer siteId, Date beginDate) {
+		return dao.countByDate(siteId, beginDate);
 	}
 
 	public Object getEntity(String entityName, Serializable id) {
@@ -100,8 +98,7 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener,
 	}
 
 	@Transactional
-	public Comment save(Comment bean, Integer userId, Integer siteId,
-			Integer parentId) {
+	public Comment save(Comment bean, Integer userId, Integer siteId, Integer parentId) {
 		Site site = siteService.get(siteId);
 		bean.setSite(site);
 		User user = userService.get(userId);

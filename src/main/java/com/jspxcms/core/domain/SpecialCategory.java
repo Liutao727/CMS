@@ -87,7 +87,7 @@ public class SpecialCategory implements java.io.Serializable, Siteable {
 
 	@Id
 	@Column(name = "f_speccate_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_special_category", pkColumnValue = "cms_special_category", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_special_category", pkColumnValue = "cms_special_category", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_special_category")
 	public Integer getId() {
 		return this.id;

@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.foxinmy.weixin4j.exception.WeixinException;
-import com.foxinmy.weixin4j.token.TokenHolder;
+import com.foxinmy.weixin4j.mp.WeixinProxy;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.common.web.Servlets;
@@ -759,13 +759,13 @@ public class InfoController {
 	public String massWeixinForm(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
 			String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap)
 			throws WeixinException {
-		if (tokenHolder == null) {
+		if (weixinProxy == null) {
 			throw new CmsException("info.error.weixinAppNotSet");
 		}
 		Site site = Context.getCurrentSite();
 		validateIds(ids, site.getId());
 		return Weixin.massWeixinForm(ids, queryNodeId, queryNodeType, queryInfoPermType, queryStatus, request,
-				modelMap, tokenHolder, query);
+				modelMap, weixinProxy, query);
 	}
 
 	@RequiresPermissions("core:info:mass_weixin")
@@ -775,7 +775,7 @@ public class InfoController {
 			HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		Weixin.massWeixin(mode, groupId, towxname, title, author, contentSourceUrl, digest, showConverPic, thumb,
-				request, response, modelMap, tokenHolder, logService, pathResolver);
+				request, response, modelMap, weixinProxy, logService, pathResolver);
 	}
 
 	@ModelAttribute
@@ -814,7 +814,7 @@ public class InfoController {
 	@Autowired
 	private AttachmentService attachmentService;
 	@Autowired
-	private TokenHolder tokenHolder;
+	private WeixinProxy weixinProxy;
 	@Autowired
 	protected PathResolver pathResolver;
 	@Autowired

@@ -37,6 +37,7 @@ import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 import org.springframework.web.util.WebUtils;
 
+import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 
 /**
@@ -109,6 +110,11 @@ public class Site implements java.io.Serializable {
 	}
 
 	@Transient
+	public boolean isDef() {
+		return getGlobal().getSite().getId().equals(getId());
+	}
+
+	@Transient
 	public long getTreeMaxLong() {
 		BigInteger big = new BigInteger(getTreeMax(), Character.MAX_RADIX);
 		return big.longValue();
@@ -140,20 +146,31 @@ public class Site implements java.io.Serializable {
 
 	@Transient
 	public String getUrl() {
-		boolean isFull = getWithDomain() && getIdentifyDomain();
-		return getUrl(isFull);
+		return getUrl(Context.isMobile());
+	}
+	
+	@Transient
+	public String getUrlMobile() {
+		return getUrl(Context.isMobile());
+	}
+
+	@Transient
+	public String getUrl(boolean isMobile) {
+		boolean isFull = getIdentifyDomain();
+		return getUrl(isFull, isMobile);
 	}
 
 	@Transient
 	public String getUrlFull() {
-		return getUrl(true);
+		return getUrl(true, Context.isMobile());
 	}
 
 	@Transient
-	public String getUrl(boolean isFull) {
+	public String getUrl(boolean isFull, boolean isMobile) {
 		StringBuilder sb = new StringBuilder();
 		if (isFull) {
-			sb.append("//").append(getDomain());
+			String domain = isMobile ? getMobileDomain() : getDomain();
+			sb.append(getProtocol()).append("://").append(domain);
 			if (getPort() != null) {
 				sb.append(":").append(getPort());
 			}
@@ -162,12 +179,12 @@ public class Site implements java.io.Serializable {
 			sb.append(getContextPath());
 		}
 		if (getStaticHome()) {
-			String urlPrefix = getHtmlPublishPoint().getUrlPrefix();
+			String urlPrefix = isMobile ? getMobilePublishPoint().getUrlPrefix() : getHtmlPublishPoint().getUrlPrefix();
 			if (StringUtils.isNotBlank(urlPrefix)) {
 				sb.append(urlPrefix).append("/");
 			}
 		} else {
-			if (!getIdentifyDomain() && !getDef()) {
+			if (!getIdentifyDomain() && !isDef()) {
 				sb.append(SITE_PREFIX).append(getNumber()).append(DYNAMIC_SUFFIX);
 			}
 		}
@@ -186,9 +203,10 @@ public class Site implements java.io.Serializable {
 	@Transient
 	public String getDy() {
 		StringBuilder sb = new StringBuilder();
-		boolean isFull = getWithDomain() && getIdentifyDomain();
+		boolean isFull = getIdentifyDomain();
 		if (isFull) {
-			sb.append("//").append(getDomain());
+			String domain = Context.isMobile() ? getMobileDomain() : getDomain();
+			sb.append(getProtocol()).append("://").append(domain);
 			if (getPort() != null) {
 				sb.append(":").append(getPort());
 			}
@@ -197,7 +215,7 @@ public class Site implements java.io.Serializable {
 		if (StringUtils.isNotBlank(ctx)) {
 			sb.append(ctx);
 		}
-		if (!getIdentifyDomain() && !getDef()) {
+		if (!getIdentifyDomain() && !isDef()) {
 			sb.append(SITE_PREFIX).append(getNumber());
 		}
 		return sb.toString();
@@ -248,7 +266,8 @@ public class Site implements java.io.Serializable {
 			}
 		}
 		sb.append("/").append(getId());
-		sb.append("/").append(getTemplateTheme());
+		String theme = Context.isMobile() ? getMobileTheme() : getTemplateTheme();
+		sb.append("/").append(theme);
 		sb.append("/").append(ForeContext.FILES);
 		if (StringUtils.isNotBlank(path)) {
 			sb.append(path);
@@ -268,7 +287,11 @@ public class Site implements java.io.Serializable {
 	public String getTemplate(String tpl) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/").append(getId());
-		sb.append("/").append(getTemplateTheme());
+		if (Context.isMobile()) {
+			sb.append("/").append(getMobileTheme());
+		} else {
+			sb.append("/").append(getTemplateTheme());
+		}
 		if (tpl != null) {
 			if (!tpl.startsWith("/")) {
 				sb.append("/");
@@ -322,11 +345,6 @@ public class Site implements java.io.Serializable {
 	@Transient
 	public String getVersion() {
 		return getGlobal() != null ? getGlobal().getVersion() : null;
-	}
-
-	@Transient
-	public Boolean getWithDomain() {
-		return getGlobal() != null ? getGlobal().getWithDomain() : null;
 	}
 
 	@Transient
@@ -392,6 +410,7 @@ public class Site implements java.io.Serializable {
 
 	private Global global;
 	private PublishPoint htmlPublishPoint;
+	private PublishPoint mobilePublishPoint;
 	private Org org;
 	private Site parent;
 
@@ -403,7 +422,10 @@ public class Site implements java.io.Serializable {
 	private String noPicture;
 	private Boolean identifyDomain;
 	private Boolean staticHome;
-	private Boolean def;
+
+	private String mobileDomain;
+	private String mobileTheme;
+
 	private String treeNumber;
 	private Integer treeLevel;
 	private String treeMax;
@@ -411,7 +433,7 @@ public class Site implements java.io.Serializable {
 
 	@Id
 	@Column(name = "f_site_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_site", pkColumnValue = "cms_site", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_site", pkColumnValue = "cms_site", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_site")
 	public Integer getId() {
 		return this.id;
@@ -498,6 +520,16 @@ public class Site implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "f_mobile_publishpoint_id")
+	public PublishPoint getMobilePublishPoint() {
+		return mobilePublishPoint;
+	}
+
+	public void setMobilePublishPoint(PublishPoint mobilePublishPoint) {
+		this.mobilePublishPoint = mobilePublishPoint;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_org_id", nullable = false)
 	public Org getOrg() {
 		return org;
@@ -579,13 +611,22 @@ public class Site implements java.io.Serializable {
 		this.staticHome = staticHome;
 	}
 
-	@Column(name = "f_is_def", nullable = false, length = 1)
-	public Boolean getDef() {
-		return def;
+	@Column(name = "f_mobile_domain", length = 100)
+	public String getMobileDomain() {
+		return mobileDomain;
 	}
 
-	public void setDef(Boolean def) {
-		this.def = def;
+	public void setMobileDomain(String mobileDomain) {
+		this.mobileDomain = mobileDomain;
+	}
+
+	@Column(name = "f_mobile_theme", length = 100)
+	public String getMobileTheme() {
+		return mobileTheme;
+	}
+
+	public void setMobileTheme(String mobileTheme) {
+		this.mobileTheme = mobileTheme;
 	}
 
 	@Column(name = "f_tree_number", nullable = false, length = 100)

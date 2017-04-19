@@ -1,6 +1,7 @@
 package com.jspxcms.core.repository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -31,6 +32,18 @@ public interface UserDao extends Repository<User, Integer>, UserDaoPlus {
 	public void delete(User bean);
 
 	// ------------------------------------
+
+	/**
+	 * 查询注册用户数量
+	 * 
+	 * @param siteId
+	 *            站点ID
+	 * @param beginDate
+	 *            开始日期
+	 * @return
+	 */
+	@Query("select count(*) from UserDetail bean where bean.creationDate >= ?1")
+	public long countByDate(Date beginDate);
 
 	public User findByUsername(String username);
 

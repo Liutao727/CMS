@@ -29,12 +29,14 @@ import com.jspxcms.core.domain.MemberGroup;
 import com.jspxcms.core.domain.Model;
 import com.jspxcms.core.domain.Org;
 import com.jspxcms.core.domain.PublishPoint;
+import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.service.GlobalService;
 import com.jspxcms.core.service.MemberGroupService;
 import com.jspxcms.core.service.ModelService;
 import com.jspxcms.core.service.OperationLogService;
 import com.jspxcms.core.service.OrgService;
 import com.jspxcms.core.service.PublishPointService;
+import com.jspxcms.core.service.SiteService;
 
 /**
  * ConfGlobalController
@@ -51,10 +53,10 @@ public class ConfGlobalController {
 	@RequiresPermissions("core:conf_global:base_edit")
 	@RequestMapping("base_edit.do")
 	public String baseEdit(org.springframework.ui.Model modelMap) {
-		List<PublishPoint> uploadsPublishPointList = publishPointService
-				.findByType(PublishPoint.TYPE_UPLOAD);
-		modelMap.addAttribute("uploadsPublishPointList",
-				uploadsPublishPointList);
+		List<PublishPoint> uploadsPublishPointList = publishPointService.findByType(PublishPoint.TYPE_UPLOAD);
+		List<Site> siteList = siteService.findList();
+		modelMap.addAttribute("uploadsPublishPointList", uploadsPublishPointList);
+		modelMap.addAttribute("siteList", siteList);
 		modelMap.addAttribute(TYPE, "base");
 		return "core/conf_global/conf_global_base";
 	}
@@ -62,9 +64,8 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:base_update")
 	@RequestMapping("base_update.do")
-	public String baseUpdate(@ModelAttribute("bean") Global bean,
-			Integer uploadsPublishPointId, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String baseUpdate(@ModelAttribute("bean") Global bean, Integer uploadsPublishPointId,
+			HttpServletRequest request, RedirectAttributes ra) {
 		service.update(bean, uploadsPublishPointId);
 		logService.operation("opr.confGlobal.baseEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -74,8 +75,7 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:custom_edit")
 	@RequestMapping("custom_edit.do")
-	public String customEdit(HttpServletRequest request,
-			org.springframework.ui.Model modelMap) {
+	public String customEdit(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Model model = modelService.findDefault(null, Global.MODEL_TYPE);
 		modelMap.addAttribute("model", model);
 		modelMap.addAttribute(TYPE, "custom");
@@ -85,14 +85,11 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:custom_update")
 	@RequestMapping("custom_update.do")
-	public String customUpdate(@ModelAttribute("bean") Global bean,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String customUpdate(@ModelAttribute("bean") Global bean, HttpServletRequest request, RedirectAttributes ra) {
 		Map<String, String> map = Servlets.getParamMap(request, "customs_");
-		Map<String, String> clobMap = Servlets.getParamMap(request,
-				"clobs_");
+		Map<String, String> clobMap = Servlets.getParamMap(request, "clobs_");
 		service.updateCustoms(bean, map, clobMap);
-		logService.operation("opr.confGlobal.customEdit", null, null, 1,
-				request);
+		logService.operation("opr.confGlobal.customEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		return "redirect:custom_edit.do";
 	}
@@ -108,11 +105,9 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:upload_update")
 	@RequestMapping("upload_update.do")
-	public String uploadUpdate(GlobalUpload bean, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String uploadUpdate(GlobalUpload bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
-		logService.operation("opr.confGlobal.uploadEdit", null, null, 1,
-				request);
+		logService.operation("opr.confGlobal.uploadEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		return "redirect:upload_edit.do";
 	}
@@ -132,11 +127,9 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:register_update")
 	@RequestMapping("register_update.do")
-	public String registerUpdate(GlobalRegister bean,
-			HttpServletRequest request, RedirectAttributes ra) {
+	public String registerUpdate(GlobalRegister bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
-		logService.operation("opr.confGlobal.registerEdit", null, null, 1,
-				request);
+		logService.operation("opr.confGlobal.registerEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		return "redirect:register_edit.do";
 	}
@@ -152,8 +145,7 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:mail_update")
 	@RequestMapping("mail_update.do")
-	public String mailUpdate(GlobalMail bean, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String mailUpdate(GlobalMail bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
 		logService.operation("opr.confGlobal.mailEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
@@ -186,11 +178,9 @@ public class ConfGlobalController {
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:other_update")
 	@RequestMapping("other_update.do")
-	public String otherUpdate(GlobalOther bean, HttpServletRequest request,
-			RedirectAttributes ra) {
+	public String otherUpdate(GlobalOther bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
-		logService
-				.operation("opr.confGlobal.otherEdit", null, null, 1, request);
+		logService.operation("opr.confGlobal.otherEdit", null, null, 1, request);
 		ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
 		return "redirect:other_edit.do";
 	}
@@ -207,6 +197,8 @@ public class ConfGlobalController {
 
 	@Autowired
 	private OperationLogService logService;
+	@Autowired
+	private SiteService siteService;
 	@Autowired
 	private PublishPointService publishPointService;
 	@Autowired

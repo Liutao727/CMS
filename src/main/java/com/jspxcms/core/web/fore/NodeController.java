@@ -24,7 +24,6 @@ import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.domain.User;
 import com.jspxcms.core.service.NodeBufferService;
 import com.jspxcms.core.service.NodeQueryService;
-import com.jspxcms.core.service.SiteService;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.core.support.Response;
@@ -38,13 +37,13 @@ import com.jspxcms.core.support.SiteResolver;
  */
 @Controller
 public class NodeController {
-	@RequestMapping(value = { "/", "/index.jspx" })
+	@RequestMapping(value = { "/", "/index" })
 	public String index(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return index(null, request, response, modelMap);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + ".jspx")
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "")
 	public String index(@PathVariable String siteNumber,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -78,20 +77,20 @@ public class NodeController {
 		}
 	}
 
-	@RequestMapping("/node/{id:[0-9]+}.jspx")
+	@RequestMapping("/node/{id:[0-9]+}")
 	public String node(@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return node(null, id, 1, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/node/{id:[0-9]+}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/node/{id:[0-9]+}")
 	public String node(@PathVariable String siteNumber,
 			@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return node(siteNumber, id, 1, request, response, modelMap);
 	}
 
-	@RequestMapping("/node/{id:[0-9]+}_{page:[0-9]+}.jspx")
+	@RequestMapping("/node/{id:[0-9]+}_{page:[0-9]+}")
 	public String node(@PathVariable Integer id, @PathVariable Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -99,7 +98,7 @@ public class NodeController {
 	}
 
 	@RequestMapping(Constants.SITE_PREFIX_PATH
-			+ "/node/{id:[0-9]+}_{page:[0-9]+}.jspx")
+			+ "/node/{id:[0-9]+}_{page:[0-9]+}")
 	public String node(@PathVariable String siteNumber,
 			@PathVariable Integer id, @PathVariable Integer page,
 			HttpServletRequest request, HttpServletResponse response,
@@ -145,16 +144,14 @@ public class NodeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "/node_views/{id:[0-9]+}.jspx",
-			Constants.SITE_PREFIX_PATH + "/node_views/{id:[0-9]+}.jspx" })
+	@RequestMapping(value = { "/node_views/{id:[0-9]+}",
+			Constants.SITE_PREFIX_PATH + "/node_views/{id:[0-9]+}" })
 	public String views(@PathVariable Integer id) {
 		return Integer.toString(bufferService.updateViews(id));
 	}
 
 	@Autowired
 	private SiteResolver siteResolver;
-	@Autowired
-	private SiteService siteService;
 	@Autowired
 	private NodeBufferService bufferService;
 	@Autowired

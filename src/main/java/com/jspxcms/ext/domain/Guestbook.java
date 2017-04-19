@@ -59,36 +59,107 @@ public class Guestbook implements Siteable, java.io.Serializable {
 	}
 
 	private Integer id;
-
+	/**
+	 * 留言类别
+	 */
 	private GuestbookType type;
+	/**
+	 * 站点
+	 */
 	private Site site;
+	/**
+	 * 创建者
+	 */
 	private User creator;
+	/**
+	 * 回复者
+	 */
 	private User replyer;
 
+	/**
+	 * 标题
+	 */
 	private String title;
+	/**
+	 * 正文
+	 */
 	private String text;
+	/**
+	 * 创建时间
+	 */
 	private Date creationDate;
+	/**
+	 * 创建IP
+	 */
 	private String creationIp;
+	/**
+	 * 创建国家
+	 */
 	private String creationCountry;
+	/**
+	 * 创建地区
+	 */
 	private String creationArea;
+	/**
+	 * 回复正文
+	 */
 	private String replyText;
+	/**
+	 * 回复日期
+	 */
 	private Date replyDate;
+	/**
+	 * 回复IP
+	 */
 	private String replyIp;
+	/**
+	 * 回复国家
+	 */
 	private String replyCountry;
+	/**
+	 * 回复地区
+	 */
 	private String replyArea;
+	/**
+	 * 是否回复
+	 */
 	private Boolean reply;
+	/**
+	 * 是否推荐
+	 */
 	private Boolean recommend;
+	/**
+	 * 状态。0:已审核;1:未审核;2:屏蔽
+	 */
 	private Integer status;
+	/**
+	 * 用户名
+	 */
 	private String username;
+	/**
+	 * 性别。true:男;false:女
+	 */
 	private Boolean gender;
+	/**
+	 * 电话号码
+	 */
 	private String phone;
+	/**
+	 * 手机号码
+	 */
 	private String mobile;
+	/**
+	 * QQ号码
+	 */
 	private String qq;
+	/**
+	 * 电子邮箱
+	 */
 	private String email;
 
 	@Id
 	@Column(name = "f_guestbook_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_guestbook", pkColumnValue = "cms_guestbook", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_guestbook", pkColumnValue = "cms_guestbook", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_guestbook")
 	public Integer getId() {
 		return this.id;

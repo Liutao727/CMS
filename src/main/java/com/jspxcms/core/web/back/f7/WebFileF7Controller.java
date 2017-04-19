@@ -141,6 +141,8 @@ public class WebFileF7Controller {
 		if (parentId == null) {
 			parentId = base;
 		}
+		//防止出现两个斜杠
+		parentId = StringUtils.replace(parentId, "//", "/");
 		if (!Validations.uri(parentId)) {
 			throw new CmsException("invalidURI");
 		}

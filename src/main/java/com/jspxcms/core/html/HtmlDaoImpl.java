@@ -14,7 +14,6 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.jspxcms.common.file.FileHandler;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.Node;
@@ -57,14 +56,14 @@ public class HtmlDaoImpl implements HtmlDao {
 		query.setProperties(params);
 		query.setCacheMode(CacheMode.IGNORE);
 		ScrollableResults nodes = query.scroll(ScrollMode.FORWARD_ONLY);
-		FileHandler fileHandler;
+//		FileHandler fileHandler;
 		Node node;
 		int count = 0;
 		while (nodes.next() && taskService.isRunning(taskId)) {
 			node = (Node) nodes.get(0);
-			fileHandler = node.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
-			PNode.makeHtml(node, Integer.MAX_VALUE, config, fileHandler,
+//			fileHandler = node.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
+			PNode.makeHtml(node, Integer.MAX_VALUE, config, pathResolver,
 					taskService, taskId);
 			// 一个节点可能有很多翻页，这里稍微设置小一点
 			if (++count % 5 == 0) {
@@ -100,14 +99,14 @@ public class HtmlDaoImpl implements HtmlDao {
 		query.setProperties(params);
 		query.setCacheMode(CacheMode.IGNORE);
 		ScrollableResults infos = query.scroll(ScrollMode.FORWARD_ONLY);
-		FileHandler fileHandler;
+//		FileHandler fileHandler;
 		Info info;
 		int count = 0;
 		while (infos.next() && taskService.isRunning(taskId)) {
 			info = (Info) infos.get(0);
-			fileHandler = info.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
-			PInfo.makeHtml(info, config, fileHandler, taskService, taskId);
+//			fileHandler = info.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
+			PInfo.makeHtml(info, config, pathResolver, taskService, taskId);
 			if (++count % 20 == 0) {
 				session.flush();
 				session.clear();

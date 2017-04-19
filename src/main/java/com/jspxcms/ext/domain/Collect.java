@@ -552,7 +552,7 @@ public class Collect implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_collect_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_collect", pkColumnValue = "cms_collect", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_collect", pkColumnValue = "cms_collect", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_collect")
 	public Integer getId() {
 		return this.id;

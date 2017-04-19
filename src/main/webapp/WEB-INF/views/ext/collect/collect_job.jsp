@@ -7,13 +7,17 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="scheduleJob.collectSource"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3">
-      <select name="data_collectId">
-        <c:forEach var="collect" items="${collectList}">
-        <f:option value="${collect.id}" selected="${dataMap['collectId']}">${collect.name}</f:option>
-        </c:forEach>
-      </select>
-    </td>
-  </tr>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="form-group">
+        <label class="col-sm-2 control-label"><s:message code="scheduleJob.collectSource"/></label>
+        <div class="col-sm-10">
+		      <select class="form-control" name="data_collectId">
+		        <c:forEach var="collect" items="${collectList}">
+		        <f:option value="${collect.id}" selected="${dataMap['collectId']}">${collect.name}</f:option>
+		        </c:forEach>
+		      </select>
+        </div>
+      </div>
+    </div>
+  </div>

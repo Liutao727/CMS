@@ -123,7 +123,8 @@ public class InfoOrg implements java.io.Serializable {
 		}
 	}
 
-	public static class InfoOrgComparator implements Comparator<InfoOrg> {
+	@SuppressWarnings("serial")
+	public static class InfoOrgComparator implements Comparator<InfoOrg>, Serializable {
 		public int compare(InfoOrg o1, InfoOrg o2) {
 			return o1.getOrg().getTreeNumber().compareTo(o2.getOrg().getTreeNumber());
 		}

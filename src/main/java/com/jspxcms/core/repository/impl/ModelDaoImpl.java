@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.QueryHints;
 
 import com.jspxcms.core.domain.Model;
-import com.jspxcms.core.domain.QModel;
+import com.jspxcms.core.domain.dsl.QModel;
 import com.jspxcms.core.repository.plus.ModelDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

@@ -1,6 +1,7 @@
 package com.jspxcms.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -18,16 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Message;
 import com.jspxcms.core.domain.MessageText;
 import com.jspxcms.core.domain.User;
+import com.jspxcms.core.listener.UserDeleteListener;
 import com.jspxcms.core.repository.MessageDao;
 import com.jspxcms.core.service.MessageService;
+import com.jspxcms.core.service.NotificationService;
 import com.jspxcms.core.service.UserService;
 
 @Service
 @Transactional(readOnly = true)
-public class MessageServiceImpl implements MessageService {
+public class MessageServiceImpl implements MessageService, UserDeleteListener {
 	@Override
 	public Page<Message> findAll(Map<String, String[]> params, Pageable pageable) {
 		return dao.findAll(spec(params), pageable);
@@ -53,18 +57,41 @@ public class MessageServiceImpl implements MessageService {
 	public Page<Object[]> findByUserId(Integer userId, boolean unread, Pageable pageable) {
 		Page<Object[]> page = dao.groupByUserId(userId, unread, pageable);
 		List<Object[]> content = page.getContent();
+		List<Object[]> resultList = fillWithObject(content);
+		return new PageImpl<Object[]>(resultList, pageable, page.getTotalElements());
+	}
+
+	@Override
+	public List<Object[]> findByUserId(Integer userId, boolean unread, Limitable limitable) {
+		List<Object[]> content = dao.groupByUserId(userId, unread, limitable);
+		List<Object[]> resultList = fillWithObject(content);
+		return resultList;
+	}
+
+	/**
+	 * 填充Message和User对象
+	 * 
+	 * @param content
+	 * @return
+	 */
+	private List<Object[]> fillWithObject(List<Object[]> content) {
 		List<Object[]> resultList = new ArrayList<Object[]>();
 		for (int i = 0, len = content.size(); i < len; i++) {
 			Message message = get((Integer) content.get(i)[0]);
 			User user = userService.get((Integer) content.get(i)[1]);
 			resultList.add(i, ArrayUtils.addAll(new Object[] { message, user }, content.get(i)));
 		}
-		return new PageImpl<Object[]>(resultList, pageable, page.getTotalElements());
+		return resultList;
 	}
 
 	@Override
 	public Page<Message> findByContactId(Integer userId, Integer contactId, Pageable pageable) {
 		return dao.findByContactId(userId, contactId, pageable);
+	}
+
+	@Override
+	public List<Message> findByContactId(Integer userId, Integer contactId, Limitable limitable) {
+		return dao.findByContactId(userId, contactId, limitable);
 	}
 
 	@Override
@@ -90,7 +117,16 @@ public class MessageServiceImpl implements MessageService {
 		bean.setReceiver(receiver);
 		bean.setMessageText(messageText);
 		messageText.setMessage(bean);
-		return save(bean);
+		save(bean);
+
+		String sourceName = sender.getUsername();
+		String sourceUrl = sender.getUrl();
+		String message = bean.getTitle();
+		String url = bean.getUrl();
+		String backendUrl = bean.getBackendUrl();
+		notificationService.send(Message.NOTIFICATION_TYPE, senderId, receiverId,
+				Constants.NOTIFICATION_CONTENT_MESSAGE, sourceName, sourceUrl, message, null, null, url, backendUrl);
+		return bean;
 	}
 
 	@Override
@@ -167,7 +203,22 @@ public class MessageServiceImpl implements MessageService {
 		return beans;
 	}
 
+	@Override
+	public void preUserDelete(Integer[] ids) {
+		if (ArrayUtils.isNotEmpty(ids)) {
+			List<Integer> idList = Arrays.asList(ids);
+			dao.deleteMessageTextByUserId(idList);
+			dao.deleteByUserId(idList);
+		}
+	}
+
+	private NotificationService notificationService;
 	private UserService userService;
+
+	@Autowired
+	public void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
 
 	@Autowired
 	public void setUserService(UserService userService) {

@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.Guestbook;
-import com.jspxcms.ext.domain.QGuestbook;
+import com.jspxcms.ext.domain.dsl.QGuestbook;
 import com.jspxcms.ext.repository.plus.GuestbookDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

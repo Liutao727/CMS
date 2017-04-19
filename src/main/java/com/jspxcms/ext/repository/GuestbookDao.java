@@ -1,6 +1,7 @@
 package com.jspxcms.ext.repository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -20,13 +21,10 @@ import com.jspxcms.ext.repository.plus.GuestbookDaoPlus;
  * @author yangxing
  * 
  */
-public interface GuestbookDao extends Repository<Guestbook, Integer>,
-		GuestbookDaoPlus {
-	public Page<Guestbook> findAll(Specification<Guestbook> spec,
-			Pageable pageable);
+public interface GuestbookDao extends Repository<Guestbook, Integer>, GuestbookDaoPlus {
+	public Page<Guestbook> findAll(Specification<Guestbook> spec, Pageable pageable);
 
-	public List<Guestbook> findAll(Specification<Guestbook> spec,
-			Limitable limitable);
+	public List<Guestbook> findAll(Specification<Guestbook> spec, Limitable limitable);
 
 	public Guestbook findOne(Integer id);
 
@@ -35,6 +33,18 @@ public interface GuestbookDao extends Repository<Guestbook, Integer>,
 	public void delete(Guestbook bean);
 
 	// --------------------
+
+	/**
+	 * 查询留言板数量
+	 * 
+	 * @param siteId
+	 *            站点ID
+	 * @param beginDate
+	 *            开始日期
+	 * @return
+	 */
+	@Query("select count(*) from Guestbook bean where bean.site.id=?1 and bean.creationDate >= ?2")
+	public long countByDate(Integer siteId, Date beginDate);
 
 	@Query("select count(*) from Guestbook bean where bean.site.id in (?1)")
 	public long countBySiteId(Collection<Integer> siteIds);

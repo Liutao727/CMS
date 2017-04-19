@@ -51,12 +51,12 @@ $(function(){
 	<div class="w center c999" style="height:32px;line-height:32px;">
 		<div class="left">
 			<a class="topa ml5" href="${ctx}/" target="_blank">首页</a>
-			<a class="topa ml5" href="${ctx}/sitemap.jspx" target="_blank">网站地图</a>
-			<a class="topa ml5" href="${ctx}/rss.jspx">RSS订阅</a>
-			<a class="topa ml5" href="${ctx}/tags.jspx">TAGS标签</a>
+			<a class="topa ml5" href="${ctx}/sitemap" target="_blank">网站地图</a>
+			<a class="topa ml5" href="${ctx}/rss">RSS订阅</a>
+			<a class="topa ml5" href="${ctx}/tags">TAGS标签</a>
 		</div>
 		<div class="right">
-			<script type="text/javascript" src="${ctx}/login_include.jspx?d=${.now?time}"></script>
+			<script type="text/javascript" src="${ctx}/login_include?d=${.now?time}"></script>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -100,8 +100,8 @@ $(function(){
 						<td>[@s.message code='info.status.${info.status}'/]</td>
 						<td>
 							[#if info.status == 'B' || info.status == 'C' || info.status == 'D']
-							<a href="${ctx}/my/contribution/update/${info.id}.jspx" class="op">修改</a>
-							<a href="${ctx}/my/contribution/delete.jspx?ids=${info.id}&nextUrl=${ctx}/my/contribution.jspx" class="op" onclick="if(confirm('您确定删除吗？')){return true;}else{return false;}">删除</a>
+							<a href="${ctx}/my/contribution/update/${info.id}" class="op">修改</a>
+							<a href="${ctx}/my/contribution/delete?ids=${info.id}&nextUrl=${ctx}/my/contribution" class="op" onclick="if(confirm('您确定删除吗？')){return true;}else{return false;}">删除</a>
 							[#else]
 							<span style="color:#999;background-color:#ddd;">修改</span>
 							<span style="color:#999;background-color:#ddd;">删除</span>

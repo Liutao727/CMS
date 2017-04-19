@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.jspxcms.common.upload.Uploader;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.service.SiteService;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.SiteResolver;
 import com.jspxcms.core.web.back.UploadControllerAbstract;
@@ -27,7 +26,7 @@ import com.jspxcms.core.web.back.UploadControllerAbstract;
  */
 @Controller
 public class UploadController extends UploadControllerAbstract {
-	@RequestMapping(value = "/upload_image.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload_image", method = RequestMethod.POST)
 	public void uploadImage(Boolean scale, Boolean exact, Integer width, Integer height, Boolean thumbnail,
 			Integer thumbnailWidth, Integer thumbnailHeight, Boolean watermark, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -35,7 +34,7 @@ public class UploadController extends UploadControllerAbstract {
 				response);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_image.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_image", method = RequestMethod.POST)
 	public void uploadImage(@PathVariable String siteNumber, Boolean scale, Boolean exact, Integer width,
 			Integer height, Boolean thumbnail, Integer thumbnailWidth, Integer thumbnailHeight, Boolean watermark,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,12 +44,12 @@ public class UploadController extends UploadControllerAbstract {
 				thumbnailHeight, watermark);
 	}
 
-	@RequestMapping(value = "/upload_flash.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload_flash", method = RequestMethod.POST)
 	public void uploadFlash(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		uploadFlash(null, request, response);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_flash.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_flash", method = RequestMethod.POST)
 	public void uploadFlash(@PathVariable String siteNumber, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		siteResolver.resolveSite(siteNumber);
@@ -58,12 +57,12 @@ public class UploadController extends UploadControllerAbstract {
 		upload(site, request, response, Uploader.FLASH);
 	}
 
-	@RequestMapping(value = "/upload_file.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload_file", method = RequestMethod.POST)
 	public void uploadFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		uploadFile(null, request, response);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_file.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_file", method = RequestMethod.POST)
 	public void uploadFile(@PathVariable String siteNumber, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		siteResolver.resolveSite(siteNumber);
@@ -71,12 +70,12 @@ public class UploadController extends UploadControllerAbstract {
 		upload(site, request, response, Uploader.FILE);
 	}
 
-	@RequestMapping(value = "/upload_video.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload_video", method = RequestMethod.POST)
 	public void uploadVideo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		uploadVideo(null, request, response);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_video.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/upload_video", method = RequestMethod.POST)
 	public void uploadVideo(@PathVariable String siteNumber, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		siteResolver.resolveSite(siteNumber);
@@ -84,12 +83,12 @@ public class UploadController extends UploadControllerAbstract {
 		upload(site, request, response, Uploader.VIDEO);
 	}
 
-	@RequestMapping(value = "/ueditor.jspx")
+	@RequestMapping(value = "/ueditor")
 	public void ueditor(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ueditor(null, request, response);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/ueditor.jspx")
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/ueditor")
 	public void ueditor(@PathVariable String siteNumber, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		String action = request.getParameter("action");
@@ -121,6 +120,4 @@ public class UploadController extends UploadControllerAbstract {
 
 	@Autowired
 	private SiteResolver siteResolver;
-	@Autowired
-	private SiteService siteService;
 }

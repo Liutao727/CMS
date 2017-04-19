@@ -52,14 +52,14 @@ public class CommentController {
 	public static final String TPL_SUFFIX = ".html";
 	public static final String TEMPLATE = TPL_PREFIX + TPL_SUFFIX;
 
-	@RequestMapping("/comment.jspx")
+	@RequestMapping("/comment")
 	public String view(String ftype, Integer fid, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return view(null, ftype, fid, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment")
 	public String view(@PathVariable String siteNumber, String ftype,
 			Integer fid, Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -86,13 +86,13 @@ public class CommentController {
 		return site.getTemplate(TEMPLATE);
 	}
 
-	@RequestMapping("/comment_like.jspx")
+	@RequestMapping("/comment_like")
 	public void like(Integer id, HttpServletRequest request,
 			HttpServletResponse response) {
 		like(null, id, request, response);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_like.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_like")
 	public void like(@PathVariable String siteNumber, Integer id,
 			HttpServletRequest request, HttpServletResponse response) {
 		siteResolver.resolveSite(siteNumber);
@@ -126,7 +126,7 @@ public class CommentController {
 		Servlets.writeHtml(response, result);
 	}
 
-	@RequestMapping("/comment_submit.jspx")
+	@RequestMapping("/comment_submit")
 	public String submit(String fname, String ftype, Integer fid,
 			Integer parentId, String text, String captcha,
 			HttpServletRequest request, HttpServletResponse response,
@@ -137,7 +137,7 @@ public class CommentController {
 				request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_submit.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_submit")
 	public String submit(@PathVariable String siteNumber, String fname,
 			String ftype, Integer fid, Integer parentId, String text,
 			String captcha, HttpServletRequest request,
@@ -206,13 +206,13 @@ public class CommentController {
 		return resp.post();
 	}
 
-	@RequestMapping("/comment_list.jspx")
+	@RequestMapping("/comment_list")
 	public String list(String ftype, Integer fid, Integer page,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		return list(null, ftype, fid, page, request, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_list.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/comment_list")
 	public String list(@PathVariable String siteNumber, String ftype,
 			Integer fid, Integer page, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {

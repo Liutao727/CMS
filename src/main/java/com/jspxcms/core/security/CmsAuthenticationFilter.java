@@ -15,7 +15,7 @@ import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.BeanFactory;
 
 import com.jspxcms.common.captcha.Captchas;
 import com.jspxcms.common.security.IncorrectCaptchaException;
@@ -35,8 +35,14 @@ import com.octo.captcha.service.CaptchaService;
  * 
  */
 public class CmsAuthenticationFilter extends FormAuthenticationFilter {
-	private Logger logger = LoggerFactory
-			.getLogger(CmsAuthenticationFilter.class);
+	private Logger logger = LoggerFactory.getLogger(CmsAuthenticationFilter.class);
+
+	private BeanFactory beanFactory;
+
+	public CmsAuthenticationFilter(BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+	}
+
 	/**
 	 * 是否需要验证码
 	 */
@@ -60,8 +66,7 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 	private String backSuccessUrl = Constants.BACK_SUCCESS_URL;
 
 	@Override
-	protected boolean executeLogin(ServletRequest request,
-			ServletResponse response) throws Exception {
+	protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
 		AuthenticationToken token = createToken(request, response);
 		if (token == null) {
 			String msg = "createToken method implementation returned null. A valid non-null AuthenticationToken "
@@ -69,27 +74,23 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 			throw new IllegalStateException(msg);
 		}
 		String username = (String) token.getPrincipal();
-		User user = userShiroService.findByUsername(username);
+		User user = getUserShiroService().findByUsername(username);
 		HttpServletRequest hsr = (HttpServletRequest) request;
 		HttpServletResponse hsp = (HttpServletResponse) response;
-		Global global = globalShiroService.findUnique();
+		Global global = getGlobalShiroService().findUnique();
 		int captchaErrors = global.getCaptchaErrors();
 		if (isCaptchaSessionRequired(hsr, hsp) || captchaErrors <= 0
 				|| (user != null && user.isCaptchaRequired(captchaErrors))) {
 			String captcha = request.getParameter(CAPTCHA_PARAM);
-			if (captcha == null
-					|| !Captchas.isValid(captchaService, hsr, captcha)) {
-				return onLoginFailure(token, new IncorrectCaptchaException(),
-						request, response);
+			if (captcha == null || !Captchas.isValid(getCaptchaService(), hsr, captcha)) {
+				return onLoginFailure(token, new IncorrectCaptchaException(), request, response);
 			}
 		}
 		String ip = Servlets.getRemoteAddr(request);
 		// 登录时，session会失效，先将错误次数取出
-		Integer errorCount = (Integer) hsr.getSession().getAttribute(
-				CAPTCHA_ERROR_COUNT_KEY);
+		Integer errorCount = (Integer) hsr.getSession().getAttribute(CAPTCHA_ERROR_COUNT_KEY);
 		// 登录时，session会失效，先将SavedRequest取出
-		SavedRequest savedRequest = (SavedRequest) hsr.getSession()
-				.getAttribute(WebUtils.SAVED_REQUEST_KEY);
+		SavedRequest savedRequest = (SavedRequest) hsr.getSession().getAttribute(WebUtils.SAVED_REQUEST_KEY);
 		try {
 			Subject subject = getSubject(request, response);
 			// 防止session fixation attack(会话固定攻击)，让旧session失效
@@ -98,9 +99,8 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 			}
 			subject.login(token);
 			// 将SavedRequest放回session
-			hsr.getSession().setAttribute(WebUtils.SAVED_REQUEST_KEY,
-					savedRequest);
-			logService.loginSuccess(ip, user.getId());
+			hsr.getSession().setAttribute(WebUtils.SAVED_REQUEST_KEY, savedRequest);
+			getOperationLogService().loginSuccess(ip, user.getId());
 			return onLoginSuccess(token, subject, request, response);
 		} catch (AuthenticationException e) {
 			Object cred = token.getCredentials();
@@ -111,16 +111,14 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 			// 将错误次数放回session
 			hsr.getSession().setAttribute(CAPTCHA_ERROR_COUNT_KEY, errorCount);
 			// 将SavedRequest放回session
-			hsr.getSession().setAttribute(WebUtils.SAVED_REQUEST_KEY,
-					savedRequest);
-			logService.loginFailure(username + ":" + password, ip);
+			hsr.getSession().setAttribute(WebUtils.SAVED_REQUEST_KEY, savedRequest);
+			getOperationLogService().loginFailure(username + ":" + password, ip);
 			return onLoginFailure(token, e, request, response);
 		}
 	}
 
 	@Override
-	public boolean onPreHandle(ServletRequest request,
-			ServletResponse response, Object mappedValue) throws Exception {
+	public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
 		boolean isAllowed = isAccessAllowed(request, response, mappedValue);
 		if (isAllowed && isLoginRequest(request, response)) {
 			try {
@@ -134,12 +132,11 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 	}
 
 	@Override
-	protected boolean onLoginSuccess(AuthenticationToken token,
-			Subject subject, ServletRequest request, ServletResponse response)
-			throws Exception {
+	protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request,
+			ServletResponse response) throws Exception {
 		ShiroUser shiroUser = (ShiroUser) subject.getPrincipal();
 		String ip = Servlets.getRemoteAddr(request);
-		userShiroService.updateLoginSuccess(shiroUser.id, ip);
+		getUserShiroService().updateLoginSuccess(shiroUser.id, ip);
 		HttpServletRequest hsr = (HttpServletRequest) request;
 		HttpServletResponse hsp = (HttpServletResponse) response;
 		// 清除需要验证码的session
@@ -148,26 +145,23 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 	}
 
 	@Override
-	protected boolean onLoginFailure(AuthenticationToken token,
-			AuthenticationException e, ServletRequest request,
+	protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request,
 			ServletResponse response) {
 		String username = (String) token.getPrincipal();
 		HttpServletRequest hsr = (HttpServletRequest) request;
 		HttpServletResponse hsp = (HttpServletResponse) response;
 		HttpSession session = hsr.getSession();
-		Integer errorCount = (Integer) session
-				.getAttribute(CAPTCHA_ERROR_COUNT_KEY);
+		Integer errorCount = (Integer) session.getAttribute(CAPTCHA_ERROR_COUNT_KEY);
 		if (errorCount != null) {
 			errorCount++;
 		} else {
 			errorCount = 1;
 		}
 		session.setAttribute(CAPTCHA_ERROR_COUNT_KEY, errorCount);
-		User user = userShiroService.updateLoginFailure(username);
-		Global global = globalShiroService.findUnique();
+		User user = getUserShiroService().updateLoginFailure(username);
+		Global global = getGlobalShiroService().findUnique();
 		int captchaErrors = global.getCaptchaErrors();
-		if (errorCount >= captchaErrors
-				|| (user != null && user.isCaptchaRequired(captchaErrors))) {
+		if (errorCount >= captchaErrors || (user != null && user.isCaptchaRequired(captchaErrors))) {
 			// 加入需要验证码的session
 			addCaptchaSession(hsr, hsp);
 		}
@@ -175,8 +169,7 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 	}
 
 	@Override
-	protected void issueSuccessRedirect(ServletRequest req, ServletResponse resp)
-			throws Exception {
+	protected void issueSuccessRedirect(ServletRequest req, ServletResponse resp) throws Exception {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		String successUrl = request.getParameter(FALLBACK_URL_PARAM);
@@ -184,8 +177,7 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 			WebUtils.issueRedirect(request, response, successUrl, null, false);
 			return;
 		}
-		if (request.getRequestURI().startsWith(
-				request.getContextPath() + backUrl)) {
+		if (request.getRequestURI().startsWith(request.getContextPath() + backUrl)) {
 			// 后台直接返回首页
 			successUrl = getBackSuccessUrl();
 			// 清除SavedRequest
@@ -199,12 +191,10 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 
 	@Override
 	protected boolean isLoginRequest(ServletRequest req, ServletResponse resp) {
-		return pathsMatch(getLoginUrl(), req)
-				|| pathsMatch(Constants.BACK_LOGIN_URL, req);
+		return pathsMatch(getLoginUrl(), req) || pathsMatch(Constants.BACK_LOGIN_URL, req);
 	}
 
-	protected void removeCaptchaSession(HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void removeCaptchaSession(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			session.removeAttribute(CAPTCHA_REQUIRED_KEY);
@@ -212,14 +202,12 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 		}
 	}
 
-	protected void addCaptchaSession(HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void addCaptchaSession(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		session.setAttribute(CAPTCHA_REQUIRED_KEY, true);
 	}
 
-	protected boolean isCaptchaSessionRequired(HttpServletRequest request,
-			HttpServletResponse response) {
+	protected boolean isCaptchaSessionRequired(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			return session.getAttribute(CAPTCHA_REQUIRED_KEY) != null;
@@ -229,25 +217,49 @@ public class CmsAuthenticationFilter extends FormAuthenticationFilter {
 
 	private CaptchaService captchaService;
 	private UserShiroService userShiroService;
-	private OperationLogService logService;
+	private OperationLogService operationLogService;
 	private GlobalShiroService globalShiroService;
 
-	@Autowired
+	public CaptchaService getCaptchaService() {
+		if (captchaService == null) {
+			captchaService = beanFactory.getBean(CaptchaService.class);
+		}
+		return captchaService;
+	}
+
+	public UserShiroService getUserShiroService() {
+		if (userShiroService == null) {
+			userShiroService = beanFactory.getBean(UserShiroService.class);
+		}
+		return userShiroService;
+	}
+
+	public OperationLogService getOperationLogService() {
+		if (operationLogService == null) {
+			operationLogService = beanFactory.getBean(OperationLogService.class);
+		}
+		return operationLogService;
+	}
+
+	public GlobalShiroService getGlobalShiroService() {
+		if (globalShiroService == null) {
+			globalShiroService = beanFactory.getBean(GlobalShiroService.class);
+		}
+		return globalShiroService;
+	}
+
 	public void setCaptchaService(CaptchaService captchaService) {
 		this.captchaService = captchaService;
 	}
 
-	@Autowired
-	public void setOperationLogService(OperationLogService logService) {
-		this.logService = logService;
+	public void setOperationLogService(OperationLogService operationLogService) {
+		this.operationLogService = operationLogService;
 	}
 
-	@Autowired
 	public void setUserShiroService(UserShiroService userShiroService) {
 		this.userShiroService = userShiroService;
 	}
 
-	@Autowired
 	public void setGlobalShiroService(GlobalShiroService globalShiroService) {
 		this.globalShiroService = globalShiroService;
 	}

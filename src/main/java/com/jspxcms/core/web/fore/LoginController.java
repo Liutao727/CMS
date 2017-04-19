@@ -29,7 +29,7 @@ import com.jspxcms.core.support.ForeContext;
  */
 @Controller
 public class LoginController {
-	public static final String LOGIN_URL = "/login.jspx";
+	public static final String LOGIN_URL = "/login";
 	public static final String LOGIN_TEMPLATE = "sys_member_login.html";
 	public static final String LOGIN_INCLUDE_TEMPLATE = "sys_member_login_include.html";
 	public static final String LOGIN_AJAX_TEMPLATE = "sys_member_login_ajax.html";
@@ -45,8 +45,8 @@ public class LoginController {
 		return site.getTemplate(LOGIN_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/login_include.jspx",
-			Constants.SITE_PREFIX_PATH + "/login_include.jspx" })
+	@RequestMapping(value = { "/login_include",
+			Constants.SITE_PREFIX_PATH + "/login_include" })
 	public String loginInclude(String fallbackUrl, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -57,8 +57,8 @@ public class LoginController {
 		return site.getTemplate(LOGIN_INCLUDE_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/login_ajax.jspx",
-			Constants.SITE_PREFIX_PATH + "/login_ajax.jspx" })
+	@RequestMapping(value = { "/login_ajax",
+			Constants.SITE_PREFIX_PATH + "/login_ajax" })
 	public String loginAjax(String fallbackUrl, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -69,8 +69,8 @@ public class LoginController {
 		return site.getTemplate(LOGIN_AJAX_TEMPLATE);
 	}
 
-	@RequestMapping(value = { "/login.jspx",
-			Constants.SITE_PREFIX_PATH + "/login.jspx" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/login",
+			Constants.SITE_PREFIX_PATH + "/login" }, method = RequestMethod.POST)
 	public String loginFail(
 			@RequestParam(DEFAULT_USERNAME_PARAM) String username,
 			String fallbackUrl, HttpServletRequest request,
@@ -82,6 +82,6 @@ public class LoginController {
 		}
 		ra.addFlashAttribute(DEFAULT_USERNAME_PARAM, username);
 		ra.addAttribute(FALLBACK_URL_PARAM, fallbackUrl);
-		return "redirect:login.jspx";
+		return "redirect:login";
 	}
 }

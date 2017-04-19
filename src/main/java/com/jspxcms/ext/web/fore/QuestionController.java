@@ -47,13 +47,13 @@ public class QuestionController {
 	public static final String SHOW_TEMPLATE = "sys_question.html";
 	public static final String RESULT_TEMPLATE = "sys_question_result.html";
 
-	@RequestMapping("/questions.jspx")
+	@RequestMapping("/questions")
 	public String index(Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return index(null, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions")
 	public String index(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -65,14 +65,14 @@ public class QuestionController {
 		return currSite.getTemplate(INDEX_TEMPLATE);
 	}
 
-	@RequestMapping("/questions/{id}.jspx")
+	@RequestMapping("/questions/{id}")
 	public String show(@PathVariable("id") Integer id,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return show(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions/{id}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions/{id}")
 	public String show(@PathVariable String siteNumber,
 			@PathVariable("id") Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -94,14 +94,14 @@ public class QuestionController {
 		return currSite.getTemplate(SHOW_TEMPLATE);
 	}
 
-	@RequestMapping("/questions/{id}/result.jspx")
+	@RequestMapping("/questions/{id}/result")
 	public String result(@PathVariable("id") Integer id,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return result(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions/{id}/result.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/questions/{id}/result")
 	public String result(@PathVariable String siteNumber,
 			@PathVariable("id") Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -123,7 +123,7 @@ public class QuestionController {
 		return currSite.getTemplate(RESULT_TEMPLATE);
 	}
 
-	@RequestMapping(value = "/questions/{id}/answer.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/questions/{id}/answer", method = RequestMethod.POST)
 	public String answer(@PathVariable("id") Integer id,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -131,7 +131,7 @@ public class QuestionController {
 	}
 
 	@RequestMapping(value = Constants.SITE_PREFIX_PATH
-			+ "/questions/{id}/answer.jspx", method = RequestMethod.POST)
+			+ "/questions/{id}/answer", method = RequestMethod.POST)
 	public String answer(@PathVariable String siteNumber,
 			@PathVariable("id") Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {

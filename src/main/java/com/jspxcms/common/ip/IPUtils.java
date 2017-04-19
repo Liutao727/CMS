@@ -3,6 +3,7 @@ package com.jspxcms.common.ip;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,8 @@ public class IPUtils {
 	 */
 	public static byte[] getIpByteArrayFromString(String ip) {
 		byte[] ret = new byte[4];
+		//传入的ip地址有时候会带有一个单引号，去除这个单引号。发现这种异常：java.lang.NumberFormatException: For input string: "1'"
+		ip = StringUtils.remove(ip, "'");
 		StringTokenizer st = new StringTokenizer(ip, ".");
 		try {
 			ret[0] = (byte) (Integer.parseInt(st.nextToken()) & 0xFF);

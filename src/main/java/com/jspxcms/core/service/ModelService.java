@@ -15,12 +15,10 @@ import com.jspxcms.core.domain.Model;
  * 
  */
 public interface ModelService {
-	public List<Model> findList(Integer siteId, String type,
-			Map<String, String[]> params, Sort sort);
+	public List<Model> findList(Integer siteId, String type, Map<String, String[]> params, Sort sort);
 
-	public RowSide<Model> findSide(Integer siteId, String type,
-			Map<String, String[]> params, Model bean, Integer position,
-			Sort sort);
+	public RowSide<Model> findSide(Integer siteId, String type, Map<String, String[]> params, Model bean,
+			Integer position, Sort sort);
 
 	public List<Model> findList(Integer siteId, String type);
 
@@ -30,10 +28,23 @@ public interface ModelService {
 
 	public Model get(Integer id);
 
+	/**
+	 * 一键开启静态化
+	 * 
+	 * @param siteId
+	 */
+	public void oneKeyEnableHtml(Integer siteId);
+
+	/**
+	 * 一键关闭静态化
+	 * 
+	 * @param siteId
+	 */
+	public void oneKeyDisableHtml(Integer siteId);
+
 	public Model save(Model bean, Integer siteId, Map<String, String> customs);
 
-	public Model copy(Integer oid, Model bean, Integer siteId,
-			Map<String, String> customs);
+	public Model copy(Integer oid, Model bean, Integer siteId, Map<String, String> customs);
 
 	public Model clone(Model model, Integer siteId);
 

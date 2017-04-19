@@ -195,6 +195,26 @@ public class Global implements java.io.Serializable {
 		}
 	}
 
+	private Site site;
+
+	/**
+	 * 获取默认站点。从所有站点中查找ID为1的站点。ID为1的站点为默认站点。
+	 * 
+	 * @return
+	 */
+	@Transient
+	public Site getSite() {
+		if (site == null) {
+			for (Site s : getSites()) {
+				if (s.getId() == 1) {
+					site = s;
+					break;
+				}
+			}
+		}
+		return site;
+	}
+
 	private Integer id;
 	private PublishPoint uploadsPublishPoint;
 	private List<Site> sites = new ArrayList<Site>(0);
@@ -204,7 +224,6 @@ public class Global implements java.io.Serializable {
 	private String protocol;
 	private Integer port;
 	private String contextPath;
-	private Boolean withDomain;
 	private Integer captchaErrors;
 
 	private String dataVersion;
@@ -220,7 +239,7 @@ public class Global implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_uploads_publishpoint_id", nullable = false)
+	@JoinColumn(name = "f_uploads_publishpoint_id")
 	public PublishPoint getUploadsPublishPoint() {
 		return uploadsPublishPoint;
 	}
@@ -292,15 +311,6 @@ public class Global implements java.io.Serializable {
 
 	public void setContextPath(String contextPath) {
 		this.contextPath = contextPath;
-	}
-
-	@Column(name = "f_is_with_domain", nullable = false, length = 1)
-	public Boolean getWithDomain() {
-		return this.withDomain;
-	}
-
-	public void setWithDomain(Boolean withDomain) {
-		this.withDomain = withDomain;
 	}
 
 	@Column(name = "f_captcha_errors", nullable = false)

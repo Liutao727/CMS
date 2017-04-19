@@ -7,13 +7,11 @@
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<script type="text/javascript">
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<script>
 $(function() {
 	$("#validForm").validate();
 	$("input[name='name']").focus();
@@ -23,59 +21,127 @@ function confirmDelete() {
 }
 </script>
 </head>
-<body class="c-body">
+<body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
-  <span class="c-position"><s:message code="task.management"/> - <s:message code="${oprt}"/></span>
+<div class="content-header">
+	<h1><s:message code="task.management"/> - <s:message code="${oprt}"/></h1>
 </div>
+<div class="content">
+	<div class="box box-primary">
+		<form class="form-horizontal" id="validForm" action="" method="post">
+			<tags:search_params/>
+			<f:hidden name="oid" value="${bean.id}"/>
+			<f:hidden name="position" value="${position}"/>
+			<input type="hidden" id="redirect" name="redirect" value="edit"/>
+			<div class="box-header with-border">
+				<div class="btn-toolbar">
+					<div class="btn-group">
+						<shiro:hasPermission name="core:task:stop">
+						<button class="btn btn-default" type="button" onclick="location.href='stop.do?ids=${bean.id}&${searchstring}';"><s:message code="stop"/></button>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="core:task:delete">
+						<button class="btn btn-default" type="button" onclick="if(confirmDelete()){location.href='delete.do?ids=${bean.id}&${searchstring}';}"><s:message code="delete"/></button>
+						</shiro:hasPermission>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default" type="button" onclick="location.href='view.do?id=${side.prev.id}&position=${position-1}&${searchstring}';"<c:if test="${empty side.prev}"> disabled</c:if>><s:message code="prev"/></button>
+						<button class="btn btn-default" type="button" onclick="location.href='view.do?id=${side.next.id}&position=${position+1}&${searchstring}';"<c:if test="${empty side.next}"> disabled</c:if>><s:message code="next"/></button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-default" type="button" onclick="location.href='list.do?${searchstring}';"><s:message code="return"/></button>
+					</div>
+				</div>		
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="task.name"/></label>
+	            <div class="col-sm-8">
+	            	<p class="form-control-static"><c:out value="${bean.name}"/></p>
+	            </div>
+	          </div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="task.type"/></label>
+	            <div class="col-sm-8">
+	              <p class="form-control-static"><s:message code="task.type.${bean.type}"/></p>
+	            </div>
+	          </div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label for="description" class="col-sm-2 control-label"><s:message code="task.description"/></label>
+	            <div class="col-sm-10">
+	             	<f:textarea class="form-control" id="description" name="description" value="${bean.description}" rows="3" readonly="readonly"/>
+	            </div>
+	          </div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="task.beginTime"/></label>
+	            <div class="col-sm-8">
+	          	 	<p class="form-control-static"><fmt:formatDate value="${bean.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+	            </div>
+	          </div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="task.endTime"/></label>
+	            <div class="col-sm-8">
+	              <p class="form-control-static"><fmt:formatDate value="${bean.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+	            </div>
+	          </div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="task.user"/></label>
+	            <div class="col-sm-8">
+	             	<p class="form-control-static"><c:out value="${bean.user.username}"/></p>
+	            </div>
+	          </div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	             <label class="col-sm-4 control-label"><s:message code="task.total"/></label>
+	             <div class="col-sm-8">
+	               <p class="form-control-static"><c:out value="${bean.total}"/></p>
+	             </div>
+	           </div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+	            <label class="col-sm-2 control-label"><s:message code="task.status"/></label>
+	            <div class="col-sm-10">
+	              <p class="form-control-static"><s:message code="task.status.${bean.status}"/></p>
+	            </div>
+	          </div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<button class="btn btn-primary" type="submit"><s:message code="save"/></button>
+      	<button class="btn btn-default" type="submit" onclick="$('#redirect').val('list');"><s:message code="saveAndReturn"/></button>
+			</div>
+		</form>
+	</div>
+</div>
+
 <form id="validForm" action="" method="post">
 <tags:search_params/>
 <f:hidden name="oid" value="${bean.id}"/>
 <f:hidden name="position" value="${position}"/>
 <input type="hidden" id="redirect" name="redirect" value="edit"/>
-<table border="0" cellpadding="0" cellspacing="0" class="in-tb margin-top5">
-  <tr>
-    <td colspan="4" class="in-opt">
-			<shiro:hasPermission name="core:task:stop">
-			<div class="in-btn"><input type="button" value="<s:message code="stop"/>" onclick="location.href='stop.do?ids=${bean.id}&${searchstring}';"/></div>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="core:task:delete">
-			<div class="in-btn"><input type="button" value="<s:message code="delete"/>" onclick="if(confirmDelete()){location.href='delete.do?ids=${bean.id}&${searchstring}';}"/></div>
-			</shiro:hasPermission>
-			<div class="in-btn"></div>
-			<div class="in-btn"><input type="button" value="<s:message code="prev"/>" onclick="location.href='view.do?id=${side.prev.id}&position=${position-1}&${searchstring}';"<c:if test="${empty side.prev}"> disabled="disabled"</c:if>/></div>
-			<div class="in-btn"><input type="button" value="<s:message code="next"/>" onclick="location.href='view.do?id=${side.next.id}&position=${position+1}&${searchstring}';"<c:if test="${empty side.next}"> disabled="disabled"</c:if>/></div>
-			<div class="in-btn"></div>
-			<div class="in-btn"><input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?${searchstring}';"/></div>
-      <div style="clear:both;"></div>
-    </td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="task.name"/>:</td>
-    <td class="in-ctt" width="35%"><c:out value="${bean.name}"/></td>
-    <td class="in-lab" width="15%"><s:message code="task.type"/>:</td>
-    <td class="in-ctt" width="35%"><s:message code="task.type.${bean.type}"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="task.description"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><f:textarea name="description" value="${bean.description}" readonly="readonly" style="width:500px;height:80px;"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="task.beginTime"/>:</td>
-    <td class="in-ctt" width="35%"><fmt:formatDate value="${bean.beginTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-    <td class="in-lab" width="15%"><s:message code="task.endTime"/>:</td>
-    <td class="in-ctt" width="35%"><fmt:formatDate value="${bean.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="task.user"/>:</td>
-    <td class="in-ctt" width="35%"><c:out value="${bean.user.username}"/></td>
-    <td class="in-lab" width="15%"><s:message code="task.total"/>:</td>
-    <td class="in-ctt" width="35%"><c:out value="${bean.total}"/></td>
-  </tr>
-  <tr>
-    <td class="in-lab" width="15%"><s:message code="task.status"/>:</td>
-    <td class="in-ctt" width="85%" colspan="3"><s:message code="task.status.${bean.status}"/></td>
-  </tr>
+<table border="0" cellpadding="0" cellspacing="0" class="in-tb"
 </table>
 </form>
 </body>

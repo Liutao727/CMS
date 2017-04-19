@@ -10,7 +10,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.QueryHints;
 
 import com.jspxcms.core.domain.Attribute;
-import com.jspxcms.core.domain.QAttribute;
+import com.jspxcms.core.domain.dsl.QAttribute;
 import com.jspxcms.core.repository.plus.AttributeDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

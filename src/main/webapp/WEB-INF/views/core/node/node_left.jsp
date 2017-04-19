@@ -2,19 +2,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<style type="text/css">
-html{height:100%;}
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<style>
+body{overflow-x:auto;}
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
 </style>
-
-<script type="text/javascript">
+<script>
 function dblClickExpand(treeId, treeNode) {
 	return treeNode.level > 0;
 }
@@ -94,7 +91,7 @@ $(function(){
 	<c:choose>
 	<c:when test="${empty param.noSelect}">
 	$("#showList").prop("checked",$.cookie('show_list')!='false');
-	$("#showDescendants").prop("checked",$.cookie('show_descendants')=='true');
+	$("#showDescendants").prop("checked",$.cookie('show_descendants')!='false');
 	var selectId = $.cookie('select_id');
 	if(selectId) {
 		var nodeObj = treeObj.getNodeByParam("id",selectId);
@@ -117,15 +114,14 @@ $(function(){
 });
 </script>
 </head>
-<body class="left-body">
-<div style="padding:7px 0 3px 0;text-align:center;">
-  <label for="showList"><input id="showList" type="checkbox" checked="checked"/><s:message code="node.showList"/></label> &nbsp;
-  <label for="showDescendants"><input id="showDescendants" type="checkbox"/><s:message code="node.showDescendants"/></label>
+<body class="skin-blue content-body">
+<div style="padding:16px 0 2px 12px;font-size:16px;">
+  <label class="checkbox-inline"><input id="showList" type="checkbox" checked/><s:message code="node.showList"/></label>
+  <label class="checkbox-inline"><input id="showDescendants" type="checkbox" checked/><s:message code="node.showDescendants"/></label>
   <%-- <input type="button" value="<s:message code="refresh"/>" onclick="javascript:location.href=location.href"/> &nbsp; --%>
   <%-- <a href="javascript:location.href=location.href" class="ls-opt"><s:message code="refresh"/></a> &nbsp; --%>
   <%-- <a href="../model/list.do" target="center" class="ls-opt"><s:message code="model.management"/></a> &nbsp; --%>
 </div>
-<hr/>
-<ul id="tree" class="ztree" style="padding-top:5px"></ul>
+<ul id="tree" class="ztree" style="margin:7px 0 0 7px;"></ul>
 </body>
 </html>

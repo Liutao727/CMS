@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>7.0.2</version>
+	<version>8.0.0</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
@@ -17,313 +17,314 @@
 		<url>http://www.jspxcms.com/</url>
 	</organization>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.2.RELEASE</version>
+	</parent>
 	<properties>
-		<spring.version>4.2.8.RELEASE</spring.version>
-
-		<spring-data-jpa.version>1.10.5.RELEASE</spring-data-jpa.version>
-		<hibernate.version>5.0.7.Final</hibernate.version>
-		<hibernate-validator.version>5.2.2.Final</hibernate-validator.version>
-		<querydsl.version>4.1.4</querydsl.version>
-		<javax.inject.version>1</javax.inject.version>
-		<shiro.version>1.2.4</shiro.version>
-		<lucene.version>3.6.2</lucene.version>
-		<!-- <lucene.version>4.3.1</lucene.version> -->
-		<!-- <lucene.version>4.7.2</lucene.version> -->
-		<quartz.version>2.2.2</quartz.version>
-		<!-- <quartz.version>2.1.7</quartz.version> -->
-		<!-- <ehcache.version>2.10.1</ehcache.version> -->
-		<ehcache.version>2.6.11</ehcache.version>
-		<jackson.version>2.6.4</jackson.version>
-		<joda-time.version>2.9.1</joda-time.version>
-		<javassist.version>3.20.0-GA</javassist.version>
-		<commons-codec.version>1.10</commons-codec.version>
+		<!-- Apache公共基础组件 -->
 		<commons-lang3.version>3.4</commons-lang3.version>
-		<commons-io.version>2.4</commons-io.version>
-		<commons-beanutils.version>1.9.2</commons-beanutils.version>
-		<commons-fileupload.version>1.3.1</commons-fileupload.version>
+		<!-- Apache公共网络组件 -->
 		<commons-net.version>3.4</commons-net.version>
-		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-collections4.version>4.1</commons-collections4.version>
-		<poi.version>3.13</poi.version>
+		<!-- Apache公共IO组件 -->
+		<commons-io.version>2.4</commons-io.version>
+		<!-- 缓存组件 -->
+		<ehcache-core.version>2.6.11</ehcache-core.version>
+		<!-- 安全框架 -->
+		<shiro.version>1.3.2</shiro.version>
+		<!-- 全文检索组件 -->
+		<lucene.version>3.6.2</lucene.version><!--<lucene.version>4.7.2</lucene.version> -->
+		<!-- HTML解析组件 -->
 		<htmlparser.version>2.1</htmlparser.version>
-		<httpclient.version>4.5.1</httpclient.version>
+		<!-- 定时任务组件 -->
+		<quartz.version>2.2.2</quartz.version>
+		<!-- 微软文档解析组件 -->
+		<poi.version>3.13</poi.version>
+		<!-- Ant组件。使用zip部分模块 -->
 		<ant.version>1.9.6</ant.version>
-		<guava.version>19.0</guava.version>
-		<aspectj.version>1.8.7</aspectj.version>
-		<slf4j.version>1.7.13</slf4j.version>
-		<freemarker.version>2.3.23</freemarker.version>
-		<jodconverter-core.version>1.0.5</jodconverter-core.version>
-		<jacob.version>1.18</jacob.version>
-		<im4java.version>1.4.0</im4java.version>
-		<owasp-java-html-sanitizer.version>20150501.1</owasp-java-html-sanitizer.version>
-		<!-- <owasp-java-html-sanitizer.version>20160203.1</owasp-java-html-sanitizer.version> -->
+		<!-- 社交风格时间格式化类库 -->
+		<prettytime.version>4.0.1.Final</prettytime.version>
+		<!-- HTML过滤组件。防止用户提交的HTML包含有害代码 -->
+		<owasp-java-html-sanitizer.version>20160924.1</owasp-java-html-sanitizer.version>
+		<!-- 用户代理解析组件。分析用户浏览器类型、操作系统等信息 -->
 		<UserAgentUtils.version>1.20</UserAgentUtils.version>
-		<weixin4j.version>1.6.9</weixin4j.version>
-		<snakeyaml.version>1.16</snakeyaml.version>
-		<pegdown.version>1.6.0</pegdown.version>
+		<!-- 微信组件 -->
+		<weixin4j.version>1.7.4</weixin4j.version>
+		<!-- Markdown解析组件 -->
+		<!-- <pegdown.version>1.6.0</pegdown.version> -->
+		<!-- 纯Java的图片处理组件 -->
 		<imgscalr.version>4.2</imgscalr.version>
+		<!-- 验证码组件 -->
 		<jcaptcha.version>2.0.0</jcaptcha.version>
-		<!-- <qq-connect.version>1.0.2</qq-connect.version> -->
-		<!-- <weibo4j-oauth2.version>2.1.1-beta2-3</weibo4j-oauth2.version> -->
-		<logback.version>1.1.3</logback.version>
+		<!-- OpenOffice转换组件 -->
+		<jodconverter-core.version>1.0.5</jodconverter-core.version>
+		<!-- MSOffice转换组件 -->
+		<jacob.version>1.14.3</jacob.version>
+		<!-- GraphicsMagick原生图片处理库调用组件 -->
+		<im4java.version>1.4.0</im4java.version>
+		<!-- 单元测试Mock组件 -->
+		<powermock.version>1.6.6</powermock.version>
 
-		<javax.mail-api.version>1.5.5</javax.mail-api.version>
-		<log4jdbc.version>1.2</log4jdbc.version>
-		<jstl.version>1.2</jstl.version>
-		<!--<jstl.version>1.1.2</jstl.version> <standard.version>1.1.2</standard.version> -->
-		<servlet-api.version>2.5</servlet-api.version>
-		<jsp-api.version>2.1.2</jsp-api.version>
-		<el-api.version>2.1.2-b05</el-api.version>
-		<tomcat-jsp-api.version>6.0.44</tomcat-jsp-api.version>
-
-		<tomcat-jdbc.version>7.0.67</tomcat-jdbc.version>
-
-		<!-- 测试 -->
-		<assertj.version>1.7.1</assertj.version>
-		<powermock.version>1.5.6</powermock.version>
-
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<!-- 数据库JDBC驱动 -->
+		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+		<jdbc.driver.version>5.1.24</jdbc.driver.version>
+		
+		<java.version>1.7</java.version>
+		<tomcat.version>7.0.73</tomcat.version>
+		<servlet-api.version>3.0.1</servlet-api.version>
+		<jsp-api.version>2.2.1</jsp-api.version>
 	</properties>
-
 	<dependencies>
+		<!-- springboot web 依赖 -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- springboot freemarker 依赖 -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
+		<!-- springboot data jpa 依赖 -->
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- springboot mail 依赖 -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+		<!-- springboot mobile 依赖 -->
 		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mobile</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-core</artifactId>
-		</dependency>
+		<!-- <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-cache</artifactId></dependency> -->
+		<!-- 系统监控actuator,autoconfig,beans,configprops,dump,env,flyway,health,info,liquibase,metrics,mappings,shutdown,trace;docs,heapdump,jolokia,logfile -->
+		<!-- <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-actuator</artifactId></dependency> -->
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
+			<version>${commons-net.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-scratchpad</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.htmlparser</groupId>
-			<artifactId>htmlparser</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.leopard.thirdparty</groupId>
-			<artifactId>jcaptcha-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.imgscalr</groupId>
-			<artifactId>imgscalr-lib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.livesense</groupId>
-			<artifactId>jodconverter-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.hynnet</groupId>
-			<artifactId>jacob</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.im4java</groupId>
-			<artifactId>im4java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-			<artifactId>owasp-java-html-sanitizer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>eu.bitwalker</groupId>
-			<artifactId>UserAgentUtils</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.foxinmy</groupId>
-			<artifactId>weixin4j-mp</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-spring</artifactId>
+			<version>${shiro.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-ehcache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-highlighter</artifactId>
+			<version>${shiro.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers</artifactId>
+			<version>${lucene.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-analyzers-common</artifactId> 
-			</dependency> -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-highlighter</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.htmlparser</groupId>
+			<artifactId>htmlparser</artifactId>
+			<version>${htmlparser.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>c3p0</groupId>
+					<artifactId>c3p0</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>${ant.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ocpsoft.prettytime</groupId>
+			<artifactId>prettytime</artifactId>
+			<version>${prettytime.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+			<artifactId>owasp-java-html-sanitizer</artifactId>
+			<version>${owasp-java-html-sanitizer.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+			<version>${UserAgentUtils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.foxinmy</groupId>
+			<artifactId>weixin4j-mp</artifactId>
+			<version>${weixin4j.version}</version>
+		</dependency>
+		<!-- <dependency><groupId>org.pegdown</groupId><artifactId>pegdown</artifactId><version>${pegdown.version}</version></dependency> -->
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>${imgscalr.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.leopard.thirdparty</groupId>
+			<artifactId>jcaptcha-core</artifactId>
+			<version>${jcaptcha.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>jodconverter-core</artifactId>
+			<version>${jodconverter-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hynnet</groupId>
+			<artifactId>jacob</artifactId>
+			<version>${jacob.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.im4java</groupId>
+			<artifactId>im4java</artifactId>
+			<version>${im4java.version}</version>
+		</dependency>
+		<!-- 中文分词组件 -->
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>IKAnalyzer</artifactId>
+			<version>2012_u6</version>
+			<!-- <version>2012FF_u1</version> -->
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/IKAnalyzer-2012_u6.jar</systemPath>
+		</dependency>
+		<!-- QQ组件 -->
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>qq-connect-Sdk4J</artifactId>
+			<version>2.0.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/qq-connect-Sdk4J-2.0.0.jar</systemPath>
+		</dependency>
+		<!-- 微博组件 -->
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>weibo4j-oauth2</artifactId>
+			<version>beta3.1.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/weibo4j-oauth2-beta3.1.1.jar</systemPath>
 		</dependency>
 
+		<!-- springboot将snakeyaml设置为运行时(runtime)依赖，代码里使用了snakeyaml，这里设置为编译期(compile)依赖 -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+		</dependency>
+		<!-- 日期组件 -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		<!-- QueryDSL查询框架 -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.googlecode.log4jdbc</groupId>
-			<artifactId>log4jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-		</dependency>
+		<!-- HTTP组件 -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>local</groupId>
-			<artifactId>IKAnalyzer</artifactId>
+			<groupId>${jdbc.driver.groupId}</groupId>
+			<artifactId>${jdbc.driver.artifactId}</artifactId>
+			<version>${jdbc.driver.version}</version>
+			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>local</groupId>
-			<artifactId>qq-connect-Sdk4J</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>local</groupId>
-			<artifactId>weibo4j-oauth2</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jdbc</artifactId>
-		</dependency>
-
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>el-api</artifactId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>${jsp-api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
+		<!-- 快速启动启动应用，类似热部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- 默认使用tomcat8，使用tomcat7需要增加这项配置 -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- 打包成war需要设置scope为provided -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- 使用JSP必须包含此项 -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -331,590 +332,14 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-jpa</artifactId>
-				<version>${spring-data-jpa.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-ehcache</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>${hibernate-validator.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.querydsl</groupId>
-				<artifactId>querydsl-apt</artifactId>
-				<version>${querydsl.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.querydsl</groupId>
-				<artifactId>querydsl-jpa</artifactId>
-				<version>${querydsl.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.inject</groupId>
-				<artifactId>javax.inject</artifactId>
-				<version>${javax.inject.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-core</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-spring</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-ehcache</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-core</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-memory</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-analyzers</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-			<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-analyzers-common</artifactId> 
-				<version>${lucene.version}</version> </dependency> -->
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-highlighter</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-queries</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-			<!-- <dependency> <groupId>org.apache.solr</groupId> <artifactId>solr-core</artifactId> 
-				<version>${lucene.version}</version> </dependency> <dependency> <groupId>org.apache.solr</groupId> 
-				<artifactId>solr-solrj</artifactId> <version>${lucene.version}</version> 
-				<exclusions> <exclusion> <groupId>log4j</groupId> <artifactId>log4j</artifactId> 
-				</exclusion> </exclusions> </dependency> -->
-			<dependency>
-				<groupId>org.quartz-scheduler</groupId>
-				<artifactId>quartz</artifactId>
-				<version>${quartz.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>c3p0</groupId>
-						<artifactId>c3p0</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache-core</artifactId>
-				<version>${ehcache.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${joda-time.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.javassist</groupId>
-				<artifactId>javassist</artifactId>
-				<version>${javassist.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>${commons-lang3.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>${commons-beanutils.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>commons-fileupload</groupId>
-				<artifactId>commons-fileupload</artifactId>
-				<version>${commons-fileupload.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-net</groupId>
-				<artifactId>commons-net</artifactId>
-				<version>${commons-net.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons-collections.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-collections4</artifactId>
-				<version>${commons-collections4.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi</artifactId>
-				<version>${poi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi-scratchpad</artifactId>
-				<version>${poi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.htmlparser</groupId>
-				<artifactId>htmlparser</artifactId>
-				<version>${htmlparser.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${httpclient.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.ant</groupId>
-				<artifactId>ant</artifactId>
-				<version>${ant.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjrt</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjweaver</artifactId>
-				<version>${aspectj.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.freemarker</groupId>
-				<artifactId>freemarker</artifactId>
-				<version>${freemarker.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.imgscalr</groupId>
-				<artifactId>imgscalr-lib</artifactId>
-				<version>${imgscalr.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.github.livesense</groupId>
-				<artifactId>jodconverter-core</artifactId>
-				<version>${jodconverter-core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.hynnet</groupId>
-				<artifactId>jacob</artifactId>
-				<version>${jacob.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.im4java</groupId>
-				<artifactId>im4java</artifactId>
-				<version>${im4java.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-				<artifactId>owasp-java-html-sanitizer</artifactId>
-				<version>${owasp-java-html-sanitizer.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>eu.bitwalker</groupId>
-				<artifactId>UserAgentUtils</artifactId>
-				<version>${UserAgentUtils.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.foxinmy</groupId>
-				<artifactId>weixin4j-mp</artifactId>
-				<version>${weixin4j.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.yaml</groupId>
-				<artifactId>snakeyaml</artifactId>
-				<version>${snakeyaml.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.pegdown</groupId>
-				<artifactId>pegdown</artifactId>
-				<version>${pegdown.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>local</groupId>
-				<artifactId>IKAnalyzer</artifactId>
-				<version>2012_u6</version>
-				<!-- <version>2012FF_u1</version> -->
-				<scope>system</scope>
-				<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/IKAnalyzer-2012_u6.jar</systemPath>
-			</dependency>
-			<dependency>
-				<groupId>local</groupId>
-				<artifactId>qq-connect-Sdk4J</artifactId>
-				<version>2.0.0</version>
-				<scope>system</scope>
-				<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/qq-connect-Sdk4J-2.0.0.jar</systemPath>
-			</dependency>
-			<dependency>
-				<groupId>local</groupId>
-				<artifactId>weibo4j-oauth2</artifactId>
-				<version>beta3.1.1</version>
-				<scope>system</scope>
-				<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/weibo4j-oauth2-beta3.1.1.jar</systemPath>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>log4j-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jul-to-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>io.leopard.thirdparty</groupId>
-				<artifactId>jcaptcha-core</artifactId>
-				<version>${jcaptcha.version}</version>
-			</dependency>
-			<!-- <dependency> <groupId>com.belerweb</groupId> <artifactId>qq-connect</artifactId> 
-				<version>${qq-connect.version}</version> </dependency> <dependency> <groupId>com.belerweb</groupId> 
-				<artifactId>weibo4j-oauth2</artifactId> <version>${weibo4j-oauth2.version}</version> 
-				</dependency> -->
-
-
-			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>javax.mail-api</artifactId>
-				<version>${javax.mail-api.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.mail</groupId>
-				<artifactId>javax.mail</artifactId>
-				<version>${javax.mail-api.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.googlecode.log4jdbc</groupId>
-				<artifactId>log4jdbc</artifactId>
-				<version>${log4jdbc.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>jstl</artifactId>
-				<version>${jstl.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>${servlet-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>${jsp-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.el</groupId>
-				<artifactId>el-api</artifactId>
-				<version>${el-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.tomcat</groupId>
-				<artifactId>tomcat-jdbc</artifactId>
-				<version>${tomcat-jdbc.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.24</version>
-				<scope>runtime</scope>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-module-junit4</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-api-mockito</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>jdk.tools</groupId>
-				<artifactId>jdk.tools</artifactId>
-				<version>${java.version}</version>
-				<scope>system</scope>
-				<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
-			</dependency>
-
-		</dependencies>
-
-	</dependencyManagement>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat6-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!-- compiler插件, 设定JDK版本 -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.3</version>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-						<showWarnings>true</showWarnings>
-						<encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.6</version>
-					<configuration>
-						<archive>
-							<manifestEntries>
-								<Built-By>Jspxcms</Built-By>
-							</manifestEntries>
-						</archive>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.9.1</version>
-					<!-- <version>1.10</version> -->
-				</plugin>
-
-				<!-- 合并多个war -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.6</version>
-					<configuration>
-						<!-- <packagingExcludes>WEB-INF/web.xml</packagingExcludes> -->
-						<failOnMissingWebXml>false</failOnMissingWebXml>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.tomcat.maven</groupId>
-					<artifactId>tomcat6-maven-plugin</artifactId>
-					<version>2.2</version>
-					<configuration>
-						<path>/</path>
-						<port>8080</port>
-						<uriEncoding>UTF-8</uriEncoding>
-						<server>tomcat6</server>
-						<contextReloadable>false</contextReloadable>
-						<useTestClasspath>true</useTestClasspath>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.tomcat.maven</groupId>
-					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.2</version>
-					<configuration>
-						<path>/</path>
-						<port>8080</port>
-						<uriEncoding>UTF-8</uriEncoding>
-						<server>tomcat7</server>
-						<contextReloadable>false</contextReloadable>
-						<useTestClasspath>true</useTestClasspath>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>com.mysema.maven</groupId>
-					<artifactId>apt-maven-plugin</artifactId>
-					<version>1.1.3</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>process</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>src/generated-sources/java</outputDirectory>
-								<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>

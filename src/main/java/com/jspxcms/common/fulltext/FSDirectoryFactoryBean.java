@@ -7,7 +7,10 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  * FSDirecotry工厂类
@@ -15,10 +18,11 @@ import org.springframework.core.io.Resource;
  * @author liufang
  * 
  */
-public class FSDirectoryFactoryBean implements FactoryBean<FSDirectory>,
-		InitializingBean, DisposableBean {
+public class FSDirectoryFactoryBean implements FactoryBean<FSDirectory>, InitializingBean, DisposableBean,
+		ResourceLoaderAware {
+	private ResourceLoader resourceLoader;
 	private FSDirectory directory;
-	private Resource location;
+	private String location;
 
 	public FSDirectory getObject() throws Exception {
 		return directory;
@@ -30,14 +34,13 @@ public class FSDirectoryFactoryBean implements FactoryBean<FSDirectory>,
 
 	public void afterPropertiesSet() throws Exception {
 		if (location == null) {
-			throw new BeanInitializationException(
-					"Must specify a location property");
+			throw new BeanInitializationException("Must specify a location property");
 		}
-		File locationFile = location.getFile();
+		Resource resource = resourceLoader.getResource(location);
+		File locationFile = resource.getFile();
 		boolean locationExists = locationFile.exists();
 		if (locationExists && !locationFile.isDirectory()) {
-			throw new BeanInitializationException(
-					"location must be a directory");
+			throw new BeanInitializationException("location must be a directory");
 		}
 		directory = FSDirectory.open(locationFile);
 	}
@@ -52,7 +55,12 @@ public class FSDirectoryFactoryBean implements FactoryBean<FSDirectory>,
 		return true;
 	}
 
-	public void setLocation(Resource location) {
+	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = (resourceLoader != null ? resourceLoader : new DefaultResourceLoader());
 	}
 }

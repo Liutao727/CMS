@@ -19,15 +19,15 @@ $(function() {
 [#include 'inc_header.html'/]
 <div class="w center">
 	<div style="padding:10px 5px;">您的位置:&nbsp; <a href="${ctx}/" class="a c-desc">首页</a> > 调查问卷</div>	
-	<form id="questionForm" action="${ctx}/questions/${question.id}/answer.jspx" method="post" class="ff-yh fs14" style="border-top:2px solid #f29149;padding:0 30px;">
+	<form id="questionForm" action="${ctx}/questions/${question.id}/answer" method="post" class="ff-yh fs14" style="border-top:2px solid #f29149;padding:0 30px;">
 		<input type="hidden" name="status_504" value="您已经参与过调查"/>
-		<input type="hidden" name="redirectUrl" value="${ctx}/questions/${question.id}/result.jspx"/>
+		<input type="hidden" name="redirectUrl" value="${ctx}/questions/${question.id}/result"/>
 		<h1 class="fs28" style="margin:30px 0 0 0;padding:0 20px;">${question.title}</h1>
 		<div style="padding:20px 20px;border-bottom:1px solid #ccc;">
 			<div class="fs12 c-666">
 				<span>创建时间：${question.creationDate?string('yyyy-MM-dd')}</span>
 				<span class="ml10">状态：[#if question.periodStatus==0]进行中[#elseif question.periodStatus==1]未开始[#elseif question.periodStatus==2]已结束[/#if]</span>
-				<a href="${ctx}/questions/${question.id}/result.jspx" target="_blank" class="ml10 a-hover" style="color:#f29149;">查看结果</a>
+				<a href="${ctx}/questions/${question.id}/result" target="_blank" class="ml10 a-hover" style="color:#f29149;">查看结果</a>
 			</div>
 			<div class="c-666" style="text-indent:2em;padding:20px 0 10px 0;">${question.description}</div>
 		</div>
@@ -47,7 +47,7 @@ $(function() {
 		</div>
 		<div class="text-center" style="padding:25px 0 20px 0;">
 			<input type="submit" value="提交"/> &nbsp;
-			<a class="a fs14" href="${ctx}/questions/${question.id}/result.jspx" target="_blank">查看结果</a>
+			<a class="a fs14" href="${ctx}/questions/${question.id}/result" target="_blank">查看结果</a>
 		</div>
 	</form>
 </div>

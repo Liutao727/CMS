@@ -2,6 +2,7 @@ package com.jspxcms.core.repository.plus;
 
 import java.util.List;
 
+import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.core.domain.Site;
 
 /**
@@ -11,7 +12,5 @@ import com.jspxcms.core.domain.Site;
  * 
  */
 public interface SiteDaoPlus {
-	public Site findDefault();
-
-	public List<Site> findByStatus(Integer[] status);
+	public List<Site> findByStatus(Integer parentId, String parentNumber, Integer[] status, Limitable limitable);
 }

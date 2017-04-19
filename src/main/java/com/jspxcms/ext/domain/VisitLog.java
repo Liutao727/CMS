@@ -74,7 +74,7 @@ public class VisitLog implements Siteable, java.io.Serializable {
 
 	@Id
 	@Column(name = "f_visitlog_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_visit_log", pkColumnValue = "cms_visit_log", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_visit_log", pkColumnValue = "cms_visit_log", initialValue = 1, allocationSize = 50)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_visit_log")
 	public Integer getId() {
 		return this.id;

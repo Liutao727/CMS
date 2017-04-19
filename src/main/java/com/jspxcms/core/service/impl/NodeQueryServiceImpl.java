@@ -44,57 +44,45 @@ import com.jspxcms.core.service.NodeQueryService;
 @Service
 @Transactional(readOnly = true)
 public class NodeQueryServiceImpl implements NodeQueryService {
-	public List<Node> findList(Integer siteId, String treeNumber,
-			Integer parentId, Integer userId, boolean isAllNodePerm,
-			Map<String, String[]> params, Sort sort) {
-		List<Node> list = dao.findAll(
-				spec(siteId, treeNumber, parentId, userId, isAllNodePerm,
-						params), sort);
+	public List<Node> findList(Integer siteId, String treeNumber, Integer parentId, Integer userId,
+			boolean isAllNodePerm, Map<String, String[]> params, Sort sort) {
+		List<Node> list = dao.findAll(spec(siteId, treeNumber, parentId, userId, isAllNodePerm, params), sort);
 		return list;
 	}
 
-	public RowSide<Node> findSide(Integer siteId, String treeNumber,
-			Integer parentId, Integer userId, boolean isAllNodePerm,
-			Map<String, String[]> params, Node bean, Integer position, Sort sort) {
+	public RowSide<Node> findSide(Integer siteId, String treeNumber, Integer parentId, Integer userId,
+			boolean isAllNodePerm, Map<String, String[]> params, Node bean, Integer position, Sort sort) {
 		if (position == null) {
 			return new RowSide<Node>();
 		}
 		Limitable limit = RowSide.limitable(position, sort);
-		List<Node> list = dao.findAll(
-				spec(siteId, treeNumber, parentId, userId, isAllNodePerm,
-						params), limit);
+		List<Node> list = dao.findAll(spec(siteId, treeNumber, parentId, userId, isAllNodePerm, params), limit);
 
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<Node> spec(final Integer siteId,
-			final String treeNumber, final Integer parentId,
-			final Integer userId, final boolean allNodePerm,
-			Map<String, String[]> params) {
+	private Specification<Node> spec(final Integer siteId, final String treeNumber, final Integer parentId,
+			final Integer userId, final boolean allNodePerm, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
 		final Specification<Node> fs = SearchFilter.spec(filters, Node.class);
 		Specification<Node> sp = new Specification<Node>() {
-			public Predicate toPredicate(Root<Node> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Node> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fs.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred, cb.equal(root.get("site")
-							.<Integer> get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").<Integer>get("id"), siteId));
 				}
 				if (StringUtils.isNotBlank(treeNumber)) {
-					Path<String> tnPath = root.<String> get("treeNumber");
+					Path<String> tnPath = root.<String>get("treeNumber");
 					pred = cb.and(pred, cb.like(tnPath, treeNumber + "%"));
 				} else if (parentId != null) {
-					pred = cb.and(pred, cb.equal(root.get("parent")
-							.<Integer> get("id"), parentId));
+					pred = cb.and(pred, cb.equal(root.get("parent").<Integer>get("id"), parentId));
 				}
 				if (!allNodePerm) {
 					Join<Node, NodeRole> nodeRoleJoin = root.join("nodeRoles");
-					Path<Integer> userPath = nodeRoleJoin.join("role")
-							.join("userRoles").join("user").<Integer> get("id");
+					Path<Integer> userPath = nodeRoleJoin.join("role").join("userRoles").join("user")
+							.<Integer>get("id");
 					pred = cb.and(pred, cb.equal(userPath, userId));
-					pred = cb.and(pred,
-							cb.equal(nodeRoleJoin.get("nodePerm"), true));
+					pred = cb.and(pred, cb.equal(nodeRoleJoin.get("nodePerm"), true));
 					query.distinct(true);
 				}
 				return pred;
@@ -103,20 +91,16 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		return sp;
 	}
 
-	public List<Node> findList(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
-			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
-			Integer[] p5, Integer[] p6, Limitable limitable) {
-		return dao.findList(siteId, parentId, treeNumber, isRealNode, isHidden,
-				p1, p2, p3, p4, p5, p6, limitable);
+	public List<Node> findList(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
+			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Limitable limitable) {
+		return dao.findList(siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6, limitable);
 	}
 
-	public Page<Node> findPage(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
-			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
-			Integer[] p5, Integer[] p6, Pageable pageable) {
-		return dao.findPage(siteId, parentId, treeNumber, isRealNode, isHidden,
-				p1, p2, p3, p4, p5, p6, pageable);
+	public Page<Node> findPage(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
+			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Pageable pageable) {
+		return dao.findPage(siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6, pageable);
 	}
 
 	public List<Node> findByIds(Integer... ids) {
@@ -149,8 +133,7 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		return findList(siteId, parentId, null, null);
 	}
 
-	public List<Node> findList(Integer siteId, Integer parentId,
-			Boolean isRealNode, Boolean isHidden) {
+	public List<Node> findList(Integer siteId, Integer parentId, Boolean isRealNode, Boolean isHidden) {
 		String treeNumber = null;
 		if (parentId != null) {
 			Node node = get(parentId);
@@ -160,24 +143,21 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		}
 		Sort sort = new Sort("treeNumber");
 		Limitable limitable = new LimitRequest(null, null, sort);
-		return dao.findList(new Integer[] { siteId }, null, treeNumber,
-				isRealNode, isHidden, null, null, null, null, null, null,
-				limitable);
+		return dao.findList(new Integer[] { siteId }, null, treeNumber, isRealNode, isHidden, null, null, null, null,
+				null, null, limitable);
 	}
 
 	public List<Node> findChildren(Integer parentId) {
 		return findChildren(parentId, null, null, null, null);
 	}
 
-	public List<Node> findChildren(Integer parentId, Boolean isRealNode,
-			Boolean isHidden, Integer offset, Integer limit) {
+	public List<Node> findChildren(Integer parentId, Boolean isRealNode, Boolean isHidden, Integer offset, Integer limit) {
 		if (parentId == null) {
 			return Collections.emptyList();
 		}
 		Sort sort = new Sort("treeNumber");
 		Limitable limitable = new LimitRequest(offset, limit, sort);
-		return dao.findList(null, parentId, null, isRealNode, isHidden, null,
-				null, null, null, null, null, limitable);
+		return dao.findList(null, parentId, null, isRealNode, isHidden, null, null, null, null, null, null, limitable);
 	}
 
 	public Node findRoot(Integer siteId) {

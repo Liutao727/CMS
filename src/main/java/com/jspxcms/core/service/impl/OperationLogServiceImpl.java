@@ -34,6 +34,7 @@ import com.jspxcms.core.domain.User;
 import com.jspxcms.core.listener.SiteDeleteListener;
 import com.jspxcms.core.listener.UserDeleteListener;
 import com.jspxcms.core.repository.OperationLogDao;
+import com.jspxcms.core.service.GlobalService;
 import com.jspxcms.core.service.OperationLogService;
 import com.jspxcms.core.service.SiteShiroService;
 import com.jspxcms.core.service.UserShiroService;
@@ -142,12 +143,11 @@ public class OperationLogServiceImpl implements OperationLogService, UserDeleteL
 		Site site = null;
 		if (siteId != null) {
 			site = siteShiroService.get(siteId);
-
 		}
 		if (site == null) {
-			site = siteShiroService.findDefault();
+			site = globalService.findUnique().getSite();
 		}
-		bean.setSite(site);
+		bean.setSite(site);		
 		if (StringUtils.isNotBlank(bean.getIp())) {
 			bean.setCountry(ipSeeker.getCountry(bean.getIp()));
 			bean.setArea(ipSeeker.getArea(bean.getIp()));
@@ -189,6 +189,7 @@ public class OperationLogServiceImpl implements OperationLogService, UserDeleteL
 
 	private UserShiroService userShiroService;
 	private SiteShiroService siteShiroService;
+	private GlobalService globalService;
 
 	@Autowired
 	public void setUserShiroService(UserShiroService userShiroService) {
@@ -198,6 +199,11 @@ public class OperationLogServiceImpl implements OperationLogService, UserDeleteL
 	@Autowired
 	public void setSiteShiroService(SiteShiroService siteShiroService) {
 		this.siteShiroService = siteShiroService;
+	}
+
+	@Autowired
+	public void setGlobalService(GlobalService globalService) {
+		this.globalService = globalService;
 	}
 
 	private IPSeeker ipSeeker;

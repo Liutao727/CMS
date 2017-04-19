@@ -1,25 +1,36 @@
 package com.jspxcms.core.repository.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.orm.JpqlBuilder;
+import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.core.domain.Message;
-import com.jspxcms.core.domain.QMessage;
+import com.jspxcms.core.domain.dsl.QMessage;
 import com.jspxcms.core.repository.plus.MessageDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class MessageDaoImpl implements MessageDaoPlus {
+	@SuppressWarnings("unchecked")
+	public List<Object[]> groupByUserId(Integer userId, boolean unread, Limitable limitable) {
+		JpqlBuilder jb = groupByUserId(userId, unread);
+		return jb.nativeList(em, limitable);
+	}
 
 	@SuppressWarnings("unchecked")
 	public Page<Object[]> groupByUserId(Integer userId, boolean unread, Pageable pageable) {
+		JpqlBuilder jb = groupByUserId(userId, unread);
+		return jb.nativePage(em, pageable);
+	}
+
+	private JpqlBuilder groupByUserId(Integer userId, boolean unread) {
 		JpqlBuilder jb = new JpqlBuilder();
 		jb.append("select max(t.message_id_) as message_id_,                                                          "
 				+ "       t.contact_id_ as contact_id_,                                                               "
@@ -46,12 +57,24 @@ public class MessageDaoImpl implements MessageDaoPlus {
 		jb.setParameter("userId", userId);
 		jb.setParameter("deletionSend", Message.DELETION_SEND);
 		jb.setParameter("deletionReceive", Message.DELETION_RECEIVE);
-		return jb.nativePage(em, pageable);
+		return jb;
 	}
 
 	public Page<Message> findByContactId(Integer userId, Integer contactId, Pageable pageable) {
 		QMessage m = QMessage.message;
-		JPAQuery<Message> query = queryFactory.selectFrom(m);
+		JPAQuery<Message> query = findByContactId(userId, contactId, m);
+		return QuerydslUtils.page(query, m, pageable);
+	}
+
+	public List<Message> findByContactId(Integer userId, Integer contactId, Limitable limitable) {
+		QMessage m = QMessage.message;
+		JPAQuery<Message> query = findByContactId(userId, contactId, m);
+		return QuerydslUtils.list(query, m, limitable);
+	}
+
+	private JPAQuery<Message> findByContactId(Integer userId, Integer contactId, QMessage m) {
+		JPAQuery<Message> query = new JPAQuery<Message>(this.em);
+		query.from(m);
 		BooleanBuilder senderExp = new BooleanBuilder(m.sender.id.eq(userId)).and(m.deletionFlag
 				.ne(Message.DELETION_SEND));
 		BooleanBuilder receiverExp = new BooleanBuilder(m.receiver.id.eq(userId)).and(m.deletionFlag
@@ -59,7 +82,7 @@ public class MessageDaoImpl implements MessageDaoPlus {
 		senderExp.and(m.receiver.id.eq(contactId));
 		receiverExp.and(m.sender.id.eq(contactId));
 		query.where(senderExp.or(receiverExp));
-		return QuerydslUtils.page(query, m, pageable);
+		return query;
 	}
 
 	private EntityManager em;
@@ -68,12 +91,4 @@ public class MessageDaoImpl implements MessageDaoPlus {
 	public void setEm(EntityManager em) {
 		this.em = em;
 	}
-
-	private JPAQueryFactory queryFactory;
-
-	@Autowired
-	public void setQueryFactory(JPAQueryFactory queryFactory) {
-		this.queryFactory = queryFactory;
-	}
-
 }

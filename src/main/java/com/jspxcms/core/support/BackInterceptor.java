@@ -29,22 +29,24 @@ import com.jspxcms.core.security.ShiroUser;
 import com.jspxcms.core.service.UserService;
 
 /**
- * BackInterceptor
+ * 后台拦截器
  * 
  * @author liufang
  * 
  */
 public class BackInterceptor implements HandlerInterceptor {
-	private static final Logger logger = LoggerFactory
-			.getLogger(BackInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(BackInterceptor.class);
 
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) throws Exception {
+	/**
+	 * Controller执行前执行。判断用户是否登录，将用户信息通过 {@link Context#setCurrentUser(User)} 保存在线程变量中，方便在其他地方获取。
+	 */
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		// 用户登录信息
 		ShiroUser shiroUser = null;
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated()) {
 			Object principal = subject.getPrincipal();
+			// 判断类型是否匹配，不匹配则退出登录
 			if (principal instanceof ShiroUser) {
 				shiroUser = (ShiroUser) principal;
 			} else {
@@ -58,8 +60,7 @@ public class BackInterceptor implements HandlerInterceptor {
 		return true;
 	}
 
-	public void postHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler,
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		if (modelAndView == null || !modelAndView.hasView()) {
 			return;
@@ -90,20 +91,17 @@ public class BackInterceptor implements HandlerInterceptor {
 			modelMap.addAttribute("SITE", site);
 		}
 		// 增加search_string
-		Map<String, String[]> searchMap = Servlets.getParamValuesMap(
-				request, Constants.SEARCH_PREFIX, true);
+		Map<String, String[]> searchMap = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX, true);
 		String page = request.getParameter("page");
 		if (page != null) {
 			searchMap.put("page", new String[] { page });
 		}
-		Map<String, String[]> pageMap = Servlets.getParamValuesMap(request,
-				"page_", true);
+		Map<String, String[]> pageMap = Servlets.getParamValuesMap(request, "page_", true);
 		searchMap.putAll(pageMap);
 		for (Entry<String, String[]> entry : searchMap.entrySet()) {
 			String[] value = entry.getValue();
 			// 避免jsp的el表达式出现 0 eq ''的情况
-			if (value != null && value.length > 0
-					&& (!"".equals(value[0]) || value.length > 1)) {
+			if (value != null && value.length > 0 && (!"".equals(value[0]) || value.length > 1)) {
 				// modelMap.addAllAttributes(searchMap);
 				modelMap.addAttribute(entry.getKey(), value);
 			}
@@ -124,8 +122,7 @@ public class BackInterceptor implements HandlerInterceptor {
 					searchString.append('=');
 					searchString.append(value);
 					searchString.append('&');
-					if (!"page".equals(key)
-							&& !StringUtils.startsWith(key, "page_sort")) {
+					if (!"page".equals(key) && !StringUtils.startsWith(key, "page_sort")) {
 						searchStringNoSort.append(key);
 						searchStringNoSort.append('=');
 						searchStringNoSort.append(value);
@@ -136,20 +133,17 @@ public class BackInterceptor implements HandlerInterceptor {
 			int len = searchString.length();
 			if (len > 1) {
 				searchString.setLength(len - 1);
-				modelMap.addAttribute(Constants.SEARCH_STRING,
-						searchString.toString());
+				modelMap.addAttribute(Constants.SEARCH_STRING, searchString.toString());
 			}
 			len = searchStringNoSort.length();
 			if (len > 1) {
 				searchStringNoSort.setLength(len - 1);
-				modelMap.addAttribute(Constants.SEARCH_STRING_NO_SORT,
-						searchStringNoSort.toString());
+				modelMap.addAttribute(Constants.SEARCH_STRING_NO_SORT, searchStringNoSort.toString());
 			}
 		}
 	}
 
-	public void afterCompletion(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex)
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 		Context.resetCurrentUser();
 	}

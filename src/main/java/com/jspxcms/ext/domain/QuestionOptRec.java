@@ -103,7 +103,8 @@ public class QuestionOptRec implements java.io.Serializable {
 		}
 	}
 
-	public static class QuestionOptRecComparator implements Comparator<QuestionOptRec> {
+	@SuppressWarnings("serial")
+	public static class QuestionOptRecComparator implements Comparator<QuestionOptRec>,Serializable {
 		public int compare(QuestionOptRec o1, QuestionOptRec o2) {
 			return o1.getRecord().getDate().compareTo(o2.getRecord().getDate());
 		}

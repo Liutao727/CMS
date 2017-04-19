@@ -84,12 +84,12 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 		Specification<User> sp = new Specification<User>() {
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fsp.toPredicate(root, query, cb);
-				pred = cb.and(pred, cb.ge(root.<Integer> get("rank"), rank));
+				pred = cb.and(pred, cb.ge(root.<Integer>get("rank"), rank));
 				if (ArrayUtils.isNotEmpty(type)) {
 					pred = cb.and(pred, root.get("type").in(Arrays.asList(type)));
 				}
 				if (StringUtils.isNotBlank(orgTreeNumber)) {
-					Path<String> orgsPath = root.join("org").<String> get("treeNumber");
+					Path<String> orgsPath = root.join("org").<String>get("treeNumber");
 					pred = cb.and(pred, cb.like(orgsPath, orgTreeNumber + "%"));
 					query.distinct(true);
 				}
@@ -101,6 +101,10 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 
 	public List<User> findByUsername(String[] usernames) {
 		return dao.findByUsername(usernames);
+	}
+
+	public long countByDate(Date beginDate) {
+		return dao.countByDate(beginDate);
 	}
 
 	public User getAnonymous() {
@@ -150,7 +154,7 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 		user.setValidationType(Constants.VERIFY_MEMBER_TYPE);
 		detail.setValidationDate(new Date());
 
-		String url = site.getProtocol() + ":" + site.getUrlFull() + Constants.VERIFY_MEMBER_URL + key;
+		String url = site.getUrlFull() + Constants.VERIFY_MEMBER_URL + key;
 		String email = user.getEmail();
 		String username = user.getUsername();
 		String sitename = site.getFullNameOrName();
@@ -181,7 +185,7 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 		user.setValidationType(Constants.RETRIEVE_PASSWORD_TYPE);
 		detail.setValidationDate(new Date());
 
-		String url = site.getProtocol() + ":" + site.getUrlFull() + Constants.RETRIEVE_PASSWORD_URL + key;
+		String url = site.getUrlFull() + Constants.RETRIEVE_PASSWORD_URL + key;
 		String email = user.getEmail();
 		String username = user.getUsername();
 		String sitename = site.getFullNameOrName();
@@ -277,10 +281,12 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 
 	@Transactional
 	public User save(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
-			Integer orgId, Integer groupId, String ip) {
+			Map<String, String> customs, Map<String, String> clobs, Integer orgId, Integer groupId, String ip) {
 		bean.setOrg(orgService.get(orgId));
 		bean.setGroup(groupService.get(groupId));
 		bean.setGlobal(globalService.findUnique());
+		bean.setCustoms(customs);
+		bean.setClobs(clobs);
 		entryptPassword(bean);
 		bean.applyDefaultValue();
 		bean = dao.save(bean);
@@ -339,18 +345,25 @@ public class UserServiceImpl implements UserService, OrgDeleteListener, MemberGr
 		detail.setMsn(msn);
 		detail.setWeixin(weixin);
 
-		save(user, detail, null, null, null, orgId, groupId, ip);
+		save(user, detail, null, null, null, null, null, orgId, groupId, ip);
 		return user;
 	}
 
 	@Transactional
 	public User update(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
-			Integer orgId, Integer groupId, Integer topOrgId, Integer siteId) {
+			Map<String, String> customs, Map<String, String> clobs, Integer orgId, Integer groupId, Integer topOrgId,
+			Integer siteId) {
 		if (orgId != null) {
 			bean.setOrg(orgService.get(orgId));
 		}
 		if (groupId != null) {
 			bean.setGroup(groupService.get(groupId));
+		}
+		if (customs != null) {
+			bean.setCustoms(customs);
+		}
+		if (clobs != null) {
+			bean.setClobs(clobs);
 		}
 		// 密码不为空，则修改密码
 		if (StringUtils.isNotBlank(bean.getRawPassword())) {

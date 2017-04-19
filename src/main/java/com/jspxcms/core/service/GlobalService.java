@@ -18,6 +18,5 @@ public interface GlobalService {
 
 	public void updateConf(Configurable conf);
 
-	public void updateCustoms(Global global, Map<String, String> map,
-			Map<String, String> clobMap);
+	public void updateCustoms(Global global, Map<String, String> map, Map<String, String> clobMap);
 }

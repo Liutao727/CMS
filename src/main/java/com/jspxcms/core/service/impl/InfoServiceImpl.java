@@ -513,7 +513,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
 			commentService.deleteByFtypeAndFid(Info.COMMENT_TYPE, id);
 			nodeService.derefer(entity.getNode());
 			attachmentRefService.delete(Info.ATTACH_TYPE, entity.getId());
-			PInfo.deleteHtml(entity, entity.getSite().getHtmlPublishPoint().getFileHandler(pathResolver));
+			PInfo.deleteHtml(entity, pathResolver);
 			dao.delete(entity);
 		}
 		return entity;

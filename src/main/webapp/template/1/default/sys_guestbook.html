@@ -21,7 +21,7 @@
 <body>
 [#include 'inc_header.html'/]
 <div class="w center">	
-	<div class="ff-yh b fs16" style="padding:6px 5px 6px 5px;border-bottom:4px solid #993333;"><a href="${dy}/guestbook.jspx" class="left fs18 a-none" style="color:#cc3333;padding-top:5px;">留言板</a><a href="${ctx}/guestbook/create.jspx" class="a-hover right" style="padding:4px 10px;background-color:#cc3333;color:#fff;">我要留言</a><div class="clear"></div></div>
+	<div class="ff-yh b fs16" style="padding:6px 5px 6px 5px;border-bottom:4px solid #993333;"><a href="${dy}/guestbook" class="left fs18 a-none" style="color:#cc3333;padding-top:5px;">留言板</a><a href="${ctx}/guestbook/create" class="a-hover right" style="padding:4px 10px;background-color:#cc3333;color:#fff;">我要留言</a><div class="clear"></div></div>
 	<div style="">
 		<div class="mt10">
 			<a href="${addParam('','isReply')}" class="a-hover left msg-status[#if !Param.isReply??] msg-status-curr[/#if]">全部留言</a>
@@ -44,14 +44,14 @@
 			[#list pagedList.content as guestbook]
 			<div style="padding:10px 5px 10px 10px;[#if guestbook_index==0]border-top:1px solid #e7e7e7;[/#if]border-bottom:1px solid #e7e7e7;border-left:1px solid #e7e7e7;border-right:1px solid #e7e7e7;background-color:#f2f2f2;">
 				<div class="left fs14"><a href="#" class="a-hover" style="color:#333;">[${guestbook.type.name}]</a></div>
-				<div class="left ml10"><a href="${ctx}/guestbook/${guestbook.id}.jspx" class="fs14 a-hover b" style="color:#990000;" target="_blank">${guestbook.title!substring(guestbook.text,100,'...')}</a></div>
+				<div class="left ml10"><a href="${ctx}/guestbook/${guestbook.id}" class="fs14 a-hover b" style="color:#990000;" target="_blank">${guestbook.title!substring(guestbook.text,100,'...')}</a></div>
 				[#if guestbook.reply]<div class="right reply">已回复</div>[#else]<div class="right unreply">未回复</div>[/#if]
 				<div class="right fs14 c-666" style="margin-right:50px;">${guestbook.creationDate?string('yyyy-MM-dd HH:mm')}</div>
 				<div class="right fs14 c-666" style="width:160px;margin-right:10px;">网友：${guestbook.creator.username!guestbook.username!"匿名网友"}</div>
 				<div class="clear"></div>
 			</div>
 			<div class="fs14" style="padding:20px;border-bottom:1px solid #e7e7e7;border-left:1px solid #e7e7e7;border-right:1px solid #e7e7e7;">
-				${substring(guestbook.text,200,'...')} <a href="${ctx}/guestbook/${guestbook.id}.jspx" target="_blank" class="a-hover" style="color:#990000;">【查看全文】</a>
+				${substring(guestbook.text,200,'...')} <a href="${ctx}/guestbook/${guestbook.id}" target="_blank" class="a-hover" style="color:#990000;">【查看全文】</a>
 			</div>
 			[/#list]
 		</div>

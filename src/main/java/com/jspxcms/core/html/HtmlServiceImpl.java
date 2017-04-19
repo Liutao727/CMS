@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.jspxcms.common.file.FileHandler;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.Node;
@@ -49,10 +48,10 @@ public class HtmlServiceImpl implements HtmlService {
 		if (info == null) {
 			return;
 		}
-		FileHandler fileHandler = info.getSite().getHtmlPublishPoint()
-				.getFileHandler(pathResolver);
+//		FileHandler fileHandler = info.getSite().getHtmlPublishPoint()
+//				.getFileHandler(pathResolver);
 		try {
-			PInfo.makeHtml(info, getConfig(), fileHandler, taskService, null);
+			PInfo.makeHtml(info, getConfig(), pathResolver, taskService, null);
 		} catch (Exception e) {
 			logger.error(null, e);
 		}
@@ -63,10 +62,10 @@ public class HtmlServiceImpl implements HtmlService {
 			return;
 		}
 
-		FileHandler fileHandler = info.getSite().getHtmlPublishPoint()
-				.getFileHandler(pathResolver);
+//		FileHandler fileHandler = info.getSite().getHtmlPublishPoint()
+//				.getFileHandler(pathResolver);
 		try {
-			PInfo.deleteHtml(info, fileHandler);
+			PInfo.deleteHtml(info, pathResolver);
 		} catch (Exception e) {
 			logger.error(null, e);
 		}
@@ -87,14 +86,14 @@ public class HtmlServiceImpl implements HtmlService {
 		if (STATIC_INFO_NODE_PARENT_LIST == method) {
 			max = Integer.MAX_VALUE;
 		}
-		FileHandler fileHandler;
+//		FileHandler fileHandler;
 		if (STATIC_INFO_NODE_PARENT == method
 				|| STATIC_INFO_NODE_PARENT_LIST == method) {
 			while (node != null) {
-				fileHandler = node.getSite().getHtmlPublishPoint()
-						.getFileHandler(pathResolver);
+//				fileHandler = node.getSite().getHtmlPublishPoint()
+//						.getFileHandler(pathResolver);
 				try {
-					PNode.makeHtml(node, max, getConfig(), fileHandler,
+					PNode.makeHtml(node, max, getConfig(), pathResolver,
 							taskService, null);
 				} catch (Exception e) {
 					logger.error(null, e);
@@ -102,10 +101,10 @@ public class HtmlServiceImpl implements HtmlService {
 				node = node.getParent();
 			}
 		} else if (STATIC_INFO_NODE == method) {
-			fileHandler = node.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
+//			fileHandler = node.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
 			try {
-				PNode.makeHtml(node, max, getConfig(), fileHandler,
+				PNode.makeHtml(node, max, getConfig(), pathResolver,
 						taskService, null);
 			} catch (Exception e) {
 				logger.error(null, e);
@@ -118,9 +117,9 @@ public class HtmlServiceImpl implements HtmlService {
 	public void makeHome(Integer siteId) throws IOException, TemplateException {
 		Node node = nodeQuery.findRoot(siteId);
 		if (node != null) {
-			FileHandler fileHandler = node.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
-			PNode.makeHtml(node, 1, getConfig(), fileHandler, taskService, null);
+//			FileHandler fileHandler = node.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
+			PNode.makeHtml(node, 1, getConfig(), pathResolver, taskService, null);
 		}
 	}
 
@@ -135,15 +134,15 @@ public class HtmlServiceImpl implements HtmlService {
 		}
 		List<Info> list = infoDao.findForHtml(siteId, nodeId, treeNumber,
 				forUpdate, lastId, maxResult);
-		FileHandler fileHandler;
+//		FileHandler fileHandler;
 		Iterator<Info> it = list.iterator();
 		Info info;
 		while (it.hasNext() && taskService.isRunning(taskId)) {
 			info = it.next();
 			lastId = info.getId();
-			fileHandler = info.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
-			PInfo.makeHtml(info, getConfig(), fileHandler, taskService, taskId);
+//			fileHandler = info.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
+			PInfo.makeHtml(info, getConfig(), pathResolver, taskService, taskId);
 		}
 		if (list.size() < maxResult) {
 			lastId = null;
@@ -162,15 +161,15 @@ public class HtmlServiceImpl implements HtmlService {
 		}
 		List<Node> list = nodeDao.findForHtml(siteId, nodeId, treeNumber,
 				forUpdate, lastId, maxResult);
-		FileHandler fileHandler;
+//		FileHandler fileHandler;
 		Iterator<Node> it = list.iterator();
 		Node node;
 		while (it.hasNext() && taskService.isRunning(taskId)) {
 			node = it.next();
 			lastId = node.getId();
-			fileHandler = node.getSite().getHtmlPublishPoint()
-					.getFileHandler(pathResolver);
-			PNode.makeHtml(node, Integer.MAX_VALUE, getConfig(), fileHandler,
+//			fileHandler = node.getSite().getHtmlPublishPoint()
+//					.getFileHandler(pathResolver);
+			PNode.makeHtml(node, Integer.MAX_VALUE, getConfig(), pathResolver,
 					taskService, taskId);
 		}
 		if (list.size() < maxResult) {

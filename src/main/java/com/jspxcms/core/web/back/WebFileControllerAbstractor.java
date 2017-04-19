@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -69,16 +68,14 @@ public abstract class WebFileControllerAbstractor {
 
 	protected abstract boolean isFtp(Site site);
 
-	protected String left(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String left(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		Site site = Context.getCurrentSite();
 		String base = getBase(site);
 		String urlPrefix = getUrlPrefix(site);
 		FileHandler fileHandler = getFileHandler(site);
 		CommonFile parent = new CommonFile(base, true);
-		List<CommonFile> list = fileHandler.listFiles(dirFilter, base,
-				urlPrefix);
+		List<CommonFile> list = fileHandler.listFiles(dirFilter, base, urlPrefix);
 		modelMap.addAttribute("parent", parent);
 		modelMap.addAttribute("list", list);
 		modelMap.addAttribute("type", getType());
@@ -86,9 +83,8 @@ public abstract class WebFileControllerAbstractor {
 		return "core/web_file/web_file_left";
 	}
 
-	protected String leftTree(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String leftTree(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		Site site = Context.getCurrentSite();
 		String parentId = Servlets.getParam(request, "parentId");
 		parentId = parentId == null ? "" : parentId;
@@ -101,24 +97,21 @@ public abstract class WebFileControllerAbstractor {
 			throw new CmsException("invalidURI");
 		}
 		FileHandler fileHandler = getFileHandler(site);
-		List<CommonFile> list = fileHandler.listFiles(dirFilter, parentId,
-				urlPrefix);
+		List<CommonFile> list = fileHandler.listFiles(dirFilter, parentId, urlPrefix);
 		modelMap.addAttribute("list", list);
 		modelMap.addAttribute("type", getType());
 		modelMap.addAttribute("isFtp", isFtp(site));
 		return "core/web_file/web_file_left_tree";
 	}
 
-	protected String list(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String list(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		Site site = Context.getCurrentSite();
 		String parentId = Servlets.getParam(request, "parentId");
 		parentId = parentId == null ? "" : parentId;
 		String searchName = Servlets.getParam(request, "search_name");
 		String base = getBase(site);
 		String defPath = getDefPath(site);
-
 		String urlPrefix = getUrlPrefix(site);
 		if (StringUtils.isBlank(parentId)) {
 			parentId = defPath;
@@ -131,8 +124,7 @@ public abstract class WebFileControllerAbstractor {
 		if (parentId.length() > base.length()) {
 			pp = new CommonFile(CommonFile.getParent(parentId), true);
 		}
-		List<CommonFile> list = fileHandler.listFiles(searchName, parentId,
-				urlPrefix);
+		List<CommonFile> list = fileHandler.listFiles(searchName, parentId, urlPrefix);
 		String sort = request.getParameter("page_sort");
 		String directionection = request.getParameter("page_sort_dir");
 		CommonFile.sort(list, sort, directionection);
@@ -148,9 +140,8 @@ public abstract class WebFileControllerAbstractor {
 		return "core/web_file/web_file_list";
 	}
 
-	protected String create(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String create(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		Site site = Context.getCurrentSite();
 		String parentId = Servlets.getParam(request, "parentId");
 		String base = getBase(site);
@@ -179,9 +170,8 @@ public abstract class WebFileControllerAbstractor {
 		return "core/web_file/web_file_form";
 	}
 
-	protected String edit(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String edit(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		Site site = Context.getCurrentSite();
 		String id = Servlets.getParam(request, "id");
 		String base = getBase(site);
@@ -202,8 +192,7 @@ public abstract class WebFileControllerAbstractor {
 		return "core/web_file/web_file_form";
 	}
 
-	protected String mkdir(String parentId, String dir,
-			HttpServletRequest request, HttpServletResponse response,
+	protected String mkdir(String parentId, String dir, HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes ra) throws IOException {
 		Site site = Context.getCurrentSite();
 		parentId = parentId == null ? "" : parentId;
@@ -218,21 +207,17 @@ public abstract class WebFileControllerAbstractor {
 		FileHandler fileHandler = getFileHandler(site);
 		boolean success = fileHandler.mkdir(dir, parentId);
 		if (success) {
-			logService.operation("opr.role.add", parentId + "/" + dir, null,
-					null, request);
+			logService.operation("opr.role.add", parentId + "/" + dir, null, null, request);
 			logger.info("mkdir file, name={}.", parentId + "/" + dir);
 		}
 		ra.addFlashAttribute("refreshLeft", true);
 		ra.addAttribute("parentId", parentId);
-		ra.addFlashAttribute(MESSAGE, success ? OPERATION_SUCCESS
-				: OPERATION_FAILURE);
+		ra.addFlashAttribute(MESSAGE, success ? OPERATION_SUCCESS : OPERATION_FAILURE);
 		return "redirect:list.do";
 	}
 
-	protected String save(String parentId, String name, String text,
-			String redirect, HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
-			throws IOException {
+	protected String save(String parentId, String name, String text, String redirect, HttpServletRequest request,
+			HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		Site site = Context.getCurrentSite();
 		String base = getBase(site);
 
@@ -241,8 +226,7 @@ public abstract class WebFileControllerAbstractor {
 		}
 		FileHandler fileHandler = getFileHandler(site);
 		fileHandler.store(text, name, parentId);
-		logService.operation("opr.webFile.add", parentId + "/" + name, null,
-				null, request);
+		logService.operation("opr.webFile.add", parentId + "/" + name, null, null, request);
 		logger.info("save file, name={}.", parentId + "/" + name);
 		ra.addFlashAttribute("refreshLeft", true);
 		ra.addAttribute("parentId", parentId);
@@ -257,10 +241,8 @@ public abstract class WebFileControllerAbstractor {
 		}
 	}
 
-	protected void update(String parentId, String origName, String name,
-			String text, Integer position, String redirect,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	protected void update(String parentId, String origName, String name, String text, Integer position,
+			String redirect, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Site site = Context.getCurrentSite();
 		String base = getBase(site);
 
@@ -275,14 +257,12 @@ public abstract class WebFileControllerAbstractor {
 		if (!origName.equals(name)) {
 			fileHandler.rename(name, parentId + "/" + origName);
 		}
-		logService.operation("opr.webFile.edit", parentId + "/" + origName,
-				null, null, request);
+		logService.operation("opr.webFile.edit", parentId + "/" + origName, null, null, request);
 		logger.info("update file, name={}.", parentId + "/" + origName);
 		Servlets.writeHtml(response, "true");
 	}
 
-	protected String delete(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected String delete(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		String[] ids = Servlets.getParamValues(request, "ids");
@@ -297,25 +277,20 @@ public abstract class WebFileControllerAbstractor {
 		boolean success = fileHandler.delete(ids);
 		if (success) {
 			for (String id : ids) {
-				logService.operation("opr.webFile.delete", id, null, null,
-						request);
+				logService.operation("opr.webFile.delete", id, null, null, request);
 			}
-			logger.info("delete file success, name={}.",
-					StringUtils.join(ids, ','));
+			logger.info("delete file success, name={}.", StringUtils.join(ids, ','));
 		} else {
-			logger.info("delete file failure, name={}.",
-					StringUtils.join(ids, ','));
+			logger.info("delete file failure, name={}.", StringUtils.join(ids, ','));
 		}
 		String parentId = Servlets.getParam(request, "parentId");
 		ra.addAttribute("parentId", parentId);
 		ra.addFlashAttribute("refreshLeft", true);
-		ra.addFlashAttribute(MESSAGE, success ? DELETE_SUCCESS
-				: OPERATION_FAILURE);
+		ra.addFlashAttribute(MESSAGE, success ? DELETE_SUCCESS : OPERATION_FAILURE);
 		return "redirect:list.do";
 	}
 
-	protected String rename(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected String rename(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		String id = Servlets.getParam(request, "id");
@@ -334,13 +309,11 @@ public abstract class WebFileControllerAbstractor {
 		String parentId = Servlets.getParam(request, "parentId");
 		ra.addAttribute("parentId", parentId);
 		ra.addFlashAttribute("refreshLeft", true);
-		ra.addFlashAttribute(MESSAGE, success ? OPERATION_SUCCESS
-				: OPERATION_FAILURE);
+		ra.addFlashAttribute(MESSAGE, success ? OPERATION_SUCCESS : OPERATION_FAILURE);
 		return "redirect:list.do";
 	}
 
-	protected String move(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected String move(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		String[] ids = Servlets.getParamValues(request, "ids");
@@ -369,8 +342,7 @@ public abstract class WebFileControllerAbstractor {
 		return "redirect:list.do";
 	}
 
-	protected String zip(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected String zip(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		FileHandler fileHandler = getFileHandler(site);
@@ -396,8 +368,7 @@ public abstract class WebFileControllerAbstractor {
 		return "redirect:list.do";
 	}
 
-	protected void zipDownload(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected void zipDownload(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		FileHandler fileHandler = getFileHandler(site);
@@ -425,8 +396,7 @@ public abstract class WebFileControllerAbstractor {
 		}
 	}
 
-	protected String unzip(HttpServletRequest request,
-			HttpServletResponse response, RedirectAttributes ra)
+	protected String unzip(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		FileHandler fileHandler = getFileHandler(site);
@@ -444,8 +414,7 @@ public abstract class WebFileControllerAbstractor {
 			File file = localFileHandler.getFile(ids[i]);
 			if (AntZipUtils.isZipFile(file)) {
 				AntZipUtils.unzip(file, file.getParentFile());
-				logService.operation("opr.webFile.unzip", ids[i], null, null,
-						request);
+				logService.operation("opr.webFile.unzip", ids[i], null, null, request);
 				logger.info("unzip file, name={}.", ids[i]);
 			}
 		}
@@ -457,12 +426,9 @@ public abstract class WebFileControllerAbstractor {
 		return "redirect:list.do";
 	}
 
-	protected void upload(
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response)
+	protected void upload(MultipartFile file, String parentId, HttpServletRequest request, HttpServletResponse response)
 			throws IllegalStateException, IOException {
 		Site site = Context.getCurrentSite();
-		String parentId = Servlets.getParam(request, "parentId");
 		// parentId = parentId == null ? base : parentId;
 		String base = getBase(site);
 		if (!Validations.uri(parentId, base)) {
@@ -470,26 +436,19 @@ public abstract class WebFileControllerAbstractor {
 		}
 		FileHandler fileHandler = getFileHandler(site);
 		fileHandler.store(file, parentId);
-		logService.operation("opr.webFile.upload",
-				parentId + "/" + file.getOriginalFilename(), null, null,
-				request);
-		logger.info("upload file, name={}.",
-				parentId + "/" + file.getOriginalFilename());
+		logService.operation("opr.webFile.upload", parentId + "/" + file.getOriginalFilename(), null, null, request);
+		logger.info("upload file, name={}.", parentId + "/" + file.getOriginalFilename());
 		Servlets.writeHtml(response, "true");
 	}
 
-	protected void zipUpload(
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, HttpServletResponse response,
-			RedirectAttributes ra) throws IOException {
+	protected void zipUpload(MultipartFile file, String parentId, HttpServletRequest request,
+			HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		Site site = Context.getCurrentSite();
 		FileHandler fileHandler = getFileHandler(site);
 		if (!(fileHandler instanceof LocalFileHandler)) {
 			throw new CmsException("ftp cannot support ZIP.");
 		}
 		LocalFileHandler localFileHandler = (LocalFileHandler) fileHandler;
-
-		String parentId = Servlets.getParam(request, "parentId");
 		String base = getBase(site);
 		// parentId = parentId == null ? base : parentId;
 
@@ -502,16 +461,12 @@ public abstract class WebFileControllerAbstractor {
 		AntZipUtils.unzip(tempFile, parentFile);
 		tempFile.delete();
 
-		logService.operation("opr.webFile.zipUpload",
-				parentId + "/" + file.getOriginalFilename(), null, null,
-				request);
-		logger.info("zip upload file, name={}.",
-				parentId + "/" + file.getOriginalFilename());
+		logService.operation("opr.webFile.zipUpload", parentId + "/" + file.getOriginalFilename(), null, null, request);
+		logger.info("zip upload file, name={}.", parentId + "/" + file.getOriginalFilename());
 		Servlets.writeHtml(response, "true");
 	}
 
-	protected String dir(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
+	protected String dir(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		Site site = Context.getCurrentSite();
 		String parentId = Servlets.getParam(request, "parentId");
@@ -543,8 +498,7 @@ public abstract class WebFileControllerAbstractor {
 			}
 		};
 		FileHandler fileHandler = getFileHandler(site);
-		List<CommonFile> list = fileHandler.listFiles(filter, parentId,
-				urlPrefix);
+		List<CommonFile> list = fileHandler.listFiles(filter, parentId, urlPrefix);
 		// 设置当前目录
 		CommonFile parent = new CommonFile(parentId, true);
 		parent.setCurrent(true);
@@ -563,9 +517,8 @@ public abstract class WebFileControllerAbstractor {
 		return "core/web_file/choose_dir";
 	}
 
-	protected String dirList(HttpServletRequest request,
-			HttpServletResponse response, org.springframework.ui.Model modelMap)
-			throws IOException {
+	protected String dirList(HttpServletRequest request, HttpServletResponse response,
+			org.springframework.ui.Model modelMap) throws IOException {
 		dir(request, response, modelMap);
 		return "core/web_file/choose_dir_list";
 	}

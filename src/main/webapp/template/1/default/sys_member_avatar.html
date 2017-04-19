@@ -45,7 +45,7 @@
 $(function(){
 	$("#validForm").validate();
 	var settings = {
-		upload_url: "${ctx}/my/avatar_upload.jspx;jsessionid=${jsessionid}",
+		upload_url: "${ctx}/my/avatar_upload;jsessionid=${jsessionid}",
 		file_size_limit: "1024 KB",
 		file_types: "*.jpg;*.jpeg;*.png;*.gif",
 		file_types_description : "Images",
@@ -138,12 +138,12 @@ $(function(){
 	<div class="w center c999" style="height:32px;line-height:32px;">
 		<div class="left">
 			<a class="topa ml5" href="${ctx}/" target="_blank">首页</a>
-			<a class="topa ml5" href="${ctx}/sitemap.jspx" target="_blank">网站地图</a>
-			<a class="topa ml5" href="${ctx}/rss.jspx">RSS订阅</a>
-			<a class="topa ml5" href="${ctx}/tags.jspx">TAGS标签</a>
+			<a class="topa ml5" href="${ctx}/sitemap" target="_blank">网站地图</a>
+			<a class="topa ml5" href="${ctx}/rss">RSS订阅</a>
+			<a class="topa ml5" href="${ctx}/tags">TAGS标签</a>
 		</div>
 		<div class="right">
-			<script type="text/javascript" src="${ctx}/login_include.jspx?d=${.now?time}"></script>
+			<script type="text/javascript" src="${ctx}/login_include?d=${.now?time}"></script>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -173,7 +173,7 @@ $(function(){
 				</div>
 			</div>
 			<div id="avatarDiv"></div>
-			<form id="avatarForm" action="${ctx}/my/avatar.jspx" method="post" class="mt20 hide">
+			<form id="avatarForm" action="${ctx}/my/avatar" method="post" class="mt20 hide">
 				<input type="hidden" name="status_0" value="头像修改成功！"/>
 				<input type="hidden" name="nextUrl" value="${url}"/>
 				<input type="hidden" id="top" name="top" value=""/>

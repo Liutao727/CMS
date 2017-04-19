@@ -19,10 +19,10 @@ $(function() {
 [#include 'inc_header.html'/]
 <div class="w center">
 	<div style="padding:10px 5px;">您的位置:&nbsp; <a href="${ctx}" class="a c-desc">首页</a> > 投票</div>		
-	<form action="${ctx}/vote.jspx" method="post" id="voteForm">
+	<form action="${ctx}/vote" method="post" id="voteForm">
 	<input type="hidden" name="id" value="${vote.id}"/>
 	<input type="hidden" name="status_560" value="您已经投过票了"/>
-	<input type="hidden" name="redirectUrl" value="${ctx}/vote/{id}.jspx"/>
+	<input type="hidden" name="redirectUrl" value="${ctx}/vote/{id}"/>
 	<div style="border-top:2px solid #f29149;padding:0 30px;">
 		<h1 class="ff-yh fs28" style="margin:20px 0 0 0;padding:0 20px;">${vote.title}</h1>
 		<div style="padding:10px 20px;border-bottom:1px solid #ccc;">
@@ -39,7 +39,7 @@ $(function() {
 		</ul>
 		<div class="text-center" style="padding:25px 0 20px 0;">
 			<button type="submit">投票</button> &nbsp;
-			<a class="a fs14" href="${ctx}/vote/${vote.id}.jspx" target="_blank">查看结果</a>
+			<a class="a fs14" href="${ctx}/vote/${vote.id}" target="_blank">查看结果</a>
 		</div>
 	</div>
 	</form>

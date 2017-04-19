@@ -13,13 +13,10 @@ import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.ext.domain.Question;
 import com.jspxcms.ext.repository.plus.QuestionDaoPlus;
 
-public interface QuestionDao extends Repository<Question, Integer>,
-		QuestionDaoPlus {
-	public Page<Question> findAll(Specification<Question> spec,
-			Pageable pageable);
+public interface QuestionDao extends Repository<Question, Integer>, QuestionDaoPlus {
+	public Page<Question> findAll(Specification<Question> spec, Pageable pageable);
 
-	public List<Question> findAll(Specification<Question> spec,
-			Limitable limitable);
+	public List<Question> findAll(Specification<Question> spec, Limitable limitable);
 
 	public Question findOne(Integer id);
 

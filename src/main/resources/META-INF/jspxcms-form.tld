@@ -690,6 +690,12 @@
 		</attribute>
 		<attribute>
 			<description>HTML Standard Attribute</description>
+			<name>labelClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>HTML Standard Attribute</description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

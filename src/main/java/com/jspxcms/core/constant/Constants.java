@@ -1,10 +1,7 @@
 package com.jspxcms.core.constant;
 
-import java.util.Properties;
-
 import org.apache.commons.lang3.StringUtils;
-
-import com.jspxcms.common.util.ConstantConfigurer;
+import org.springframework.core.env.Environment;
 
 /**
  * CMS常量
@@ -12,16 +9,16 @@ import com.jspxcms.common.util.ConstantConfigurer;
  * @author liufang
  * 
  */
-public class Constants implements ConstantConfigurer {
+public class Constants {
 	/**
 	 * Quartz中使用的ApplicationContext
 	 */
 	public static final String APP_CONTEXT = "appContext";
 
 	public static final String VERIFY_MEMBER_TYPE = "verify_member";
-	public static final String VERIFY_MEMBER_URL = "/verify_member.jspx?key=";
+	public static final String VERIFY_MEMBER_URL = "/verify_member?key=";
 	public static final String RETRIEVE_PASSWORD_TYPE = "retrieve_password";
-	public static final String RETRIEVE_PASSWORD_URL = "/retrieve_password.jspx?key=";
+	public static final String RETRIEVE_PASSWORD_URL = "/retrieve_password?key=";
 	/**
 	 * 内容访问路径
 	 */
@@ -31,9 +28,17 @@ public class Constants implements ConstantConfigurer {
 	 */
 	public static final String NODE_PATH = "node";
 	/**
+	 * 栏目访问路径
+	 */
+	public static final String USER_PATH = "space";
+	/**
+	 * 会员中心访问路径
+	 */
+	public static final String MEMBER_PATH = "my";
+	/**
 	 * 动态也后缀
 	 */
-	public static final String DYNAMIC_SUFFIX = ".jspx";
+	public static final String DYNAMIC_SUFFIX = "";
 	/**
 	 * 站点前缀
 	 */
@@ -94,6 +99,10 @@ public class Constants implements ConstantConfigurer {
 	 * 身份识别COOKIE名称
 	 */
 	public static final String IDENTITY_COOKIE_NAME = "_jspxcms";
+	/**
+	 * 默认分页数量
+	 */
+	public static final int PAGE_SIZE = 20;
 
 	public static final String STATUS = "status";
 	public static final String MESSAGE = "message";
@@ -109,7 +118,7 @@ public class Constants implements ConstantConfigurer {
 	/**
 	 * 前台登录地址
 	 */
-	public static String LOGIN_URL = "/login.jspx";
+	public static String LOGIN_URL = "/login";
 	/**
 	 * 模版存储路径。
 	 * 
@@ -152,6 +161,19 @@ public class Constants implements ConstantConfigurer {
 	 */
 	public static String IM4JAVA_TOOLPATH = null;
 
+	/**
+	 * 通知来源模板
+	 */
+	public static String NOTIFICATION_SOURCE = "";
+	/**
+	 * 通知多条来源模板
+	 */
+	public static String NOTIFICATION_SOURCE_MULTI = "";
+	/**
+	 * 私信通知内容模板
+	 */
+	public static String NOTIFICATION_CONTENT_MESSAGE = "";
+
 	public static boolean IS_ROOT_ALL_PERMS = false;
 	public static String CMSCP = "/cmscp";
 	public static String BACK_SUCCESS_URL = "/cmscp/index.do";
@@ -172,72 +194,85 @@ public class Constants implements ConstantConfigurer {
 		return "GraphicsMagick".equalsIgnoreCase(IMAGE_HANDLER);
 	}
 
-	@Override
-	public void loadProperties(Properties properties) {
-		if (properties == null) {
+	public static void loadEnvironment(Environment env) {
+		if (env == null) {
 			return;
 		}
-		String loginUrl = properties.getProperty("loginUrl");
+		String loginUrl = env.getProperty("loginUrl");
 		if (loginUrl != null) {
 			LOGIN_URL = loginUrl;
 		}
-		String templateStorePath = properties.getProperty("templateStorePath");
+		String templateStorePath = env.getProperty("templateStorePath");
 		if (templateStorePath != null) {
 			TEMPLATE_STORE_PATH = templateStorePath;
 		}
-		String templateDisplayPath = properties.getProperty("templateDisplayPath");
+		String templateDisplayPath = env.getProperty("templateDisplayPath");
 		if (templateDisplayPath != null) {
 			TEMPLATE_DISPLAY_PATH = templateDisplayPath;
 		}
-		String openofficePort = properties.getProperty("openofficePort");
+		String openofficePort = env.getProperty("openofficePort");
 		if (StringUtils.isNotBlank(openofficePort)) {
 			OPENOFFICE_PORT = Integer.valueOf(openofficePort);
 		}
-		String swftoolsPdf2swf = properties.getProperty("swftoolsPdf2swf");
+		String swftoolsPdf2swf = env.getProperty("swftoolsPdf2swf");
 		if (swftoolsPdf2swf != null) {
 			SWFTOOLS_PDF2SWF = swftoolsPdf2swf;
 		}
-		String swftoolsLanguagedir = properties.getProperty("swftoolsLanguagedir");
+		String swftoolsLanguagedir = env.getProperty("swftoolsLanguagedir");
 		if (swftoolsLanguagedir != null) {
 			SWFTOOLS_LANGUAGEDIR = swftoolsLanguagedir;
 		}
-		String doc2html = properties.getProperty("doc2html");
+		String doc2html = env.getProperty("doc2html");
 		if (doc2html != null) {
 			DOC2HTML = doc2html;
 		}
-		String imageHandler = properties.getProperty("imageHandler");
+		String imageHandler = env.getProperty("imageHandler");
 		if (imageHandler != null) {
 			IMAGE_HANDLER = imageHandler;
 		}
-		String im4javaToolpath = properties.getProperty("im4javaToolpath");
+		String im4javaToolpath = env.getProperty("im4javaToolpath");
 		if (im4javaToolpath != null) {
 			IM4JAVA_TOOLPATH = im4javaToolpath;
 		}
-		String isRootAllPerms = properties.getProperty("isRootAllPerms");
+
+		String notificationSource = env.getProperty("notificationSource");
+		if (notificationSource != null) {
+			NOTIFICATION_SOURCE = notificationSource;
+		}
+		String notificationSourceMulti = env.getProperty("notificationSourceMulti");
+		if (notificationSourceMulti != null) {
+			NOTIFICATION_SOURCE_MULTI = notificationSourceMulti;
+		}
+		String notificationContentMessage = env.getProperty("notificationContentMessage");
+		if (notificationContentMessage != null) {
+			NOTIFICATION_CONTENT_MESSAGE = notificationContentMessage;
+		}
+
+		String isRootAllPerms = env.getProperty("isRootAllPerms");
 		if ("true".equals(isRootAllPerms)) {
 			IS_ROOT_ALL_PERMS = true;
 		}
-		String cmscp = properties.getProperty("cmscp");
+		String cmscp = env.getProperty("cmscp");
 		if (cmscp != null) {
 			CMSCP = cmscp;
 		}
-		String backSuccessUrl = properties.getProperty("backSuccessUrl");
+		String backSuccessUrl = env.getProperty("backSuccessUrl");
 		if (backSuccessUrl != null) {
 			BACK_SUCCESS_URL = backSuccessUrl;
 		}
-		String backLoginUrl = properties.getProperty("backLoginUrl");
+		String backLoginUrl = env.getProperty("backLoginUrl");
 		if (backLoginUrl != null) {
 			BACK_LOGIN_URL = backLoginUrl;
 		}
-		String tagKeywordsSplit = properties.getProperty("tagKeywordsSplit");
+		String tagKeywordsSplit = env.getProperty("tagKeywordsSplit");
 		if (tagKeywordsSplit != null) {
 			TAG_KEYWORDS_SPLIT = tagKeywordsSplit;
 		}
-		String defUsername = properties.getProperty("defUsername");
+		String defUsername = env.getProperty("defUsername");
 		if (defUsername != null) {
 			DEF_USERNAME = defUsername;
 		}
-		String defPassword = properties.getProperty("defPassword");
+		String defPassword = env.getProperty("defPassword");
 		if (defPassword != null) {
 			DEF_PASSWORD = defPassword;
 		}

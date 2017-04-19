@@ -26,14 +26,15 @@
 			<span class="info-detail">${info.author!info.creator.realName!info.creator.username}</span>
 			<span class="info-detail"><span id="info_views"></span>次阅读</span>
 			<script type="text/javascript">
-				$("#info_views").load("${dy}/info_views/${info.id}.jspx?d="+new Date()*1);
+				$("#info_views").load("${dy}/info_views/${info.id}?d="+new Date()*1);
 			</script>
 			[#if info.getCommentStatus(user,groups)!=0]
-			<a href="${ctx}/comment.jspx?fid=${info.id}" class="info-detail c-666 a-hover" target="_blank"><span id="info_comments"></span>条评论</a>
+			<a href="${ctx}/comment?fid=${info.id}" class="info-detail c-666 a-hover" target="_blank"><span id="info_comments"></span>条评论</a>
 			<script type="text/javascript">
-				 $("#info_comments").load("${dy}/info_comments/${info.id}.jspx?d="+new Date()*1);
+				 $("#info_comments").load("${dy}/info_comments/${info.id}?d="+new Date()*1);
 			</script>
 			[/#if]
+			<script src="${dy}/app?template=info_favorites&id=${info.id}&d="+new Date()*1></script>
 		</div>
 		<div class="info-text mt20">
 			[#noescape]${text}[/#noescape]
@@ -46,7 +47,7 @@
 		<table class="center mt20"><tr><td>
 			<script type="text/javascript">
 				function infoScoring(id,itemId) {
-					$.post('${dy}/info_scoring.jspx',{id:id,itemId:itemId},function(data) {
+					$.post('${dy}/info_scoring',{id:id,itemId:itemId},function(data) {
 						if(data!="0"){$("#score-item-"+itemId).text(data);}else{alert("你已经表达过心情了！");}
 					});
 				}
@@ -66,7 +67,7 @@
 			[/#if]
 			[/@ScoreGroup]
 			<script type="text/javascript">
-				$.get("${dy}/info_score/${info.id}.jspx?d="+new Date()*1,function(data) {
+				$.get("${dy}/info_score/${info.id}?d="+new Date()*1,function(data) {
 					for(id in data){$("#score-item-"+id).text(data[id]);}
 				},"json");
 			</script>
@@ -74,12 +75,12 @@
 		<table class="digg center mt20"><tr><td>
 			<script type="text/javascript">
 				function digg() {
-					$.post("${dy}/info_digg.jspx",{id:${info.id}},function(data){
+					$.post("${dy}/info_digg",{id:${info.id}},function(data){
 						if(data!="0"){$("#diggs").text(data);}else{alert("你已经顶过一次！")}
 					});
 				}
 				function bury() {
-					$.post("${dy}/info_bury.jspx",{id:${info.id}},function(data){
+					$.post("${dy}/info_bury",{id:${info.id}},function(data){
 						if(data!="0"){$("#burys").text(data);}else{alert("你已经踩过一次！")}
 					});
 				}
@@ -88,7 +89,7 @@
 			<div id="burys" class="digg-item" onclick="bury();"></div>
 			<div class="clear"></div>
 			<script type="text/javascript">
-				$.get("${dy}/info_diggs/${info.id}.jspx?d="+new Date()*1,function(data) {
+				$.get("${dy}/info_diggs/${info.id}?d="+new Date()*1,function(data) {
 					$("#diggs").text(data[0]);$("#burys").text(data[1]);
 				},"json");
 			</script>
@@ -129,7 +130,7 @@
 		</div>
 		<div id="commentDiv" class="mt20"></div>		
 		<script type="text/javascript">
-			$("#commentDiv").load("${dy}/comment_list.jspx?fid=${info.id}&url=${url?url}&d="+new Date()*1);
+			$("#commentDiv").load("${dy}/comment_list?fid=${info.id}&url=${url?url}&d="+new Date()*1);
 		</script>
 	</div>
 	<div class="right w1">

@@ -23,11 +23,6 @@ public class SiteShiroServiceImpl implements SiteShiroService {
 		return dao.findByUserId(userId);
 	}
 
-	public Site findDefault() {
-		Site site = dao.findDefault();
-		return site;
-	}
-
 	public Site findByDomain(String domain) {
 		List<Site> list = dao.findByDomain(domain);
 		if (!list.isEmpty()) {

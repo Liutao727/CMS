@@ -13,10 +13,10 @@ import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
-import com.jspxcms.core.domain.QInfo;
-import com.jspxcms.core.domain.QInfoTag;
-import com.jspxcms.core.domain.QTag;
 import com.jspxcms.core.domain.Tag;
+import com.jspxcms.core.domain.dsl.QInfo;
+import com.jspxcms.core.domain.dsl.QInfoTag;
+import com.jspxcms.core.domain.dsl.QTag;
 import com.jspxcms.core.repository.plus.TagDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

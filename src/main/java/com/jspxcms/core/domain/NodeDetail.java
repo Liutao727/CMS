@@ -27,6 +27,7 @@ public class NodeDetail implements java.io.Serializable {
 	private Node node;
 	private String link;
 	private String html;
+	private String mobileHtml;
 	private String metaKeywords;
 	private String metaDescription;
 	private Boolean newWindow;
@@ -87,6 +88,15 @@ public class NodeDetail implements java.io.Serializable {
 
 	public void setHtml(String html) {
 		this.html = html;
+	}
+	
+	@Column(name = "f_mobile_html")
+	public String getMobileHtml() {
+		return mobileHtml;
+	}
+
+	public void setMobileHtml(String mobileHtml) {
+		this.mobileHtml = mobileHtml;
 	}
 
 	@Column(name = "f_meta_keywords", length = 150)

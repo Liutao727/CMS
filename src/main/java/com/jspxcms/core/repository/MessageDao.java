@@ -1,5 +1,6 @@
 package com.jspxcms.core.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -76,5 +77,25 @@ public interface MessageDao extends Repository<Message, Integer>, MessageDaoPlus
 	@Modifying
 	@Query("update Message bean set bean.deletionFlag=2 where bean.sender.id=?1 and bean.receiver.id=?2 and bean.deletionFlag=0")
 	public int setDeleteFlagByReceiver(Integer senderId, Integer receiverId);
+
+	/**
+	 * 删除用户消息。包括收件人和发件人。
+	 * 
+	 * @param userIds
+	 * @return
+	 */
+	@Modifying
+	@Query("delete from Message bean where bean.receiver.id in (?1) or bean.sender.id in (?1)")
+	public int deleteByUserId(Collection<Integer> userIds);
+
+	/**
+	 * 删除用户消息。包括收件人和发件人。
+	 * 
+	 * @param userIds
+	 * @return
+	 */
+	@Modifying
+	@Query(value = "delete mt from cms_message_text mt join cms_message m on mt.message_id_=m.message_id_ where m.receiver_id_ in (?1) or m.sender_id_ in (?1)", nativeQuery = true)
+	public int deleteMessageTextByUserId(Collection<Integer> userIds);
 
 }

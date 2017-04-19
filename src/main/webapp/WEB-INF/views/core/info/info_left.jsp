@@ -1,20 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Jspxcms管理平台 - Powered by Jspxcms</title>
-<jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
-<style type="text/css">
-html{height:100%;}
+<jsp:include page="/WEB-INF/views/head.jsp"/>
+<style>
+body{overflow-x:auto;}
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}
 .ztree li ul.level0 {padding:0; background:none;}
 </style>
-
-<script type="text/javascript">
+<script>
 	function onClick(event, treeId, treeNode, clickFlag) {
 		parent.frames["center"].location.href="list.do?queryNodeId="+treeNode.id+"&queryNodeType="+$("#queryNodeType").val();
 	}
@@ -69,16 +66,15 @@ html{height:100%;}
 
 </script>
 </head>
-<body class="left-body">
-<div style="padding:7px 0 3px 0;text-align:center;">
-	<select id="queryNodeType">
+<body class="skin-blue content-body">
+<div style="padding:12px 0 0 12px;">
+	<select class="form-control input-sm" id="queryNodeType">
 		<option value="0"><s:message code="info.queryNodeType.0"/></option>
 		<option value="1"><s:message code="info.queryNodeType.1"/></option>
 		<option value="2"><s:message code="info.queryNodeType.2"/></option>
 	</select>
 	<%-- <label for="showChildren"><input id="showChildren" type="checkbox" checked="checked"/><s:message code="info.showChildren"/></label> --%>
 </div>
-<hr/>
-<ul id="tree" class="ztree" style="padding-top:5px"></ul>
+<ul id="tree" class="ztree" style="margin:7px 0 0 7px"></ul>
 </body>
 </html>

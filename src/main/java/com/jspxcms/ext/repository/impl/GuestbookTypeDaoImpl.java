@@ -11,7 +11,7 @@ import org.hibernate.jpa.QueryHints;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
 import com.jspxcms.ext.domain.GuestbookType;
-import com.jspxcms.ext.domain.QGuestbookType;
+import com.jspxcms.ext.domain.dsl.QGuestbookType;
 import com.jspxcms.ext.repository.plus.GuestbookTypeDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

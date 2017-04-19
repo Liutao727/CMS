@@ -78,20 +78,15 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	public List<Site> findList() {
-		return dao.findByStatus(null);
+		return dao.findByStatus(null, null, null, null);
 	}
 
-	public List<Site> findList(Integer[] status) {
-		return dao.findByStatus(status);
+	public List<Site> findList(Integer parentId, String parentNumber, Integer[] status, Limitable limitable) {
+		return dao.findByStatus(parentId, parentNumber, status, limitable);
 	}
 
 	public List<Site> findByUserId(Integer userId) {
 		return dao.findByUserId(userId);
-	}
-
-	public Site findDefault() {
-		Site site = dao.findDefault();
-		return site;
 	}
 
 	public Site findByDomain(String domain) {
@@ -122,8 +117,8 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public Site save(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId, Integer userId,
-			Site srcSite) {
+	public Site save(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId,
+			Integer mobilePublishPointId, Integer userId, Site srcSite) {
 		Site parent = null;
 		if (parentId != null) {
 			parent = dao.findOne(parentId);
@@ -132,6 +127,7 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 		}
 		PublishPoint publishPoint = publishPointService.get(htmlPublishPointId);
 		bean.setHtmlPublishPoint(publishPoint);
+		bean.setMobilePublishPoint(publishPointService.get(mobilePublishPointId));
 		bean.setOrg(orgService.get(orgId));
 		bean.setGlobal(globalService.findUnique());
 		bean.applyDefaultValue();
@@ -222,9 +218,11 @@ public class SiteServiceImpl implements SiteService, OrgDeleteListener {
 	}
 
 	@Transactional
-	public Site update(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId) {
+	public Site update(Site bean, Integer parentId, Integer orgId, Integer htmlPublishPointId,
+			Integer mobilePublishPointId) {
 		PublishPoint publishPoint = publishPointService.get(htmlPublishPointId);
 		bean.setHtmlPublishPoint(publishPoint);
+		bean.setMobilePublishPoint(publishPointService.get(mobilePublishPointId));
 		bean.setOrg(orgService.get(orgId));
 		bean.applyDefaultValue();
 		bean = dao.save(bean);

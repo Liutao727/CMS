@@ -3,6 +3,7 @@ package com.jspxcms.ext.service.impl;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,29 +48,24 @@ import com.jspxcms.ext.service.GuestbookTypeService;
  */
 @Service
 @Transactional(readOnly = true)
-public class GuestbookServiceImpl implements GuestbookService,
-		SiteDeleteListener, UserDeleteListener, GuestbookTypeDeleteListener {
-	public Page<Guestbook> findAll(Map<String, String[]> params,
-			Pageable pageable, Integer siteId) {
+public class GuestbookServiceImpl implements GuestbookService, SiteDeleteListener, UserDeleteListener,
+		GuestbookTypeDeleteListener {
+	public Page<Guestbook> findAll(Map<String, String[]> params, Pageable pageable, Integer siteId) {
 		return dao.findAll(spec(siteId, params), pageable);
 	}
 
-	public List<Guestbook> findList(Integer[] siteId, String[] type,
-			Integer[] typeId, Boolean isRecommend, Boolean isReply,
-			Integer[] status, Limitable limitable) {
-		return dao.findList(siteId, type, typeId, isRecommend, isReply, status,
-				limitable);
+	public List<Guestbook> findList(Integer[] siteId, String[] type, Integer[] typeId, Boolean isRecommend,
+			Boolean isReply, Integer[] status, Limitable limitable) {
+		return dao.findList(siteId, type, typeId, isRecommend, isReply, status, limitable);
 	}
 
-	public Page<Guestbook> findPage(Integer[] siteId, String[] type,
-			Integer[] typeId, Boolean isRecommend, Boolean isReply,
-			Integer[] status, Pageable pageable) {
-		return dao.findPage(siteId, type, typeId, isRecommend, isReply, status,
-				pageable);
+	public Page<Guestbook> findPage(Integer[] siteId, String[] type, Integer[] typeId, Boolean isRecommend,
+			Boolean isReply, Integer[] status, Pageable pageable) {
+		return dao.findPage(siteId, type, typeId, isRecommend, isReply, status, pageable);
 	}
 
-	public RowSide<Guestbook> findSide(Map<String, String[]> params,
-			Integer siteId, Guestbook bean, Integer position, Sort sort) {
+	public RowSide<Guestbook> findSide(Map<String, String[]> params, Integer siteId, Guestbook bean, Integer position,
+			Sort sort) {
 		if (position == null) {
 			return new RowSide<Guestbook>();
 		}
@@ -78,18 +74,14 @@ public class GuestbookServiceImpl implements GuestbookService,
 		return RowSide.create(list, bean);
 	}
 
-	private Specification<Guestbook> spec(final Integer siteId,
-			Map<String, String[]> params) {
+	private Specification<Guestbook> spec(final Integer siteId, Map<String, String[]> params) {
 		Collection<SearchFilter> filters = SearchFilter.parse(params).values();
-		final Specification<Guestbook> fs = SearchFilter.spec(filters,
-				Guestbook.class);
+		final Specification<Guestbook> fs = SearchFilter.spec(filters, Guestbook.class);
 		Specification<Guestbook> sp = new Specification<Guestbook>() {
-			public Predicate toPredicate(Root<Guestbook> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Guestbook> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate pred = fs.toPredicate(root, query, cb);
 				if (siteId != null) {
-					pred = cb.and(pred,
-							cb.equal(root.get("site").get("id"), siteId));
+					pred = cb.and(pred, cb.equal(root.get("site").get("id"), siteId));
 				}
 				return pred;
 			}
@@ -97,13 +89,16 @@ public class GuestbookServiceImpl implements GuestbookService,
 		return sp;
 	}
 
+	public long countByDate(Integer siteId, Date beginDate) {
+		return dao.countByDate(siteId, beginDate);
+	}
+
 	public Guestbook get(Integer id) {
 		return dao.findOne(id);
 	}
 
 	@Transactional
-	public Guestbook save(Guestbook bean, Integer userId, Integer typeId,
-			String ip, Integer siteId) {
+	public Guestbook save(Guestbook bean, Integer userId, Integer typeId, String ip, Integer siteId) {
 		Site site = siteService.get(siteId);
 		User user = userService.get(userId);
 		bean.setSite(site);
@@ -138,8 +133,7 @@ public class GuestbookServiceImpl implements GuestbookService,
 	}
 
 	@Transactional
-	public Guestbook update(Guestbook bean, Integer userId, Integer typeId,
-			String ip) {
+	public Guestbook update(Guestbook bean, Integer userId, Integer typeId, String ip) {
 		User user = userService.get(userId);
 		if (StringUtils.isBlank(bean.getCreationIp())) {
 			bean.setCreationIp(ip);

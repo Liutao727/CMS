@@ -20,7 +20,7 @@ table th{padding:5px 0;}
 table td br{display:none;}
 </style>
 <script type="text/javascript">
-	$.get("${dy}/info_views/${info.id}.jspx?d="+new Date()*1);
+	$.get("${dy}/info_views/${info.id}?d="+new Date()*1);
 </script>
 </head>
 <body>
@@ -55,7 +55,7 @@ table td br{display:none;}
 			</div>
 			<script type="text/javascript">
 			function getScore() {
-				$.get("${dy}/info_score/${info.id}.jspx?d="+new Date()*1,function(data) {
+				$.get("${dy}/info_score/${info.id}?d="+new Date()*1,function(data) {
 					var tickets=0,score=0,totalScore=0;	
 					for(var id in data) {
 						if($("#item-score-"+id).length>0){
@@ -90,7 +90,7 @@ table td br{display:none;}
 			</div>
 			<script type="text/javascript">
 			function scoring(id,itemId) {
-				$.post('${ctx}/info_scoring.jspx',
+				$.post('${ctx}/info_scoring',
 					{id:id,itemId:itemId},
 					function(data) {
 						if(data!="0"){
@@ -166,7 +166,7 @@ table td br{display:none;}
 	</div>
 	<div id="commentDiv" class="mt20"></div>		
 	<script type="text/javascript">
-		$("#commentDiv").load("${dy}/comment_list.jspx?fid=${info.id}&url=${url?url}&d="+new Date()*1);
+		$("#commentDiv").load("${dy}/comment_list?fid=${info.id}&url=${url?url}&d="+new Date()*1);
 	</script>
 </div>
 [#include 'inc_friendlink.html'/]

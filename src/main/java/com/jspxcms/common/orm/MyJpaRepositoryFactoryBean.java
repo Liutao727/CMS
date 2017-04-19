@@ -17,10 +17,13 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
  * @param <S>
  * @param <ID>
  */
-public class MyJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
-		extends JpaRepositoryFactoryBean<T, S, ID> {
-	protected RepositoryFactorySupport createRepositoryFactory(
-			EntityManager entityManager) {
+public class MyJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends
+		JpaRepositoryFactoryBean<T, S, ID> {
+	public MyJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+		super(repositoryInterface);
+	}
+
+	protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
 		return new MyJpaRepositoryFactory(entityManager);
 	}
 }

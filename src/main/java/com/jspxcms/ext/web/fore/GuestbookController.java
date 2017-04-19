@@ -45,13 +45,13 @@ public class GuestbookController {
 	public static final String TEMPLATE_ITEM = "sys_guestbook_item.html";
 	public static final String TEMPLATE_FORM = "sys_guestbook_form.html";
 
-	@RequestMapping("/guestbook.jspx")
+	@RequestMapping("/guestbook")
 	public String index(Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return index(null, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook")
 	public String index(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -69,13 +69,13 @@ public class GuestbookController {
 		return site.getTemplate(TEMPLATE);
 	}
 
-	@RequestMapping("/guestbook/{id}.jspx")
+	@RequestMapping("/guestbook/{id}")
 	public String show(@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return show(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook/{id}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook/{id}")
 	public String show(@PathVariable String siteNumber,
 			@PathVariable Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -97,13 +97,13 @@ public class GuestbookController {
 		return site.getTemplate(TEMPLATE_ITEM);
 	}
 
-	@RequestMapping("/guestbook/create.jspx")
+	@RequestMapping("/guestbook/create")
 	public String createForm(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return createForm(null, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook/create.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/guestbook/create")
 	public String createForm(@PathVariable String siteNumber,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -124,7 +124,7 @@ public class GuestbookController {
 		return site.getTemplate(TEMPLATE_FORM);
 	}
 
-	@RequestMapping(value = { "/guestbook/create.jspx", "/guestbook.jspx" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/guestbook/create", "/guestbook" }, method = RequestMethod.POST)
 	public String createSubmit(Integer typeId, String text, String title,
 			String username, Boolean gender, String phone, String mobile,
 			String qq, String email, String captcha,
@@ -135,8 +135,8 @@ public class GuestbookController {
 	}
 
 	@RequestMapping(value = {
-			Constants.SITE_PREFIX_PATH + "/guestbook/create.jspx",
-			Constants.SITE_PREFIX_PATH + "/guestbook.jspx" }, method = RequestMethod.POST)
+			Constants.SITE_PREFIX_PATH + "/guestbook/create",
+			Constants.SITE_PREFIX_PATH + "/guestbook" }, method = RequestMethod.POST)
 	public String createSubmit(@PathVariable String siteNumber, Integer typeId,
 			String text, String title, String username, Boolean gender,
 			String phone, String mobile, String qq, String email,

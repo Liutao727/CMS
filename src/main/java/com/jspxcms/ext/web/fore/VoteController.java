@@ -39,14 +39,14 @@ public class VoteController {
 	public static final String TEMPLATE = "sys_vote.html";
 	public static final String VIEW_TEMPLATE = "sys_vote_view.html";
 
-	@RequestMapping("/vote/{id}.jspx")
+	@RequestMapping("/vote/{id}")
 	public String view(@PathVariable("id") Integer id,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return view(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/vote/{id}.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/vote/{id}")
 	public String view(@PathVariable String siteNumber,
 			@PathVariable("id") Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
@@ -65,13 +65,13 @@ public class VoteController {
 		return currSite.getTemplate(VIEW_TEMPLATE);
 	}
 
-	@RequestMapping("/vote.jspx")
+	@RequestMapping("/vote")
 	public String form(Integer id, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return form(null, id, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/vote.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/vote")
 	public String form(@PathVariable String siteNumber, Integer id,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -93,14 +93,14 @@ public class VoteController {
 		return site.getTemplate(TEMPLATE);
 	}
 
-	@RequestMapping(value = "/vote.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = "/vote", method = RequestMethod.POST)
 	public String submit(Integer id, Integer[] optionIds,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
 		return submit(null, id, optionIds, request, response, modelMap);
 	}
 
-	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/vote.jspx", method = RequestMethod.POST)
+	@RequestMapping(value = Constants.SITE_PREFIX_PATH + "/vote", method = RequestMethod.POST)
 	public String submit(@PathVariable String siteNumber, Integer id,
 			Integer[] optionIds, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {

@@ -2,6 +2,13 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
+[#if site.url != site.urlMobile]
+<script>
+//生成静态HTML时，需要使用js判断是否为手机端访问，并跳转到手机端地址
+var ua = navigator.userAgent;var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),isIphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),isAndroid = ua.match(/(Android)\s+([\d.]+)/),isMobile = isIphone || isAndroid;
+if(isMobile) location.href = "${site.urlMobile}";
+</script>
+[/#if]
 <meta charset="utf-8"/>
 <title>${site.fullNameOrName}${global.customs['poweredby']}</title>
 <meta name="keywords" content="${node.keywords}"/>
@@ -173,16 +180,16 @@
 			[/@InfoList]
 		</ul>
 		<div class="box2 mt10">
-			<div class="head"><a class="b c-node fs14 a-hover" href="${ctx}/special_category.jspx">专题</a></div>
+			<div class="head"><a class="b c-node fs14 a-hover" href="${ctx}/special_category">专题</a></div>
 			[@SpecialList limit='1';list]
 			[#list list as special]
 			<div style="padding:10px;">
-				<a class="left" style="width:130px;" href="${ctx}/special/${special.id}.jspx" target="_blank" title="${special.title}">
+				<a class="left" style="width:130px;" href="${ctx}/special/${special.id}" target="_blank" title="${special.title}">
 					<img src="${special.smallImageUrl}" width="130" height="87"/>
 				</a>
 				<div class="right" style="width:158px;margin-left:10px;">						
-					<div><a class="fs14 b a-hover c-infoem" href="${ctx}/special/${special.id}.jspx" title="${special.title}" target="_blank">${substring(special.title,10,'...')}</a></div>
-					<div class="mt5 c-desc">${substring(special.description,32,'...')} <a class="c-node a-all" href="${ctx}/special/${special.id}.jspx" target="_blank">[详细]</a></div>
+					<div><a class="fs14 b a-hover c-infoem" href="${ctx}/special/${special.id}" title="${special.title}" target="_blank">${substring(special.title,10,'...')}</a></div>
+					<div class="mt5 c-desc">${substring(special.description,32,'...')} <a class="c-node a-all" href="${ctx}/special/${special.id}" target="_blank">[详细]</a></div>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -191,7 +198,7 @@
 			[@SpecialList offset='1' limit='6';list]
 			<ul class="mt5 list-unstyled" style="padding:10px 10px;border-top:1px dotted #d2e1f1;">
 			[#list list as special]
-				<li style="height:26px;line-height:26px;"><a class="fs14 a" href="${ctx}/special/${special.id}.jspx" target="_blank" title="${special.title}">${substring(special.title,20,'...')}</a></li>
+				<li style="height:26px;line-height:26px;"><a class="fs14 a" href="${ctx}/special/${special.id}" target="_blank" title="${special.title}">${substring(special.title,20,'...')}</a></li>
 			[/#list]
 			</ul>			
 			[/@SpecialList]
@@ -217,7 +224,7 @@
 	</ul>
 </div>
 <div class="w center">
-	<script src="${ctx}/dd_number/homepage.jspx"></script>
+	<script src="${ctx}/dd_number/homepage"></script>
 </div>
 <div class="w center mt10">	
 	<div class="left w2">
@@ -309,19 +316,19 @@
 				[@CommentList limit='3';list]
 				<ul class="list-unstyled" style="line-height:1.8;padding:0 10px;">
 				[#list list as comment]
-					<li style="padding:10px 0;border-top:1px dotted #d2e1f1;">[#if comment.creator.id==0]<span class="b c-comment cert">匿名网友</span>[#else]<a href="${ctx}/space/${comment.creator.id}.jspx" target="_blank" class="b a-hover c-comment cert">${comment.creator.username}</a>[/#if]：<a class="c-comment a-hover" href="${comment.anchor.url}" target="_blank" title="${comment.anchor.title}">#${substring(comment.anchor.title,12,'...')}#</a>${substring(comment.text,22,'...')}</li>
+					<li style="padding:10px 0;border-top:1px dotted #d2e1f1;">[#if comment.creator.id==0]<span class="b c-comment cert">匿名网友</span>[#else]<a href="${ctx}/space/${comment.creator.id}" target="_blank" class="b a-hover c-comment cert">${comment.creator.username}</a>[/#if]：<a class="c-comment a-hover" href="${comment.anchor.url}" target="_blank" title="${comment.anchor.title}">#${substring(comment.anchor.title,12,'...')}#</a>${substring(comment.text,22,'...')}</li>
 				[/#list]
 				</ul>			
 				[/@CommentList]
 			</div>
 		</div>
 		<div class="box2 mt10">
-			<div class="head"><a href="${ctx}/questions.jspx" class="b c-node fs14 a-none">调查问卷</a></div>
+			<div class="head"><a href="${ctx}/questions" class="b c-node fs14 a-none">调查问卷</a></div>
 			<div style="padding:0 10px;">
 				[@Question;question]
 				[#if question??]
-				<form action="${ctx}/questions/${question.id}/answer.jspx" method="post" id="questionForm">
-					<div class="text-center" style="padding:5px 10px;"><a class="c-infoem fs14 a-hover" href="${ctx}/questions/${question.id}.jspx" target="_blank">${question.title}</a></div>
+				<form action="${ctx}/questions/${question.id}/answer" method="post" id="questionForm">
+					<div class="text-center" style="padding:5px 10px;"><a class="c-infoem fs14 a-hover" href="${ctx}/questions/${question.id}" target="_blank">${question.title}</a></div>
 					[#list question.items as item]
 					<div class="" style="padding:5px 0;"><span class="fs14">${item_index+1}、${item.title}</span><label for="item_${item.id}" class="hide error"></label></div>
 					<ul class="list-unstyled" style="padding-left:6px;">
@@ -335,10 +342,10 @@
 					</ul>
 					[/#list]
 					<input type="hidden" name="status_504" value="您已经参与过调查"/>
-					<input type="hidden" name="redirectUrl" value="${ctx}/questions/${question.id}/result.jspx"/>
+					<input type="hidden" name="redirectUrl" value="${ctx}/questions/${question.id}/result"/>
 					<div class="text-center" style="padding:10px 0 20px 0;">
 						<input type="submit" value="提交"/> &nbsp;
-						<a class="a fs14" href="${ctx}/questions/${question.id}/result.jspx" target="_blank">查看结果</a>
+						<a class="a fs14" href="${ctx}/questions/${question.id}/result" target="_blank">查看结果</a>
 					</div>
 				</form>
 				<script>
@@ -357,8 +364,8 @@
 			<div style="padding:0 10px;">
 				[@Vote;vote]
 				[#if vote??]
-				<div class="text-center" style="padding:5px 10px;"><a class="c-infoem fs14 a-hover" href="${ctx}/vote.jspx?id=${vote.id}" target="_blank">${vote.title?html}</a></div>
-				<form action="${ctx}/vote.jspx" method="post" id="voteForm">
+				<div class="text-center" style="padding:5px 10px;"><a class="c-infoem fs14 a-hover" href="${ctx}/vote?id=${vote.id}" target="_blank">${vote.title?html}</a></div>
+				<form action="${ctx}/vote" method="post" id="voteForm">
 					<input type="hidden" name="id" value="${vote.id}"/>
 					<ul class="list-unstyled">
 						<label for="optionIds" class="hide error"></label>
@@ -367,10 +374,10 @@
 						[/#list]
 					</ul>
 					<input type="hidden" name="status_560" value="您已经投过票了"/>
-					<input type="hidden" name="redirectUrl" value="${ctx}/vote/{id}.jspx"/>
+					<input type="hidden" name="redirectUrl" value="${ctx}/vote/{id}"/>
 					<div class="text-center" style="padding:10px 0 20px 0;">
 						<input type="submit" value="投票"/> &nbsp;
-						<a class="a fs14" href="${ctx}/vote/${vote.id}.jspx" target="_blank">查看结果</a>
+						<a class="a fs14" href="${ctx}/vote/${vote.id}" target="_blank">查看结果</a>
 					</div>
 				</form>
 				<script>

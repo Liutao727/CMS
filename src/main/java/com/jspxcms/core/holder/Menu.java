@@ -1,44 +1,83 @@
 package com.jspxcms.core.holder;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 后台菜单类
+ * 
+ * @author liufang
+ *
+ */
 public class Menu implements Comparable<Menu> {
+	/**
+	 * ID。如100，100-200
+	 */
 	private String id;
+	/**
+	 * 名称。如文档管理、栏目管理
+	 */
 	private String name;
+	/**
+	 * 字体图标的class
+	 */
+	private String icon;
+	/**
+	 * 菜单的访问地址
+	 */
 	private String url;
+	/**
+	 * 菜单地址对应的权限，可以有多个
+	 */
 	private String perms;
-	private List<Function> functions;
-
+	/**
+	 * 菜单对应功能模块里的具体操作，比如栏目管理里面的新增、修改、删除等功能
+	 */
+	private List<Op> ops;
+	/**
+	 * 菜单的排列顺序，为ID的最后一个节点，如100-200，则为200
+	 */
 	private int seq = Integer.MAX_VALUE;
+	/**
+	 * 上级菜单ID
+	 */
 	private String parentId;
-
+	/**
+	 * 左侧链接地址。部分功能有会显示左侧页面，如文档管理、栏目管理。
+	 */
 	private String leftUrl;
+	/**
+	 * 中间链接地址。就是一个功能的连接地址，显示在页面的中间。
+	 */
 	private String centerUrl;
+	/**
+	 * 菜单权限的第一个权限
+	 */
 	private String perm;
 
+	/**
+	 * 上级菜单
+	 */
 	private Menu parent;
+	/**
+	 * 子菜单
+	 */
 	private Set<Menu> children;
 
-	public static Set<Menu> assemble(Map<String, String> map) {
-		Set<Menu> menus = new HashSet<Menu>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			menus.add(parse(entry.getKey(), entry.getValue()));
-		}
-		return sort(menus);
-	}
-
-	public static Set<Menu> sort(Set<Menu> menus) {
-		Set<Menu> set = new TreeSet<Menu>();
+	/**
+	 * 根据ID排序，并处理父子关系
+	 * 
+	 * @param menus
+	 * @return
+	 */
+	public static TreeSet<Menu> sort(Set<Menu> menus) {
+		TreeSet<Menu> set = new TreeSet<Menu>();
 		for (Menu menu : menus) {
 			String parentId = menu.getParentId();
 			if (StringUtils.isNotBlank(parentId)) {
@@ -46,18 +85,6 @@ public class Menu implements Comparable<Menu> {
 					if (parentId.equals(parent.getId())) {
 						parent.addChild(menu);
 						menu.setParent(parent);
-						String centerUrl = menu.getCenterUrl();
-						if (StringUtils.isBlank(centerUrl)) {
-							menu.setCenterUrl(menu.getLeftUrl());
-							menu.setLeftUrl(parent.getLeftUrl());
-							String leftUrl = parent.getLeftUrl();
-							if (leftUrl.indexOf("?") != -1) {
-								leftUrl += "&subId=";
-							} else {
-								leftUrl += "?subId=";
-							}
-							menu.setLeftUrl(leftUrl + menu.getId());
-						}
 						break;
 					}
 				}
@@ -65,76 +92,63 @@ public class Menu implements Comparable<Menu> {
 				set.add(menu);
 			}
 		}
-		// 设置导航栏的centerUrl。
-		for (Menu menu : set) {
-			if (StringUtils.isBlank(menu.getCenterUrl())) {
-				Set<Menu> children = menu.getChildren();
-				if (CollectionUtils.isNotEmpty(children)) {
-					menu.setCenterUrl(children.iterator().next().getUrl());
-				}
-			}
-		}
 		return set;
 	}
 
-	public static Menu parse(String id, String str) {
-		if (StringUtils.isBlank(str)) {
-			return null;
+	/**
+	 * 将map解析为Menu对象
+	 * 
+	 * @param id
+	 * @param map
+	 * @return
+	 */
+	public static Menu parse(Object id, Map<Object, Object> map) {
+		Menu menu = new Menu();
+		menu.setId(String.valueOf(id));
+		Object name = map.get("name");
+		if (name != null) {
+			menu.setName(String.valueOf(name));
 		}
-		String[] attrs = StringUtils.split(str, ';');
-		String name = null, url = null, perms = null;
-		String[] funcArr = null;
-		List<Function> functions = null;
-		int len = attrs.length;
-		if (len > 0) {
-			name = attrs[0];
+		Object icon = map.get("icon");
+		if (icon != null) {
+			menu.setIcon(String.valueOf(icon));
 		}
-		if (len > 1) {
-			url = attrs[1];
+		Object url = map.get("url");
+		if (url != null) {
+			menu.setUrl(String.valueOf(url));
 		}
-		if (len > 2) {
-			perms = attrs[2];
+		Object perms = map.get("perms");
+		if (perms != null) {
+			menu.setPerms(String.valueOf(perms));
 		}
-		if (len > 3) {
-			funcArr = ArrayUtils.subarray(attrs, 3, len);
-			functions = new ArrayList<Function>(funcArr.length);
-			for (String func : funcArr) {
-				String[] pair = StringUtils.split(func, '@');
+
+		@SuppressWarnings("unchecked")
+		List<Object> ops = (List<Object>) map.get("ops");
+		if (ops != null) {
+			List<Op> menuOps = new ArrayList<Op>(ops.size());
+			menu.setOps(menuOps);
+			for (Object op : ops) {
+				String[] pair = StringUtils.split(String.valueOf(op), '@');
 				String n = pair[0];
 				String p = null;
 				if (pair.length > 1) {
 					p = pair[1];
 				}
-				functions.add(new Function(n, p));
+				menuOps.add(new Op(n, p));
 			}
 		}
-		return new Menu(id, name, url, perms, functions);
+		return menu;
 	}
 
-	public Menu(String id, String name, String url, String perms,
-			List<Function> functions) {
-		this.id = id;
-		String[] seqArr = StringUtils.split(id, '.');
-		this.seq = NumberUtils.toInt(seqArr[seqArr.length - 1],
-				Integer.MAX_VALUE);
-		if (id.indexOf('.') != -1) {
-			this.parentId = id.substring(0, id.lastIndexOf('.'));
-		}
+	public Menu() {
+	}
+
+	public Menu(String id, String name, String url, String perms, List<Op> functions) {
+		setId(id);
 		this.name = name;
-		this.url = url;
-		this.perms = perms;
-		if (StringUtils.isNotBlank(url)) {
-			String[] urlArr = StringUtils.split(url, ',');
-			leftUrl = urlArr[0];
-			if (urlArr.length > 1) {
-				centerUrl = urlArr[1];
-			}
-		}
-		if (StringUtils.isNotBlank(perms)) {
-			String[] permArr = StringUtils.split(perms, ',');
-			perm = permArr[0];
-		}
-		this.functions = functions;
+		setUrl(url);
+		setPerms(perms);
+		this.ops = functions;
 	}
 
 	public int compareTo(Menu o) {
@@ -187,8 +201,8 @@ public class Menu implements Comparable<Menu> {
 		return perms;
 	}
 
-	public List<Function> getFunctions() {
-		return functions;
+	public List<Op> getFunctions() {
+		return ops;
 	}
 
 	public String getParentId() {
@@ -215,13 +229,91 @@ public class Menu implements Comparable<Menu> {
 		return perm;
 	}
 
-	public static class Function {
-		private String name;
-		private String perms;
+	public List<Op> getOps() {
+		return ops;
+	}
 
+	public void setOps(List<Op> ops) {
+		this.ops = ops;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+		String[] arr = StringUtils.split(id, '-');
+		this.seq = NumberUtils.toInt(arr[arr.length - 1], Integer.MAX_VALUE);
+		if (id.indexOf('-') != -1) {
+			this.parentId = id.substring(0, id.lastIndexOf('-'));
+		}
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+		if (url != null) {
+			String[] urlArr = StringUtils.split(url, ',');
+			centerUrl = urlArr[0];
+			if (urlArr.length > 1) {
+				leftUrl = urlArr[1];
+			}
+		}
+	}
+
+	public void setPerms(String perms) {
+		this.perms = perms;
+		if (perms != null) {
+			perm = StringUtils.split(perms, ',')[0];
+		}
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public void setPerm(String perm) {
+		this.perm = perm;
+	}
+
+	public void setChildren(Set<Menu> children) {
+		this.children = children;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	@Override
+	public String toString() {
+		return "id:" + getId() + ";name:" + getName() + ";url:" + getUrl() + ";perms:" + getPerms();
+	}
+
+	/**
+	 * 功能模块的具体操作，比如栏目管理里面的新增、修改、删除等功能。
+	 * 
+	 * @author liufang
+	 *
+	 */
+	public static class Op {
+		/**
+		 * 操作名称
+		 */
+		private String name;
+		/**
+		 * 操作对应的权限，可能会有多个，用英文逗号`,`分开
+		 */
+		private String perms;
+		/**
+		 * 操作权限中的第一个权限
+		 */
 		private String perm;
 
-		public Function(String name, String perms) {
+		public Op(String name, String perms) {
 			this.name = name;
 			this.perms = perms;
 			if (StringUtils.isNotBlank(perms)) {

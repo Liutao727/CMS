@@ -15,7 +15,7 @@
 <jsp:include page="/WEB-INF/views/commons/head.jsp"></jsp:include>
 <script type="text/javascript">
 $(function() {
-	$("#pagedTable").tableHighlight();
+	
 	$("#sortHead").headSort();
 });
 function confirmDelete() {
@@ -76,7 +76,7 @@ function optDeletePassword(form) {
 </head>
 <body class="c-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
-<div class="c-bar margin-top5">
+<div class="c-bar">
   <span class="c-position"><s:message code="member.management"/> - <s:message code="list"/></span>
 	<span class="c-total">(<s:message code="totalElements" arguments="${pagedList.totalElements}"/>)</span>
 </div>
@@ -133,7 +133,7 @@ function optDeletePassword(form) {
 	</shiro:hasPermission>
 	<div style="clear:both"></div>
 </div>
-<table id="pagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb margin-top5">
+<table id="pagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb">
   <thead id="sortHead" pagesort="<c:out value='${page_sort[0]}' />" pagedir="${page_sort_dir[0]}" pageurl="list.do?page_sort={0}&page_sort_dir={1}&${searchstringnosort}">
   <tr class="ls_table_th">
     <th width="25"><input type="checkbox" onclick="Cms.check('ids',this.checked);"/></th>
@@ -185,7 +185,7 @@ function optDeletePassword(form) {
   </tbody>
 </table>
 <c:if test="${fn:length(pagedList.content) le 0}"> 
-<div class="ls-norecord margin-top5"><s:message code="recordNotFound"/></div>
+<div class="ls-norecord"><s:message code="recordNotFound"/></div>
 </c:if>
 </form>
 <form action="list.do" method="get" class="ls-page">

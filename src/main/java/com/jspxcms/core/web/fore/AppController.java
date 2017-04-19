@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jspxcms.common.web.Servlets;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.service.SiteService;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.core.support.Response;
@@ -29,13 +28,13 @@ import com.jspxcms.core.support.SiteResolver;
 @Controller
 public class AppController {
 
-	@RequestMapping("/app.jspx")
+	@RequestMapping("/app")
 	private String app(Integer page, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {
 		return app(null, page, request, response, modelMap);
 	}
 
-	@RequestMapping(Constants.SITE_PREFIX_PATH + "/app.jspx")
+	@RequestMapping(Constants.SITE_PREFIX_PATH + "/app")
 	private String app(@PathVariable String siteNumber, Integer page,
 			HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) {
@@ -56,6 +55,4 @@ public class AppController {
 
 	@Autowired
 	private SiteResolver siteResolver;
-	@Autowired
-	private SiteService siteService;
 }

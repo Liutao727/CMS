@@ -77,7 +77,7 @@ public class NodeController {
 
 	@RequiresPermissions("core:node:list")
 	@RequestMapping("list.do")
-	public String list(Integer queryParentId, @RequestParam(defaultValue = "false") boolean showDescendants,
+	public String list(Integer queryParentId, @RequestParam(defaultValue = "true") boolean showDescendants,
 			@PageableDefault(sort = { "treeNumber", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
@@ -201,9 +201,9 @@ public class NodeController {
 	@RequiresPermissions("core:node:edit")
 	@RequestMapping("edit.do")
 	public String edit(Integer id, Integer modelId, Integer queryParentId,
-			@RequestParam(defaultValue = "false") boolean showDescendants, Integer position,
-			@PageableDefault(sort = { "treeNumber", "id" }, direction = Direction.ASC) Pageable pageable,
-			HttpServletRequest request, org.springframework.ui.Model modelMap) {
+			@RequestParam(defaultValue = "false") boolean showDescendants, Integer position, @PageableDefault(sort = {
+					"treeNumber", "id" }, direction = Direction.ASC) Pageable pageable, HttpServletRequest request,
+			org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
 		Site site = Context.getCurrentSite();
 		Integer siteId = site.getId();
@@ -320,13 +320,14 @@ public class NodeController {
 	@RequestMapping("update.do")
 	public String update(@ModelAttribute("bean") Node bean, @ModelAttribute("detail") NodeDetail detail,
 			Integer[] infoPermIds, Integer[] nodePermIds, Integer[] viewGroupIds, Integer[] contriGroupIds,
-			Integer[] commentGroupIds, Integer[] viewOrgIds, Integer parentId, Integer nodeModelId, Integer infoModelId,
-			Integer workflowId, @RequestParam(defaultValue = "false") boolean infoPermIdsExist,
+			Integer[] commentGroupIds, Integer[] viewOrgIds, Integer parentId, Integer nodeModelId,
+			Integer infoModelId, Integer workflowId, @RequestParam(defaultValue = "false") boolean infoPermIdsExist,
 			@RequestParam(defaultValue = "false") boolean nodePermIdsExist,
 			@RequestParam(defaultValue = "false") boolean viewGroupIdsExist,
 			@RequestParam(defaultValue = "false") boolean contriGroupIdsExist,
-			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist, Integer position, Integer queryParentId,
-			Boolean showDescendants, String redirect, HttpServletRequest request, RedirectAttributes ra) {
+			@RequestParam(defaultValue = "false") boolean commentGroupIdsExist, Integer position,
+			Integer queryParentId, Boolean showDescendants, String redirect, HttpServletRequest request,
+			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
 		if (parentId != null) {
@@ -422,8 +423,8 @@ public class NodeController {
 		Node[] beans = service.delete(ids);
 		String ip = Servlets.getRemoteAddr(request);
 		for (Node bean : beans) {
-			logService.operation("opr.node.delete", bean.getTitle(), null, bean.getId(), ip, user.getId(),
-					site.getId());
+			logService
+					.operation("opr.node.delete", bean.getTitle(), null, bean.getId(), ip, user.getId(), site.getId());
 			logger.info("delete Node, name={}.", bean.getName());
 		}
 		ra.addAttribute("queryParentId", queryParentId);

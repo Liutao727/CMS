@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -14,10 +15,13 @@ import org.springframework.data.domain.Pageable;
 
 import com.jspxcms.common.file.FileHandler;
 import com.jspxcms.common.freemarker.Freemarkers;
+import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.core.domain.Info;
 import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.PublishPoint;
 import com.jspxcms.core.domain.Site;
 import com.jspxcms.core.service.TaskService;
+import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.core.support.TitleText;
 
@@ -33,17 +37,34 @@ import freemarker.template.TemplateException;
  * 
  */
 public abstract class PInfo {
-	public static void makeHtml(Info info, Configuration config, FileHandler fileHandler, TaskService taskService,
+	public static void makeHtml(Info info, Configuration config, PathResolver pathResolver, TaskService taskService,
 			Integer taskId) throws IOException, TemplateException {
 		if (info == null) {
 			return;
 		}
-		deleteHtml(info, fileHandler);
+		deleteHtml(info, pathResolver);
 		info.updateHtmlStatus();
 		if (!info.isNormal() || !info.getGenerate()) {
 			// 不需要生成
 			return;
 		}
+		Context.setMobile(false);
+		try {
+			doMakeHtml(info, config, pathResolver, taskService, taskId);
+			// 生成手机端HTML
+			if (info.getSite().getMobilePublishPoint() != null
+					&& info.getSite().getMobilePublishPoint().getId() != info.getSite().getHtmlPublishPoint().getId()
+					&& StringUtils.isNotBlank(info.getSite().getMobileDomain())) {
+				Context.setMobile(true);
+				doMakeHtml(info, config, pathResolver, taskService, taskId);
+			}
+		} finally {
+			Context.resetMobile();
+		}
+	}
+
+	private static void doMakeHtml(Info info, Configuration config, PathResolver pathResolver, TaskService taskService,
+			Integer taskId) throws IOException, TemplateException {
 		Site site = info.getSite();
 		Node node = info.getNode();
 		List<TitleText> textList = info.getTextList();
@@ -61,11 +82,18 @@ public abstract class PInfo {
 		items.add(null);
 		Pageable pa;
 		int total = textList.size();
+		PublishPoint publishPoint = Context.isMobile() ? info.getSite().getMobilePublishPoint() : info.getSite()
+				.getHtmlPublishPoint();
+		FileHandler fileHandler = publishPoint.getFileHandler(pathResolver);
 		for (int page = 1; page <= total && taskService.isRunning(taskId); page++) {
 			titleText = textList.get(page - 1);
-			String filename = info.getUrlStatic(page, false, true);
+			String filename = info.getUrlStatic(page, false, true, Context.isMobile());
 			if (page == 1) {
-				info.getDetail().setHtml(filename);
+				if (Context.isMobile()) {
+					info.getDetail().setMobileHtml(filename);
+				} else {
+					info.getDetail().setHtml(filename);
+				}
 				info.setHtmlStatus(Node.HTML_GENERATED);
 			}
 			rootMap.put("title", titleText.getTitle());
@@ -81,11 +109,19 @@ public abstract class PInfo {
 		}
 	}
 
-	public static void deleteHtml(Info info, FileHandler fileHandler) {
+	public static void deleteHtml(Info info, PathResolver pathResolver) {
 		String html = info.getHtml();
+		FileHandler fileHandler = info.getSite().getHtmlPublishPoint().getFileHandler(pathResolver);
 		PNode.deleteHtml(html, fileHandler);
 		if (info.getDetail() != null) {
 			info.getDetail().setHtml(null);
+		}
+
+		String mobileHtml = info.getMobileHtml();
+		fileHandler = info.getSite().getMobilePublishPoint().getFileHandler(pathResolver);
+		PNode.deleteHtml(mobileHtml, fileHandler);
+		if (info.getDetail() != null) {
+			info.getDetail().setMobileHtml(null);
 		}
 	}
 }

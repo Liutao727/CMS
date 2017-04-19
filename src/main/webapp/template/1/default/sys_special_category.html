@@ -23,14 +23,14 @@ a.zt-a2:hover{text-decoration:underline;}
 	[@SpecialCategoryList;list]
 	<ul class="list-unstyled oh" style="padding:5px 0;">
 		[#list list as sc]
-		<li class="left ml20"><a href="${dy}/special_category/${sc.id}.jspx" class="zt-a2">${sc.name}专题</a></li>
+		<li class="left ml20"><a href="${dy}/special_category/${sc.id}" class="zt-a2">${sc.name}专题</a></li>
 		[/#list]
 	</ul>
 	[/@SpecialCategoryList]
 </div>
 <div class="w center">
 	<div class="fs20 ff-yh" style="padding:8px 28px;background:url(_files/img/ico-point-red2.png) 10px center no-repeat">
-		<a href="${dy}/special_category.jspx" class="zt-a1">专题</a> - <a href="${dy}/special_category/${category.id}.jspx" class="zt-a1">${category.name}专题</a>
+		<a href="${dy}/special_category" class="zt-a1">专题</a> - <a href="${dy}/special_category/${category.id}" class="zt-a1">${category.name}专题</a>
 	</div>
 </div>
 [@SpecialPage categoryId=category.id pageSize='20';pagedList]
@@ -38,7 +38,7 @@ a.zt-a2:hover{text-decoration:underline;}
 	<ul class="oh list-unstyled" style="padding:10px 10px;border-top:2px solid #4e4e4e;">
 		[#list pagedList.content as special]
 		<li class="[#if special_index % 2 == 0]left[#else]right[/#if] oh" style="width:460px;height:32px;line-height:32px;padding-left:15px;background:url(_files/img/ico-point-red.png) 0 center no-repeat;">
-			<div class="left"><a href="${ctx}/special/${special.id}.jspx" target="_blank" class="a fs14" style="">${substring(special.title,20,'...')}</a></div>
+			<div class="left"><a href="${ctx}/special/${special.id}" target="_blank" class="a fs14" style="">${substring(special.title,20,'...')}</a></div>
 			<div class="right" style="color:#8d8d8d;">${special.creationDate?string('yyyy-MM-dd')}</div>
 		</li>
 		[/#list]

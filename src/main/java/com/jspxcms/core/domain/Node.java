@@ -53,6 +53,7 @@ import com.jspxcms.common.web.ImageAnchorBean;
 import com.jspxcms.common.web.PageUrlResolver;
 import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.NodeOrg.NodeOrgComparator;
+import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.Siteable;
 
 /**
@@ -280,25 +281,26 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 
 	@Transient
 	public String getUrlDynamicFull(Integer page) {
-		return getUrlDynamic(page, true);
+		return getUrlDynamic(page, true, Context.isMobile());
 	}
 
 	@Transient
 	public String getUrlDynamic(Integer page) {
 		Site site = getSite();
-		boolean isFull = site.getWithDomain() || site.getIdentifyDomain();
-		return getUrlDynamic(page, isFull);
+		boolean isFull = site.getIdentifyDomain();
+		return getUrlDynamic(page, isFull, Context.isMobile());
 	}
 
 	@Transient
-	public String getUrlDynamic(Integer page, boolean isFull) {
+	public String getUrlDynamic(Integer page, boolean isFull, boolean isMobile) {
 		if (isLinked()) {
 			return getLinkUrl();
 		}
 		Site site = getSite();
 		StringBuilder sb = new StringBuilder();
 		if (isFull) {
-			sb.append("//").append(site.getDomain());
+			String domain = isMobile ? site.getMobileDomain() : site.getDomain();
+			sb.append(site.getProtocol()).append("://").append(domain);
 			if (site.getPort() != null) {
 				sb.append(":").append(site.getPort());
 			}
@@ -307,14 +309,13 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		if (StringUtils.isNotBlank(ctx)) {
 			sb.append(ctx);
 		}
-		boolean sitePrefix = !site.getIdentifyDomain() && !site.getDef();
+		boolean sitePrefix = !site.getIdentifyDomain() && !site.isDef();
 		if (sitePrefix) {
 			sb.append(SITE_PREFIX).append(site.getNumber());
 		}
 		sb.append("/");
 		if (getParent() != null) {
-			sb.append(Constants.NODE_PATH);
-			sb.append("/").append(getId());
+			sb.append(Constants.NODE_PATH).append("/").append(getId());
 			if (page != null && page > 1) {
 				sb.append("_").append(page);
 			}
@@ -337,8 +338,8 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 	@Transient
 	public String getUrlStatic(Integer page) {
 		Site site = getSite();
-		boolean isFull = site.getWithDomain() || site.getIdentifyDomain();
-		return getUrlStatic(page, isFull, false);
+		boolean isFull = site.getIdentifyDomain();
+		return getUrlStatic(page, isFull, false, Context.isMobile());
 	}
 
 	@Transient
@@ -348,11 +349,11 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 
 	@Transient
 	public String getUrlStaticFull(Integer page) {
-		return getUrlStatic(page, true, false);
+		return getUrlStatic(page, true, false, Context.isMobile());
 	}
 
 	@Transient
-	public String getUrlStatic(Integer page, boolean isFull, boolean forRealPath) {
+	public String getUrlStatic(Integer page, boolean isFull, boolean forRealPath, boolean isMobile) {
 		if (isLinked()) {
 			return getLinkUrl();
 		}
@@ -385,15 +386,14 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		StringBuilder sb = new StringBuilder();
 		Site site = getSite();
 		if (isFull && !forRealPath) {
-			sb.append("//");
-			String domain = site.getDomain();
-			sb.append(domain);
+			String domain = isMobile ? site.getMobileDomain() : site.getDomain();
+			sb.append(site.getProtocol()).append("://").append(domain);
 			if (site.getPort() != null) {
 				sb.append(":").append(site.getPort());
 			}
 		}
 		if (!forRealPath) {
-			PublishPoint point = getSite().getHtmlPublishPoint();
+			PublishPoint point = isMobile ? getSite().getMobilePublishPoint() : getSite().getHtmlPublishPoint();
 			String urlPrefix = point.getUrlPrefix();
 			if (StringUtils.isNotBlank(urlPrefix)) {
 				sb.append(urlPrefix);
@@ -417,8 +417,9 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		if (link.startsWith("/") && !link.startsWith("//")) {
 			StringBuilder sb = new StringBuilder();
 			Site site = getSite();
-			if (site.getWithDomain()) {
-				sb.append("//").append(site.getDomain());
+			if (site.getIdentifyDomain()) {
+				String domain = Context.isMobile() ? site.getMobileDomain() : site.getDomain();
+				sb.append(site.getProtocol()).append("://").append(domain);
 				if (site.getPort() != null) {
 					sb.append(":").append(site.getPort());
 				}
@@ -707,6 +708,11 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 	@Transient
 	public String getHtml() {
 		return getDetail() != null ? getDetail().getHtml() : null;
+	}
+
+	@Transient
+	public String getMobileHtml() {
+		return getDetail() != null ? getDetail().getMobileHtml() : null;
 	}
 
 	@Transient
@@ -1104,8 +1110,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 	private Integer refers;
 	private Integer views;
 	/**
-	 * 是否真实节点。有文档模型的栏目为真实节点，可以在该栏目下添加文档。文档模型为空的栏目不会在文档管理中显示，不能在该栏目下添加文档，
-	 * 这种栏目通常作为单页栏目或跳转栏目。
+	 * 是否真实节点。有文档模型的栏目为真实节点，可以在该栏目下添加文档。文档模型为空的栏目不会在文档管理中显示，不能在该栏目下添加文档， 这种栏目通常作为单页栏目或跳转栏目。
 	 */
 	private Boolean realNode;
 	private Boolean hidden;
@@ -1135,7 +1140,7 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 
 	@Id
 	@Column(name = "f_node_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_node", pkColumnValue = "cms_node", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_node", pkColumnValue = "cms_node", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_node")
 	public Integer getId() {
 		return this.id;

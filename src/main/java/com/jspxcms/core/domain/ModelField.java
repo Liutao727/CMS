@@ -253,7 +253,7 @@ public class ModelField implements java.io.Serializable {
 
 	@Id
 	@Column(name = "f_modefiel_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_model_field", pkColumnValue = "cms_model_field", table = "t_id_table", pkColumnName = "f_table", valueColumnName = "f_id_value", initialValue = 1, allocationSize = 1)
+	@TableGenerator(name = "tg_cms_model_field", pkColumnValue = "cms_model_field", initialValue = 1, allocationSize = 10)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_model_field")
 	public Integer getId() {
 		return this.id;

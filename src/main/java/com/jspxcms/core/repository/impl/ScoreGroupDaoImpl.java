@@ -7,8 +7,8 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.jpa.QueryHints;
 
-import com.jspxcms.core.domain.QScoreGroup;
 import com.jspxcms.core.domain.ScoreGroup;
+import com.jspxcms.core.domain.dsl.QScoreGroup;
 import com.jspxcms.core.repository.plus.ScoreGroupDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;

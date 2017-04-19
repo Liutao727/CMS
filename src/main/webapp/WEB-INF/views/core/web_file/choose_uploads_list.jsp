@@ -5,8 +5,8 @@
 <%@ taglib prefix="fnx" uri="http://java.sun.com/jsp/jstl/functionsx"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="f" uri="http://www.jspxcms.com/tags/form"%>
-<div>${parentId}</div>
-<table id="f7PagedTable" border="0" cellpadding="0" cellspacing="0" class="ls-tb margin-top5">
+<div style="padding:3px 5px;">${parentId}</div>
+<table id="f7PagedTable" class="table table-condensed table-bordered ls-tb">
   <thead>
   <tr class="ls_table_th">
     <th width="30">#</th>

@@ -25,35 +25,36 @@
 	<c:set var="style_width"><c:if test="${!empty field.customs['width']}">width:${field.customs['width']}px;</c:if></c:set>
 	<c:set var="style_height"><c:if test="${!empty field.customs['height']}">height:${field.customs['height']}px;</c:if></c:set>
 	<c:set var="attr_maxlength"><c:if test="${!empty field.customs['maxLength']}">maxlength="${field.customs['maxLength']}"</c:if></c:set>
-	<c:set var="attr_class"><c:choose><c:when test="${!empty field.customs['validation']}">class="${field.customs['validation']}"</c:when><c:otherwise><c:if test="${field.required}">class="required"</c:if></c:otherwise></c:choose></c:set>
+	<c:set var="attr_rows">rows="${!empty field.customs['rows'] ? field.customs['rows'] : '3'}"</c:set>
+	<c:set var="attr_class">class="form-control<c:choose><c:when test="${!empty field.customs['validation']}"> ${field.customs['validation']}</c:when><c:otherwise><c:if test="${field.required}"> required</c:if></c:otherwise></c:choose>"</c:set>
 	<c:choose>
  		<c:when test="${field.type==1}">
- 			<input type="text" name="${c_name}" value="${c_value}" ${attr_class} ${attr_maxlength} style="${style_width}"/>
+ 			<input type="text" name="${c_name}" value="${c_value}" ${attr_class} ${attr_maxlength}/>
  		</c:when>
  		<c:when test="${field.type==2}">
  			<c:if test="${oprt=='create' && c_value=='now'}"><c:set var="c_value"><fmt:formatDate value="${fnx:now()}" pattern="${field.customs['datePattern']}"/></c:set></c:if>
- 			<input type="text" name="${c_name}" value="${c_value}" onclick="WdatePicker({dateFmt:'${field.customs['datePattern']}'});" ${attr_class} ${attr_maxlength} style="${style_width}"/>
+ 			<input type="text" name="${c_name}" value="${c_value}" onclick="WdatePicker({dateFmt:'${field.customs['datePattern']}'});" ${attr_class} ${attr_maxlength}/>
  		</c:when>
  		<c:when test="${field.type==3}">
       <c:set var="c_value" value="${fnx:split_sc(c_value,',')}"/>
  			<c:forEach var="option" items="${fnx:invoke(field.options,'entrySet')}">
- 				<label><input type="checkbox" name="${c_name}" value="${option.key}"<c:if test="${fnx:contains_oxo(c_value,option.key)}"> checked="checked"</c:if>/>${option.value}</label>
+ 				<label class="checkbox-inline"><input type="checkbox" name="${c_name}" value="${option.key}"<c:if test="${fnx:contains_oxo(c_value,option.key)}"> checked</c:if>/>${option.value}</label>
  			</c:forEach>
  		</c:when>
     <c:when test="${field.type==4 || field.type==100}">
       <c:forEach var="option" items="${fnx:invoke(field.options,'entrySet')}">
-        <label><input type="radio" name="${c_name}" value="${option.key}"<c:if test="${c_value eq option.key}"> checked="checked"</c:if>/>${option.value}</label>
+        <label class="radio-inline"><input type="radio" name="${c_name}" value="${option.key}"<c:if test="${c_value eq option.key}"> checked</c:if>/>${option.value}</label>
       </c:forEach>
     </c:when>
  		<c:when test="${field.type==5 || field.type==101}">
- 			<select name="${c_name}" style="${style_width}">
+ 			<select class="form-control" name="${c_name}">
       <c:forEach var="option" items="${fnx:invoke(field.options,'entrySet')}">
  				<option value="${option.key}"<c:if test="${c_value eq option.key}"> selected="selected"</c:if>>${option.value}</option>
  			</c:forEach>
  			</select>
  		</c:when>
  		<c:when test="${field.type==6}">
- 			<textarea name="${c_name}" ${attr_class} ${attr_maxlength} style="${style_width}${style_height}">${c_value}</textarea>
+ 			<textarea name="${c_name}" ${attr_class} ${attr_maxlength} ${attr_rows}>${c_value}</textarea>
  		</c:when>
  		<c:when test="${field.type==7}">
  			<tags:image_upload name="${c_name}" value="${c_value}" width="${field.customs['imageWidth']}" height="${field.customs['imageHeight']}" watermark="${field.customs['imageWatermark']}" scale="${field.customs['imageScale']}" exact="${field.customs['imageExact']}"/>
@@ -65,78 +66,77 @@
       <c:set var="c_valueLength"><c:out value="${(field.clob) ? (bean.clobs[c_valueLength]) : (bean.customs[c_valueLength])}"/></c:set>
       <c:set var="c_valueTime">${field.name}Time</c:set>
       <c:set var="c_valueTime"><c:out value="${(field.clob) ? (bean.clobs[c_valueTime]) : (bean.customs[c_valueTime])}"/></c:set>
-	    <%--
-	    <div>
-	      <span style="padding:0 7px;"><s:message code="fileName"/>:</span><f:text id="${c_name}Name" name="${c_name}Name" value="${c_valueName}" maxlength="255" style="width:420px;"/>
+	    <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileName"/></span>
+	      <f:text class="form-control" id="${c_name}Name" name="${c_name}Name" value="${c_valueName}" maxlength="255"/>
 	    </div>
-	    <div style="padding-top:3px;">
-	      <span style="padding:0 7px;"><s:message code="fileUrl"/>:</span><f:text id="${c_name}" name="${c_name}" value="${c_value}" maxlength="255" style="width:420px;"/>
+	    <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileUrl"/></span>
+	      <f:text class="form-control" id="${c_name}" name="${c_name}" value="${c_value}" maxlength="255"/>
 	    </div>
-	    <div style="padding-top:3px;">
-	      <span style="padding:0 7px;"><input id="f_${c_name}" name="f_${c_name}" type="file" size="23" style="width:235px;"/></span> <input type="button" onclick="uploadVideo('${c_name}',this)" value="<s:message code="upload"/>"/>
+	    <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileLength"/></span>
+	      <f:text id="${c_name}Length" name="${c_name}Length" value="${c_valueLength}" class="form-control {digits:true,max:2147483647}" maxlength="10"/>
+	      <span class="input-group-addon"><s:message code="videoTime"/></span>
+	      <f:text class="form-control" id="${c_name}Time" name="${c_name}Time" value="${c_valueTime}" maxlength="100"/>
+	      <span class="input-group-btn">
+	      	<button class="btn btn-default" type="button" id="${c_name}Button"><s:message code='choose'/></button>
+		      <span id="${c_name}SwfButton"></span>
+		      <button class="btn btn-default" type="button"><s:message code="upload"/></button>
+		      <button class="btn btn-default" type="button" id="${c_name}SwfCancel" onclick="${c_name}SwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+	      </span>
 	    </div>
-	    --%>
-	  <div>
-      <span style="padding:0 7px;"><s:message code="fileName"/>:</span><f:text id="${c_name}Name" name="${c_name}Name" value="${c_valueName}" maxlength="255" style="width:460px;"/>
-    </div>
-    <div style="padding-top:3px;">
-      <span style="padding:0 7px;"><s:message code="fileUrl"/>:</span><f:text id="${c_name}" name="${c_name}" value="${c_value}" maxlength="255" style="width:460px;"/>
-    </div>
-    <div style="padding-top:3px;">
-      <span style="padding:0 7px;"><s:message code="fileLength"/>:</span><f:text id="${c_name}Length" name="${c_name}Length" value="${c_valueLength}" class="{digits:true,max:2147483647}" maxlength="10" style="width:70px;"/>
-      <span style="padding:0 7px;"><s:message code="videoTime"/>:</span><f:text id="${c_name}Time" name="${c_name}Time" value="${c_valueTime}" maxlength="100" style="width:70px;"/> &nbsp;
-      <input id="${c_name}Button" type="button" value="<s:message code='choose'/>"/>
-      <script type="text/javascript">
+	    <div id="${c_name}SwfProgress"></div>
+      <script>
       $(function() {
         Cms.f7.uploads("${c_name}","${c_name}Name",{
           settings: {"title": "<s:message code="webFile.chooseUploads"/>"}
         });
       });
-      </script>
-      <span id="${c_name}SwfButton"></span><input type="button" value="<s:message code="upload"/>" class="swfbutton"/>
-      <input id="${c_name}SwfCancel" type="button" value="<s:message code="cancel"/>" onclick="${c_name}SwfUpload.cancelQueue();" disabled="disabled"/>
-      <script type="text/javascript">
       var ${c_name}SwfUpload = Cms.swfUploadVideo("${c_name}",{
         jsessionid: "<%=request.getSession().getId()%>",
         file_size_limit: "${GLOBAL.upload.videoLimit}",
         file_types: "${GLOBAL.upload.videoTypes}"
       });
       </script>
-      <div id="${c_name}SwfProgress"></div>
-    </div>
 		</c:when>
  		<c:when test="${field.type==9}">
  		  <c:set var="c_valueName">${field.name}Name</c:set>
       <c:set var="c_valueName"><c:out value="${(field.clob) ? (bean.clobs[c_valueName]) : (bean.customs[c_valueName])}"/></c:set>
       <c:set var="c_valueLength">${field.name}Length</c:set>
       <c:set var="c_valueLength"><c:out value="${(field.clob) ? (bean.clobs[c_valueLength]) : (bean.customs[c_valueLength])}"/></c:set>
-	    <div>
-	      <span style="padding:0 7px;"><s:message code="fileName"/>:</span><f:text id="${c_name}Name" name="${c_name}Name" value="${c_valueName}" maxlength="255" style="width:460px;"/>
+      
+      <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileName"/></span>
+	      <f:text class="form-control" id="${c_name}Name" name="${c_name}Name" value="${c_valueName}" maxlength="255"/>
 	    </div>
-	    <div style="padding-top:3px;">
-	      <span style="padding:0 7px;"><s:message code="fileUrl"/>:</span><f:text id="${c_name}" name="${c_name}" value="${c_value}" maxlength="255" style="width:460px;"/>
+	    <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileUrl"/></span>
+	      <f:text class="form-control" id="${c_name}" name="${c_name}" value="${c_value}" maxlength="255"/>
 	    </div>
-	    <div style="padding-top:3px;">
-	      <span style="padding:0 7px;"><s:message code="fileLength"/>:</span><f:text id="${c_name}Length" name="${c_name}Length" value="${c_valueLength}" class="{digits:true,max:2147483647}" maxlength="10" style="width:70px;"/>
-	      <input id="${c_name}Button" type="button" value="<s:message code='choose'/>"/>
-	      <script type="text/javascript">
-	      $(function() {
-	        Cms.f7.uploads("${c_name}","${c_name}Name",{
-	          settings: {"title": "<s:message code="webFile.chooseUploads"/>"}
-	        });
-	      });
-	      </script>
-	      <span id="${c_name}SwfButton"></span><input type="button" value="<s:message code="upload"/>" class="swfbutton"/>
-	      <input id="${c_name}SwfCancel" type="button" value="<s:message code="cancel"/>" onclick="${c_name}SwfUpload.cancelQueue();" disabled="disabled"/>
-	      <script type="text/javascript">
-	      var ${c_name}SwfUpload = Cms.swfUploadFile("${c_name}",{
-	        jsessionid: "<%=request.getSession().getId()%>",
-	        file_size_limit: "${GLOBAL.upload.fileLimit}",
-	        file_types: "${GLOBAL.upload.fileTypes}"
-	      });
-	      </script>
+	    <div class="input-group">
+	      <span class="input-group-addon"><s:message code="fileLength"/></span>
+	      <f:text id="${c_name}Length" name="${c_name}Length" value="${c_valueLength}" class="form-control {digits:true,max:2147483647}" maxlength="10"/>
+	      <span class="input-group-btn">
+	      	<button class="btn btn-default" id="${c_name}Button" type="button"><s:message code='choose'/></button>
+	      	<span id="${c_name}SwfButton"></span>
+	      	<button class="btn btn-default" type="button" class="swfbutton"><s:message code="upload"/></button>
+      		<button class="btn btn-default" type="button" id="${c_name}SwfCancel" onclick="${c_name}SwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+	     	</span>
 	    </div>
 	    <div id="${c_name}SwfProgress"></div>
+      <script type="text/javascript">
+      $(function() {
+        Cms.f7.uploads("${c_name}","${c_name}Name",{
+          settings: {"title": "<s:message code="webFile.chooseUploads"/>"}
+        });
+      });
+      var ${c_name}SwfUpload = Cms.swfUploadFile("${c_name}",{
+        jsessionid: "<%=request.getSession().getId()%>",
+        file_size_limit: "${GLOBAL.upload.fileLimit}",
+        file_types: "${GLOBAL.upload.fileTypes}"
+      });
+      </script>
    	</c:when>
  		<c:when test="${field.type==50}">
 			<div id="editor_${field.name}"></div>
