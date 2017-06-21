@@ -1,13 +1,11 @@
 package com.jspxcms.ext.web.back;
 
-import static com.jspxcms.core.constant.Constants.DELETE_SUCCESS;
-import static com.jspxcms.core.constant.Constants.MESSAGE;
-import static com.jspxcms.core.constant.Constants.SAVE_SUCCESS;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.jspxcms.core.domain.Site;
+import com.jspxcms.core.service.OperationLogService;
+import com.jspxcms.core.support.Backends;
+import com.jspxcms.core.support.Context;
+import com.jspxcms.ext.domain.FriendlinkType;
+import com.jspxcms.ext.service.FriendlinkTypeService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -17,12 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.service.OperationLogService;
-import com.jspxcms.core.support.Backends;
-import com.jspxcms.core.support.Context;
-import com.jspxcms.ext.domain.FriendlinkType;
-import com.jspxcms.ext.service.FriendlinkTypeService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.jspxcms.core.constant.Constants.*;
 
 /**
  * FriendlinkTypeController
@@ -64,8 +60,8 @@ public class FriendlinkTypeController {
 	public String batchUpdate(Integer[] id, String[] name, String[] number,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
-		validateIds(id, site.getId());
 		if (ArrayUtils.isNotEmpty(id)) {
+			validateIds(id, site.getId());
 			FriendlinkType[] beans = service.batchUpdate(id, name, number);
 			for (FriendlinkType bean : beans) {
 				logService.operation("opr.friendlinkType.batchEdit",

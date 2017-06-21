@@ -193,7 +193,7 @@ function confirmDelete() {
 						    <div class="input-group">
 							    <f:text name="title" value="${bean.title}" class="required form-control" maxlength="150"/>
 						      <span class="input-group-addon">
-							    	<label style="margin-bottom:0;font-weight:normal;"><input id="linkCheck" type="checkbox" onclick="$('#linkDiv').toggle(this.checked);"<c:if test="${bean.linked}"> checked="checked"</c:if>/><s:message code="info.link"/></label>
+							    	<label style="margin-bottom:0;font-weight:normal;"><input id="linkCheck" type="checkbox" onclick="$('#linkDiv').toggle(this.checked);" style="margin-right:2px;" <c:if test="${bean.linked}"> checked="checked"</c:if>/><s:message code="info.link"/></label>
 							    </span>
 							  </div>
 						    <div class="input-group" id="linkDiv" style="margin-top:2px;<c:if test="${!bean.linked}">display:none;</c:if>">
@@ -379,7 +379,7 @@ function confirmDelete() {
 						      	<button class="btn btn-default" id="videoButton" type="button"><s:message code='choose'/></button>
 							      <span id="videoSwfButton"></span>
 							      <button type="button" class="btn btn-default"><s:message code="upload"/></button>
-							      <button class="btn btn-default" id="videoSwfCancel" type="button" onclick="fileSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+							      <button class="btn btn-default" id="videoSwfCancel" type="button" onclick="videoSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
 						      </span>
 						    </div>
 					      <div id="videoSwfProgress"></div>
@@ -420,9 +420,13 @@ function confirmDelete() {
 						      <f:text id="docLength" name="docLength" value="${bean.docLength}" class="form-control {digits:true,max:2147483647}" maxlength="10"/>
 						      <c:choose>
 						      <c:when test="${GLOBAL.enterpriseEdition&&GLOBAL.docEnabled}">
-							      <span id="docSwfButton"></span>
-							      <button class="btn btn-default" type="button"><s:message code="upload"/></button>
-							      <button class="btn btn-default" id="docSwfCancel" type="button" onclick="fileSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+							      	<span class="input-group-btn">
+									      <span id="docSwfButton"></span>
+									      <button class="btn btn-default" type="button"><s:message code="upload"/></button>
+									      <button class="btn btn-default" id="docSwfCancel" type="button" onclick="docSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+								      </span>
+						   			</div>
+						    		<div id="docSwfProgress"></div>
 							      <script type="text/javascript">
 							      var docSwfUpload = Cms.swfUploadDoc("doc",{
 							        jsessionid: "<%=request.getSession().getId()%>",
@@ -430,8 +434,6 @@ function confirmDelete() {
 							        file_types: "${GLOBAL.upload.docTypes}"
 							      });
 							      </script>
-						   			</div>
-						    		<div id="docSwfProgress"></div>
 						      </c:when>
 									<c:when test="${!GLOBAL.enterpriseEdition}">
 										</div>
@@ -501,12 +503,10 @@ function confirmDelete() {
 						      toMove.next().after(toMove);
 						    }
 						    </script>
-						    <div class="btn-group">
-							    <span id="filesSwfButton"></span>
-						    	<button class="btn btn-default" type="button"><s:message code="upload"/></button>
-							    <button class="btn btn-default" id="filesSwfCancel" type="button" onclick="filesSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
-							    <button class="btn btn-default" type="button" onclick="addFileRow('','','');"><s:message code='addRow'/></button>
-						    </div>
+							<span id="filesSwfButton"></span>
+							<button class="btn btn-default" type="button"><s:message code="upload"/></button>
+							<button class="btn btn-default" id="filesSwfCancel" type="button" onclick="filesSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
+							<button class="btn btn-default" type="button" onclick="addFileRow('','','');"><s:message code='addRow'/></button>
 						    <div id="filesSwfProgress"></div>
 						    <div id="filesContainer"></div>
 						    <script type="text/javascript">
@@ -601,12 +601,10 @@ function confirmDelete() {
 								}
 								</script>
 								<div class="form-inline">
-									<div class="btn-group">
 							      <span id="imagesSwfButton"></span>
 							      <button class="btn btn-default" type="button"><s:message code="upload"/></button>
 							      <button class="btn btn-default" id="imagesSwfCancel" type="button" onclick="imagesSwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
-							      <button class="btn btn-default" type="button" onclick="addImageRow('','');"><s:message code='addRow'/></button>									
-									</div>
+							      <button class="btn btn-default" type="button" onclick="addImageRow('','');"><s:message code='addRow'/></button>
 						      <script type="text/javascript">
 						      var imagesSwfUpload = Cms.swfUploadImages("images",{
 						        jsessionid: "<%=request.getSession().getId()%>",

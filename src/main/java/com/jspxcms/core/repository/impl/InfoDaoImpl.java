@@ -1,40 +1,25 @@
 package com.jspxcms.core.repository.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
+import com.jspxcms.common.orm.JpqlBuilder;
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.QuerydslUtils;
+import com.jspxcms.core.domain.Info;
+import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.dsl.*;
+import com.jspxcms.core.repository.plus.InfoDaoPlus;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.jspxcms.common.orm.JpqlBuilder;
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.QuerydslUtils;
-import com.jspxcms.core.domain.Info;
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.dsl.QAttribute;
-import com.jspxcms.core.domain.dsl.QInfo;
-import com.jspxcms.core.domain.dsl.QInfoAttribute;
-import com.jspxcms.core.domain.dsl.QInfoDetail;
-import com.jspxcms.core.domain.dsl.QInfoMemberGroup;
-import com.jspxcms.core.domain.dsl.QInfoNode;
-import com.jspxcms.core.domain.dsl.QInfoOrg;
-import com.jspxcms.core.domain.dsl.QInfoSpecial;
-import com.jspxcms.core.domain.dsl.QInfoTag;
-import com.jspxcms.core.domain.dsl.QNode;
-import com.jspxcms.core.domain.dsl.QNodeMemberGroup;
-import com.jspxcms.core.domain.dsl.QNodeOrg;
-import com.jspxcms.core.domain.dsl.QSpecial;
-import com.jspxcms.core.domain.dsl.QTag;
-import com.jspxcms.core.repository.plus.InfoDaoPlus;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.jpa.impl.JPAQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.Date;
+import java.util.List;
 
 /**
  * InfoDaoImpl
@@ -47,14 +32,14 @@ public class InfoDaoImpl implements InfoDaoPlus {
 			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
 			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
 			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Limitable limitable) {
 		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QInfo info = QInfo.info;
 		predicate(query, info, modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
 				viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
-				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6);
+				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status,p0, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.list(query, info, limitable);
 	}
 
@@ -62,14 +47,14 @@ public class InfoDaoImpl implements InfoDaoPlus {
 			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
 			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
 			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Pageable pageable) {
 		JPAQuery<Info> query = new JPAQuery<Info>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QInfo info = QInfo.info;
 		predicate(query, info, modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
 				viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
-				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6);
+				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status,p0, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.page(query, info, pageable);
 	}
 
@@ -77,7 +62,7 @@ public class InfoDaoImpl implements InfoDaoPlus {
 			Integer[] specialId, Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId,
 			Integer[] viewGroupId, Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName,
 			Integer[] priority, Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6) {
 		boolean isDistinct = false;
 		query.from(info);
@@ -247,6 +232,9 @@ public class InfoDaoImpl implements InfoDaoPlus {
 		}
 		if (ArrayUtils.isNotEmpty(status)) {
 			exp = exp.and(info.status.in(status));
+		}
+		if (ArrayUtils.isNotEmpty(p0)) {
+			exp = exp.and(info.p0.in(p0));
 		}
 		if (ArrayUtils.isNotEmpty(p1)) {
 			exp = exp.and(info.p1.in(p1));

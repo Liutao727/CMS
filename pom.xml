@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>8.0.0</version>
+	<version>8.0.1</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
@@ -69,12 +69,13 @@
 		<!-- 数据库JDBC驱动 -->
 		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
 		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
-		<jdbc.driver.version>5.1.24</jdbc.driver.version>
-		
+		<jdbc.driver.version>5.1.41</jdbc.driver.version>
+
 		<java.version>1.7</java.version>
 		<tomcat.version>7.0.73</tomcat.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<jsp-api.version>2.2.1</jsp-api.version>
+		<springloaded.version>1.2.7.RELEASE</springloaded.version>
 	</properties>
 	<dependencies>
 		<!-- springboot web 依赖 -->
@@ -342,4 +343,45 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<!-- spring-boot插件。使用方式：spring-boot:run。该方式只适合在IDEA开发工具下使用，Eclipse使用该方式启动会出现无法停止tomcat服务的情况 -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 指定启动的入口类 -->
+					<mainClass>com.jspxcms.core.Application</mainClass>
+					<!-- 关闭fork。否则使用spring-boot:run启动时，在idea中无法调试程序，在eclipse中无法关闭web服务 -->
+					<fork>false</fork>
+				</configuration>
+				<dependencies>
+					<!-- 热加载插件。修改方法里面的内容无需重启tomcat，但修改配置文件或者新增方法则无效。需关闭devtool的自动reload功能 -->
+					<!-- 
+					<dependency>
+						<groupId>org.springframework</groupId>
+						<artifactId>springloaded</artifactId>
+						<version>${springloaded.version}</version>
+					</dependency>
+					 -->
+				</dependencies>
+			</plugin>
+			<!-- Tomcat7插件。使用方式：tomcat7:run。如果使用Tomcat7插件启动，则不能使用spring-boot-devtools提供的功能。由于tomcat7插件已经不再更新了（一直没有发布tomcat8插件），建议使用spring-boot:run插件启动。 -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- 上下文路径 -->
+					<path>/</path>
+					<!-- 端口号 -->
+					<port>8080</port>
+					<uriEncoding>UTF-8</uriEncoding>
+					<server>tomcat7</server>
+					<contextReloadable>false</contextReloadable>
+					<useTestClasspath>true</useTestClasspath>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

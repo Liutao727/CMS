@@ -3840,7 +3840,7 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_member_gr
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_model',52);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_model_field',632);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_node',119);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_operation_log',1716);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_operation_log',1766);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_org',24);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_publish_point',33);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_question',23);
@@ -3861,7 +3861,7 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_special_c
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_tag',105);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_task',46);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_user',40);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4325);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4525);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote',22);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_mark',116);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_option',27);
@@ -3871,6 +3871,8 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_workflow_
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_workflow_step',25);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('plug_resume',24);
 INSERT INTO plug_resume (f_resume_id, f_site_id, f_name, f_post, f_creation_date, f_gender, f_birth_date, f_mobile, f_email, f_expected_salary, f_education_experience, f_work_experience, f_remark) VALUES (3,1,'123','软件UI设计师','2014-12-08 17:38:37','M',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
+commit;
 
 alter table cms_ad add constraint fk_cms_ad_adslot foreign key (f_adslot_id)
       references cms_ad_slot (f_adslot_id) on delete restrict on update restrict;

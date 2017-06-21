@@ -164,6 +164,7 @@ parent.frames['left'].reload();
 	<div class="box box-primary">
 		<div class="box-body table-responsive">
 			<form id="searchForm" action="list.do" method="get" class="form-inline ls-search">
+				<f:hidden name="parentId" value="${parentId}"/>
 				<div class="form-group">
 				  <label for="search_name"><s:message code="webFile.name"/></label>
 				  <input class="form-control input-sm" type="text" id="search_name" name="search_name" value="${search_name[0]}" style="width:150px;"/></label>
@@ -238,7 +239,7 @@ parent.frames['left'].reload();
 				    <td align="center">
 				      <c:choose>
 				        <c:when test='${bean.directory}'>
-				          <c:url value="list.do?${searchstring}" var="editUrl">
+				          <c:url value="list.do" var="editUrl">
 				            <c:param name="parentId" value="${bean.id}"/>
 				          </c:url>
 				        </c:when>

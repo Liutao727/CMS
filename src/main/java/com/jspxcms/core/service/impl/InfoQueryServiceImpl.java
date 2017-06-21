@@ -1,18 +1,11 @@
 package com.jspxcms.core.service.impl;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.core.domain.*;
+import com.jspxcms.core.repository.InfoDao;
+import com.jspxcms.core.service.InfoQueryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,16 +15,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.RowSide;
-import com.jspxcms.common.orm.SearchFilter;
-import com.jspxcms.core.domain.Info;
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.NodeRole;
-import com.jspxcms.core.domain.Role;
-import com.jspxcms.core.domain.WorkflowProcess;
-import com.jspxcms.core.repository.InfoDao;
-import com.jspxcms.core.service.InfoQueryService;
+import javax.persistence.criteria.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 信息Service实现
@@ -137,12 +125,12 @@ public class InfoQueryServiceImpl implements InfoQueryService {
 			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
 			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
 			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Limitable limitable) {
 		return dao
 				.findList(modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
 						viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
-						excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6,
+						excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status,p0, p1, p2, p3, p4, p5, p6,
 						limitable);
 	}
 
@@ -150,11 +138,11 @@ public class InfoQueryServiceImpl implements InfoQueryService {
 			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
 			Integer[] viewOrgId, String[] treeNumber, String[] specialTitle, String[] tagName, Integer[] priority,
 			Date beginDate, Date endDate, String[] title, Integer[] includeId, Integer[] excludeId,
-			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,
+			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Pageable pageable) {
 		return dao.findPage(modelId, nodeId, attrId, specialId, tagId, siteId, mainNodeId, userId, viewGroupId,
 				viewOrgId, treeNumber, specialTitle, tagName, priority, beginDate, endDate, title, includeId,
-				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p1, p2, p3, p4, p5, p6, pageable);
+				excludeId, excludeMainNodeId, excludeTreeNumber, isWithImage, status, p0,p1, p2, p3, p4, p5, p6, pageable);
 	}
 
 	public Info findNext(Integer id, boolean bySite) {

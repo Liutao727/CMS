@@ -1,12 +1,11 @@
 package com.jspxcms.core.repository.plus;
 
-import java.util.List;
-
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.core.domain.Node;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.core.domain.Node;
+import java.util.List;
 
 /**
  * NodeDaoPlus
@@ -16,12 +15,12 @@ import com.jspxcms.core.domain.Node;
  */
 public interface NodeDaoPlus {
 	public List<Node> findList(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
+			String treeNumber, Boolean isRealNode, Boolean isHidden,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Limitable limitable);
 
 	public Page<Node> findPage(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
+			String treeNumber, Boolean isRealNode, Boolean isHidden,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Pageable pageable);
 

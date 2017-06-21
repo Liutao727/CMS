@@ -43,7 +43,7 @@ $(function() {
 	};
 	var zNodes =[
   	<c:forEach var="node" items="${list}" varStatus="status">
-  	{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"displayName":"${node.displayName}","name":"${node.name}","checked":${fnx:contains_oxo(ids,node.id)},<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":false</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
+  	{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"displayName":"${fnx:escapeEcmaScript(node.displayName)}","name":"${fnx:escapeEcmaScript(node.name)}","checked":${fnx:contains_oxo(ids,node.id)},<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":false</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
   	</c:forEach>
   ];
 	var ztree = $.fn.zTree.init($("#f7_tree"), setting, zNodes);

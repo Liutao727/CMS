@@ -162,7 +162,7 @@ public class Role implements Siteable, java.io.Serializable {
 		this.userRoles = userRoles;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "role")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "role")
 	public Set<NodeRole> getNodeRoles() {
 		return nodeRoles;
 	}

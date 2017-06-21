@@ -160,79 +160,9 @@ function optDelete(form) {
 				<div class="ls-norecord"><s:message code="recordNotFound"/></div>
 				</c:if>
 			</form>
-			<form action="list.do" method="get">
+			<form action="list.do" method="get" class="ls-page">
 				<tags:search_params excludePage="true"/>
-				<ul class="pagination pull-left" style="margin:0;">
-			    <li>
-			      <a href="#" aria-label="First">
-			        <span aria-hidden="true">«</span>
-			      </a>
-			    </li>
-			    <%-- <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">‹</span>
-			      </a>
-			    </li> --%>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">1 ...</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">5</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">6</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">7</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">8</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">9</span>
-			      </a>
-			    </li>
-			    <li>
-			      <a href="#" aria-label="Previous">
-			        <span aria-hidden="true">... 22</span>
-			      </a>			    	
-			    </li>
-			    <%-- <li>
-			      <a href="#" aria-label="Next">
-			        <span aria-hidden="true">›</span>
-			      </a>
-			    </li> --%>
-			    <li>
-			      <a href="#" aria-label="Last">
-			        <span aria-hidden="true">»</span>
-			      </a>
-			    </li>
-			  </ul>
-			  <div class="pull-left" style="padding:0 6px;">
-			  	&nbsp;每页
-			  	<select class="form-control" style="border-radius:4px;padding-left:3px;padding-right:3px;width:60px;display:inline-block;">
-			  		<option>10</option>
-			  		<option>20</option>
-			  		<option>50</option>
-			  		<option>100</option>
-			  		<option>200</option>
-			  		<option>400</option>
-			  		<option>800</option>
-			  	</select>
-			  	条 &nbsp; 共 ${pagedList.totalElements} 条
-			  </div>
-			  <%-- <tags:pagination pagedList="${pagedList}"/> --%>
+			  <tags:pagination pagedList="${pagedList}"/>
 			</form>
 		</div>
 	</div>

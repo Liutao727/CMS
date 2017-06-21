@@ -1,17 +1,5 @@
 package com.jspxcms.core.repository.impl;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.jpa.QueryHints;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.jspxcms.common.orm.JpqlBuilder;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.QuerydslUtils;
@@ -20,6 +8,16 @@ import com.jspxcms.core.domain.dsl.QNode;
 import com.jspxcms.core.repository.plus.NodeDaoPlus;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.jpa.QueryHints;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * NodeDaoImpl
@@ -29,27 +27,27 @@ import com.querydsl.jpa.impl.JPAQuery;
  */
 public class NodeDaoImpl implements NodeDaoPlus {
 	public List<Node> findList(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
-			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Boolean isHidden,Integer[] p0, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
 			Limitable limitable) {
 		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
-		predicate(query, node, siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6);
+		predicate(query, node, siteId, parentId, treeNumber, isRealNode, isHidden,p0, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.list(query, node, limitable);
 	}
 
 	public Page<Node> findPage(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
-			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Boolean isHidden,Integer[] p0, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
 			Pageable pageable) {
 		JPAQuery<Node> query = new JPAQuery<Node>(this.em);
 		query.setHint(QueryHints.HINT_CACHEABLE, true);
 		QNode node = QNode.node;
-		predicate(query, node, siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6);
+		predicate(query, node, siteId, parentId, treeNumber, isRealNode, isHidden,p0, p1, p2, p3, p4, p5, p6);
 		return QuerydslUtils.page(query, node, pageable);
 	}
 
 	private void predicate(JPAQuery<Node> query, QNode node, Integer[] siteId, Integer parentId, String treeNumber,
-			Boolean isRealNode, Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5,
+			Boolean isRealNode, Boolean isHidden, Integer[] p0,Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5,
 			Integer[] p6) {
 		query.from(node);
 		BooleanBuilder exp = new BooleanBuilder();
@@ -67,6 +65,9 @@ public class NodeDaoImpl implements NodeDaoPlus {
 		}
 		if (isHidden != null) {
 			exp = exp.and(node.hidden.eq(isHidden));
+		}
+		if (ArrayUtils.isNotEmpty(p0)) {
+			exp = exp.and(node.p0.in(p0));
 		}
 		if (ArrayUtils.isNotEmpty(p1)) {
 			exp = exp.and(node.p1.in(p1));

@@ -14,7 +14,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><jsp:include page="/WEB-INF/views/title.jsp"/></title>
   <meta name="renderer" content="webkit">
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> -->
   <script>if(top!=this){top.location=this.location;}</script>
   <link rel="stylesheet" href="${ctx}/static/vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="${ctx}/static/vendor/font-awesome/css/font-awesome.min.css">
@@ -56,7 +56,7 @@
 			      </select> 
       		</li>
         	<li>
-			      <a href="${ctx}/" target="_blank" title="网站首页">
+			      <a href="${site.url}" target="_blank" title="网站首页">
 			        <i class="glyphicon glyphicon-home"></i>
 			      </a>
       		</li>
@@ -91,6 +91,7 @@
       <ul class="sidebar-menu">
         <!-- <li class="header">功能导航</li> -->
         <c:forEach var="menu" varStatus="status" items="${menus}">
+        	<shiro:hasPermission name="${menu.perm}">
 	        <c:choose>
 	        	<c:when test="${fn:length(menu.children)>0}">
 			        <li class="treeview<c:if test="${status.index==0}"> active</c:if>">
@@ -101,6 +102,7 @@
 			          </a>
 			          <ul class="treeview-menu">
         					<c:forEach var="m" varStatus="status" items="${menu.children}">
+        						<shiro:hasPermission name="${m.perm}">
         						<c:choose>
         						<c:when test="${fn:length(m.children)>0}">
         							<li class="treeview">
@@ -111,15 +113,27 @@
 							          </a>
 							          <ul class="treeview-menu">
 							          	<c:forEach var="c" varStatus="status" items="${m.children}">
+							          		<shiro:hasPermission name="${c.perm}">
 							          		<li><a href="javascript:nav('${c.centerUrl}','${c.leftUrl}');"><i class="${empty c.icon ? 'fa fa-circle-o' : c.icon}"></i> <span><s:message code="${c.name}" text="${c.name}"/></span></a></li>
+							          		</shiro:hasPermission>
 							          	</c:forEach>
 							          </ul>
 							        </li>
         						</c:when>
         						<c:otherwise>
-		        					<li><a href="javascript:nav('${m.centerUrl}','${m.leftUrl}');"><i class="${empty m.icon ? 'fa fa-circle-o' : m.icon}"></i> <span><s:message code="${m.name}" text="${m.name}"/></span></a></li>
+        							<c:choose>
+        								<c:when test="${fn:startsWith(m.perm,'core:user_global:') || fn:startsWith(m.perm,'core:org_global:') || fn:startsWith(m.perm,'core:site:') || fn:startsWith(m.perm,'core:conf_global:')}">
+        								<shiro:hasRole name="super">
+        									<li><a href="javascript:nav('${m.centerUrl}','${m.leftUrl}');"><i class="${empty m.icon ? 'fa fa-circle-o' : m.icon}"></i> <span><s:message code="${m.name}" text="${m.name}"/></span></a></li>
+        								</shiro:hasRole>
+        								</c:when>
+        								<c:otherwise>
+        									<li><a href="javascript:nav('${m.centerUrl}','${m.leftUrl}');"><i class="${empty m.icon ? 'fa fa-circle-o' : m.icon}"></i> <span><s:message code="${m.name}" text="${m.name}"/></span></a></li>
+        								</c:otherwise>
+        							</c:choose>		        					
         						</c:otherwise>
         						</c:choose>
+        						</shiro:hasPermission>
 			            </c:forEach>
 			          </ul>
 			        </li>
@@ -128,6 +142,7 @@
 			        <li><a href="javascript:nav('${menu.centerUrl}','${menu.leftUrl}');"><i class="${empty menu.icon ? 'fa fa-circle-o' : menu.icon}"></i> <span><s:message code="${menu.name}" text="${menu.name}"/></span></a></li>
 	        	</c:otherwise>
 	        </c:choose>
+	        </shiro:hasPermission>
         </c:forEach>
       </ul>
       <!-- /.sidebar-menu -->
@@ -164,7 +179,7 @@ $(function() {
 		});
 	}
 	getNotificationCount();
-	setInterval(getNotificationCount,15000);
+	setInterval(getNotificationCount,120000);
 	
 	$(".treeview-menu>li:not(.treeview)>a").click(function() {
 		$(this).parent().parent().find("li").removeClass("active");

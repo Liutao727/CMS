@@ -212,7 +212,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 	public static String getDescription(Map<String, String> map, String title) {
 		String html = map != null ? map.get(INFO_TEXT) : null;
 		String text = getTextWithoutPageBreak(html);
-		String desciption = Strings.getTextFromHtml(text, 150);
+		String desciption = Strings.getTextFromHtml(text, 450);
 		return StringUtils.isNotBlank(desciption) ? desciption : title;
 	}
 
@@ -300,7 +300,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		String desciption = getMetaDescription();
 		if (StringUtils.isBlank(desciption)) {
 			String text = getTextWithoutPageBreak();
-			desciption = Strings.getTextFromHtml(text, 150);
+			desciption = Strings.getTextFromHtml(text, 450);
 			if (StringUtils.isBlank(desciption)) {
 				desciption = getTitle();
 			}

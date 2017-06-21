@@ -151,7 +151,7 @@ public class Site implements java.io.Serializable {
 	
 	@Transient
 	public String getUrlMobile() {
-		return getUrl(Context.isMobile());
+		return getUrl(true);
 	}
 
 	@Transient
@@ -175,15 +175,15 @@ public class Site implements java.io.Serializable {
 				sb.append(":").append(getPort());
 			}
 		}
-		if (StringUtils.isNotBlank(getContextPath())) {
-			sb.append(getContextPath());
-		}
 		if (getStaticHome()) {
 			String urlPrefix = isMobile ? getMobilePublishPoint().getUrlPrefix() : getHtmlPublishPoint().getUrlPrefix();
 			if (StringUtils.isNotBlank(urlPrefix)) {
 				sb.append(urlPrefix).append("/");
 			}
 		} else {
+			if (StringUtils.isNotBlank(getContextPath())) {
+				sb.append(getContextPath());
+			}
 			if (!getIdentifyDomain() && !isDef()) {
 				sb.append(SITE_PREFIX).append(getNumber()).append(DYNAMIC_SUFFIX);
 			}

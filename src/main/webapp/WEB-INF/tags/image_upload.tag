@@ -32,18 +32,16 @@ function fn_${id}(src) {
 				<span class="input-group-addon"><s:message code="height"/></span>
 				<f:text class="form-control" id="h_${id}" value="${height}" default="140" style="width:70px;"/>
 			</div>
-			<div class="btn-group">
-				<button class="btn btn-default" type="button" id="${id}Button"><s:message code='choose'/></button>
-	      <button class="btn btn-default" type="button" onclick="imgCrop('${id}');"><s:message code='crop'/></button>
-	      <span id="${id}SwfButton"></span>
-	      <button class="btn btn-default" type="button"><s:message code="upload"/></button>
-	      <button class="btn btn-default" type="button" id="${id}SwfCancel" onclick="${id}SwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
-      </div>
+			<button class="btn btn-default" type="button" id="${id}Button"><s:message code='choose'/></button>
+			<button class="btn btn-default" type="button" onclick="imgCrop('${id}');"><s:message code='crop'/></button>
+			<span id="${id}SwfButton"></span>
+			<button class="btn btn-default" type="button"><s:message code="upload"/></button>
+			<button class="btn btn-default" type="button" id="${id}SwfCancel" onclick="${id}SwfUpload.cancelQueue();" disabled><s:message code="cancel"/></button>
 		</div>
     <div>
-      <label class="checkbox-inline"><input type="checkbox" id="s_${id}"<c:if test="${empty scale || scale=='true'}"> checked="checked"</c:if>/><s:message code="scale"/></label>
-      <label class="checkbox-inline"><input type="checkbox" id="e_${id}"<c:if test="${!empty exact && exact=='true'}"> checked="checked"</c:if>/><s:message code="exact"/></label>
-      <label class="checkbox-inline"><input type="checkbox" id="wm_${id}"<c:if test="${!empty watermark && watermark=='true'}"> checked="checked"</c:if>/><s:message code="watermark"/></label>
+		<label class="checkbox-inline"><input type="checkbox" id="s_${id}"<c:if test="${empty scale || scale=='true'}"> checked="checked"</c:if>/><s:message code="scale"/></label>
+		<label class="checkbox-inline"><input type="checkbox" id="e_${id}"<c:if test="${!empty exact && exact=='true'}"> checked="checked"</c:if>/><s:message code="exact"/></label>
+		<label class="checkbox-inline"><input type="checkbox" id="wm_${id}"<c:if test="${!empty watermark && watermark=='true'}"> checked="checked"</c:if>/><s:message code="watermark"/></label>
     </div>
     <f:hidden id="t_${id}" value="${(!empty thumbnail) ? thumbnail : 'false'}"/>
    	<f:hidden id="tw_${id}" value="${(!empty thumbnailWidth) ? thumbnailWidth : '116'}"/>
@@ -56,9 +54,9 @@ function fn_${id}(src) {
 <div id="${id}SwfProgress"></div>
 <script>
 var ${id}SwfUpload = Cms.swfUploadImage("${id}",{
-	  jsessionid: "<%=request.getSession().getId()%>",
-  file_size_limit: "${GLOBAL.upload.imageLimit}",
-  file_types: "${GLOBAL.upload.imageTypes}"
+	jsessionid: "<%=request.getSession().getId()%>",
+	file_size_limit: "${GLOBAL.upload.imageLimit}",
+	file_types: "${GLOBAL.upload.imageTypes}"
 });
 $(function() {
   Cms.f7.uploads("${id}","${id}",{

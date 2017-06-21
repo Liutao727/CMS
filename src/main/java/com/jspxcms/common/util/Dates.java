@@ -21,6 +21,21 @@ public abstract class Dates {
 		return parse(s, true);
 	}
 
+	/**
+	 * 格式化日期。如：
+	 * 
+	 * <ul>
+	 * <li>now
+	 * <li>now,year+1
+	 * <li>now,month-1,day+2,minute-5
+	 * </ul>
+	 * 
+	 * @param s
+	 *            需要格式化的字符串
+	 * @param endDate
+	 *            是否是结束日期，结束日期会自动调整到下一天的0点
+	 * @return
+	 */
 	public static Date parse(String s, boolean endDate) {
 		if (StringUtils.isBlank(s)) {
 			return null;

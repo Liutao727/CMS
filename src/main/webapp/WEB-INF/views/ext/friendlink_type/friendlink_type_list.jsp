@@ -49,7 +49,7 @@ function optDelete(form) {
 				  <label><s:message code="friendlinkType.number"/></label>
 			  	<f:text class="form-control input-sm" name="number" maxlength="100" style="width:120px;"/>
 				</div>
-			  <button class="btn btn-default btn-sm" type="submit"><s:message code="submit"/></button>
+			  <button class="btn btn-primary btn-sm" type="submit"><s:message code="create"/></button>
 			</form>
 			
 			<form class="form-inline" action="batch_update.do" method="post">

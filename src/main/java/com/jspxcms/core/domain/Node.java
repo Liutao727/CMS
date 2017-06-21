@@ -1,50 +1,5 @@
 package com.jspxcms.core.domain;
 
-import static com.jspxcms.core.constant.Constants.DYNAMIC_SUFFIX;
-import static com.jspxcms.core.constant.Constants.SITE_PREFIX;
-
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.hibernate.annotations.MapKeyType;
-import org.hibernate.annotations.SortComparator;
-import org.hibernate.annotations.Type;
-
 import com.google.common.base.Objects;
 import com.jspxcms.common.util.Reflections;
 import com.jspxcms.common.web.Anchor;
@@ -55,6 +10,20 @@ import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.domain.NodeOrg.NodeOrgComparator;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.Siteable;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.hibernate.annotations.MapKeyType;
+import org.hibernate.annotations.SortComparator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.*;
+
+import static com.jspxcms.core.constant.Constants.DYNAMIC_SUFFIX;
+import static com.jspxcms.core.constant.Constants.SITE_PREFIX;
 
 /**
  * Node
@@ -243,10 +212,10 @@ public class Node implements java.io.Serializable, Anchor, Siteable, PageUrlReso
 		Node node = this;
 		while (node != null) {
 			if (node.getGenerate()) {
-				if (StringUtils.isNotBlank(node.getHtml())) {
-					node.setHtmlStatus(HTML_TOBE_UPDATE);
-				} else {
+				if (StringUtils.isBlank(node.getHtml())) {
 					node.setHtmlStatus(HTML_TOBE_GENERATE);
+				} else {
+					node.setHtmlStatus(HTML_GENERATED);
 				}
 			} else {
 				if (StringUtils.isNotBlank(node.getHtml())) {

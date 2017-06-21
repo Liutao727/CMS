@@ -40,7 +40,7 @@ $(function() {
 	var zNodes =[
   	<c:forEach var="node" items="${list}" varStatus="status"> 
   	<c:if test="${empty excludeChildrenBean || !fn:startsWith(node.treeNumber,excludeChildrenBean.treeNumber)}">
-  		{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"displayName":"${node.displayName}","name":"${node.name}",<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":false</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
+  		{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"displayName":"${fnx:escapeEcmaScript(node.displayName)}","name":"${fnx:escapeEcmaScript(node.name)}",<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":false</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
   	</c:if>
   	</c:forEach>
   ];

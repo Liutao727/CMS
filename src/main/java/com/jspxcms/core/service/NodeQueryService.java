@@ -1,15 +1,14 @@
 package com.jspxcms.core.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.core.domain.Node;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.RowSide;
-import com.jspxcms.core.domain.Node;
+import java.util.List;
+import java.util.Map;
 
 /**
  * NodeQueryService
@@ -27,12 +26,12 @@ public interface NodeQueryService {
 			Boolean isRealNode, Boolean isHidden);
 
 	public List<Node> findList(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
+			String treeNumber, Boolean isRealNode, Boolean isHidden,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Limitable limitable);
 
 	public Page<Node> findPage(Integer[] siteId, Integer parentId,
-			String treeNumber, Boolean isRealNode, Boolean isHidden,
+			String treeNumber, Boolean isRealNode, Boolean isHidden,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4,
 			Integer[] p5, Integer[] p6, Pageable pageable);
 

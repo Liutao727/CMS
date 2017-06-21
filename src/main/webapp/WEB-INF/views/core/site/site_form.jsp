@@ -188,11 +188,9 @@ function confirmDelete() {
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="form-group">
-	            <label class="col-sm-2 control-label"><s:message code="site.mobileDomain"/></label>
+	            <label class="col-sm-2 control-label"><s:message code="site.mobileDomain"/><span class="in-prompt" title="<s:message code='site.mobileDomain.prompt'/>"></span></label>
 	            <div class="col-sm-10">
-	            	<div class="input-group">
-						      <f:text name="mobileDomain" value="${oprt=='edit' ? bean.mobileDomain : ''}" class="form-control" maxlength="100"/>
-    						</div>
+					      <f:text name="mobileDomain" value="${oprt=='edit' ? bean.mobileDomain : ''}" class="form-control" maxlength="100"/>
 	            </div>
 	          </div>
 	        </div>

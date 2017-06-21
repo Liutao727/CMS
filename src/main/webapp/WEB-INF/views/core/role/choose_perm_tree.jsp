@@ -39,9 +39,10 @@ $(function() {
 			expandSpeed: ""
 		}
 	};
-	var perms = $("#permsNumber").val();
+	//补足最后一个逗号，用于判断是否包含某个权限
+	var perms = $("#permsNumber").val()+",";
 	var isChecked = function(perm) {
-		return perms.indexOf(perm)!=-1;
+		return perms.indexOf(perm+",")!=-1;
 	};
 	var zNodes =[
 		{"name":"<s:message code='role.perms.root'/>","perms":"index,container,nav_homepage,core:homepage:welcome","open":true,"checked":isChecked("index"),"children":[

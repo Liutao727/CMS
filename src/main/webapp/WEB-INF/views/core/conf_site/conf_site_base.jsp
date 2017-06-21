@@ -68,6 +68,33 @@ $(function() {
 	        </div>
 	      </div>
 				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><s:message code="site.mobileDomain"/><span class="in-prompt" title="<s:message code='site.mobileDomain.prompt'/>"></span></label>
+	            <div class="col-sm-8">
+					      <f:text name="mobileDomain" value="${bean.mobileDomain}" class="form-control" maxlength="100"/>
+	            </div>
+	          </div>
+	        </div>
+					<div class="col-sm-6">
+						<div class="form-group">
+	            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.mobileTheme"/></label>
+	            <div class="col-sm-8">
+					      <c:choose>
+					    	<c:when test="${oprt=='create'}">
+					    		<f:text class="form-control" name="mobileTheme" value="${bean.mobileTheme}" default="default"/>
+					    	</c:when>
+					    	<c:otherwise>    	
+						    	<select class="form-control" name="mobileTheme">
+						    		<f:options items="${themeList}" selected="${bean.mobileTheme}"/>
+						    	</select>
+					    	</c:otherwise>
+					    	</c:choose>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+				<div class="row">
 					<div class="col-sm-12">
 						<div class="form-group">
 	            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="site.noPicture"/></label>

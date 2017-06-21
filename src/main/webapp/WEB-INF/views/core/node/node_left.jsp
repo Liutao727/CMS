@@ -67,7 +67,7 @@ var setting = {
 };
 var zNodes =[
 	<c:forEach var="node" items="${list}" varStatus="status">
-		{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"name":"${node.name} <span style='color:#c8103d;'>${node.nodeModel.name}<c:if test='${!empty node.infoModel}'>,${node.infoModel.name}</c:if></span>","position":${status.index},<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":isOpen(${node.id})</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
+		{"id":${node.id},"pId":<c:out value="${node.parent.id}" default="null"/>,"name":"<c:out value='${node.name}'/> <span style='color:#c8103d;'>${node.nodeModel.name}<c:if test='${!empty node.infoModel}'>,${node.infoModel.name}</c:if></span>","position":${status.index},<c:choose><c:when test="${empty node.parent}">"open":true</c:when><c:otherwise>"open":isOpen(${node.id})</c:otherwise></c:choose>}<c:if test="${!status.last}">,</c:if>
 	</c:forEach>
 ];
 

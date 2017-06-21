@@ -1,21 +1,13 @@
 package com.jspxcms.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import com.jspxcms.common.orm.LimitRequest;
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.NodeRole;
+import com.jspxcms.core.repository.NodeDao;
+import com.jspxcms.core.service.NodeQueryService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jspxcms.common.orm.LimitRequest;
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.RowSide;
-import com.jspxcms.common.orm.SearchFilter;
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.NodeRole;
-import com.jspxcms.core.repository.NodeDao;
-import com.jspxcms.core.service.NodeQueryService;
+import javax.persistence.criteria.*;
+import java.util.*;
 
 /**
  * NodeQueryServiceImpl
@@ -92,15 +78,15 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 	}
 
 	public List<Node> findList(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
-			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Boolean isHidden,Integer[] p0, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
 			Limitable limitable) {
-		return dao.findList(siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6, limitable);
+		return dao.findList(siteId, parentId, treeNumber, isRealNode, isHidden, p0,p1, p2, p3, p4, p5, p6, limitable);
 	}
 
 	public Page<Node> findPage(Integer[] siteId, Integer parentId, String treeNumber, Boolean isRealNode,
-			Boolean isHidden, Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
+			Boolean isHidden, Integer[] p0,Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6,
 			Pageable pageable) {
-		return dao.findPage(siteId, parentId, treeNumber, isRealNode, isHidden, p1, p2, p3, p4, p5, p6, pageable);
+		return dao.findPage(siteId, parentId, treeNumber, isRealNode, isHidden, p0, p1, p2, p3, p4, p5, p6, pageable);
 	}
 
 	public List<Node> findByIds(Integer... ids) {
@@ -143,7 +129,7 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		}
 		Sort sort = new Sort("treeNumber");
 		Limitable limitable = new LimitRequest(null, null, sort);
-		return dao.findList(new Integer[] { siteId }, null, treeNumber, isRealNode, isHidden, null, null, null, null,
+		return dao.findList(new Integer[] { siteId }, null, treeNumber, isRealNode, isHidden, null, null,null, null, null,
 				null, null, limitable);
 	}
 
@@ -157,7 +143,7 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		}
 		Sort sort = new Sort("treeNumber");
 		Limitable limitable = new LimitRequest(offset, limit, sort);
-		return dao.findList(null, parentId, null, isRealNode, isHidden, null, null, null, null, null, null, limitable);
+		return dao.findList(null, parentId, null, isRealNode, isHidden, null,null, null, null, null, null, null, limitable);
 	}
 
 	public Node findRoot(Integer siteId) {
