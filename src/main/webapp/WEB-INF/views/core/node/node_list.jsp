@@ -128,7 +128,7 @@ parent.frames["left"].location.href="left.do";
 						<button class="btn btn-default" type="button" onclick="return optSingle('#edit_opt_');"><s:message code="edit"/></button>
 						</shiro:hasPermission>
 					  <shiro:hasPermission name="core:node:move_form">
-					  <button class="btn btn-default" type="button" onclick="return optMulti(this.form,'move_form.do?queryParentId=${queryParentId}&showDescendants=${showDescendants}&${searchstring}',true);"><s:message code="move"/></button>
+					  <button class="btn btn-default" type="button" onclick="return optMulti(this.form,'move_form.do?queryParentId=${queryParentId}&showDescendants=${showDescendants}&${searchstring}');"><s:message code="move"/></button>
 					  </shiro:hasPermission>
 					  <shiro:hasPermission name="core:node:merge_form">
 					  <button class="btn btn-default" type="button" onclick="location.href='merge_form.do?parentId=${parent.id}&queryParentId=${queryParentId}&showDescendants=${showDescendants}&${searchstring}';"><s:message code="merge"/></button>

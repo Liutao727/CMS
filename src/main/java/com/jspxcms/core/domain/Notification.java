@@ -23,6 +23,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.jspxcms.common.util.Strings;
@@ -91,7 +92,8 @@ public class Notification implements Serializable {
 
 	@Transient
 	public void processText(String template, String message, String targetName, String targetUrl) {
-		StringBuilder sourcesBuilder = new StringBuilder();
+        message = StringEscapeUtils.escapeHtml4(message);
+        StringBuilder sourcesBuilder = new StringBuilder();
 		int n = sources.size();
 		// 后添加的后面，倒叙获取
 		for (int i = n - 1, min = i - MULTI_NUMBER; i >= 0 && i > min; i--) {

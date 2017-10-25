@@ -1,13 +1,14 @@
 package com.jspxcms.core;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-
+import com.jspxcms.common.security.SHA1CredentialsDigest;
+import com.jspxcms.common.util.PropertiesHelper;
+import com.jspxcms.common.util.PropertiesLoader;
+import com.jspxcms.common.web.JspDispatcherFilter;
+import com.jspxcms.core.security.CmsAuthenticationFilter;
+import com.jspxcms.core.security.CmsLogoutFilter;
+import com.jspxcms.core.security.CmsUserFilter;
+import com.jspxcms.core.security.ShiroDbRealm;
+import com.jspxcms.core.support.BackSiteFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -22,15 +23,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import com.jspxcms.common.security.SHA1CredentialsDigest;
-import com.jspxcms.common.util.PropertiesHelper;
-import com.jspxcms.common.util.PropertiesLoader;
-import com.jspxcms.common.web.JspDispatcherFilter;
-import com.jspxcms.core.security.CmsAuthenticationFilter;
-import com.jspxcms.core.security.CmsLogoutFilter;
-import com.jspxcms.core.security.CmsUserFilter;
-import com.jspxcms.core.security.ShiroDbRealm;
-import com.jspxcms.core.support.BackSiteFilter;
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Configuration
 public class ShiroConfig {
@@ -133,6 +131,7 @@ public class ShiroConfig {
 		filterRegistration.setEnabled(true);
 		filterRegistration.addInitParameter("prefix", "/jsp");
 		filterRegistration.addUrlPatterns("*.jsp");
+		filterRegistration.addUrlPatterns("*.jspx");
 		filterRegistration.setDispatcherTypes(DispatcherType.REQUEST);
 		return filterRegistration;
 	}

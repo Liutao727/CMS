@@ -1,27 +1,5 @@
 package com.jspxcms.core.service.impl;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.jspxcms.common.ip.IPSeeker;
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
@@ -36,6 +14,22 @@ import com.jspxcms.core.service.CommentService;
 import com.jspxcms.core.service.SiteService;
 import com.jspxcms.core.service.UserService;
 import com.jspxcms.core.support.Commentable;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * CommentServiceImpl
@@ -149,7 +143,8 @@ public class CommentServiceImpl implements CommentService, SiteDeleteListener, U
 
 	@Transactional
 	public int deleteByFtypeAndFid(String ftype, Integer fid) {
-		return dao.deleteByFtypeAndFid(ftype, fid);
+        dao.clearParentByFtypeAndFid(ftype, fid);
+        return dao.deleteByFtypeAndFid(ftype, fid);
 	}
 
 	@Transactional

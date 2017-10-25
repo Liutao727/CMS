@@ -1,8 +1,8 @@
 package com.jspxcms.core.repository;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.core.domain.Message;
+import com.jspxcms.core.repository.plus.MessageDaoPlus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,9 +10,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.core.domain.Message;
-import com.jspxcms.core.repository.plus.MessageDaoPlus;
+import java.util.Collection;
+import java.util.List;
 
 public interface MessageDao extends Repository<Message, Integer>, MessageDaoPlus {
 	public Page<Message> findAll(Specification<Message> spec, Pageable pageable);
@@ -95,7 +94,8 @@ public interface MessageDao extends Repository<Message, Integer>, MessageDaoPlus
 	 * @return
 	 */
 	@Modifying
-	@Query(value = "delete mt from cms_message_text mt join cms_message m on mt.message_id_=m.message_id_ where m.receiver_id_ in (?1) or m.sender_id_ in (?1)", nativeQuery = true)
+//	@Query(value = "delete mt from cms_message_text mt join cms_message m on mt.message_id_=m.message_id_ where m.receiver_id_ in (?1) or m.sender_id_ in (?1)", nativeQuery = true)
+	@Query(value = "delete from cms_message_text mt where exists (select 1 from cms_message m where mt.message_id_=m.message_id_ and m.receiver_id_ in (?1) or m.sender_id_ in (?1))", nativeQuery = true)
 	public int deleteMessageTextByUserId(Collection<Integer> userIds);
 
 }

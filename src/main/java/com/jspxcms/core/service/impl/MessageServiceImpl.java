@@ -1,21 +1,5 @@
 package com.jspxcms.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.jspxcms.common.orm.Limitable;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.orm.SearchFilter;
@@ -28,6 +12,17 @@ import com.jspxcms.core.repository.MessageDao;
 import com.jspxcms.core.service.MessageService;
 import com.jspxcms.core.service.NotificationService;
 import com.jspxcms.core.service.UserService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -77,8 +72,8 @@ public class MessageServiceImpl implements MessageService, UserDeleteListener {
 	private List<Object[]> fillWithObject(List<Object[]> content) {
 		List<Object[]> resultList = new ArrayList<Object[]>();
 		for (int i = 0, len = content.size(); i < len; i++) {
-			Message message = get((Integer) content.get(i)[0]);
-			User user = userService.get((Integer) content.get(i)[1]);
+			Message message = get(((Number) content.get(i)[0]).intValue());
+			User user = userService.get(((Number) content.get(i)[1]).intValue());
 			resultList.add(i, ArrayUtils.addAll(new Object[] { message, user }, content.get(i)));
 		}
 		return resultList;

@@ -3861,7 +3861,7 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_special_c
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_tag',105);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_task',46);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_user',40);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4525);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4575);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote',22);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_mark',116);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_option',27);
