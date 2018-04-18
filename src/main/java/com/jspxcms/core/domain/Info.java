@@ -694,7 +694,7 @@ public class Info implements java.io.Serializable, Anchor, Siteable, Commentable
 		StringBuilder sb = new StringBuilder();
 		Site site = getSite();
 		if (isFull && !forRealPath) {
-			String domain = isMobile ? site.getMobileDomain() : site.getDomain();
+			String domain = isMobile && StringUtils.isNotBlank(site.getMobileDomain()) ? site.getMobileDomain() : site.getDomain();
 			sb.append(site.getProtocol()).append("://").append(domain);
 			if (site.getPort() != null) {
 				sb.append(":").append(site.getPort());

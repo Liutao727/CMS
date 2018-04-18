@@ -263,6 +263,12 @@ public class InfoController {
         User user = Context.getCurrentUser();
         Integer siteId = site.getId();
         validateIds(ids, siteId);
+        for (Integer id : ids) {
+            Info bean = query.get(id);
+            if (!bean.isDataPerm(user) || !bean.isAuditPerm(user)) {
+                throw new CmsException("accessDenied");
+            }
+        }
         List<Node> nodeList = nodeQuery.findList(siteId, null, true, null);
         nodeList = user.getInfoPermList(siteId, nodeList);
         modelMap.addAttribute("ids", ids);
@@ -425,6 +431,12 @@ public class InfoController {
         Site site = Context.getCurrentSite();
         User user = Context.getCurrentUser();
         validateIds(ids, site.getId());
+        for (Integer id : ids) {
+            Info bean = query.get(id);
+            if (!bean.isDataPerm(user) || !bean.isAuditPerm(user)) {
+                throw new CmsException("accessDenied");
+            }
+        }
         List<Info> beans = service.move(ids, nodeId);
         String ip = Servlets.getRemoteAddr(request);
         for (Info bean : beans) {

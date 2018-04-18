@@ -26,200 +26,208 @@ import com.jspxcms.core.support.Siteable;
 @Entity
 @Table(name = "cms_visit_log")
 public class VisitLog implements Siteable, java.io.Serializable {
-	private static final long serialVersionUID = 1L;
-	/**
-	 * 访问来源：直接访问
-	 */
-	public static final String SOURCE_DIRECT = "DIRECT";
-	/**
-	 * 访问来源：其他来源
-	 */
-	public static final String SOURCE_OTHER = "OTHER";
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat(
-			"yyyyMMdd");
-	public static final DateFormat DATE_HH_FORMAT = new SimpleDateFormat(
-			"yyyyMMddHH");
-	public static final DateFormat DATE_HHMM_FORMAT = new SimpleDateFormat(
-			"yyyyMMddHHmm");
-	public static final DateFormat DATE_HHMMSS_FORMAT = new SimpleDateFormat(
-			"yyyyMMddHHmmss");
+    private static final long serialVersionUID = 1L;
+    /**
+     * 访问来源：直接访问
+     */
+    public static final String SOURCE_DIRECT = "DIRECT";
+    /**
+     * 访问来源：其他来源
+     */
+    public static final String SOURCE_OTHER = "OTHER";
 
-	@Transient
-	public void applyDefaultValue() {
-		if (getTime() == null) {
-			setTime(new Timestamp(System.currentTimeMillis()));
-		}
-		if (getTimeString() == null) {
-			setTimeString(DATE_HHMMSS_FORMAT.format(getTime()));
-		}
-	}
+    public static DateFormat getDateFormat() {
+        return new SimpleDateFormat("yyyyMMdd");
+    }
 
-	private Integer id;
+    public static DateFormat getDateHhFormat() {
+        return new SimpleDateFormat("yyyyMMddHH");
+    }
 
-	private Site site;
-	private User user;
-	private String url;
-	private String referrer;
-	private String source;
-	private String ip;
-	private String country;
-	private String area;
-	private String cookie;
-	private String userAgent;
-	private String browser;
-	private String os;
-	private String device;
-	private String timeString;
-	private Date time;
+    public static DateFormat getDateHhmmFormat() {
+        return new SimpleDateFormat("yyyyMMddHHmm");
+    }
 
-	@Id
-	@Column(name = "f_visitlog_id", unique = true, nullable = false)
-	@TableGenerator(name = "tg_cms_visit_log", pkColumnValue = "cms_visit_log", initialValue = 1, allocationSize = 50)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_visit_log")
-	public Integer getId() {
-		return this.id;
-	}
+    public static DateFormat getDateHhmmssFormat() {
+        return new SimpleDateFormat("yyyyMMddHHmmss");
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Transient
+    public void applyDefaultValue() {
+        if (getTime() == null) {
+            setTime(new Timestamp(System.currentTimeMillis()));
+        }
+        if (getTimeString() == null) {
+            setTimeString(getDateHhmmssFormat().format(getTime()));
+        }
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_site_id", nullable = false)
-	public Site getSite() {
-		return site;
-	}
+    private Integer id;
 
-	public void setSite(Site site) {
-		this.site = site;
-	}
+    private Site site;
+    private User user;
+    private String url;
+    private String referrer;
+    private String source;
+    private String ip;
+    private String country;
+    private String area;
+    private String cookie;
+    private String userAgent;
+    private String browser;
+    private String os;
+    private String device;
+    private String timeString;
+    private Date time;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_user_id")
-	public User getUser() {
-		return user;
-	}
+    @Id
+    @Column(name = "f_visitlog_id", unique = true, nullable = false)
+    @TableGenerator(name = "tg_cms_visit_log", pkColumnValue = "cms_visit_log", initialValue = 1, allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tg_cms_visit_log")
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	@Column(name = "f_url", nullable = false, length = 255)
-	public String getUrl() {
-		return this.url;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "f_site_id", nullable = false)
+    public Site getSite() {
+        return site;
+    }
 
-	@Column(name = "f_referrer", length = 255)
-	public String getReferrer() {
-		return this.referrer;
-	}
+    public void setSite(Site site) {
+        this.site = site;
+    }
 
-	public void setReferrer(String referrer) {
-		this.referrer = referrer;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "f_user_id")
+    public User getUser() {
+        return user;
+    }
 
-	@Column(name = "f_source", length = 100)
-	public String getSource() {
-		return source;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    @Column(name = "f_url", nullable = false, length = 255)
+    public String getUrl() {
+        return this.url;
+    }
 
-	@Column(name = "f_ip", length = 100)
-	public String getIp() {
-		return this.ip;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    @Column(name = "f_referrer", length = 255)
+    public String getReferrer() {
+        return this.referrer;
+    }
 
-	@Column(name = "f_cookie", length = 100)
-	public String getCookie() {
-		return this.cookie;
-	}
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
+    }
 
-	public void setCookie(String cookie) {
-		this.cookie = cookie;
-	}
+    @Column(name = "f_source", length = 100)
+    public String getSource() {
+        return source;
+    }
 
-	@Column(name = "f_user_agent", length = 450)
-	public String getUserAgent() {
-		return userAgent;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-	public void setUserAgent(String userAgent) {
-		this.userAgent = userAgent;
-	}
+    @Column(name = "f_ip", length = 100)
+    public String getIp() {
+        return this.ip;
+    }
 
-	@Column(name = "f_country", length = 100)
-	public String getCountry() {
-		return country;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    @Column(name = "f_cookie", length = 100)
+    public String getCookie() {
+        return this.cookie;
+    }
 
-	@Column(name = "f_area", length = 100)
-	public String getArea() {
-		return area;
-	}
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
 
-	public void setArea(String area) {
-		this.area = area;
-	}
+    @Column(name = "f_user_agent", length = 450)
+    public String getUserAgent() {
+        return userAgent;
+    }
 
-	@Column(name = "f_browser", length = 100)
-	public String getBrowser() {
-		return browser;
-	}
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 
-	public void setBrowser(String browser) {
-		this.browser = browser;
-	}
+    @Column(name = "f_country", length = 100)
+    public String getCountry() {
+        return country;
+    }
 
-	@Column(name = "f_os", length = 100)
-	public String getOs() {
-		return os;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public void setOs(String os) {
-		this.os = os;
-	}
+    @Column(name = "f_area", length = 100)
+    public String getArea() {
+        return area;
+    }
 
-	@Column(name = "f_device", length = 100)
-	public String getDevice() {
-		return device;
-	}
+    public void setArea(String area) {
+        this.area = area;
+    }
 
-	public void setDevice(String device) {
-		this.device = device;
-	}
+    @Column(name = "f_browser", length = 100)
+    public String getBrowser() {
+        return browser;
+    }
 
-	@Column(name = "f_time_string", length = 10)
-	public String getTimeString() {
-		return timeString;
-	}
+    public void setBrowser(String browser) {
+        this.browser = browser;
+    }
 
-	public void setTimeString(String timeString) {
-		this.timeString = timeString;
-	}
+    @Column(name = "f_os", length = 100)
+    public String getOs() {
+        return os;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "f_time", nullable = false, length = 19)
-	public Date getTime() {
-		return this.time;
-	}
+    public void setOs(String os) {
+        this.os = os;
+    }
 
-	public void setTime(Date time) {
-		this.time = time;
-	}
+    @Column(name = "f_device", length = 100)
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    @Column(name = "f_time_string", length = 10)
+    public String getTimeString() {
+        return timeString;
+    }
+
+    public void setTimeString(String timeString) {
+        this.timeString = timeString;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "f_time", nullable = false, length = 19)
+    public Date getTime() {
+        return this.time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
 
 }

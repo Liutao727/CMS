@@ -85,7 +85,7 @@ $(function() {
 				    <th width="50"><s:message code="operate"/></th>
 				    <th width="30" class="ls-th-sort"><span class="ls-sort" pagesort="id">ID</span></th>
 				    <th width="160" class="ls-th-sort"><span class="ls-sort" pagesort="sendTime"><s:message code="notification.sendTime"/></span></th>
-				    <th class="ls-th-sort"><span class="ls-sort" pagesort="content"><s:message code="notification.content"/></span></th>
+				    <th><s:message code="notification.content"/></th>
 				    <%-- <th><s:message code="notification.source"/></th> --%>
 				  </tr>
 				  </thead>

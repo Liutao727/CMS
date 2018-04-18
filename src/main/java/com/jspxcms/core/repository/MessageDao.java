@@ -95,7 +95,7 @@ public interface MessageDao extends Repository<Message, Integer>, MessageDaoPlus
 	 */
 	@Modifying
 //	@Query(value = "delete mt from cms_message_text mt join cms_message m on mt.message_id_=m.message_id_ where m.receiver_id_ in (?1) or m.sender_id_ in (?1)", nativeQuery = true)
-	@Query(value = "delete from cms_message_text mt where exists (select 1 from cms_message m where mt.message_id_=m.message_id_ and m.receiver_id_ in (?1) or m.sender_id_ in (?1))", nativeQuery = true)
+	@Query(value = "delete from cms_message_text where exists (select 1 from cms_message m where message_id_=m.message_id_ and (m.receiver_id_ in (?1) or m.sender_id_ in (?1)))", nativeQuery = true)
 	public int deleteMessageTextByUserId(Collection<Integer> userIds);
 
 }

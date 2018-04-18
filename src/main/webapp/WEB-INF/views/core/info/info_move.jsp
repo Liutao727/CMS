@@ -81,7 +81,7 @@ $(function() {
 				<c:forEach var="id" items="${ids}">
 				<input type="hidden" name="ids" value="${id}"/>
 				</c:forEach>
-				<input type="button" value="<s:message code="return"/>" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"/>
+				<button class="btn btn-default" type="button" onclick="location.href='list.do?queryNodeId=${queryNodeId}&queryNodeType=${queryNodeType}&queryInfoPermType=${queryInfoPermType}&queryStatus=${queryStatus}&${searchstring}';"><s:message code="return"/></button>
 			</div>
 			<div class="box-body">
 				<div><label><s:message code="info.destNode"/></label></div>

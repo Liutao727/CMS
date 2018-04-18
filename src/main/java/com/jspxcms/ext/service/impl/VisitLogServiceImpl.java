@@ -1,20 +1,17 @@
 package com.jspxcms.ext.service.impl;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import com.jspxcms.common.ip.IPSeeker;
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.core.domain.Site;
+import com.jspxcms.core.domain.User;
+import com.jspxcms.core.listener.SiteDeleteListener;
+import com.jspxcms.core.listener.UserDeleteListener;
+import com.jspxcms.ext.domain.VisitLog;
+import com.jspxcms.ext.repository.VisitLogDao;
+import com.jspxcms.ext.service.VisitLogService;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -28,19 +25,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jspxcms.common.ip.IPSeeker;
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.RowSide;
-import com.jspxcms.common.orm.SearchFilter;
-import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.domain.User;
-import com.jspxcms.core.listener.SiteDeleteListener;
-import com.jspxcms.core.listener.UserDeleteListener;
-import com.jspxcms.ext.domain.VisitLog;
-import com.jspxcms.ext.repository.VisitLogDao;
-import com.jspxcms.ext.service.VisitLogService;
-
-import eu.bitwalker.useragentutils.UserAgent;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -98,7 +90,7 @@ public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener,
 		DateTime dt = new DateTime(begin.getTime());
 		try {
 			for (Object[] arr : list) {
-				Date d = VisitLog.DATE_FORMAT.parse((String) arr[0]);
+				Date d = VisitLog.getDateFormat().parse((String) arr[0]);
 				arr[0] = d;
 				while (dt.toDate().compareTo(d) < 0) {
 					result.add(new Object[] { dt.toDate(), 0L, 0L, 0L });
@@ -123,7 +115,7 @@ public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener,
 		DateTime dt = new DateTime(begin.getTime());
 		try {
 			for (Object[] arr : list) {
-				Date d = VisitLog.DATE_HH_FORMAT.parse((String) arr[0]);
+				Date d = VisitLog.getDateHhFormat().parse((String) arr[0]);
 				arr[0] = d;
 				while (dt.toDate().compareTo(d) < 0) {
 					result.add(new Object[] { dt.toDate(), 0L, 0L, 0L });
@@ -155,7 +147,7 @@ public class VisitLogServiceImpl implements VisitLogService, SiteDeleteListener,
 		DateTime dt = new DateTime(begin.getTime());
 		try {
 			for (Object[] arr : list) {
-				Date d = VisitLog.DATE_HHMM_FORMAT.parse((String) arr[0]);
+				Date d = VisitLog.getDateHhmmFormat().parse((String) arr[0]);
 				arr[0] = d;
 				while (dt.toDate().compareTo(d) < 0) {
 					result.add(new Object[] { dt.toDate(), 0L, 0L, 0L });

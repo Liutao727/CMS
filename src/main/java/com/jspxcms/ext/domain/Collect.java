@@ -244,7 +244,7 @@ public class Collect implements Siteable, java.io.Serializable {
 		List<URI> uris = new ArrayList<URI>();
 		for (String url : getListUrls(getListPattern(), getPageBegin(),
 				getPageEnd(), getDesc())) {
-			uris.add(new URI(url));
+			uris.add(new URI(StringEscapeUtils.unescapeHtml4(url)));
 		}
 		return uris;
 	}
@@ -256,7 +256,7 @@ public class Collect implements Siteable, java.io.Serializable {
 		List<URI> uris = new ArrayList<URI>(items.size());
 		for (String item : items) {
 			item = StringUtils.trim(item);
-			uris.add(source.resolve(item));
+			uris.add(source.resolve(StringEscapeUtils.unescapeHtml4(item)));
 		}
 		if (getDesc()) {
 			Collections.reverse(uris);

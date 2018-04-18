@@ -73,7 +73,7 @@ public interface SiteDao extends Repository<Site, Integer>, SiteDaoPlus {
 	public int appendModifiedFlag(String treeNumberStart);
 
 	@Modifying
-	@Query("update Site bean set bean.treeLevel=(LENGTH(CONCAT(?2,SUBSTRING(bean.treeNumber,?3)))-4)/5, bean.treeNumber=CONCAT(?2,SUBSTRING(bean.treeNumber,?3)) where bean.treeNumber like ?1")
+	@Query("update Site bean set bean.treeLevel=(LENGTH(CONCAT(?2,SUBSTRING(bean.treeNumber,?3,LENGTH(bean.treeNumber))))-4)/5, bean.treeNumber=CONCAT(?2,SUBSTRING(bean.treeNumber,?3,LENGTH(bean.treeNumber))) where bean.treeNumber like ?1")
 	public int updateTreeNumber(String treeNumber, String value, int len);
 
 	@Modifying

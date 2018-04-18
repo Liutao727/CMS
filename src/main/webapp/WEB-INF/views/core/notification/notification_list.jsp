@@ -102,7 +102,7 @@ function optDelete(form) {
 				    <th width="90" class="ls-th-sort"><span class="ls-sort" pagesort="receiver.username"><s:message code="notification.receiver"/></span></th>
 				    <th width="160" class="ls-th-sort"><span class="ls-sort" pagesort="sendTime"><s:message code="notification.sendTime"/></span></th>
 				    <th width="130" class="ls-th-sort"><span class="ls-sort" pagesort="type"><s:message code="notification.type"/></span></th>
-				    <th class="ls-th-sort"><span class="ls-sort" pagesort="content"><s:message code="notification.content"/></span></th>
+				    <th><s:message code="notification.content"/></th>
 				    <%-- <th><s:message code="notification.source"/></th> --%>
 				  </tr>
 				  </thead>

@@ -115,7 +115,7 @@ $(function(){
 </script>
 </head>
 <body class="skin-blue content-body">
-<div style="padding:16px 0 2px 12px;font-size:16px;">
+<div style="padding:16px 0 2px 12px;font-size:14px;">
   <label class="checkbox-inline"><input id="showList" type="checkbox" checked/><s:message code="node.showList"/></label>
   <label class="checkbox-inline"><input id="showDescendants" type="checkbox" checked/><s:message code="node.showDescendants"/></label>
   <%-- <input type="button" value="<s:message code="refresh"/>" onclick="javascript:location.href=location.href"/> &nbsp; --%>

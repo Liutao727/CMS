@@ -1,19 +1,25 @@
 package com.jspxcms.ext.service.impl;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.orm.RowSide;
+import com.jspxcms.common.orm.SearchFilter;
+import com.jspxcms.common.upload.UploadResult;
+import com.jspxcms.common.upload.Uploader;
+import com.jspxcms.core.domain.*;
+import com.jspxcms.core.listener.NodeDeleteListener;
+import com.jspxcms.core.listener.SiteDeleteListener;
+import com.jspxcms.core.listener.UserDeleteListener;
+import com.jspxcms.core.service.InfoQueryService;
+import com.jspxcms.core.service.NodeQueryService;
+import com.jspxcms.core.service.SiteService;
+import com.jspxcms.core.service.UserService;
+import com.jspxcms.core.support.DeleteException;
+import com.jspxcms.core.support.UploadHandler;
+import com.jspxcms.ext.domain.Collect;
+import com.jspxcms.ext.repository.CollectDao;
+import com.jspxcms.ext.service.CollectService;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -38,28 +44,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.orm.RowSide;
-import com.jspxcms.common.orm.SearchFilter;
-import com.jspxcms.common.upload.UploadResult;
-import com.jspxcms.common.upload.Uploader;
-import com.jspxcms.core.domain.Info;
-import com.jspxcms.core.domain.InfoDetail;
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.domain.User;
-import com.jspxcms.core.listener.NodeDeleteListener;
-import com.jspxcms.core.listener.SiteDeleteListener;
-import com.jspxcms.core.listener.UserDeleteListener;
-import com.jspxcms.core.service.InfoQueryService;
-import com.jspxcms.core.service.NodeQueryService;
-import com.jspxcms.core.service.SiteService;
-import com.jspxcms.core.service.UserService;
-import com.jspxcms.core.support.DeleteException;
-import com.jspxcms.core.support.UploadHandler;
-import com.jspxcms.ext.domain.Collect;
-import com.jspxcms.ext.repository.CollectDao;
-import com.jspxcms.ext.service.CollectService;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.IOException;
+import java.net.URI;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -220,7 +211,7 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 					uploadHandler);
 			response.close();
 			while (StringUtils.isNotBlank(next)) {
-				uri = uri.resolve(next);
+				uri = uri.resolve(StringEscapeUtils.unescapeHtml4(next));
 				httpget = new HttpGet(uri);
 				response = httpclient.execute(httpget);
 				entity = response.getEntity();
@@ -268,7 +259,7 @@ public class CollectServiceImpl implements CollectService, NodeDeleteListener,
 				if (StringUtils.isBlank(src)) {
 					continue;
 				}
-				String srcUrl = uri.resolve(src).toString();
+				String srcUrl = uri.resolve(StringEscapeUtils.unescapeHtml4(src)).toString();
 				if (isDownload) {
 					UploadResult result = new UploadResult();
 					uploadHandler.upload(srcUrl, Uploader.IMAGE, site, userId,

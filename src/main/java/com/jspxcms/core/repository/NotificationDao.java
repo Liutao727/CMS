@@ -48,6 +48,6 @@ public interface NotificationDao extends Repository<Notification, Integer>, Noti
 	 */
 	@Modifying
 //	@Query(value = "delete ns from cms_notification_source ns join cms_notification n on ns.notification_id_=n.notification_id_ where n.receiver_id_ in (?1)", nativeQuery = true)
-	@Query(value = "delete from cms_notification_source ns where exists (select 1 from cms_notification n where ns.notification_id_=n.notification_id_ and n.receiver_id_ in (?1))", nativeQuery = true)
+	@Query(value = "delete from cms_notification_source where exists (select 1 from cms_notification n where notification_id_=n.notification_id_ and n.receiver_id_ in (?1))", nativeQuery = true)
 	public int deleteNotificationSourceByUserId(Collection<Integer> userIds);
 }
