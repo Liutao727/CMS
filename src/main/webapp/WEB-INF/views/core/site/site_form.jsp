@@ -70,8 +70,8 @@
                                 <div class="input-group">
                                     <f:text class="form-control" id="parentIdName" value="${parentName}" readonly="readonly"/>
                                     <span class="input-group-btn">
-							    	<button class="btn btn-default" id="parentIdButton" type="button"><s:message code='choose'/></button>
-							    </span>
+                                        <button class="btn btn-default" id="parentIdButton" type="button"><s:message code='choose'/></button>
+                                    </span>
                                 </div>
                                 <script type="text/javascript">
                                     $(function () {
@@ -95,8 +95,8 @@
                                 <div class="input-group">
                                     <f:text class="form-control required" id="orgIdName" value="${org.displayName}" readonly="readonly"/>
                                     <span class="input-group-btn">
-							    	<button class="btn btn-default" id="orgIdButton" type="button"><s:message code='choose'/></button>
-							    </span>
+                                        <button class="btn btn-default" id="orgIdButton" type="button"><s:message code='choose'/></button>
+                                    </span>
                                 </div>
                                 <script type="text/javascript">
                                     $(function () {
@@ -110,6 +110,28 @@
                         </div>
                     </div>
                 </div>
+                <c:if test="${oprt!='edit'}">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.copySite"/></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="copySiteId">
+                                        <f:options items="${siteList}" itemValue="id" itemLabel="name" selected="${bean.id}"/>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"><s:message code="site.copyData"/></label>
+                                <div class="col-sm-8">
+                                    <label class="checkbox-inline"><input type="checkbox" name="copyData" value="info"/><s:message code="site.copyData.info"/></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -129,23 +151,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.domain"/></label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <f:text name="domain" value="${oprt=='edit' ? bean.domain : ''}" class="form-control required" maxlength="100"/>
-                                    <span class="input-group-addon">
-	    							<label class="checkbox-inline" style="padding-top:0;"><f:checkbox name="identifyDomain" value="${bean.identifyDomain}" default="false"/><s:message code="site.identifyDomain"/></label>
-	    						</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.number"/></label>
-                            <div class="col-sm-8">
+                            <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="site.number"/></label>
+                            <div class="col-sm-10">
                                 <f:text name="number" value="${oprt=='edit' ? (bean.number) : ''}" class="form-control {required:true,remote:{url:'check_number.do',type:'post',data:{original:'${oprt=='edit' ? (bean.number) : ''}'}},messages:{remote:'${numberExist}'}}" maxlength="100"/>
                             </div>
                         </div>
@@ -154,21 +163,27 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.templateTheme"/></label>
+                            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.domain"/></label>
                             <div class="col-sm-8">
-                                <c:choose>
-                                    <c:when test="${oprt=='create'}">
-                                        <f:text class="form-control" name="templateTheme" value="${bean.templateTheme}" default="default"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <select class="form-control" name="templateTheme">
-                                            <f:options items="${themeList}" selected="${bean.templateTheme}"/>
-                                        </select>
-                                    </c:otherwise>
-                                </c:choose>
+                                <div class="input-group">
+                                    <f:text name="domain" value="${oprt=='edit' ? bean.domain : ''}" class="form-control required" maxlength="100"/>
+                                    <span class="input-group-addon">
+                                        <label class="checkbox-inline" style="padding-top:0;"><f:checkbox name="identifyDomain" value="${bean.identifyDomain}" default="false"/><s:message code="site.identifyDomain"/></label>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"><s:message code="site.mobileDomain"/><span class="in-prompt" title="<s:message code='site.mobileDomain.prompt'/>"></span></label>
+                            <div class="col-sm-8">
+                                <f:text name="mobileDomain" value="${oprt=='edit' ? bean.mobileDomain : ''}" class="form-control" maxlength="100"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="col-sm-4 control-label"><s:message code="site.htmlPublishPoint"/></label>
@@ -178,38 +193,9 @@
                                         <f:options itemLabel="name" itemValue="id" selected="${bean.htmlPublishPoint.id}" items="${publishPointList}"/>
                                     </select>
                                     <span class="input-group-addon">
-					      	<label class="checkbox-inline" style="padding-top:0;"><f:checkbox name="staticHome" value="${bean.staticHome}" default="false"/><s:message code="site.staticHome"/></label>
-					     	</span>
+                                        <label class="checkbox-inline" style="padding-top:0;"><f:checkbox name="staticHome" value="${bean.staticHome}" default="false"/><s:message code="site.staticHome"/></label>
+                                    </span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><s:message code="site.mobileDomain"/><span class="in-prompt" title="<s:message code='site.mobileDomain.prompt'/>"></span></label>
-                            <div class="col-sm-10">
-                                <f:text name="mobileDomain" value="${oprt=='edit' ? bean.mobileDomain : ''}" class="form-control" maxlength="100"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.mobileTheme"/></label>
-                            <div class="col-sm-8">
-                                <c:choose>
-                                    <c:when test="${oprt=='create'}">
-                                        <f:text class="form-control" name="mobileTheme" value="${bean.mobileTheme}" default="default"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <select class="form-control" name="mobileTheme">
-                                            <f:options items="${themeList}" selected="${bean.mobileTheme}"/>
-                                        </select>
-                                    </c:otherwise>
-                                </c:choose>
                             </div>
                         </div>
                     </div>
@@ -226,6 +212,42 @@
                 </div>
                 <c:if test="${oprt == 'edit'}">
                     <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.templateTheme"/></label>
+                                <div class="col-sm-8">
+                                    <c:choose>
+                                        <c:when test="${oprt=='create'}">
+                                            <f:text class="form-control" name="templateTheme" value="${bean.templateTheme}" default="default"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <select class="form-control" name="templateTheme">
+                                                <f:options items="${themeList}" selected="${bean.templateTheme}"/>
+                                            </select>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label"><em class="required">*</em><s:message code="site.mobileTheme"/></label>
+                                <div class="col-sm-8">
+                                    <c:choose>
+                                        <c:when test="${oprt=='create'}">
+                                            <f:text class="form-control" name="mobileTheme" value="${bean.mobileTheme}" default="default"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <select class="form-control" name="mobileTheme">
+                                                <f:options items="${themeList}" selected="${bean.mobileTheme}"/>
+                                            </select>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="site.noPicture"/></label>
@@ -241,8 +263,8 @@
                                                 <div class="input-group">
                                                     <f:text id="noPicture" name="noPicture" value="${bean.noPicture}" class="form-control required" maxlength="255" onchange="fn_noPicture('${bean.filesUrl}'+this.value);"/>
                                                     <span class="input-group-btn">
-						            	<button class="btn btn-default" id="noPictureButton" type="button"><s:message code='choose'/></button>
-						            </span>
+                                                        <button class="btn btn-default" id="noPictureButton" type="button"><s:message code='choose'/></button>
+                                                    </span>
                                                 </div>
                                                 <script type="text/javascript">
                                                     $(function () {

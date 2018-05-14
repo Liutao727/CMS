@@ -5,6 +5,7 @@ import com.foxinmy.weixin4j.mp.WeixinProxy;
 import com.jspxcms.common.orm.RowSide;
 import com.jspxcms.common.web.PathResolver;
 import com.jspxcms.common.web.Servlets;
+import com.jspxcms.core.commercial.SitePush;
 import com.jspxcms.core.commercial.Weixin;
 import com.jspxcms.core.commercial.WordImporter;
 import com.jspxcms.core.constant.Constants;
@@ -14,6 +15,7 @@ import com.jspxcms.core.service.*;
 import com.jspxcms.core.support.Backends;
 import com.jspxcms.core.support.CmsException;
 import com.jspxcms.core.support.Context;
+import com.jspxcms.core.support.WeixinProxyFactory;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -28,6 +30,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -324,7 +327,7 @@ public class InfoController {
         }
         String status = draft ? Info.DRAFT : null;
         service.save(bean, detail, nodeIds, specialIds, viewGroupIds, viewOrgIds, customs, clobs, images, files,
-                attrIds, attrImages, tagNames, nodeId, userId, status, siteId);
+                attrIds, attrImages, tagNames, nodeId, userId, status, siteId, null);
         String ip = Servlets.getRemoteAddr(request);
         logService.operation("opr.info.add", bean.getTitle(), null, bean.getId(), ip, userId, siteId);
         logger.info("save Info, title={}.", bean.getTitle());
@@ -739,15 +742,43 @@ public class InfoController {
     // Servlets.writeHtml(response, Strings.getKeywords(title));
     // }
 
+    @RequiresPermissions("core:info:site_push_form")
+    @RequestMapping("site_push_form.do")
+    public String sitePushForm(Integer[] ids, HttpServletRequest request, org.springframework.ui.Model modelMap) {
+        return SitePush.sitePushForm(ids, request, modelMap, siteService, query);
+    }
+
+    @RequiresPermissions("core:info:site_push")
+    @RequestMapping(value = "site_push.do", method = RequestMethod.POST)
+    public String sitePush(Integer[] ids, Integer[] siteId, Integer[] nodeId, HttpServletRequest request, RedirectAttributes ra) {
+        return SitePush.sitePush(ids, siteId, nodeId, request, ra, service, logService, logger);
+    }
+
+    @RequiresPermissions("core:info:site_push_list")
+    @RequestMapping("site_push_list.do")
+    public String sitePushList(@PageableDefault(sort = {"created", "id"}, direction = Direction.DESC) Pageable pageable,
+                               HttpServletRequest request, org.springframework.ui.Model modelMap) {
+        return SitePush.sitePushList(pageable, request, modelMap, infoPushService);
+    }
+
+    @RequiresPermissions("core:info:site_push_delete")
+    @RequestMapping("site_push_delete.do")
+    public String sitePushDelete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
+        return SitePush.sitePushDelete(ids, request, ra, service, infoPushService, logService, logger);
+    }
+
     @RequiresPermissions("core:info:mass_weixin_form")
     @RequestMapping("mass_weixin_form.do")
     public String massWeixinForm(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
                                  String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap)
             throws WeixinException {
-        if (weixinProxy == null) {
-            throw new CmsException("info.error.weixinAppNotSet");
-        }
         Site site = Context.getCurrentSite();
+        SiteWeixin sw = site.getWeixin();
+        if (StringUtils.isBlank(sw.getAppid()) || StringUtils.isBlank(sw.getSecret())) {
+            throw new CmsException("error.weixinAppNotSet");
+        }
+        WeixinProxy weixinProxy = weixinProxyFactory.get(sw.getAppid(), sw.getSecret());
+
         validateIds(ids, site.getId());
         return Weixin.massWeixinForm(ids, queryNodeId, queryNodeType, queryInfoPermType, queryStatus, request,
                 modelMap, weixinProxy, query);
@@ -755,12 +786,19 @@ public class InfoController {
 
     @RequiresPermissions("core:info:mass_weixin")
     @RequestMapping("mass_weixin.do")
-    public void massWeixin(String mode, Integer groupId, String towxname, String[] title, String[] author,
+    public void massWeixin(String mode, Integer groupId, String towxname, Integer[] ids, String[] title, String[] author,
                            String[] contentSourceUrl, String[] digest, Boolean[] showConverPic, String[] thumb,
                            HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
             throws IOException {
+        Site site = Context.getCurrentSite();
+        SiteWeixin sw = site.getWeixin();
+        if (StringUtils.isBlank(sw.getAppid()) || StringUtils.isBlank(sw.getSecret())) {
+            throw new CmsException("error.weixinAppNotSet");
+        }
+        WeixinProxy weixinProxy = weixinProxyFactory.get(sw.getAppid(), sw.getSecret());
         Weixin.massWeixin(mode, groupId, towxname, title, author, contentSourceUrl, digest, showConverPic, thumb,
                 request, response, modelMap, weixinProxy, logService, pathResolver);
+        service.massWeixin(ids);
     }
 
     @ModelAttribute
@@ -799,7 +837,7 @@ public class InfoController {
     @Autowired
     private AttachmentService attachmentService;
     @Autowired
-    private WeixinProxy weixinProxy;
+    private WeixinProxyFactory weixinProxyFactory;
     @Autowired
     protected PathResolver pathResolver;
     @Autowired
@@ -813,7 +851,11 @@ public class InfoController {
     @Autowired
     private NodeQueryService nodeQuery;
     @Autowired
+    private InfoPushService infoPushService;
+    @Autowired
     private InfoService service;
     @Autowired
     private InfoQueryService query;
+    @Autowired
+    private SiteService siteService;
 }

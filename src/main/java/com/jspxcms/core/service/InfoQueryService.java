@@ -13,19 +13,18 @@ import java.util.Map;
 
 /**
  * InfoQueryService
- * 
+ *
  * @author liufang
- * 
  */
 public interface InfoQueryService {
-	public Page<Info> findAll(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber, Integer userId,
-			boolean allInfoPerm, int infoRightType, String status, Map<String, String[]> params, Pageable pageable);
+    public Page<Info> findAll(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber, Integer userId,
+                              boolean allInfoPerm, int infoRightType, String status, Map<String, String[]> params, Pageable pageable);
 
-	public RowSide<Info> findSide(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber,
-			Integer userId, boolean allInfoPerm, int infoPermType, String status, Map<String, String[]> params,
-			Info bean, Integer position, Sort sort);
+    public RowSide<Info> findSide(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber,
+                                  Integer userId, boolean allInfoPerm, int infoPermType, String status, Map<String, String[]> params,
+                                  Info bean, Integer position, Sort sort);
 
-	public List<Info> findAll(Iterable<Integer> ids);
+    public List<Info> findAll(Iterable<Integer> ids);
 
 	public List<Info> findList(Integer[] modelId, Integer[] nodeId, Integer[] attrId, Integer[] specialId,
 			Integer[] tagId, Integer[] siteId, Integer[] mainNodeId, Integer[] userId, Integer[] viewGroupId,
@@ -41,13 +40,16 @@ public interface InfoQueryService {
 			Integer[] excludeMainNodeId, String[] excludeTreeNumber, Boolean isWithImage, String[] status,Integer[] p0,
 			Integer[] p1, Integer[] p2, Integer[] p3, Integer[] p4, Integer[] p5, Integer[] p6, Pageable pageable);
 
-	public Info findNext(Integer id, boolean bySite);
 
-	public Info findPrev(Integer id, boolean bySite);
+    public List<Info> findBySiteId(Integer siteId);
 
-	public boolean containsTitle(String title, Integer siteId);
+    public Info findNext(Integer id, boolean bySite);
 
-	public long countByDate(Integer siteId, Date beginDate);
+    public Info findPrev(Integer id, boolean bySite);
 
-	public Info get(Integer id);
+    public boolean containsTitle(String title, Integer siteId);
+
+    public long countByDate(Integer siteId, Date beginDate);
+
+    public Info get(Integer id);
 }

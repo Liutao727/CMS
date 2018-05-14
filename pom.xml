@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jspxcms</groupId>
 	<artifactId>jspxcms</artifactId>
-	<version>8.0.4</version>
+	<version>9.0.0</version>
 	<packaging>war</packaging>
 
 	<name>Jspxcms</name>
@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
+		<version>1.5.13.RELEASE</version>
 	</parent>
 	<properties>
 		<!-- Apache公共基础组件 -->
@@ -63,6 +63,8 @@
 		<jacob.version>1.14.3</jacob.version>
 		<!-- GraphicsMagick原生图片处理库调用组件 -->
 		<im4java.version>1.4.0</im4java.version>
+		<!-- 阿里云短信sdk -->
+		<aliyun-sdk-mns.version>1.1.8</aliyun-sdk-mns.version>
 		<!-- 单元测试Mock组件 -->
 		<powermock.version>1.6.6</powermock.version>
 
@@ -227,6 +229,12 @@
 			<groupId>org.im4java</groupId>
 			<artifactId>im4java</artifactId>
 			<version>${im4java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun.mns</groupId>
+			<artifactId>aliyun-sdk-mns</artifactId>
+			<version>${aliyun-sdk-mns.version}</version>
+			<classifier>jar-with-dependencies</classifier>
 		</dependency>
 		<!-- 中文分词组件 -->
 		<dependency>

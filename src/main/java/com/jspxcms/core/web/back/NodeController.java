@@ -20,6 +20,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -81,6 +82,27 @@ public class NodeController {
         modelMap.addAttribute("queryParentId", queryParentId);
         modelMap.addAttribute("showDescendants", showDescendants);
         return "core/node/node_list";
+    }
+
+    @RequiresPermissions("core:node:batch_create_form")
+    @RequestMapping(value = "batch_create.do")
+    public String batchCreateForm(Integer queryParentId,
+                                  Boolean showDescendants, HttpServletRequest request, org.springframework.ui.Model modelMap) {
+        Integer siteId = Context.getCurrentSiteId();
+        Node parent = query.findRoot(siteId);
+        modelMap.addAttribute("parent", parent);
+        return "core/node/node_batch_form";
+    }
+
+    @RequiresPermissions("core:node:batch_create_submit")
+    @RequestMapping(value = "batch_create.do", method = RequestMethod.POST)
+    public String batchCreateSubmit(Integer parentId, String batchData, HttpServletRequest request, RedirectAttributes ra) {
+        Integer userId = Context.getCurrentUserId();
+        Integer siteId = Context.getCurrentSiteId();
+        service.saveBatchNode(siteId, userId, parentId, batchData);
+        ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
+        ra.addFlashAttribute("refreshLeft", true);
+        return "redirect:list.do";
     }
 
     @RequiresPermissions("core:node:create")

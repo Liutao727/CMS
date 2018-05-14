@@ -1,18 +1,5 @@
 package com.jspxcms.core.html;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
 import com.jspxcms.common.file.FileHandler;
 import com.jspxcms.common.freemarker.Freemarkers;
 import com.jspxcms.common.web.PathResolver;
@@ -24,11 +11,18 @@ import com.jspxcms.core.service.TaskService;
 import com.jspxcms.core.support.Context;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.core.support.TitleText;
-
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * PInfo
@@ -118,8 +112,11 @@ public abstract class PInfo {
 		}
 
 		String mobileHtml = info.getMobileHtml();
-		fileHandler = info.getSite().getMobilePublishPoint().getFileHandler(pathResolver);
-		PNode.deleteHtml(mobileHtml, fileHandler);
+		PublishPoint mobilePublishPoint = info.getSite().getMobilePublishPoint();
+		if (mobilePublishPoint != null) {
+			fileHandler = mobilePublishPoint.getFileHandler(pathResolver);
+			PNode.deleteHtml(mobileHtml, fileHandler);
+		}
 		if (info.getDetail() != null) {
 			info.getDetail().setMobileHtml(null);
 		}

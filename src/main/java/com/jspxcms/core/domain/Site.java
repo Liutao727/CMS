@@ -1,50 +1,30 @@
 package com.jspxcms.core.domain;
 
-import static com.jspxcms.core.constant.Constants.DYNAMIC_SUFFIX;
-import static com.jspxcms.core.constant.Constants.IDENTITY_COOKIE_NAME;
-import static com.jspxcms.core.constant.Constants.SITE_PREFIX;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jspxcms.core.support.Context;
+import com.jspxcms.core.support.ForeContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.hibernate.annotations.MapKeyType;
 import org.hibernate.annotations.Type;
 import org.springframework.web.util.WebUtils;
 
-import com.jspxcms.core.support.Context;
-import com.jspxcms.core.support.ForeContext;
+import javax.persistence.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.math.BigInteger;
+import java.util.*;
+
+import static com.jspxcms.core.constant.Constants.*;
 
 /**
  * Site
  *
  * @author liufang
  */
+@XmlRootElement
 @Entity
 @Table(name = "cms_site")
 public class Site implements java.io.Serializable {
@@ -363,6 +343,11 @@ public class Site implements java.io.Serializable {
     }
 
     @Transient
+    public SiteWeixin getWeixin() {
+        return new SiteWeixin(this);
+    }
+
+    @Transient
     public SiteComment getCommment() {
         return new SiteComment(this);
     }
@@ -430,6 +415,7 @@ public class Site implements java.io.Serializable {
     private String treeMax;
     private Integer status;
 
+    @XmlTransient
     @Id
     @Column(name = "f_site_id", unique = true, nullable = false)
     @TableGenerator(name = "tg_cms_site", pkColumnValue = "cms_site", initialValue = 1, allocationSize = 10)
@@ -442,6 +428,7 @@ public class Site implements java.io.Serializable {
         this.id = id;
     }
 
+    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     @OrderBy(value = "treeNumber asc, id asc")
     public List<Site> getChildren() {
@@ -452,6 +439,7 @@ public class Site implements java.io.Serializable {
         this.children = children;
     }
 
+    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "site")
     @OrderBy(value = "seq asc, id asc")
     public List<Role> getRoles() {
@@ -488,6 +476,7 @@ public class Site implements java.io.Serializable {
         this.clobs = clobs;
     }
 
+    @XmlTransient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "f_parent_id")
     public Site getParent() {
@@ -498,6 +487,7 @@ public class Site implements java.io.Serializable {
         this.parent = parent;
     }
 
+    @XmlTransient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "f_global_id", nullable = false)
     public Global getGlobal() {

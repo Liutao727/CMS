@@ -44,6 +44,8 @@ public class QInfo extends EntityPathBase<Info> {
 
     public final ListPath<com.jspxcms.core.domain.InfoFile, QInfoFile> files = this.<com.jspxcms.core.domain.InfoFile, QInfoFile>createList("files", com.jspxcms.core.domain.InfoFile.class, QInfoFile.class, PathInits.DIRECT2);
 
+    public final QSite fromSite;
+
     public final StringPath htmlStatus = createString("htmlStatus");
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
@@ -120,6 +122,7 @@ public class QInfo extends EntityPathBase<Info> {
         super(type, metadata, inits);
         this.creator = inits.isInitialized("creator") ? new QUser(forProperty("creator"), inits.get("creator")) : null;
         this.detail = inits.isInitialized("detail") ? new QInfoDetail(forProperty("detail"), inits.get("detail")) : null;
+        this.fromSite = inits.isInitialized("fromSite") ? new QSite(forProperty("fromSite"), inits.get("fromSite")) : null;
         this.node = inits.isInitialized("node") ? new QNode(forProperty("node"), inits.get("node")) : null;
         this.org = inits.isInitialized("org") ? new QOrg(forProperty("org"), inits.get("org")) : null;
         this.site = inits.isInitialized("site") ? new QSite(forProperty("site"), inits.get("site")) : null;

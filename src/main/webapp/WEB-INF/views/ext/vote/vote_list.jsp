@@ -89,8 +89,8 @@ function optDelete(form) {
 				    <th width="30" class="ls-th-sort"><span class="ls-sort" pagesort="id">ID</span></th>
 				    <th class="ls-th-sort"><span class="ls-sort" pagesort="title"><s:message code="vote.title"/></span></th>
 				    <th class="ls-th-sort"><span class="ls-sort" pagesort="number"><s:message code="vote.number"/></span></th>
-				    <th class="ls-th-sort"><span class="ls-sort" pagesort="total"><s:message code="vote.total"/></span></th>
-				    <th class="ls-th-sort"><span class="ls-sort" pagesort="seq"><s:message code="vote.seq"/></span></th>
+					<th class="ls-th-sort"><span class="ls-sort" pagesort="creationDate"><s:message code="vote.creationDate"/></span></th>
+					<th class="ls-th-sort"><span class="ls-sort" pagesort="total"><s:message code="vote.total"/></span></th>
 				    <th class="ls-th-sort"><span class="ls-sort" pagesort="status"><s:message code="vote.status"/></span></th>
 				  </tr>
 				  </thead>
@@ -112,8 +112,8 @@ function optDelete(form) {
 				    <td><c:out value="${bean.id}"/></td>
 				    <td><c:out value="${bean.title}"/></td>
 				    <td><c:out value="${bean.number}"/></td>
+					<td><fmt:formatDate value="${bean.creationDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				    <td align="right"><c:out value="${bean.total}"/></td>
-				    <td align="right"><c:out value="${bean.seq}"/></td>
 				    <td align="center"><c:if test="${bean.status!=0}"><b></c:if><s:message code="vote.status.${bean.status}"/><c:if test="${bean.status!=0}"></b></c:if></td>
 				  </tr>
 				  </c:forEach>

@@ -1,17 +1,15 @@
 package com.jspxcms.core.web.fore;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jspxcms.common.file.FileHandler;
+import com.jspxcms.common.file.LocalFileHandler;
+import com.jspxcms.common.util.JsonMapper;
+import com.jspxcms.common.web.PathResolver;
+import com.jspxcms.common.web.Servlets;
+import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.domain.*;
+import com.jspxcms.core.service.*;
+import com.jspxcms.core.support.*;
+import com.jspxcms.ext.service.FavoriteService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,32 +22,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jspxcms.common.file.FileHandler;
-import com.jspxcms.common.file.LocalFileHandler;
-import com.jspxcms.common.util.JsonMapper;
-import com.jspxcms.common.web.PathResolver;
-import com.jspxcms.common.web.Servlets;
-import com.jspxcms.core.constant.Constants;
-import com.jspxcms.core.domain.Info;
-import com.jspxcms.core.domain.MemberGroup;
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.Org;
-import com.jspxcms.core.domain.PublishPoint;
-import com.jspxcms.core.domain.ScoreBoard;
-import com.jspxcms.core.domain.ScoreItem;
-import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.domain.User;
-import com.jspxcms.core.service.InfoBufferService;
-import com.jspxcms.core.service.InfoQueryService;
-import com.jspxcms.core.service.ScoreBoardService;
-import com.jspxcms.core.service.ScoreItemService;
-import com.jspxcms.core.service.VoteMarkService;
-import com.jspxcms.core.support.Context;
-import com.jspxcms.core.support.ForeContext;
-import com.jspxcms.core.support.Response;
-import com.jspxcms.core.support.SiteResolver;
-import com.jspxcms.core.support.TitleText;
-import com.jspxcms.ext.service.FavoriteService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * InfoController
@@ -86,13 +64,13 @@ public class InfoController {
 		if (info == null) {
 			return resp.badRequest("Info not found: " + id);
 		}
-		if (!info.isNormal()) {
+		User user = Context.getCurrentUser();
+		if (!info.isNormal() && (user == null || !info.isDataPerm(user))) {
 			return resp.forbidden();
 		}
 		Collection<MemberGroup> groups = Context.getCurrentGroups(request);
 		Collection<Org> orgs = Context.getCurrentOrgs(request);
 		if (!info.isViewPerm(groups, orgs)) {
-			User user = Context.getCurrentUser();
 			if (user != null) {
 				return resp.forbidden();
 			} else {

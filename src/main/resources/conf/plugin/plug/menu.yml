@@ -9,3 +9,9 @@
     - save@plug:resume:save
     - update@plug:resume:update
     - delete@plug:resume:delete
+600-1100:
+  name: weixinMenu.management
+  url: plug/weixin_menu/list.do
+  perms: plug:weixin_menu:list
+  ops:
+    - save@plug:weixin_menu:save

@@ -1,57 +1,69 @@
 package com.jspxcms.core.service;
 
+import com.jspxcms.core.domain.Node;
+import com.jspxcms.core.domain.NodeDetail;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.jspxcms.core.domain.Node;
-import com.jspxcms.core.domain.NodeDetail;
-
 /**
  * NodeService
- * 
+ *
  * @author liufang
- * 
  */
 public interface NodeService {
-	public Node save(Node bean, NodeDetail detail, Map<String, String> customs,
-			Map<String, String> clobs, Integer[] infoPermIds,
-			Integer[] nodePermIds, Integer[] viewGroupIds,
-			Integer[] contriGroupIds, Integer[] commentGroupIds,
-			Integer[] viewOrgIds, Integer parentId, Integer nodeModelId,
-			Integer infoModelId, Integer workflowId, Integer creatorId,
-			Integer siteId);
+    public Node save(Node bean, NodeDetail detail, Map<String, String> customs,
+                     Map<String, String> clobs, Integer[] infoPermIds,
+                     Integer[] nodePermIds, Integer[] viewGroupIds,
+                     Integer[] contriGroupIds, Integer[] commentGroupIds,
+                     Integer[] viewOrgIds, Integer parentId, Integer nodeModelId,
+                     Integer infoModelId, Integer workflowId, Integer creatorId,
+                     Integer siteId);
 
-	public Node update(Node bean, NodeDetail detail,
-			Map<String, String> customs, Map<String, String> clobs,
-			Integer[] infoPermIds, Integer[] nodePermIds,
-			Integer[] viewGroupIds, Integer[] contriGroupIds,
-			Integer[] commentGroupIds, Integer[] viewOrgIds,
-			Integer nodeModelId, Integer infoModelId, Integer workflowId);
+    public Node update(Node bean, NodeDetail detail,
+                       Map<String, String> customs, Map<String, String> clobs,
+                       Integer[] infoPermIds, Integer[] nodePermIds,
+                       Integer[] viewGroupIds, Integer[] contriGroupIds,
+                       Integer[] commentGroupIds, Integer[] viewOrgIds,
+                       Integer nodeModelId, Integer infoModelId, Integer workflowId);
 
-	public Node[] batchUpdate(Integer[] id, String[] name, String[] number,
-			Integer[] views, Boolean[] hidden, Integer siteId,
-			boolean isUpdateTree);
+    public Node[] batchUpdate(Integer[] id, String[] name, String[] number,
+                              Integer[] views, Boolean[] hidden, Integer siteId,
+                              boolean isUpdateTree);
 
-	public int move(Integer[] ids, Integer id, Integer siteId);
+    /**
+     * 克隆栏目对象
+     *
+     * @param srcNode 被克隆的栏目对象
+     * @param siteId  新栏目的站点ID
+     * @return 新栏目对象
+     */
+    public Node clone(Node srcNode, Integer siteId, Integer creatorId);
 
-	public int merge(Integer[] ids, Integer id, boolean deleteMergedNode);
+    public void importNode(List<Node> nodeList, Integer userId, Integer siteId);
 
-	public Node delete(Integer id);
+    public void saveBatchNode(Integer siteId, Integer userId, Integer rootNodeId, String batchData);
 
-	public Node[] delete(Integer[] ids);
+    public int move(Integer[] ids, Integer id, Integer siteId);
 
-	/**
-	 * 引用节点。节点信息数加一。
-	 * 
-	 * @param nodeId
-	 * @return
-	 */
-	public Node refer(Integer nodeId);
+    public int merge(Integer[] ids, Integer id, boolean deleteMergedNode);
 
-	public List<Node> refer(Integer[] nodeIds);
+    public Node delete(Integer id);
 
-	public void derefer(Node node);
+    public Node[] delete(Integer[] ids);
 
-	public void derefer(Collection<Node> nodes);
+    /**
+     * 引用节点。节点信息数加一。
+     *
+     * @param nodeId
+     * @return
+     */
+    public Node refer(Integer nodeId);
+
+    public List<Node> refer(Integer[] nodeIds);
+
+    public void derefer(Node node);
+
+    public void derefer(Collection<Node> nodes);
 }

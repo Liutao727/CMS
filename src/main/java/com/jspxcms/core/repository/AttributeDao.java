@@ -30,6 +30,8 @@ public interface AttributeDao extends Repository<Attribute, Integer>,
 
 	// --------------------
 
+    public List<Attribute> findBySiteIdAndNumber(Integer siteId, String number);
+
 	@QueryHints(@QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true"))
 	public List<Attribute> findBySiteId(Integer siteId, Sort sort);
 

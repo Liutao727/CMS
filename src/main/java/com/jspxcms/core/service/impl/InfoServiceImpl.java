@@ -8,6 +8,7 @@ import com.jspxcms.core.html.PInfo;
 import com.jspxcms.core.listener.*;
 import com.jspxcms.core.repository.InfoDao;
 import com.jspxcms.core.service.*;
+import com.jspxcms.core.support.CmsException;
 import com.jspxcms.core.support.DeleteException;
 import com.jspxcms.core.support.UploadHandler;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +35,17 @@ import java.util.*;
  */
 @Service
 @Transactional
-public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDeleteListener, NodeDeleteListener,
-        UserDeleteListener {
+public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDeleteListener, NodeDeleteListener, UserDeleteListener {
     private static final Logger logger = LoggerFactory.getLogger(InfoServiceImpl.class);
 
     public Info save(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
                      Integer[] viewOrgIds, Map<String, String> customs, Map<String, String> clobs, List<InfoImage> images,
                      List<InfoFile> files, Integer[] attrIds, Map<String, String> attrImages, String[] tagNames, Integer nodeId,
-                     Integer creatorId, String status, Integer siteId) {
+                     Integer creatorId, String status, Integer siteId, Integer fromSiteId) {
         bean.setSite(siteService.get(siteId));
+        if (fromSiteId != null) {
+            bean.setFromSite(siteService.get(fromSiteId));
+        }
         User creator = userService.get(creatorId);
         bean.setCreator(creator);
         bean.setOrg(creator.getOrg());
@@ -70,8 +74,8 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
             bean.setWithImage(false);
         }
         Workflow workflow = null;
-        if (Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status) || Info.COLLECTED.equals(status)) {
-            // 草稿、投稿、采集
+        if (Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status) || Info.COLLECTED.equals(status) || Info.PUSH.equals(status)) {
+            // 草稿、投稿、采集、推送
             bean.setStatus(status);
         } else {
             workflow = node.getWorkflow();
@@ -112,6 +116,123 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
         updateHtml(bean, false);
         firePostSave(bean);
         return bean;
+    }
+
+    public Info clone(Info srcInfo, Integer siteId, Integer fromSiteId, Integer nodeId, Integer userId, String status) {
+        Info destInfo = new Info();
+        // 关联对象不要复制，只复制简单的属性
+        BeanUtils.copyProperties(srcInfo, destInfo, "id", "customs", "clobs", "details", "detail", "buffers", "buffer", "infoNodes", "infoTags", "infoSpecials", "infoAttrs", "images", "files", "infoGroups", "infoOrgs", "processes", "infoFavorites", "node", "org", "creator", "site");
+        // 处理关联对象
+        InfoDetail detail = new InfoDetail();
+        BeanUtils.copyProperties(srcInfo.getDetail(), detail, "id", "info");
+        Map<String, String> customs = new HashMap<>();
+        customs.putAll(srcInfo.getCustoms());
+        Map<String, String> clobs = new HashMap<>();
+        clobs.putAll(srcInfo.getClobs());
+        List<InfoImage> images = new ArrayList<>(srcInfo.getImages());
+        List<InfoFile> files = new ArrayList<>(srcInfo.getFiles());
+        String tagKeydords = srcInfo.getTagKeywords();
+        String[] tagNames = null;
+        if (StringUtils.isNotBlank(tagKeydords)) {
+            tagNames = srcInfo.getTagKeywords().split(",");
+        }
+        // 处理栏目
+        if (nodeId == null) {
+            String nodeName = srcInfo.getNode().getName();
+            Node node = nodeQuery.findByName(siteId, nodeName);
+            // 同名栏目不存在，返回null。
+            if (node == null) {
+                return null;
+            }
+            nodeId = node.getId();
+        }
+        // 属性图
+        List<InfoAttribute> infoAttrList = srcInfo.getInfoAttrs();
+        List<Integer> attrIdList = new ArrayList<>();
+        Map<String, String> attrImages = new HashMap<>();
+        for (InfoAttribute ia : infoAttrList) {
+            String attrNumber = ia.getAttribute().getNumber();
+            Attribute attr = attributeService.findByNumber(siteId, attrNumber);
+            if (attr != null) {
+                attrIdList.add(attr.getId());
+                attrImages.put(attr.getId().toString(), ia.getImage());
+            }
+        }
+        Integer[] attrIds = attrIdList.toArray(new Integer[attrIdList.size()]);
+        if (StringUtils.isBlank(status)) {
+            status = Info.NORMAL;
+        }
+        save(destInfo, detail, null, null, null, null, customs, clobs, images, files, attrIds, attrImages, tagNames, nodeId, userId, status, siteId, fromSiteId);
+        return destInfo;
+    }
+
+    public List<Info> importInfo(List<Info> infoList, Integer userId, Integer siteId) {
+        for (Info info : infoList) {
+            String tagKeydords = info.getTagKeywords();
+            String[] tagNames = null;
+            if (StringUtils.isNotBlank(tagKeydords)) {
+                tagNames = info.getTagKeywords().split(",");
+            }
+            // 清除InfoTag数据，避免被jpa作为对象保存
+            info.getInfoTags().clear();
+            // 处理栏目
+            String nodeName = info.getNode().getName();
+            Node node = nodeQuery.findByName(siteId, nodeName);
+            if (node == null) {
+                throw new CmsException("Node not found! siteId=" + siteId + ", nodeName=" + nodeName);
+            }
+            Integer nodeId = node.getId();
+            // 属性图
+            List<InfoAttribute> infoAttrList = info.getInfoAttrs();
+            List<Integer> attrIdList = new ArrayList<>();
+            Map<String, String> attrImages = new HashMap<>();
+            for (InfoAttribute ia : infoAttrList) {
+                String attrNumber = ia.getAttribute().getNumber();
+                Attribute attr = attributeService.findByNumber(siteId, attrNumber);
+                if (attr != null) {
+                    attrIdList.add(attr.getId());
+                    attrImages.put(attr.getId().toString(), ia.getImage());
+                }
+            }
+            Integer[] attrIds = attrIdList.toArray(new Integer[attrIdList.size()]);
+            // 清除对象，避免被jpa作为对象进行持久化
+            info.getInfoAttrs().clear();
+            String status = Info.NORMAL;
+            save(info, info.getDetail(), null, null, null, null, info.getCustoms(), info.getClobs(), info.getImages(), info.getFiles(), attrIds, attrImages, tagNames, nodeId, userId, status, siteId, null);
+        }
+        return infoList;
+    }
+
+    public List<Info> push(Integer[] ids, Integer[] siteIds, Integer[] nodeIds, Integer userId) {
+        List<Info> result = new ArrayList<>();
+        for (Integer id : ids) {
+            Info info = query.get(id);
+            for (int i = 0, len = siteIds.length; i < len; i++) {
+                Site fromSite = info.getSite();
+                Site toSite = siteService.get(siteIds[i]);
+                String status = Info.PUSH;
+                // 如果是子站点，则直接为发布状态
+                if (toSite.getTreeNumber().startsWith(fromSite.getTreeNumber())) {
+                    status = Info.NORMAL;
+                }
+                Info cloned = clone(info, siteIds[i], fromSite.getId(), nodeIds[i], userId, status);
+                if (cloned != null) {
+                    infoPushService.save(cloned.getId(), info.getSite().getId(), siteIds[i], userId);
+                    result.add(cloned);
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<InfoPush> pushDelete(Integer[] ids) {
+        List<InfoPush> result = new ArrayList<InfoPush>();
+        for (Integer id : ids) {
+            InfoPush bean = infoPushService.get(id);
+            delete(bean.getInfo().getId());
+            result.add(bean);
+        }
+        return result;
     }
 
     public Info update(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
@@ -306,9 +427,9 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
             info = dao.findOne(id);
             detail = info.getDetail();
             String status = info.getStatus();
-            // 审核中、草稿、投稿、采集、退稿可审核。
+            // 审核中、草稿、投稿、采集、推送、退稿可审核。
             if (Info.AUDITING.equals(status) || Info.DRAFT.equals(status) || Info.CONTRIBUTION.equals(status)
-                    || Info.COLLECTED.equals(status) || Info.REJECTION.equals(status)) {
+                    || Info.COLLECTED.equals(status) || Info.REJECTION.equals(status) || Info.PUSH.equals(status)) {
                 workflow = info.getNode().getWorkflow();
                 owner = info.getCreator();
                 String stepName = workflowService.pass(workflow, owner, operator, new InfoProcess(),
@@ -462,6 +583,22 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
         updateHtml(infos, false);
         firePostLogicDelete(infos);
         return infos;
+    }
+
+    /**
+     * 标记为微信群发
+     *
+     * @param ids
+     * @return
+     */
+    public List<Info> massWeixin(Integer[] ids) {
+        List<Info> list = new ArrayList<>();
+        for (Integer id : ids) {
+            Info bean = query.get(id);
+            bean.getDetail().setWeixinMass(true);
+            list.add(bean);
+        }
+        return list;
     }
 
     private Info doDelete(Integer id) {
@@ -713,6 +850,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     private CommentService commentService;
     private InfoOrgService infoOrgService;
     private InfoMemberGroupService infoMemberGroupService;
+    private InfoPushService infoPushService;
     private WorkflowService workflowService;
     private InfoAttributeService infoAttrService;
     private AttributeService attributeService;
@@ -722,6 +860,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     private InfoDetailService infoDetailService;
     private InfoBufferService infoBufferService;
     private NodeService nodeService;
+    private NodeQueryService nodeQuery;
     private UserService userService;
     private SiteService siteService;
     protected PathResolver pathResolver;
@@ -754,6 +893,11 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     @Autowired
     public void setInfoMemberGroupService(InfoMemberGroupService infoMemberGroupService) {
         this.infoMemberGroupService = infoMemberGroupService;
+    }
+
+    @Autowired
+    public void setInfoPushService(InfoPushService infoPushService) {
+        this.infoPushService = infoPushService;
     }
 
     @Autowired
@@ -799,6 +943,11 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     @Autowired
     public void setNodeService(NodeService nodeService) {
         this.nodeService = nodeService;
+    }
+
+    @Autowired
+    public void setNodeQuery(NodeQueryService nodeQuery) {
+        this.nodeQuery = nodeQuery;
     }
 
     @Autowired

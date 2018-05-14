@@ -1,27 +1,21 @@
 package com.jspxcms.ext.web.directive;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
+import com.jspxcms.common.freemarker.Freemarkers;
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.core.support.ForeContext;
+import com.jspxcms.ext.domain.Question;
+import com.jspxcms.ext.service.QuestionService;
+import freemarker.core.Environment;
+import freemarker.template.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import com.jspxcms.common.freemarker.Freemarkers;
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.core.support.ForeContext;
-import com.jspxcms.ext.domain.Question;
-import com.jspxcms.ext.service.QuestionService;
-
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * AbstractQuestionListPageDirective
@@ -53,6 +47,9 @@ public abstract class AbstractQuestionListPageDirective implements TemplateDirec
 		Integer historyUserId = Freemarkers.getInteger(params, HISTORY_USER_ID);
 		Boolean inPeriod = Freemarkers.getBoolean(params, IN_PERIOD);
 		Integer[] status = Freemarkers.getIntegers(params, STATUS);
+		if(status==null) {
+			status = new Integer[]{Question.NOMAL_STATUS};
+		}
 		Sort defSort = new Sort(Direction.DESC, "creationDate");
 
 		if (isPage) {

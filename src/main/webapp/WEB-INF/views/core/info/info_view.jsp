@@ -21,22 +21,6 @@ $(function() {
 	$("#validForm").validate();
 	$("input[name='title']").focus();
 });
-function uploadFile(name,button) {
-	if($("#f_"+name).val()=="") {alert("<s:message code='pleaseSelectTheFile'/>");return;}
-	Cms.uploadFile("../upload_file.do",name,button);
-}
-function uploadVideo(name,button) {
-	if($("#f_"+name).val()=="") {alert("<s:message code='pleaseSelectTheFile'/>");return;}
-	Cms.uploadFile("../upload_video.do",name,button);
-}
-function uploadImg(name,button) {
-	if($("#f_"+name).val()=="") {alert("<s:message code='pleaseSelectTheFile'/>");return;}
-	Cms.uploadImg("../upload_image.do",name,button);
-}
-function imgCrop(name) {
-	if($("#"+name).val()=="") {alert("<s:message code='noImageToCrop'/>");return;}
-	Cms.imgCrop("../../commons/img_area_select.do",name);
-}
 function confirmDelete() {
 	return confirm("<s:message code='confirmDelete'/>");
 }

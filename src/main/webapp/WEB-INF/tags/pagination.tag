@@ -28,7 +28,7 @@
   <c:if test="${pagedList.totalPages > 1}">
   <li<c:if test="${pagedList.number+1 == pagedList.totalPages}"> class="active"</c:if>>
     <a href="javascript:$('#page').val('${pagedList.totalPages}')[0].form.submit();">
-      <span><c:if test="${pagedList.totalPages - pagedList.number > 4}"> ...</c:if>${pagedList.totalPages}</span>
+      <span><c:if test="${pagedList.totalPages - pagedList.number > 4}">... </c:if>${pagedList.totalPages}</span>
     </a>			    	
   </li>
   </c:if>

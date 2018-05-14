@@ -1,22 +1,16 @@
 package com.jspxcms.ext.web.directive;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.jspxcms.common.freemarker.Freemarkers;
 import com.jspxcms.core.support.ForeContext;
 import com.jspxcms.ext.domain.Vote;
 import com.jspxcms.ext.service.VoteService;
-
 import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+import freemarker.template.*;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * VoteDirective
@@ -48,7 +42,7 @@ public class VoteDirective implements TemplateDirectiveModel {
 		String number = Freemarkers.getString(params, NUMBER);
 		Integer[] status = Freemarkers.getIntegers(params, STATUS);
 		if (status == null) {
-			status = new Integer[] { Vote.NOMAL_STATUS };
+			status = new Integer[] { Vote.NORMAL_STATUS};
 		}
 
 		Vote vote;

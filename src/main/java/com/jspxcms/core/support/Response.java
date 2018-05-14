@@ -1,17 +1,9 @@
 package com.jspxcms.core.support;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jspxcms.common.util.JsonMapper;
+import com.jspxcms.common.web.Servlets;
+import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.domain.Site;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.util.WebUtils;
@@ -19,10 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.jspxcms.common.util.JsonMapper;
-import com.jspxcms.common.web.Servlets;
-import com.jspxcms.core.constant.Constants;
-import com.jspxcms.core.domain.Site;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Response
@@ -234,8 +227,7 @@ public class Response {
 		this.response = response;
 		this.modelMap = modelMap;
 		this.locale = RequestContextUtils.getLocale(request);
-		this.wac = RequestContextUtils.getWebApplicationContext(request);
-//		this.wac = RequestContextUtils.findWebApplicationContext(request);		
+		this.wac = RequestContextUtils.findWebApplicationContext(request);
 	}
 
 	public String post(int status, String code, String[] args) {

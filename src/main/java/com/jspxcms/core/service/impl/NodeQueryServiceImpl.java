@@ -156,6 +156,11 @@ public class NodeQueryServiceImpl implements NodeQueryService {
 		return !list.isEmpty() ? list.get(0) : null;
 	}
 
+	public Node findByName(Integer siteId, String name) {
+		List<Node> list = dao.findBySiteIdAndName(siteId, name);
+		return !list.isEmpty() ? list.get(0) : null;
+	}
+
 	public List<Node> findByNumber(String[] numbers, Integer[] siteIds) {
 		List<Node> list = dao.findByNumbers(numbers, siteIds);
 		return list;

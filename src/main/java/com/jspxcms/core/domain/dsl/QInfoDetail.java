@@ -92,6 +92,8 @@ public class QInfoDetail extends EntityPathBase<InfoDetail> {
 
     public final StringPath videoTime = createString("videoTime");
 
+    public final BooleanPath weixinMass = createBoolean("weixinMass");
+
     public QInfoDetail(String variable) {
         this(InfoDetail.class, forVariable(variable), INITS);
     }

@@ -8,61 +8,63 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * NodeBuffer
- * 
+ *
  * @author liufang
- * 
  */
 @Entity
 @Table(name = "cms_node_buffer")
 public class NodeBuffer implements java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public void applyDefaultValue() {
-		if (getViews() == null) {
-			setViews(0);
-		}
-	}
+    public void applyDefaultValue() {
+        if (getViews() == null) {
+            setViews(0);
+        }
+    }
 
-	private Integer id;
-	private Node node;
-	private Integer views;
+    private Integer id;
+    private Node node;
+    private Integer views;
 
-	public NodeBuffer() {
-	}
+    public NodeBuffer() {
+    }
 
-	public NodeBuffer(Node node) {
-		this.node = node;
-	}
+    public NodeBuffer(Node node) {
+        this.node = node;
+    }
 
-	@Id
-	public Integer getId() {
-		return this.id;
-	}
+    @XmlTransient
+    @Id
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	@MapsId
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_node_id")
-	public Node getNode() {
-		return this.node;
-	}
+    @XmlTransient
+    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "f_node_id")
+    public Node getNode() {
+        return this.node;
+    }
 
-	public void setNode(Node node) {
-		this.node = node;
-	}
+    public void setNode(Node node) {
+        this.node = node;
+    }
 
-	@Column(name = "f_views", nullable = false)
-	public Integer getViews() {
-		return views;
-	}
+    @Column(name = "f_views", nullable = false)
+    public Integer getViews() {
+        return views;
+    }
 
-	public void setViews(Integer views) {
-		this.views = views;
-	}
+    public void setViews(Integer views) {
+        this.views = views;
+    }
 }

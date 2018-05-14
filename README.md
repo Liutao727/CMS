@@ -16,7 +16,7 @@
 1. 创建数据库。如使用MySQL，字符集选择为`utf8`或者`utf8mb4`（支持更多特殊字符如表情字符emoji，推荐）。
 2. 执行数据库脚本。数据库脚本在`database`目录下。
 3. 在eclipse中导入maven项目。点击eclipse菜单`File` - `Import`，选择`Maven` - `Existing Maven Projects`。创建好maven项目后，会开始从maven服务器下载第三方jar包（如spring等），需要一定时间，请耐心等待。
-4. 修改数据库连接。打开`/src/main/resources/application.propertis`文件，根据实际情况修改`spring.datasource.url`、`spring.datasource.username`、`spring.datasource.password`的值。
+4. 修改数据库连接。打开`/src/main/resources/application.propertis`文件，根据实际情况修改`spring.datasource.url`、`spring.datasource.username`、`spring.datasource.password`的值。注意：即使数据使用`utf8mb4`字符集，数据库连接的`characterEncoding=utf8`也必须保留，不能修改为`characterEncoding=utf8mb4`。
 5. 启动程序。**请一定按照这里介绍的方式启动程序，否则可能因上下文路径（ContextPath）导致页面没有样式等问题**。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`spring-boot:run`，`JRE`选项卡中可以选择JDK版本，`VM arguments`输入框中可以设置java内存参数，如使用JDK7，应在此处填入`-XX:PermSize=128M -XX:MaxPermSize=512M`，然后点击`Run`。
 6. 访问系统。前台地址：[http://localhost:8080/](http://localhost:8080/)，使用手机访问前台或者使用浏览器模拟手机访问前台，系统会调用手机端模板，显示手机端的界面。后台地址：[http://localhost:8080/cmscp/index.do](http://localhost:8080/cmscp/index.do)，用户名：admin，密码：空。
 

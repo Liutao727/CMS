@@ -8,135 +8,137 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * InfoBuffer
- * 
+ *
  * @author liufang
- * 
  */
 @Entity
 @Table(name = "cms_info_buffer")
 public class InfoBuffer implements java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public void applyDefaultValue() {
-		if (getViews() == null) {
-			setViews(0);
-		}
-		if (getDownloads() == null) {
-			setDownloads(0);
-		}
-		if (getComments() == null) {
-			setComments(0);
-		}
-		if (getInvolveds() == null) {
-			setInvolveds(0);
-		}
-		if (getDiggs() == null) {
-			setDiggs(0);
-		}
-		if (getBurys() == null) {
-			setBurys(0);
-		}
-		if (getScore() == null) {
-			setScore(0);
-		}
-	}
+    public void applyDefaultValue() {
+        if (getViews() == null) {
+            setViews(0);
+        }
+        if (getDownloads() == null) {
+            setDownloads(0);
+        }
+        if (getComments() == null) {
+            setComments(0);
+        }
+        if (getInvolveds() == null) {
+            setInvolveds(0);
+        }
+        if (getDiggs() == null) {
+            setDiggs(0);
+        }
+        if (getBurys() == null) {
+            setBurys(0);
+        }
+        if (getScore() == null) {
+            setScore(0);
+        }
+    }
 
-	private Integer id;
-	
-	private Info info;
-	
-	private Integer views;
-	private Integer downloads;
-	private Integer comments;
-	private Integer involveds;
-	private Integer diggs;
-	private Integer burys;
-	private Integer score;
+    private Integer id;
 
-	@Id
-	public Integer getId() {
-		return this.id;
-	}
+    private Info info;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    private Integer views;
+    private Integer downloads;
+    private Integer comments;
+    private Integer involveds;
+    private Integer diggs;
+    private Integer burys;
+    private Integer score;
 
-	@MapsId
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "f_info_id")
-	public Info getInfo() {
-		return this.info;
-	}
+    @XmlTransient
+    @Id
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setInfo(Info info) {
-		this.info = info;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	@Column(name = "f_views", nullable = false)
-	public Integer getViews() {
-		return views;
-	}
+    @XmlTransient
+    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "f_info_id")
+    public Info getInfo() {
+        return this.info;
+    }
 
-	public void setViews(Integer views) {
-		this.views = views;
-	}
+    public void setInfo(Info info) {
+        this.info = info;
+    }
 
-	@Column(name = "f_downloads", nullable = false)
-	public Integer getDownloads() {
-		return downloads;
-	}
+    @Column(name = "f_views", nullable = false)
+    public Integer getViews() {
+        return views;
+    }
 
-	public void setDownloads(Integer downloads) {
-		this.downloads = downloads;
-	}
+    public void setViews(Integer views) {
+        this.views = views;
+    }
 
-	@Column(name = "f_comments", nullable = false)
-	public Integer getComments() {
-		return comments;
-	}
+    @Column(name = "f_downloads", nullable = false)
+    public Integer getDownloads() {
+        return downloads;
+    }
 
-	public void setComments(Integer comments) {
-		this.comments = comments;
-	}
+    public void setDownloads(Integer downloads) {
+        this.downloads = downloads;
+    }
 
-	@Column(name = "f_involveds", nullable = false)
-	public Integer getInvolveds() {
-		return involveds;
-	}
+    @Column(name = "f_comments", nullable = false)
+    public Integer getComments() {
+        return comments;
+    }
 
-	public void setInvolveds(Integer involveds) {
-		this.involveds = involveds;
-	}
+    public void setComments(Integer comments) {
+        this.comments = comments;
+    }
 
-	@Column(name = "f_diggs", nullable = false)
-	public Integer getDiggs() {
-		return diggs;
-	}
+    @Column(name = "f_involveds", nullable = false)
+    public Integer getInvolveds() {
+        return involveds;
+    }
 
-	public void setDiggs(Integer diggs) {
-		this.diggs = diggs;
-	}
+    public void setInvolveds(Integer involveds) {
+        this.involveds = involveds;
+    }
 
-	@Column(name = "f_burys", nullable = false)
-	public Integer getBurys() {
-		return burys;
-	}
+    @Column(name = "f_diggs", nullable = false)
+    public Integer getDiggs() {
+        return diggs;
+    }
 
-	public void setBurys(Integer burys) {
-		this.burys = burys;
-	}
+    public void setDiggs(Integer diggs) {
+        this.diggs = diggs;
+    }
 
-	@Column(name = "f_score", nullable = false)
-	public Integer getScore() {
-		return score;
-	}
+    @Column(name = "f_burys", nullable = false)
+    public Integer getBurys() {
+        return burys;
+    }
 
-	public void setScore(Integer score) {
-		this.score = score;
-	}
+    public void setBurys(Integer burys) {
+        this.burys = burys;
+    }
+
+    @Column(name = "f_score", nullable = false)
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
 }

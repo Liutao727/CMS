@@ -1,10 +1,12 @@
 package com.jspxcms.common.freemarker;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.jspxcms.common.orm.LimitRequest;
+import com.jspxcms.common.orm.Limitable;
+import com.jspxcms.common.util.Dates;
+import com.jspxcms.common.util.JsonMapper;
+import com.jspxcms.common.web.PageUrlResolver;
+import freemarker.core.Environment;
+import freemarker.template.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.SortField;
@@ -15,20 +17,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.util.NumberUtils;
 
-import com.jspxcms.common.orm.LimitRequest;
-import com.jspxcms.common.orm.Limitable;
-import com.jspxcms.common.util.Dates;
-import com.jspxcms.common.util.JsonMapper;
-import com.jspxcms.common.web.PageUrlResolver;
-
-import freemarker.core.Environment;
-import freemarker.template.AdapterTemplateModel;
-import freemarker.template.TemplateBooleanModel;
-import freemarker.template.TemplateDateModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateNumberModel;
-import freemarker.template.TemplateScalarModel;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * FreeMarker帮助类
@@ -137,7 +129,7 @@ public class Freemarkers {
 		int len = args.length;
 		if (len > 2) {
 			field = new SortField(getSortFieldName(args[0]),
-					getSortFieldType(args[1]), getdirectionection(args[2]));
+					getSortFieldType(args[1]), getDirection(args[2]));
 		} else if (len > 1) {
 			field = new SortField(getSortFieldName(args[0]),
 					getSortFieldType(args[1]));
@@ -182,7 +174,7 @@ public class Freemarkers {
 		}
 	}
 
-	private static boolean getdirectionection(String direction) {
+	private static boolean getDirection(String direction) {
 		return "desc".equals(direction);
 	}
 

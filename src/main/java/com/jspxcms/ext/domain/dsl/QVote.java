@@ -26,6 +26,8 @@ public class QVote extends EntityPathBase<Vote> {
 
     public final DateTimePath<java.util.Date> beginDate = createDateTime("beginDate", java.util.Date.class);
 
+    public final DateTimePath<java.util.Date> creationDate = createDateTime("creationDate", java.util.Date.class);
+
     public final StringPath description = createString("description");
 
     public final DateTimePath<java.util.Date> endDate = createDateTime("endDate", java.util.Date.class);
@@ -41,8 +43,6 @@ public class QVote extends EntityPathBase<Vote> {
     public final StringPath number = createString("number");
 
     public final ListPath<com.jspxcms.ext.domain.VoteOption, QVoteOption> options = this.<com.jspxcms.ext.domain.VoteOption, QVoteOption>createList("options", com.jspxcms.ext.domain.VoteOption.class, QVoteOption.class, PathInits.DIRECT2);
-
-    public final NumberPath<Integer> seq = createNumber("seq", Integer.class);
 
     public final com.jspxcms.core.domain.dsl.QSite site;
 

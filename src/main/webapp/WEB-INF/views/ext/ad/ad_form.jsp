@@ -19,27 +19,6 @@
         function confirmDelete() {
             return confirm("<s:message code='confirmDelete'/>");
         }
-        function uploadImg(name, button) {
-            if ($("#f_" + name).val() == "") {
-                alert("<s:message code='pleaseSelectTheFile'/>");
-                return;
-            }
-            Cms.uploadImg("../../core/upload_image.do", name, button);
-        }
-        function uploadFlash(name, button) {
-            if ($("#f_" + name).val() == "") {
-                alert("<s:message code='pleaseSelectTheFile'/>");
-                return;
-            }
-            Cms.uploadFile("../../core/upload_flash.do", name, button);
-        }
-        function imgCrop(name) {
-            if ($("#" + name).val() == "") {
-                alert("<s:message code='noImageToCrop'/>");
-                return;
-            }
-            Cms.imgCrop("../../commons/img_area_select.do", name);
-        }
     </script>
 </head>
 <body class="skin-blue content-body">
@@ -47,7 +26,6 @@
 <div class="content-header">
     <h1><s:message code="ad.management"/> - <s:message code="${oprt=='edit' ? 'edit' : 'create'}"/></h1>
 </div>
-
 <div class="content">
     <div class="box box-primary">
         <form class="form-horizontal" id="validForm" action="${oprt=='edit' ? 'update' : 'save'}.do" method="post">
@@ -85,7 +63,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="ad.slot"/></label>
                             <div class="col-sm-10">
-                                <select name="slotId" class="form-control required" onchange="location.href='${oprt=='edit' ? 'edit' : 'create'}.do?id=${bean.id}&querySlotId='+this.value;">
+                                <select name="slotId" class="form-control required" onchange="location.href='${oprt=='edit' ? 'edit' : 'create'}.do?id=${bean.id}&slotId='+this.value;">
                                     <f:options items="${slotList}" itemValue="id" itemLabel="name" selected="${slot.id}"/>
                                 </select>
                             </div>
@@ -185,9 +163,31 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"><em class="required">*</em><s:message code="ad.flash"/></label>
                                     <div class="col-sm-10">
-                                        <f:text id="flash" name="flash" value="${bean.flash}" class="form-control required" maxlength="255"/>
-                                        <input id="f_flash" name="f_flash" type="file"/>
-                                        <button class="btn btn-default" type="button" onclick="uploadFlash('flash',this)"><s:message code="upload"/></button>
+                                        <div class="input-group">
+                                            <f:text id="flash" name="flash" value="${bean.flash}" class="form-control required" maxlength="255"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" id="flashButton" type="button"><s:message code='choose'/></button>
+                                                <span class="btn btn-success fileinput-button">
+                                                    <i class="glyphicon glyphicon-plus"></i>
+                                                    <span><s:message code="upload"/></span>
+                                                    <input id="flashFileUpload" type="file">
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div id="flashProgress" class="progress" style="display:none;">
+                                            <div class="progress-bar progress-bar-success"></div>
+                                        </div>
+                                        <script>
+                                            $(function () {
+                                                Cms.f7.uploads("flash", "flash", {
+                                                    settings: {"title": "<s:message code="webFile.chooseUploads"/>"}
+                                                });
+                                            });
+                                            var flashJfUpload = Cms.jfUploadFlash("flash", {
+                                                file_size_limit: ${GLOBAL.upload.flashLimit},
+                                                acceptFileTypes: ${GLOBAL.upload.flashTypes}
+                                            });
+                                        </script>
                                     </div>
                                 </div>
                             </div>

@@ -1,11 +1,5 @@
 package com.jspxcms.common.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 import org.htmlparser.Node;
 import org.htmlparser.lexer.Lexer;
@@ -13,7 +7,12 @@ import org.htmlparser.nodes.TextNode;
 import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.util.HtmlUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
@@ -166,7 +165,7 @@ public abstract class Strings {
 		try {
 			while ((node = lexer.nextNode()) != null && buff.length() < length) {
 				if (node instanceof TextNode) {
-					buff.append(HtmlUtils.htmlUnescape(node.getText()));
+					buff.append(node.getText());
 				}
 			}
 		} catch (ParserException e) {

@@ -1,12 +1,11 @@
 package com.jspxcms.core.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.jspxcms.common.image.ScaleParam;
 import com.jspxcms.core.support.Configurable;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 上传配置对象
@@ -124,12 +123,11 @@ public class GlobalUpload implements Configurable {
 	public String getTypes(String ext) {
 		StringBuilder sb = new StringBuilder();
 		if (StringUtils.isNotBlank(ext)) {
-			for (String s : StringUtils.split(ext, ',')) {
-				sb.append("*.").append(s).append(";");
-			}
-			sb.setLength(sb.length() - 1);
+            sb.append(" /(\\.|\\/)(");
+            sb.append(StringUtils.replace(ext, ",", "|"));
+            sb.append(")$/i");
 		} else {
-			sb.append("*.*");
+			sb.append("undefined");
 		}
 		return sb.toString();
 	}

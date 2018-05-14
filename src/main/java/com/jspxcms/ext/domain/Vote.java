@@ -1,28 +1,13 @@
 package com.jspxcms.ext.domain;
 
+import com.jspxcms.core.domain.Site;
+import com.jspxcms.core.support.Siteable;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import com.jspxcms.core.domain.Site;
-import com.jspxcms.core.support.Siteable;
 
 /**
  * Vote 投票实体类
@@ -57,7 +42,7 @@ public class Vote implements Siteable, java.io.Serializable {
 	/**
 	 * 启用状态
 	 */
-	public static final int NOMAL_STATUS = 0;
+	public static final int NORMAL_STATUS = 0;
 	/**
 	 * 禁用状态
 	 */
@@ -68,6 +53,9 @@ public class Vote implements Siteable, java.io.Serializable {
 		if (getInterval() == null) {
 			setInterval(0);
 		}
+		if (getCreationDate() == null) {
+			setCreationDate(new Timestamp(System.currentTimeMillis()));
+		}
 		if (getMaxSelected() == null) {
 			setMaxSelected(1);
 		}
@@ -77,11 +65,8 @@ public class Vote implements Siteable, java.io.Serializable {
 		if (getTotal() == null) {
 			setTotal(0);
 		}
-		if (getSeq() == null) {
-			setSeq(Integer.MAX_VALUE);
-		}
 		if (getStatus() == null) {
-			setStatus(NOMAL_STATUS);
+			setStatus(NORMAL_STATUS);
 		}
 	}
 
@@ -93,13 +78,13 @@ public class Vote implements Siteable, java.io.Serializable {
 	private String title;
 	private String number;
 	private String description;
+	private Date creationDate;
 	private Date beginDate;
 	private Date endDate;
 	private Integer interval;
 	private Integer maxSelected;
 	private Integer mode;
 	private Integer total;
-	private Integer seq;
 	private Integer status;
 
 	@Id
@@ -162,6 +147,16 @@ public class Vote implements Siteable, java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "f_creation_date", nullable = false)
+	public Date getCreationDate() {
+		return this.creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "f_begin_date", length = 19)
 	public Date getBeginDate() {
 		return this.beginDate;
@@ -215,15 +210,6 @@ public class Vote implements Siteable, java.io.Serializable {
 
 	public void setTotal(Integer total) {
 		this.total = total;
-	}
-
-	@Column(name = "f_seq", nullable = false)
-	public Integer getSeq() {
-		return this.seq;
-	}
-
-	public void setSeq(Integer seq) {
-		this.seq = seq;
 	}
 
 	@Column(name = "f_status", nullable = false)

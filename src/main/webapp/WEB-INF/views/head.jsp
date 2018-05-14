@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="${ctx}/static/vendor/ztree/css/metroStyle/metroStyle.css"/>
 <link rel="stylesheet" href="${ctx}/static/vendor/adminlte/css/AdminLTE.min.css">
 <link rel="stylesheet" href="${ctx}/static/vendor/adminlte/css/skins/skin-blue.min.css">
-<link rel="stylesheet" href="${ctx}/static/vendor/swfupload/process.css"/>
+<link rel="stylesheet" href="${ctx}/static/vendor/jquery-file-upload/css/jquery.fileupload.css">
 <link rel="stylesheet" href="${ctx}/static/vendor/editormd/css/editormd.min.css"/>
 <link rel="stylesheet" href="${ctx}/static/css/main.css">
 <!--[if lt IE 9]>
@@ -31,16 +31,15 @@ window.UEDITOR_HOME_URL = "${ctx}/static/vendor/ueditor/";
 <script src="${ctx}/static/vendor/jquery-ui/jquery-ui.js"></script>
 <script src="${ctx}/static/vendor/jquery-validation/jquery-validation.min.js"></script>
 <script src="${ctx}/static/js/jquery.validation_zh_CN.js"></script>
+<script src="${ctx}/static/vendor/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="${ctx}/static/vendor/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script src="${ctx}/static/vendor/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+<script src="${ctx}/static/vendor/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
 <script src="${ctx}/static/vendor/jquery-form/jquery-form.min.js"></script>
-<script src="${ctx}/static/vendor/jquery-ajaxfileuploader/jquery-ajaxfileuploader.min.js"></script>
 <script src="${ctx}/static/vendor/jquery-minicolors/jquery.minicolors.min.js"></script>
 <script src="${ctx}/static/vendor/jquery-cookie/jquery-cookie.min.js"></script>
 <script src="${ctx}/static/vendor/ztree/js/jquery.ztree.all.min.js"></script>
 <script src="${ctx}/static/vendor/My97DatePicker/cn_WdatePicker.js"></script>
-<script src="${ctx}/static/vendor/swfupload/swfupload.js"></script>
-<script src="${ctx}/static/vendor/swfupload/swfupload.queue.js"></script>
-<script src="${ctx}/static/vendor/swfupload/fileprogress.js"></script>
-<script src="${ctx}/static/vendor/swfupload/handlers.js"></script>
 <script src="${ctx}/static/vendor/ueditor/ueditor.config.js"></script>
 <script src="${ctx}/static/vendor/ueditor/ueditor.all.min.js"></script>
 <script src="${ctx}/static/vendor/ueditor/lang/zh-cn/zh-cn.js"></script>

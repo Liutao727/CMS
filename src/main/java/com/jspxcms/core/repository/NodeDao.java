@@ -51,6 +51,8 @@ public interface NodeDao extends Repository<Node, Integer>, NodeDaoPlus {
 	@QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") })
 	public List<Node> findBySiteIdAndNumber(Integer siteId, String number);
 
+	public List<Node> findBySiteIdAndName(Integer siteId, String name);
+
 	@Query("select count(*) from Node bean where bean.parent.id = ?1")
 	public long countByParentId(Integer parentId);
 

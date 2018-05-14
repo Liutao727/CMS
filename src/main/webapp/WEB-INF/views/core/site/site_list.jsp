@@ -13,6 +13,7 @@
     <jsp:include page="/WEB-INF/views/head.jsp"/>
     <script type="text/javascript">
         $(function () {
+            $("#importForm").validate();
             $("#sortHead").headSort();
         });
         function confirmDelete() {
@@ -61,6 +62,26 @@
                 </div>
                 <button class="btn btn-default btn-sm" type="submit"><s:message code="search"/></button>
             </form>
+            <div class="form-group">
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span><s:message code="site.import"/></span>
+                    <input id="siteFileUpload" type="file" name="file">
+                </span>
+                <script>
+                    var siteJfUpload = Cms.jfUpload("site", {
+                        url: "import.do?_site=" + ($.cookie("_site") || ""),
+                        file_size_limit: 0,
+                        acceptFileTypes: /\.xml$/i,
+                        dataType: "html",
+                        afterAlways: function (e, data) {
+                            setTimeout(function () {
+                                location.href = location.href;
+                            }, 1000);
+                        }
+                    });
+                </script>
+            </div>
             <form method="post">
                 <tags:search_params/>
                 <div class="btn-toolbar ls-btn-bar">
@@ -87,7 +108,7 @@
                     <thead id="sortHead" pagesort="<c:out value='${page_sort[0]}' />" pagedir="${page_sort_dir[0]}" pageurl="list.do?page_sort={0}&page_sort_dir={1}&${searchstringnosort}">
                     <tr class="ls_table_th">
                         <th width="25"><input type="checkbox" onclick="Cms.check('ids',this.checked);"/></th>
-                        <th width="140"><s:message code="operate"/></th>
+                        <th width="160"><s:message code="operate"/></th>
                         <th width="30" class="ls-th-sort"><span class="ls-sort" pagesort="id">ID</span></th>
                         <th class="ls-th-sort"><span class="ls-sort" pagesort="name"><s:message code="site.name"/></span></th>
                         <th class="ls-th-sort"><span class="ls-sort" pagesort="number"><s:message code="site.number"/></span></th>
@@ -107,6 +128,9 @@
                                 <shiro:hasPermission name="core:site:edit">
                                     <a id="edit_opt_${bean.id}" href="edit.do?id=${bean.id}&position=${status.index}&${searchstring}" class="ls-opt"><s:message code="edit"/></a>
                                 </shiro:hasPermission>
+                                <shiro:hasPermission name="core:site:export">
+                                    <a id="export_opt_${bean.id}" href="export.do?id=${bean.id}&position=${status.index}&${searchstring}" class="ls-opt"><s:message code="export"/></a>
+                                </shiro:hasPermission>
                                 <shiro:hasPermission name="core:site:delete">
                                     <c:choose>
                                         <c:when test="${bean.id==1}">
@@ -123,7 +147,7 @@
                             <td><c:out value="${bean.number}"/></td>
                             <td><c:out value="${bean.domain}"/></td>
                             <td><c:out value="${bean.org.displayName}"/></td>
-                            <%--<td><s:message code="site.status.${bean.status}"/></td>--%>
+                                <%--<td><s:message code="site.status.${bean.status}"/></td>--%>
                         </tr>
                     </c:forEach>
                     </tbody>

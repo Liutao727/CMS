@@ -17,7 +17,15 @@ public interface InfoService {
                      Map<String, String> customs, Map<String, String> clobs,
                      List<InfoImage> images, List<InfoFile> files, Integer[] attrIds,
                      Map<String, String> attrImages, String[] tagNames, Integer nodeId,
-                     Integer creatorId, String status, Integer siteId);
+                     Integer creatorId, String status, Integer siteId, Integer fromSiteId);
+
+    public Info clone(Info srcInfo, Integer siteId, Integer fromSiteId, Integer nodeId, Integer userId, String status);
+
+    public List<Info> importInfo(List<Info> infoList, Integer userId, Integer siteId);
+
+    public List<Info> push(Integer[] ids, Integer[] siteIds, Integer[] nodeIds, Integer userId);
+
+    public List<InfoPush> pushDelete(Integer[] ids);
 
     public Info update(Info bean, InfoDetail detail, Integer[] nodeIds,
                        Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds,
@@ -42,6 +50,8 @@ public interface InfoService {
     public List<Info> archive(Integer[] ids);
 
     public List<Info> antiArchive(Integer[] ids);
+
+    public List<Info> massWeixin(Integer[] ids);
 
     public Info delete(Integer id);
 
