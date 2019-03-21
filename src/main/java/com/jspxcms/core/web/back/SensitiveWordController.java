@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -40,9 +38,9 @@ public class SensitiveWordController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SensitiveWordController.class);
 
-	@RequestMapping("list.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:list")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -53,9 +51,9 @@ public class SensitiveWordController {
 		return "core/sensitive_word/sensitive_word_list";
 	}
 
-	@RequestMapping("create.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:create")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		if (id != null) {
 			SensitiveWord bean = service.get(id);
@@ -65,9 +63,9 @@ public class SensitiveWordController {
 		return "core/sensitive_word/sensitive_word_form";
 	}
 
-	@RequestMapping("edit.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:edit")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer position,
@@ -85,9 +83,9 @@ public class SensitiveWordController {
 		return "core/sensitive_word/sensitive_word_form";
 	}
 
-	@RequestMapping("save.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:save")
+	@PostMapping("save.do")
 	public String save(SensitiveWord bean, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -106,9 +104,9 @@ public class SensitiveWordController {
 		}
 	}
 
-	@RequestMapping("update.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:update")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") SensitiveWord bean,
 			Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -126,9 +124,9 @@ public class SensitiveWordController {
 		}
 	}
 
-	@RequestMapping("delete.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:sensitive_word:delete")
+	@RequestMapping("delete.do")
 	public String delete(Integer[] ids, HttpServletRequest request,
 			RedirectAttributes ra) {
 		SensitiveWord[] beans = service.delete(ids);

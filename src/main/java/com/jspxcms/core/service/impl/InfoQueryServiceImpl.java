@@ -29,6 +29,7 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 public class InfoQueryServiceImpl implements InfoQueryService {
+    @Override
     public Page<Info> findAll(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber, Integer userId,
                               boolean allInfoPerm, int infoRightType, String status, Map<String, String[]> params, Pageable pageable) {
         return dao.findAll(
@@ -36,6 +37,7 @@ public class InfoQueryServiceImpl implements InfoQueryService {
                 pageable);
     }
 
+    @Override
     public RowSide<Info> findSide(Integer siteId, Integer mainNodeId, Integer nodeId, String treeNumber,
                                   Integer userId, boolean allInfoPerm, int infoRightType, String status, Map<String, String[]> params,
                                   Info bean, Integer position, Sort sort) {

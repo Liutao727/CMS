@@ -25,9 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -63,7 +61,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
@@ -83,7 +81,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, Integer orgId, HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -116,7 +114,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position,
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
@@ -146,7 +144,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(User bean, UserDetail detail, Integer[] roleIds, Integer[] orgIds, Integer[] groupIds,
 			Integer orgId, Integer groupId, String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -186,7 +184,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") User bean, @ModelAttribute("detail") UserDetail detail,
 			Integer[] roleIds, Integer[] orgIds, Integer[] groupIds, Integer orgId, Integer groupId, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -225,7 +223,7 @@ public class UserGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:delete")
-	@RequestMapping("delete.do")
+	@PostMapping("delete.do")
 	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -233,7 +231,7 @@ public class UserGlobalController {
 		validateIds(ids, currRank);
 		for (Integer id : ids) {
 			User bean = service.get(id);
-			if (bean.getId() == user.getId() || bean.getId() == 0 || bean.getId() == 1) {
+			if (bean.getId().equals(user.getId()) || bean.getId() == 0 || bean.getId() == 1) {
 				// 当前用户、匿名用户（ID=0）和根用户（ID=1）不能删除
 				throw new CmsException("user.error.systemUserCannotBeDeleted");
 			}
@@ -252,7 +250,7 @@ public class UserGlobalController {
 	// 删除密码
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:delete_password")
-	@RequestMapping("delete_password.do")
+	@PostMapping("delete_password.do")
 	public String deletePassword(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -272,7 +270,7 @@ public class UserGlobalController {
 	// 审核账户
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:check")
-	@RequestMapping("check.do")
+	@PostMapping("check.do")
 	public String check(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
 		Integer currRank = user.getRank();
@@ -289,7 +287,7 @@ public class UserGlobalController {
 	// 锁定账户
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:lock")
-	@RequestMapping("lock.do")
+	@PostMapping("lock.do")
 	public String lock(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
 		Integer currRank = user.getRank();
@@ -306,7 +304,7 @@ public class UserGlobalController {
 	// 解锁账户
 	@RequiresRoles("super")
 	@RequiresPermissions("core:user_global:unlock")
-	@RequestMapping("unlock.do")
+	@PostMapping("unlock.do")
 	public String unlock(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
 		Integer currRank = user.getRank();

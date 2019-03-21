@@ -121,7 +121,7 @@
     <!-- 中文单字分词器。所有的中文都按两个字分词。如“我的世界”分词为“我  | 的  | 世  | 界” -->
     <!--
     <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer" destroy-method="close">
-    <constructor-arg><util:constant static-field="org.apache.lucene.util.Version.LUCENE_36"/></constructor-arg>
+        <constructor-arg><util:constant static-field="org.apache.lucene.util.Version.LUCENE_36"/></constructor-arg>
     </bean>
      -->
 

@@ -23,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,9 +44,9 @@ import static com.jspxcms.core.constant.Constants.*;
 public class SiteController {
     private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
 
-    @RequestMapping("list.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:list")
+    @GetMapping("list.do")
     public String list(@PageableDefault(sort = "treeNumber") Pageable pageable, HttpServletRequest request,
                        org.springframework.ui.Model modelMap) {
         Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
@@ -57,9 +55,9 @@ public class SiteController {
         return "core/site/site_list";
     }
 
-    @RequestMapping("create.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:create")
+    @GetMapping("create.do")
     public String create(Integer id, HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site bean = null;
         if (id != null) {
@@ -86,9 +84,9 @@ public class SiteController {
         return "core/site/site_form";
     }
 
-    @RequestMapping("edit.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:edit")
+    @GetMapping("edit.do")
     public String edit(Integer id, Integer position, @PageableDefault(sort = "treeNumber") Pageable pageable,
                        HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site bean = service.get(id);
@@ -124,9 +122,9 @@ public class SiteController {
         return "core/site/site_form";
     }
 
-    @RequestMapping("export.do")
     @RequiresRoles("super")
-    @RequiresPermissions("core:site:exportNode")
+    @RequiresPermissions("core:site:export")
+    @GetMapping("export.do")
     public void exportSite(Integer id, HttpServletResponse response) throws JAXBException, IOException {
         Site site = service.get(id);
         response.setCharacterEncoding("UTF-8");
@@ -146,7 +144,9 @@ public class SiteController {
         }
     }
 
-    @RequestMapping("import.do")
+    @RequiresRoles("super")
+    @RequiresPermissions("core:site:import")
+    @PostMapping("import.do")
     public String importSite(@RequestParam(value = "file", required = false) MultipartFile file,
                              HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
             throws IOException, JAXBException {
@@ -162,9 +162,9 @@ public class SiteController {
         return "redirect:list.do";
     }
 
-    @RequestMapping("save.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:save")
+    @PostMapping("save.do")
     public String save(Site bean, Integer parentId, Integer orgId,
                        Integer htmlPublishPointId, Integer mobilePublishPointId, Integer copySiteId, String[] copyData,
                        String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -183,9 +183,9 @@ public class SiteController {
         }
     }
 
-    @RequestMapping("update.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:update")
+    @PostMapping("update.do")
     public String update(@ModelAttribute("bean") Site bean, Integer parentId,
                          Integer orgId, Integer htmlPublishPointId, Integer mobilePublishPointId, Integer position,
                          String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -202,9 +202,9 @@ public class SiteController {
         }
     }
 
-    @RequestMapping("delete.do")
     @RequiresRoles("super")
     @RequiresPermissions("core:site:delete")
+    @RequestMapping("delete.do")
     public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
         for (Integer id : ids) {
             // ID==1的默认站点不能删除

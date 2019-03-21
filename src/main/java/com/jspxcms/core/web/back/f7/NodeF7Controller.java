@@ -5,8 +5,10 @@ import com.jspxcms.core.domain.Node;
 import com.jspxcms.core.domain.User;
 import com.jspxcms.core.service.NodeQueryService;
 import com.jspxcms.core.support.Context;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree.do")
     public String f7NodeTree(Integer id, Integer siteId, Integer excludeChildrenId,
                              Boolean isRealNode, HttpServletRequest request,
@@ -67,6 +70,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree_info_perms.do")
     public String f7NodeTreeInfoPerms(Integer id, Integer excludeChildrenId,
                                       Boolean isRealNode, HttpServletRequest request,
@@ -103,6 +107,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree_node_perms.do")
     public String f7NodeTreeNodePerms(Integer id, Integer excludeChildrenId,
                                       Boolean isRealNode, HttpServletRequest request,
@@ -138,6 +143,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree_multi.do")
     public String f7NodeTreeMulti(Integer[] ids, Boolean isRealNode,
                                   HttpServletRequest request, HttpServletResponse response,
@@ -167,6 +173,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree_multi_info_perms.do")
     public String f7NodeTreeMultiInfoPerms(Integer[] ids, Boolean isRealNode,
                                            HttpServletRequest request, HttpServletResponse response,
@@ -199,6 +206,7 @@ public class NodeF7Controller {
      * @param modelMap
      * @return
      */
+    @RequiresPermissions("core:nav")
     @RequestMapping("choose_node_tree_perms.do")
     public String f7NodeTreePerms(Integer[] ids, Boolean isRealNode,
                                   HttpServletRequest request, HttpServletResponse response,

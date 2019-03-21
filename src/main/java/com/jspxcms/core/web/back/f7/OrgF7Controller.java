@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,6 +36,7 @@ public class OrgF7Controller {
 	 * @param modelMap
 	 * @return
 	 */
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_org_tree.do")
 	public String f7OrgTree(Integer id, String treeNumber,
 			@RequestParam(defaultValue = "true") Boolean allowRoot,
@@ -62,6 +65,7 @@ public class OrgF7Controller {
 		return "core/org/choose_org_tree";
 	}
 
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_org_tree_multi.do")
 	public String f7OrgTreeMulti(Integer[] ids, String treeNumber,
 			HttpServletRequest request, HttpServletResponse response,

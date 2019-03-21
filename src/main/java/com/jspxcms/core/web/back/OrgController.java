@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +39,7 @@ public class OrgController {
             .getLogger(OrgController.class);
 
     @RequiresPermissions("core:org:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(
             Integer queryParentId,
             @RequestParam(defaultValue = "true") boolean showDescendants,
@@ -62,7 +60,7 @@ public class OrgController {
     }
 
     @RequiresPermissions("core:org:create")
-    @RequestMapping("create.do")
+    @GetMapping("create.do")
     public String create(Integer id, Integer parentId, Integer queryParentId,
                          Boolean showDescendants, HttpServletRequest request,
                          org.springframework.ui.Model modelMap) {
@@ -92,7 +90,7 @@ public class OrgController {
     }
 
     @RequiresPermissions("core:org:edit")
-    @RequestMapping("edit.do")
+    @GetMapping("edit.do")
     public String edit(
             Integer id,
             Integer queryParentId,
@@ -122,7 +120,7 @@ public class OrgController {
     }
 
     @RequiresPermissions("core:org:save")
-    @RequestMapping("save.do")
+    @PostMapping("save.do")
     public String save(Org bean, Integer parentId, Integer queryParentId,
                        Boolean showDescendants, String redirect,
                        HttpServletRequest request, RedirectAttributes ra) {
@@ -151,7 +149,7 @@ public class OrgController {
     }
 
     @RequiresPermissions("core:org:update")
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     public String update(@ModelAttribute("bean") Org bean, Integer parentId,
                          Integer queryParentId, Boolean showDescendants, Integer position,
                          String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -181,7 +179,7 @@ public class OrgController {
     }
 
     @RequiresPermissions("core:org:batch_update")
-    @RequestMapping("batch_update.do")
+    @PostMapping("batch_update.do")
     public String batchUpdate(Integer[] id, String[] name, String[] number,
                               String[] phone, String[] address, Integer queryParentId,
                               Boolean showDescendants, Pageable pageable,

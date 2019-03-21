@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,7 +40,7 @@ public class AttributeController {
 			.getLogger(AttributeController.class);
 
 	@RequiresPermissions("core:attribute:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -48,7 +50,7 @@ public class AttributeController {
 	}
 
 	@RequiresPermissions("core:attribute:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Attribute bean, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -61,7 +63,7 @@ public class AttributeController {
 	}
 
 	@RequiresPermissions("core:attribute:batch_update")
-	@RequestMapping("batch_update.do")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, String[] name, String[] number,
 			Integer[] imageWidth, Integer[] imageHeight, Boolean[] scale,
 			Boolean[] exact, Boolean[] watermark, HttpServletRequest request,
@@ -101,7 +103,7 @@ public class AttributeController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("check_number.do")
+	@GetMapping("check_number.do")
 	@ResponseBody
 	public String checkNumber(String number, String original,
 			HttpServletRequest request) {
@@ -110,8 +112,7 @@ public class AttributeController {
 		}
 		// 检查数据库是否重名
 		Integer siteId = Context.getCurrentSiteId();
-		String result = service.numberExist(number, siteId) ? "false" : "true";
-		return result;
+		return service.numberExist(number, siteId) ? "false" : "true";
 	}
 
 	private void validateIds(Integer[] ids, Integer siteId) {

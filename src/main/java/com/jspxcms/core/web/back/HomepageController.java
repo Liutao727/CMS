@@ -23,10 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -65,7 +62,7 @@ public class HomepageController {
 	private static final Logger logger = LoggerFactory.getLogger(HomepageController.class);
 
 	// @RequiresPermissions("core:homepage:welcome")
-	@RequestMapping("welcome.do")
+	@GetMapping("welcome.do")
 	public String welcome(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		User user = Context.getCurrentUser();
@@ -99,7 +96,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:environment")
-	@RequestMapping("environment.do")
+	@GetMapping("environment.do")
 	public String environment(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Properties props = System.getProperties();
 		Runtime runtime = Runtime.getRuntime();
@@ -124,7 +121,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:personal:edit")
-	@RequestMapping(value = "personal_edit.do")
+	@GetMapping(value = "personal_edit.do")
 	public String personalEdit(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		User user = Context.getCurrentUser();
 		modelMap.addAttribute("user", user);
@@ -132,7 +129,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:personal:update")
-	@RequestMapping(value = "personal_update.do")
+	@PostMapping(value = "personal_update.do")
 	public String personalUpdate(String origPassword, String rawPassword, HttpServletRequest request,
 			RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
@@ -154,7 +151,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:notification:list")
-	@RequestMapping(value = "notification_list.do")
+	@GetMapping(value = "notification_list.do")
 	public String notificationList(
 			@PageableDefault(sort = "sendTime", direction = Direction.DESC, size = Constants.PAGE_SIZE) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -174,6 +171,7 @@ public class HomepageController {
 		return "redirect:notification_list.do";
 	}
 
+	@RequiresPermissions("core:homepage:notification:delete")
 	@RequestMapping(value = "notification_delete_ajax.do")
 	public void notificationView(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
@@ -182,7 +180,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:message:list")
-	@RequestMapping(value = "message_list.do")
+	@GetMapping(value = "message_list.do")
 	public String messageList(@RequestParam(defaultValue = "false") boolean unread,
 			@PageableDefault(sort = "send_time_", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -195,7 +193,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:message:list")
-	@RequestMapping(value = "message_contact.do")
+	@GetMapping(value = "message_contact.do")
 	public String messageContact(Integer contactId,
 			@PageableDefault(sort = "sendTime", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -210,7 +208,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:message:send")
-	@RequestMapping(value = "message_send.do", method = RequestMethod.POST)
+	@PostMapping(value = "message_send.do")
 	public String messageSend(String receiverUsername, Integer contactId, MessageText messageText,
 			HttpServletRequest request, RedirectAttributes ra) {
 		User user = Context.getCurrentUser();
@@ -261,7 +259,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:mail_inbox:list")
-	@RequestMapping(value = "mail_inbox_list.do")
+	@GetMapping(value = "mail_inbox_list.do")
 	public String mailInboxList(@RequestParam(defaultValue = "false") boolean unread,
 			@PageableDefault(sort = "receiveTime", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -273,7 +271,7 @@ public class HomepageController {
 	}
 
 	@RequiresPermissions("core:homepage:mail_inbox:show")
-	@RequestMapping(value = "mail_inbox_show.do")
+	@GetMapping(value = "mail_inbox_show.do")
 	public String mailInboxShow(Integer id, Integer position,
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {

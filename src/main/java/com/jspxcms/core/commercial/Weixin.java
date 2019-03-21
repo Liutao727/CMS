@@ -24,7 +24,7 @@ public class Weixin {
 			org.springframework.ui.Model modelMap, WeixinProxy weixinProxy, InfoQueryService query)
 			throws WeixinException {
 		// 本功能在商业版中提供
-		return "redirect:/support_genuine.jsp";
+		return "redirect:/support_genuine.html";
 	}
 
 	public static void massWeixin(String mode, Integer groupId, String towxname, String[] title, String[] author,

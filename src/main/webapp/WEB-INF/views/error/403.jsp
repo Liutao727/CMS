@@ -23,6 +23,10 @@ strong{font-weight:bold;}
 </head>
 <body>
 <h1 class="type"><strong class="code">403</strong> &nbsp; <strong class="title">您没有权限访问该页面</strong></h1>
+<div class="messages">
+    <%-- <p class="message">URL: ${requestScope["javax.servlet.forward.request_uri"]}</p> --%>
+    <c:if test="${!empty requestScope['javax.servlet.error.message']}"><p class="message">信息：${requestScope["javax.servlet.error.message"]}</p></c:if>
+</div>
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->
 <!-- 1111111111111111111111111111111111111111111111111111111111111111111111 -->

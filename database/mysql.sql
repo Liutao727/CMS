@@ -3830,7 +3830,7 @@ INSERT INTO cms_tag (f_tag_id, f_site_id, f_name, f_creation_date, f_refers) VAL
 INSERT INTO cms_user (f_user_id, f_org_id, f_membergroup_id, f_username, f_password, f_salt, f_email, f_mobile, f_real_name, f_gender, f_birth_date, f_validation_type, f_validation_key, f_rank, f_type, f_status, f_global_id, f_qq_openid, f_weibo_uid, f_weixin_openid) VALUES (0,1,1,'anonymous',NULL,NULL,NULL,NULL,NULL,'M',NULL,NULL,NULL,1,1,1,1,NULL,NULL,NULL);
 INSERT INTO cms_user (f_user_id, f_org_id, f_membergroup_id, f_username, f_password, f_salt, f_email, f_mobile, f_real_name, f_gender, f_birth_date, f_validation_type, f_validation_key, f_rank, f_type, f_status, f_global_id, f_qq_openid, f_weibo_uid, f_weixin_openid) VALUES (1,1,1,'admin',NULL,NULL,NULL,NULL,'管理员',NULL,NULL,NULL,NULL,0,1,0,1,NULL,NULL,NULL);
 INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (0,NULL,NULL,0,NULL,NULL,NULL,NULL,'2013-03-09 22:18:56','127.0.0.1',0,NULL,NULL,NULL,NULL,NULL,'0');
-INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (1,'2015-04-12 10:27:43',NULL,0,'2018-05-04 10:18:49','0:0:0:0:0:0:0:1','2018-05-14 10:46:44','0:0:0:0:0:0:0:1','2013-02-21 20:59:27','127.0.0.1',681,NULL,NULL,NULL,NULL,NULL,'1');
+INSERT INTO cms_user_detail (f_user_id, f_validation_date, f_login_error_date, f_login_error_count, f_prev_login_date, f_prev_login_ip, f_last_login_date, f_last_login_ip, f_creation_date, f_creation_ip, f_logins, f_bio, f_come_from, f_qq, f_msn, f_weixin, f_is_with_avatar) VALUES (1,'2015-04-12 10:27:43',NULL,0,'2019-03-12 17:33:26','0:0:0:0:0:0:0:1','2019-03-19 19:00:16','0:0:0:0:0:0:0:1','2013-02-21 20:59:27','127.0.0.1',684,NULL,NULL,NULL,NULL,NULL,'1');
 INSERT INTO cms_user_membergroup (f_user_id, f_membergroup_id, f_group_index) VALUES (1,1,0);
 INSERT INTO cms_user_membergroup (f_user_id, f_membergroup_id, f_group_index) VALUES (0,1,0);
 INSERT INTO cms_user_org (f_user_id, f_org_id, f_org_index) VALUES (1,1,0);
@@ -3860,7 +3860,7 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_member_gr
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_model',52);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_model_field',632);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_node',119);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_operation_log',1936);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_operation_log',1966);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_org',24);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_publish_point',33);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_question',23);
@@ -3879,9 +3879,9 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_site',24)
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_special',34);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_special_category',27);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_tag',105);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_task',46);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_task',56);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_user',40);
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4625);
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_visit_log',4675);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote',22);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_mark',116);
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES ('cms_vote_option',27);

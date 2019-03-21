@@ -165,7 +165,6 @@ public class UploadHandlerImpl implements UploadHandler {
 		} catch (Exception e) {
 			result.setError(e.getMessage());
 		}
-		return;
 	}
 
 	@Override
@@ -190,7 +189,6 @@ public class UploadHandlerImpl implements UploadHandler {
 			result.setError(e.getMessage());
 			logger.error(null, e);
 		}
-		return;
 	}
 
 	private UploadResult doUpload(File file, String fileName, String type, Site site, Integer userId, String ip,
@@ -205,7 +203,7 @@ public class UploadHandlerImpl implements UploadHandler {
 			return result;
 		}
 		// 文库是否开启
-		if (type == Uploader.DOC && !isDocEnabled(result, site.getGlobal())) {
+		if (Uploader.DOC.equals(type) && !isDocEnabled(result, site.getGlobal())) {
 			return result;
 		}
 		PublishPoint point = site.getUploadsPublishPoint();
@@ -220,7 +218,7 @@ public class UploadHandlerImpl implements UploadHandler {
 			SiteWatermark sw = site.getWatermark();
 			doUploadImage(fileHandler, file, pathname, scale, exact, width, height, thumbnail, thumbnailWidth,
 					thumbnailHeight, watermark, gu, sw, ip, userId, siteId);
-		} else if (Uploader.DOC == type) {
+		} else if (Uploader.DOC.equals(type)) {
 			if (!"swf".equals(ext)) {
 				String swfPathname = site.getSiteBase(Uploader.getQuickPathname(type, "swf"));
 				swfUrl = urlPrefix + swfPathname;

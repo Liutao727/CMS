@@ -19,10 +19,20 @@ $(function() {
 function confirmDelete() {
 	return confirm("<s:message code='confirmDelete'/>");
 }
+
+function singleDelete(id) {
+    if (!confirmDelete()) return false;
+    $('#singleIds').val(id);
+    $('#singleForm').attr('action', 'delete.do').submit();
+}
 </script>
 </head>
 <body class="skin-blue content-body">
 <jsp:include page="/WEB-INF/views/commons/show_message.jsp"/>
+<form id="singleForm" method="post">
+	<tags:search_params />
+	<input type="hidden" id="singleIds" name="ids" value="">
+</form>
 <div class="content-header">
 	<h1><s:message code="userGlobal.management"/> - <s:message code="${oprt=='edit' ? 'edit' : 'create'}"/></h1>
 </div>
@@ -46,7 +56,7 @@ function confirmDelete() {
 					</div>
 					<div class="btn-group">
 						<shiro:hasPermission name="core:user_global:delete">
-						<button class="btn btn-default" type="button" onclick="if(confirmDelete()){location.href='delete.do?ids=${bean.id}&${searchstring}';}"<c:if test="${oprt=='create' || bean.id le 1}"> disabled="disabled"</c:if>><s:message code="delete"/></button>
+						<button class="btn btn-default" type="button" onclick="singleDelete(${bean.id})"<c:if test="${oprt=='create' || bean.id le 1}"> disabled="disabled"</c:if>><s:message code="delete"/></button>
 						</shiro:hasPermission>
 					</div>
 					<div class="btn-group">

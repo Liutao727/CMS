@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +34,7 @@ public class ResumeController {
             .getLogger(ResumeController.class);
 
     @RequiresPermissions("plug:resume:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
                        HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Integer siteId = Context.getCurrentSiteId();
@@ -47,7 +45,7 @@ public class ResumeController {
     }
 
     @RequiresPermissions("plug:resume:create")
-    @RequestMapping("create.do")
+    @GetMapping("create.do")
     public String create(Integer id, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
         if (id != null) {
@@ -60,7 +58,7 @@ public class ResumeController {
     }
 
     @RequiresPermissions("plug:resume:edit")
-    @RequestMapping("edit.do")
+    @GetMapping("edit.do")
     public String edit(Integer id, Integer position,
                        @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
                        HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -77,7 +75,7 @@ public class ResumeController {
     }
 
     @RequiresPermissions("plug:resume:save")
-    @RequestMapping("save.do")
+    @PostMapping("save.do")
     public String save(@Valid Resume bean, String redirect, HttpServletRequest request, RedirectAttributes ra) {
         Integer siteId = Context.getCurrentSiteId();
         service.save(bean, siteId);
@@ -95,7 +93,7 @@ public class ResumeController {
     }
 
     @RequiresPermissions("plug:resume:update")
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     public String update(@ModelAttribute("bean") Resume bean, Integer position,
                          String redirect, HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();

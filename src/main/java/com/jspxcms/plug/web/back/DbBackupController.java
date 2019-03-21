@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -32,7 +33,7 @@ public class DbBackupController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("plug:db_backup:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		String realPath = pathResolver.getPath(BACKUP_PATH);
 		File parent = new File(realPath);

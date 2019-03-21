@@ -15,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.PolicyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -704,15 +705,13 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     }
 
     private void sanitizeClob(Map<String, String> clobs) {
-        // if (clobs == null) {
-        // return;
-        // }
-        // for (Entry<String, String> entry : clobs.entrySet()) {
-        // String v = entry.getValue();
-        // if (v != null) {
-        // entry.setValue(policyFactory.sanitize(v));
-        // }
-        // }
+        if (clobs == null) return;
+        for (Map.Entry<String, String> entry : clobs.entrySet()) {
+            String v = entry.getValue();
+            if (v != null) {
+                entry.setValue(policyFactory.sanitize(v));
+            }
+        }
     }
 
     public void preUserDelete(Integer[] ids) {
@@ -844,7 +843,7 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
         this.deleteListeners = deleteListeners;
     }
 
-    // private PolicyFactory policyFactory;
+    private PolicyFactory policyFactory;
     private HtmlService htmlService;
     private AttachmentRefService attachmentRefService;
     private CommentService commentService;
@@ -865,10 +864,10 @@ public class InfoServiceImpl implements InfoService, SiteDeleteListener, OrgDele
     private SiteService siteService;
     protected PathResolver pathResolver;
 
-    // @Autowired
-    // public void setPolicyFactory(PolicyFactory policyFactory) {
-    // this.policyFactory = policyFactory;
-    // }
+    @Autowired
+    public void setPolicyFactory(PolicyFactory policyFactory) {
+        this.policyFactory = policyFactory;
+    }
 
     @Autowired
     public void setHtmlService(HtmlService htmlService) {

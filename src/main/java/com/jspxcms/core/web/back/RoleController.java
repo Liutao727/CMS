@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -49,7 +47,7 @@ public class RoleController {
 			.getLogger(RoleController.class);
 
 	@RequiresPermissions("core:role:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = { "seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -62,7 +60,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		if (id != null) {
@@ -75,7 +73,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position, @PageableDefault(sort = {
 			"seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -96,7 +94,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Role bean, Integer[] infoPermIds, Integer[] nodePermIds,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -116,7 +114,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Role bean,
 			Integer[] infoPermIds, Integer[] nodePermIds, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -147,7 +145,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:update")
-	@RequestMapping("batch_update.do")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, String[] name, Integer[] rank,
 			String[] description, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -164,7 +162,7 @@ public class RoleController {
 	}
 
 	@RequiresPermissions("core:role:delete")
-	@RequestMapping("delete.do")
+	@PostMapping("delete.do")
 	public String delete(Integer[] ids, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();

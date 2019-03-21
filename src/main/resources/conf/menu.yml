@@ -215,28 +215,28 @@
     - webFile.upload@core:web_file_2:upload
     - webFile.zipUpload@core:web_file_2:zip_upload
     - webFile.siteFile@core:web_file_2:site_file
-200-300:
-  name: webFile3.management
-  url: core/web_file_3/list.do,core/web_file_3/left.do?noSelect=true
-  perms: core:web_file_3:list,core:web_file_3:left
-  ops:
-    - webFile.createText@core:web_file_3:create
-    - webFile.createDir@core:web_file_3:create_dir
-    - copy@core:web_file_3:copy
-    - edit@core:web_file_3:edit
-    - webFile.open@core:web_file_3:open
-    - save@:web_file_3:save
-    - update@core:web_file_3:update
-    - delete@core:web_file_3:delete
-    - webFile.rename@core:web_file_3:rename
-    - webFile.mkdir@core:web_file_3:mkdir
-    - webFile.move@core:web_file_3:move
-    - webFile.zip@core:web_file_3:zip
-    - webFile.zipDownload@core:web_file_3:zip_download
-    - webFile.unzip@core:web_file_3:unzip
-    - webFile.upload@core:web_file_3:upload
-    - webFile.zipUpload@core:web_file_3:zip_upload
-    - webFile.siteFile@core:web_file_3:site_file
+#200-300:
+#  name: webFile3.management
+#  url: core/web_file_3/list.do,core/web_file_3/left.do?noSelect=true
+#  perms: core:web_file_3:list,core:web_file_3:left
+#  ops:
+#    - webFile.createText@core:web_file_3:create
+#    - webFile.createDir@core:web_file_3:create_dir
+#    - copy@core:web_file_3:copy
+#    - edit@core:web_file_3:edit
+#    - webFile.open@core:web_file_3:open
+#    - save@:web_file_3:save
+#    - update@core:web_file_3:update
+#    - delete@core:web_file_3:delete
+#    - webFile.rename@core:web_file_3:rename
+#    - webFile.mkdir@core:web_file_3:mkdir
+#    - webFile.move@core:web_file_3:move
+#    - webFile.zip@core:web_file_3:zip
+#    - webFile.zipDownload@core:web_file_3:zip_download
+#    - webFile.unzip@core:web_file_3:unzip
+#    - webFile.upload@core:web_file_3:upload
+#    - webFile.zipUpload@core:web_file_3:zip_upload
+#    - webFile.siteFile@core:web_file_3:site_file
 500:
   name: navigation.module
   icon: glyphicon glyphicon-th
@@ -251,7 +251,7 @@
     - delete@core:task:delete
 500-200:
   name: scheduleJob.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:schedule_job:list
   ops:
     - create@core:schedule_job:create
@@ -287,7 +287,7 @@
     - delete@core:sensitive_word:delete
 500-500:
   name: attachment.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:attachment:list
   ops:
     - delete@core:attachment:delete
@@ -557,7 +557,7 @@
     - global.custom.settingUpdate@core:conf_global:custom_update
 900-300:
   name: publishPoint.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:publish_point:list
   ops:
     - create@core:publish_point:create
@@ -574,9 +574,11 @@
     - create@core:site:create
     - copy@core:site:copy
     - edit@core:site:edit
+    - export@core:site:export
     - save@core:site:save
     - update@core:site:update
     - delete@core:site:delete
+    - import@core:site:import
 900-500:
   name: model.management
   url: core/model/list.do
@@ -594,7 +596,7 @@
 
 900-700:
   name: workflowGroup.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:workflow_group:list
   ops:
     - create@core:workflow_group:create
@@ -605,7 +607,7 @@
     - delete@core:workflow_group:delete
 900-800:
   name: workflow.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:workflow:list,core:workflow_step:list
   ops:
     - create@core:workflow:create,core:workflow_step:create
@@ -616,7 +618,7 @@
     - delete@core:workflow:delete,core:workflow_step:delete
 900-900:
   name: operationLog.management
-  url: ../support_genuine.jsp
+  url: ../support_genuine.html
   perms: core:operation_log:list
   ops:
     - view@core:operation_log:view

@@ -82,7 +82,7 @@ public class HtmlGeneratorImpl implements HtmlGenerator {
 				try {
 					Integer lastId = null;
 					do {
-						htmlService.makeNode(siteId, nodeId, includeChildren, taskId, false, lastId, NODE_MAX_RESULT);
+						lastId = htmlService.makeNode(siteId, nodeId, includeChildren, taskId, false, lastId, NODE_MAX_RESULT);
 					} while (lastId != null);
 					taskService.finish(taskId);
 				} catch (Exception e) {

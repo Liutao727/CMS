@@ -1,3 +1,4 @@
+[#escape x as (x)!?html]
 <div class="pager">
 <a[#if page>1] href="${paging(1)}"[/#if] class="page">首页</a>
 [#if page>1]
@@ -16,3 +17,4 @@
 <a[#if page<pagedList.totalPages] href="${paging(pagedList.totalPages)}"[/#if] class="page" >末页</a>
 <div style="clear:both;"></div>
 </div>
+[/#escape]

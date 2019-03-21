@@ -22,9 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -53,7 +51,7 @@ public class FriendlinkController {
 			.getLogger(FriendlinkController.class);
 
 	@RequiresPermissions("ext:friendlink:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Map<String, String[]> params = Servlets.getParamValuesMap(request,
@@ -67,7 +65,7 @@ public class FriendlinkController {
 	}
 
 	@RequiresPermissions("ext:friendlink:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, Integer typeId,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -89,7 +87,7 @@ public class FriendlinkController {
 	}
 
 	@RequiresPermissions("ext:friendlink:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer position,
@@ -113,7 +111,7 @@ public class FriendlinkController {
 	}
 
 	@RequiresPermissions("ext:friendlink:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Friendlink bean, Integer typeId, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -135,7 +133,7 @@ public class FriendlinkController {
 	}
 
 	@RequiresPermissions("ext:friendlink:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Friendlink bean,
 			Integer typeId, Integer position, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
@@ -158,7 +156,7 @@ public class FriendlinkController {
 	}
 
 	@RequiresPermissions("ext:friendlink:batch_update")
-	@RequestMapping("batch_update.do")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();

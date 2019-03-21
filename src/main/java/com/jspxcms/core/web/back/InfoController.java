@@ -28,10 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -60,7 +57,7 @@ public class InfoController {
     public static final int MAIN_NODE = 2;
 
     @RequiresPermissions("core:info:left")
-    @RequestMapping("left.do")
+    @GetMapping("left.do")
     public String left(HttpServletRequest request, org.springframework.ui.Model modelMap) {
         User user = Context.getCurrentUser();
         Integer siteId = Context.getCurrentSiteId();
@@ -71,7 +68,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType, String queryStatus,
                        @PageableDefault(sort = {"publishDate", "id"}, direction = Direction.DESC) Pageable pageable,
                        HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -113,7 +110,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:create")
-    @RequestMapping("create.do")
+    @GetMapping("create.do")
     public String create(Integer id, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
                          String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -150,7 +147,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:edit")
-    @RequestMapping("edit.do")
+    @GetMapping("edit.do")
     public String edit(Integer id, Integer position, Integer queryNodeId,
                        @RequestParam(defaultValue = "0") int queryNodeType, Integer queryInfoPermType, String queryStatus,
                        @PageableDefault(sort = {"publishDate", "id"}, direction = Direction.DESC) Pageable pageable,
@@ -210,7 +207,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:edit")
-    @RequestMapping("view.do")
+    @GetMapping("view.do")
     public String view(Integer id, Integer position, Integer queryNodeId,
                        @RequestParam(defaultValue = "0") int queryNodeType, Integer queryInfoPermType, String queryStatus,
                        @PageableDefault(sort = {"publishDate", "id"}, direction = Direction.DESC) Pageable pageable,
@@ -259,7 +256,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:move_form")
-    @RequestMapping("move_form.do")
+    @GetMapping("move_form.do")
     public String moveForm(Integer[] ids, Integer queryNodeId, Integer queryNodeType, Integer queryInfoPermType,
                            String queryStatus, HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -284,7 +281,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:save")
-    @RequestMapping("save.do")
+    @PostMapping("save.do")
     public String save(Info bean, InfoDetail detail, Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds,
                        Integer[] viewOrgIds, Integer[] attrIds, Integer nodeId, String tagKeywords,
                        @RequestParam(defaultValue = "false") boolean draft, String[] imagesName, String[] imagesText,
@@ -347,7 +344,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:update")
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     public String update(@ModelAttribute("bean") Info bean, @ModelAttribute("detail") InfoDetail detail,
                          Integer[] nodeIds, Integer[] specialIds, Integer[] viewGroupIds, Integer[] viewOrgIds, Integer[] attrIds,
                          Integer nodeId, String tagKeywords, @RequestParam(defaultValue = "false") boolean pass,
@@ -428,7 +425,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:move_submit")
-    @RequestMapping("move_submit.do")
+    @PostMapping("move_submit.do")
     public String moveSubmit(Integer[] ids, Integer nodeId, Integer queryNodeId, Integer queryNodeType,
                              Integer queryInfoPermType, String queryStatus, HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();
@@ -718,7 +715,7 @@ public class InfoController {
 
     // 上传不设权限
     // @RequiresPermissions("core:info:import_office")
-    @RequestMapping("import_office.do")
+    @PostMapping("import_office.do")
     public void importOffice(MultipartFile file, HttpServletRequest request, HttpServletResponse response)
             throws ParserException, IllegalStateException, URISyntaxException, IOException {
         Site site = Context.getCurrentSite();
@@ -785,7 +782,7 @@ public class InfoController {
     }
 
     @RequiresPermissions("core:info:mass_weixin")
-    @RequestMapping("mass_weixin.do")
+    @PostMapping("mass_weixin.do")
     public void massWeixin(String mode, Integer groupId, String towxname, Integer[] ids, String[] title, String[] author,
                            String[] contentSourceUrl, String[] digest, Boolean[] showConverPic, String[] thumb,
                            HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)

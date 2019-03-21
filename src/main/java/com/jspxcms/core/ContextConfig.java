@@ -20,6 +20,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mobile.device.LiteDeviceResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @Configuration
 @EntityScan({"com.jspxcms.core.domain", "com.jspxcms.ext.domain"})
@@ -154,4 +156,13 @@ public class ContextConfig {
         return new SiteResolver();
     }
 
+    /**
+     * WebLogic12cR2(12.2.1.3.0) 上传有会出错，要使用CommonsMultipartResolver
+     * @return
+     */
+    @Bean
+    public CommonsMultipartResolver commonsMultipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        return multipartResolver;
+    }
 }

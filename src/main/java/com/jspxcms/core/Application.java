@@ -1,9 +1,10 @@
 package com.jspxcms.core;
 
-import java.util.Date;
-
-import javax.servlet.MultipartConfigElement;
-
+import com.jspxcms.common.web.DateEditor;
+import com.jspxcms.common.web.StringEmptyEditor;
+import com.jspxcms.common.web.TimerInterceptor;
+import com.jspxcms.core.constant.Constants;
+import com.jspxcms.core.support.ForeInterceptor;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.ObjectProvider;
@@ -18,11 +19,7 @@ import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEven
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
@@ -31,11 +28,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.jspxcms.common.web.DateEditor;
-import com.jspxcms.common.web.StringEmptyEditor;
-import com.jspxcms.common.web.TimerInterceptor;
-import com.jspxcms.core.constant.Constants;
-import com.jspxcms.core.support.ForeInterceptor;
+import javax.servlet.MultipartConfigElement;
+import java.util.Date;
 
 /**
  * 应用启动的主入口

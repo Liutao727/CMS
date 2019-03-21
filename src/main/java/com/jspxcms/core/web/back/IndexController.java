@@ -8,6 +8,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jspxcms.core.domain.Site;
@@ -31,7 +32,7 @@ public class IndexController {
 	 * @param modelMap
 	 * @return
 	 */
-	@RequestMapping({ "/", "/index.do" })
+	@GetMapping({ "/", "/index.do" })
 	public String index(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated()) {

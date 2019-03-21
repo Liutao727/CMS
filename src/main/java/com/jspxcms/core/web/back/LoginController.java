@@ -6,9 +6,7 @@ import static org.apache.shiro.web.filter.authc.FormAuthenticationFilter.DEFAULT
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -19,12 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 public class LoginController {
-	@RequestMapping(value = "/login.do")
+	@GetMapping(value = "/login.do")
 	public String login() {
 		return "login";
 	}
 
-	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
+	@PostMapping(value = "/login.do")
 	public String fail(@RequestParam(DEFAULT_USERNAME_PARAM) String username,
 			HttpServletRequest request, RedirectAttributes redirect) {
 		Object errorName = request

@@ -23,9 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -58,7 +56,7 @@ public class SpecialController {
 			.getLogger(SpecialController.class);
 
 	@RequiresPermissions("core:special:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -75,7 +73,7 @@ public class SpecialController {
 	}
 
 	@RequiresPermissions("core:special:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, Integer modelId, Integer categoryId,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -117,7 +115,7 @@ public class SpecialController {
 	}
 
 	@RequiresPermissions("core:special:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer modelId,
@@ -153,7 +151,7 @@ public class SpecialController {
 	}
 
 	@RequiresPermissions("core:special:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Special bean, Integer categoryId, Integer modelId,
 			String[] imagesName, String[] imagesText, String[] imagesImage,
 			String[] filesName, String[] filesFile, Long[] filesLength,
@@ -207,7 +205,7 @@ public class SpecialController {
 	}
 
 	@RequiresPermissions("core:special:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Special bean,
 			Integer categoryId, Integer modelId, String[] imagesName,
 			String[] imagesText, String[] imagesImage, String[] filesName,

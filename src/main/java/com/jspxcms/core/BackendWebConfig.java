@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +47,7 @@ public class BackendWebConfig extends DelegatingWebMvcConfiguration {
 	public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
 		RequestMappingHandlerAdapter adapter = super.requestMappingHandlerAdapter();
 		adapter.setWebBindingInitializer(new BindingInitializer());
-		List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<HandlerMethodArgumentResolver>();
+		List<HandlerMethodArgumentResolver> argumentResolvers = new ArrayList<>();
 		argumentResolvers.add(new PageableArgumentResolver());
 		adapter.setCustomArgumentResolvers(argumentResolvers);
 		return adapter;
@@ -87,7 +88,7 @@ public class BackendWebConfig extends DelegatingWebMvcConfiguration {
 
 	/**
 	 * Shiro方法级权限验证Advisor。必须定义在BackendWebConfig里面，否则无效。
-	 * 
+	 *
 	 * @param securityManager
 	 * @return
 	 * @throws IOException

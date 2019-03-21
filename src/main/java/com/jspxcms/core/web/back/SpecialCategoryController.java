@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -48,8 +46,8 @@ public class SpecialCategoryController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SpecialCategoryController.class);
 
-	@RequestMapping("list.do")
 	@RequiresPermissions("core:special_category:list")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = { "seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -62,8 +60,8 @@ public class SpecialCategoryController {
 		return "core/special_category/special_category_list";
 	}
 
-	@RequestMapping("create.do")
 	@RequiresPermissions("core:special_category:create")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		if (id != null) {
@@ -76,7 +74,7 @@ public class SpecialCategoryController {
 	}
 
 	@RequiresPermissions("core:special_category:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position, @PageableDefault(sort = {
 			"seq", "id" }, direction = Direction.ASC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -94,8 +92,8 @@ public class SpecialCategoryController {
 		return "core/special_category/special_category_form";
 	}
 
-	@RequestMapping("save.do")
 	@RequiresPermissions("core:special_category:save")
+	@PostMapping("save.do")
 	public String save(SpecialCategory bean, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -114,8 +112,8 @@ public class SpecialCategoryController {
 		}
 	}
 
-	@RequestMapping("update.do")
 	@RequiresPermissions("core:special_category:update")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") SpecialCategory bean,
 			Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -136,8 +134,8 @@ public class SpecialCategoryController {
 		}
 	}
 
-	@RequestMapping("batch_update.do")
 	@RequiresPermissions("core:special_category:batch_update")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, String[] name, Integer[] views,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();
@@ -154,8 +152,8 @@ public class SpecialCategoryController {
 		return "redirect:list.do";
 	}
 
-	@RequestMapping("delete.do")
 	@RequiresPermissions("core:special_category:delete")
+	@RequestMapping("delete.do")
 	public String delete(Integer[] ids, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();

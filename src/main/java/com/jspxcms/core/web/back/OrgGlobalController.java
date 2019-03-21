@@ -22,9 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -55,9 +53,9 @@ public class OrgGlobalController {
 	// return "core/org_global/org_global_left";
 	// }
 
-	@RequestMapping("list.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:list")
+	@GetMapping("list.do")
 	public String list(
 			Integer queryParentId,
 			@RequestParam(defaultValue = "true") boolean showDescendants,
@@ -75,9 +73,9 @@ public class OrgGlobalController {
 		return "core/org_global/org_global_list";
 	}
 
-	@RequestMapping("create.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:create")
+	@GetMapping("create.do")
 	public String create(Integer id, Integer parentId, Integer queryParentId,
 			Boolean showDescendants, org.springframework.ui.Model modelMap) {
 		Org bean = null, parent = null;
@@ -97,9 +95,9 @@ public class OrgGlobalController {
 		return "core/org_global/org_global_form";
 	}
 
-	@RequestMapping("edit.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:edit")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer queryParentId,
@@ -122,9 +120,9 @@ public class OrgGlobalController {
 		return "core/org_global/org_global_form";
 	}
 
-	@RequestMapping("save.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:save")
+	@PostMapping("save.do")
 	public String save(Org bean, Integer parentId, Integer queryParentId,
 			Boolean showDescendants, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
@@ -146,9 +144,9 @@ public class OrgGlobalController {
 		}
 	}
 
-	@RequestMapping("update.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:update")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Org bean, Integer parentId,
 			Integer queryParentId, Boolean showDescendants, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
@@ -168,9 +166,9 @@ public class OrgGlobalController {
 		}
 	}
 
-	@RequestMapping("batch_update.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:batch_update")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, String[] name, String[] number,
 			String[] phone, String[] address, Integer queryParentId,
 			Boolean showDescendants, Pageable pageable,
@@ -193,9 +191,9 @@ public class OrgGlobalController {
 		return "redirect:list.do";
 	}
 
-	@RequestMapping("delete.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:org_global:delete")
+	@RequestMapping("delete.do")
 	public String delete(Integer[] ids, Integer queryParentId,
 			Boolean showDescendants, HttpServletRequest request,
 			RedirectAttributes ra) {

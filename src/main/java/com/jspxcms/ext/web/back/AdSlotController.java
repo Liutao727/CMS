@@ -20,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -42,7 +40,7 @@ public class AdSlotController {
 			.getLogger(AdSlotController.class);
 
 	@RequiresPermissions("ext:ad_slot:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -56,7 +54,7 @@ public class AdSlotController {
 	}
 
 	@RequiresPermissions("ext:ad_slot:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
 		if (id != null) {
@@ -69,7 +67,7 @@ public class AdSlotController {
 	}
 
 	@RequiresPermissions("ext:ad_slot:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer position,
@@ -90,7 +88,7 @@ public class AdSlotController {
 	}
 
 	@RequiresPermissions("ext:ad_slot:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(AdSlot bean, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -110,7 +108,7 @@ public class AdSlotController {
 	}
 
 	@RequiresPermissions("ext:ad_slot:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") AdSlot bean, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();

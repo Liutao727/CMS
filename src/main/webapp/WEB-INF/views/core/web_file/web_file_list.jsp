@@ -90,6 +90,9 @@
                     height: 450,
                     modal: true,
                     position: {my: "center top", at: "center top", of: window},
+                    close: function () {
+                        $(this).remove();
+                    },
                     buttons: {
                         "OK": function () {
                             var dest = $("#f7_id").val();
@@ -107,7 +110,7 @@
                             form.submit();
                         },
                         Cancel: function () {
-                            $(this).dialog("close");
+                            $(this).remove();
                         }
                     }
                 });

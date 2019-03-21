@@ -698,30 +698,32 @@ Cms.jfUploadImage = function (name, settings) {
     }
     // acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
     // maxFileSize: 10000000,
-    settings.formData = {};
-    if ($("#s_" + name).length != 0) {
-        settings.formData.scale = $("#s_" + name).prop("checked");
-    }
-    if ($("#e_" + name).length != 0) {
-        settings.formData.exact = $("#e_" + name).prop("checked");
-    }
-    if ($("#wm_" + name).length != 0) {
-        settings.formData.watermark = $("#wm_" + name).prop("checked");
-    }
-    if ($("#w_" + name).length != 0) {
-        settings.formData.width = $("#w_" + name).val();
-    }
-    if ($("#h_" + name).length != 0) {
-        settings.formData.height = $("#h_" + name).val();
-    }
-    if ($("#t_" + name).length != 0) {
-        settings.formData.thumbnail = $("#t_" + name).val();
-    }
-    if ($("#tw_" + name).length != 0) {
-        settings.formData.thumbnailWidth = $("#tw_" + name).val();
-    }
-    if ($("#th_" + name).length != 0) {
-        settings.formData.thumbnailHeight = $("#th_" + name).val();
+    settings.submit = function(e, data) {
+        data.formData = {};
+        if ($("#s_" + name).length != 0) {
+            data.formData.scale = $("#s_" + name).prop("checked");
+        }
+        if ($("#e_" + name).length != 0) {
+            data.formData.exact = $("#e_" + name).prop("checked");
+        }
+        if ($("#wm_" + name).length != 0) {
+            data.formData.watermark = $("#wm_" + name).prop("checked");
+        }
+        if ($("#w_" + name).length != 0) {
+            data.formData.width = $("#w_" + name).val();
+        }
+        if ($("#h_" + name).length != 0) {
+            data.formData.height = $("#h_" + name).val();
+        }
+        if ($("#t_" + name).length != 0) {
+            data.formData.thumbnail = $("#t_" + name).val();
+        }
+        if ($("#tw_" + name).length != 0) {
+            data.formData.thumbnailWidth = $("#tw_" + name).val();
+        }
+        if ($("#th_" + name).length != 0) {
+            data.formData.thumbnailHeight = $("#th_" + name).val();
+        }
     }
     settings.done = function (e, data) {
         $("#" + name).val(data.result.fileUrl).change();
@@ -764,31 +766,33 @@ Cms.jfUploadImages = function (name, settings, addImageRow) {
     }
     // acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
     // maxFileSize: 10000000,
-    settings.formData = {};
-    if ($("#s_" + name).length != 0) {
-        settings.formData.scale = $("#s_" + name).prop("checked");
+    settings.submit = function(e, data) {
+        data.formData = {};
+        if ($("#s_" + name).length != 0) {
+            data.formData.scale = $("#s_" + name).prop("checked");
+        }
+        if ($("#e_" + name).length != 0) {
+            data.formData.exact = $("#e_" + name).prop("checked");
+        }
+        if ($("#wm_" + name).length != 0) {
+            data.formData.watermark = $("#wm_" + name).prop("checked");
+        }
+        if ($("#w_" + name).length != 0) {
+            data.formData.width = $("#w_" + name).val();
+        }
+        if ($("#h_" + name).length != 0) {
+            data.formData.height = $("#h_" + name).val();
+        }
+        if ($("#t_" + name).length != 0) {
+            data.formData.thumbnail = $("#t_" + name).val();
+        }
+        if ($("#tw_" + name).length != 0) {
+            data.formData.thumbnailWidth = $("#tw_" + name).val();
+        }
+        if ($("#th_" + name).length != 0) {
+            data.formData.thumbnailHeight = $("#th_" + name).val();
+        }
     }
-    if ($("#e_" + name).length != 0) {
-        settings.formData.exact = $("#e_" + name).prop("checked");
-    }
-    if ($("#wm_" + name).length != 0) {
-        settings.formData.watermark = $("#wm_" + name).prop("checked");
-    }
-    if ($("#w_" + name).length != 0) {
-        settings.formData.width = $("#w_" + name).val();
-    }
-    if ($("#h_" + name).length != 0) {
-        settings.formData.height = $("#h_" + name).val();
-    }
-    if ($("#t_" + name).length != 0) {
-        settings.formData.thumbnail = $("#t_" + name).val();
-    }
-    if ($("#tw_" + name).length != 0) {
-        settings.formData.thumbnailWidth = $("#tw_" + name).val();
-    }
-    if ($("#th_" + name).length != 0) {
-        settings.formData.thumbnailHeight = $("#th_" + name).val();
-    };
     settings.done = function (e, data) {
         addImageRow(data.result.fileUrl, '');
     };
@@ -826,11 +830,11 @@ Cms.scaleImg = function (imgId, maxWidth, maxHeight, src) {
         $("#" + imgId).hide();
         return;
     }
-    if (src.indexOf("?") == -1) {
-        src += "?d=" + new Date() * 1;
-    } else {
-        src += "&d=" + new Date() * 1;
-    }
+    // if (src.indexOf("?") == -1) {
+    //     src += "?d=" + new Date() * 1;
+    // } else {
+    //     src += "&d=" + new Date() * 1;
+    // }
     var id = "scaleImg" + new Date() * 1;
     var imgHtml = "<img id='" + id + "' src='" + src + "' style='position:absolute;top:-99999px;left:-99999px'/>";
     $(imgHtml).appendTo($("#" + imgId).parent());

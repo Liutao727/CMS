@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,7 +36,7 @@ public class WeixinMenuController {
     private static final Logger logger = LoggerFactory.getLogger(WeixinMenuController.class);
 
     @RequiresPermissions("plug:weixin_menu:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(HttpServletRequest request, org.springframework.ui.Model modelMap) throws WeixinException {
         Site site = Context.getCurrentSite();
         SiteWeixin sw = site.getWeixin();
@@ -58,7 +60,7 @@ public class WeixinMenuController {
     }
 
     @RequiresPermissions("plug:weixin_menu:save")
-    @RequestMapping("save.do")
+    @PostMapping("save.do")
     public String save(String[] id, String[] name, String[] type, String[] content, String[] subid, String[] subname,
                        String[] subtype, String[] subcontent, HttpServletRequest request, RedirectAttributes ra) throws WeixinException {
         Site site = Context.getCurrentSite();

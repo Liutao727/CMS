@@ -21,10 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -45,7 +42,7 @@ public class MailOutboxController {
 	private static final Logger logger = LoggerFactory.getLogger(MailOutboxController.class);
 
 	@RequiresPermissions("core:mail_outbox:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
@@ -57,7 +54,7 @@ public class MailOutboxController {
 	}
 
 	@RequiresPermissions("core:mail_outbox:send")
-	@RequestMapping("send.do")
+	@PostMapping("send.do")
 	public String send(@RequestParam(defaultValue = "false") boolean allReceive, String receiverUsername,
 			Integer[] receiverGroupIds, MailText mailText, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -69,7 +66,7 @@ public class MailOutboxController {
 	}
 
 	@RequiresPermissions("core:mail_outbox:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position,
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
@@ -84,7 +81,7 @@ public class MailOutboxController {
 	}
 
 	@RequiresPermissions("core:mail_outbox:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") MailOutbox bean, @ModelAttribute("mailText") MailText mailText,
 			Integer position, String redirect, RedirectAttributes ra) {
 		service.update(bean);

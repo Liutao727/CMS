@@ -17,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.web.Servlets;
@@ -35,7 +32,7 @@ import com.jspxcms.core.support.Context;
 public class NotificationController {
 	private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
-	@RequestMapping("count.do")
+	@GetMapping("count.do")
 	@ResponseBody
 	public String countNotification() {
 		User user = Context.getCurrentUser();
@@ -44,7 +41,7 @@ public class NotificationController {
 	}
 
 	@RequiresPermissions("core:notification:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(@PageableDefault(sort = "id", direction = Direction.DESC, size = PAGE_SIZE) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);

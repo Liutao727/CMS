@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -32,7 +34,7 @@ public class CommentConfController {
 			.getLogger(CommentConfController.class);
 
 	@RequiresPermissions("core:comment_conf:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -42,7 +44,7 @@ public class CommentConfController {
 	}
 
 	@RequiresPermissions("core:comment_conf:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(SiteComment bean, HttpServletRequest request,
 			RedirectAttributes ra) {
 		Site site = Context.getCurrentSite();

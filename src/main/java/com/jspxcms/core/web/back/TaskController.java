@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +43,7 @@ public class TaskController {
 			.getLogger(TaskController.class);
 
 	@RequiresPermissions("core:task:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -55,7 +56,7 @@ public class TaskController {
 	}
 
 	@RequiresPermissions("core:task:view")
-	@RequestMapping("view.do")
+	@GetMapping("view.do")
 	public String view(
 			Integer id,
 			Integer position,

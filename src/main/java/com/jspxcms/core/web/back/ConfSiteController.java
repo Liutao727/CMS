@@ -16,9 +16,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +40,7 @@ public class ConfSiteController {
     public static final String TYPE = "type";
 
     @RequiresPermissions("core:conf_site:base_edit")
-    @RequestMapping("base_edit.do")
+    @GetMapping("base_edit.do")
     public String baseEdit(HttpServletRequest request,
                            org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -67,7 +65,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:base_update")
-    @RequestMapping("base_update.do")
+    @PostMapping("base_update.do")
     public String baseUpdate(@ModelAttribute("bean") Site bean,
                              HttpServletRequest request, RedirectAttributes ra) {
         service.update(bean);
@@ -78,7 +76,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:custom_edit")
-    @RequestMapping("custom_edit.do")
+    @GetMapping("custom_edit.do")
     public String customEdit(HttpServletRequest request,
                              org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -90,7 +88,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:custom_update")
-    @RequestMapping("custom_update.do")
+    @PostMapping("custom_update.do")
     public String customUpdate(@ModelAttribute("bean") Site bean, HttpServletRequest request, RedirectAttributes ra) {
         Map<String, String> map = Servlets.getParamMap(request, "customs_");
         Map<String, String> clobMap = Servlets.getParamMap(request,
@@ -103,7 +101,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:watermark_edit")
-    @RequestMapping("watermark_edit.do")
+    @GetMapping("watermark_edit.do")
     public String watermarkEdit(HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
         modelMap.addAttribute("site", site);
@@ -112,7 +110,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:watermark_update")
-    @RequestMapping("watermark_update.do")
+    @PostMapping("watermark_update.do")
     public String watermarkUpdate(SiteWatermark bean, HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();
         service.updateConf(site, bean);
@@ -122,7 +120,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:weixin_edit")
-    @RequestMapping("weixin_edit.do")
+    @GetMapping("weixin_edit.do")
     public String weixinEdit(HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
         modelMap.addAttribute("site", site);
@@ -131,7 +129,7 @@ public class ConfSiteController {
     }
 
     @RequiresPermissions("core:conf_site:weixin_update")
-    @RequestMapping("weixin_update.do")
+    @PostMapping("weixin_update.do")
     public String weixinUpdate(SiteWeixin bean, HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();
         service.updateConf(site, bean);

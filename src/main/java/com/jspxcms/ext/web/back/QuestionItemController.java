@@ -17,9 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -39,7 +37,7 @@ public class QuestionItemController {
 			.getLogger(QuestionItemController.class);
 
 	@RequiresPermissions("ext:question:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position, @PageableDefault(sort = {
 			"seq", "id" }, direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -59,7 +57,7 @@ public class QuestionItemController {
 	}
 
 	@RequiresPermissions("ext:question:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") QuestionItem bean,
 			Integer[] optionId, String[] optionTitle, Integer position,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {

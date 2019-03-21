@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -36,7 +38,7 @@ public class GuestbookTypeController {
 			.getLogger(GuestbookTypeController.class);
 
 	@RequiresPermissions("ext:guestbook_type:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -46,7 +48,7 @@ public class GuestbookTypeController {
 	}
 
 	@RequiresPermissions("ext:guestbook_type:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(GuestbookType bean, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -59,7 +61,7 @@ public class GuestbookTypeController {
 	}
 
 	@RequiresPermissions("ext:guestbook_type:batch_update")
-	@RequestMapping("batch_update.do")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer[] id, String[] name, String[] number,
 			String[] description, HttpServletRequest request,
 			RedirectAttributes ra) {

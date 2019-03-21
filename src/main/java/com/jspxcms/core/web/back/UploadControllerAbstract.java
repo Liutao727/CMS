@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.*;
 
@@ -87,9 +88,8 @@ public abstract class UploadControllerAbstract {
         sb.append("\"imageCompressEnable\": true,");
         sb.append("\"catcherLocalDomain\":[\"127.0.0.1\", \"0:0:0:0:0:0:0:1\", \"localhost\"");
         String uploadsDomain = site.getGlobal().getUploadsDomain();
-        if (StringUtils.isNotBlank(uploadsDomain)) {
-            sb.append(",\"+uploadsDomain+\"");
-        }
+        if (StringUtils.isNotBlank(uploadsDomain)) sb.append(",\"").append(uploadsDomain).append("\"");
+
         sb.append("]}");
 
         logger.debug("ueditor config:" + sb.toString());
@@ -108,7 +108,7 @@ public abstract class UploadControllerAbstract {
         StringBuilder sb = new StringBuilder();
         if (StringUtils.isNotBlank(extensions)) {
             for (String s : StringUtils.split(extensions, ',')) {
-                sb.append(".").append(s).append(",");
+                sb.append("\".").append(s).append("\",");
             }
             if (sb.length() > 0) {
                 sb.setLength(sb.length() - 1);
@@ -125,45 +125,42 @@ public abstract class UploadControllerAbstract {
         String urlPrefix = point.getUrlPrefix();
 
         StringBuilder result = new StringBuilder("{\"state\": \"SUCCESS\", list: [");
-        List<String> urls = new ArrayList<String>();
-        List<String> srcs = new ArrayList<String>();
-
         String[] source = request.getParameterValues("source[]");
-        if (source == null) {
-            source = new String[0];
-        }
-        for (int i = 0; i < source.length; i++) {
-            String src = source[i];
-            String extension = FilenameUtils.getExtension(src);
-            // 格式验证
-            if (!gu.isExtensionValid(extension, Uploader.IMAGE)) {
+        if (source == null) source = new String[0];
+        try {
+            for (String src : source) {
+                String extension = FilenameUtils.getExtension(src);
+                // 格式验证
                 // state = "Extension Invalid";
-                continue;
-            }
-            HttpURLConnection.setFollowRedirects(false);
-            HttpURLConnection conn = (HttpURLConnection) new URL(src).openConnection();
-            if (conn.getContentType().indexOf("image") == -1) {
+                if (!gu.isExtensionValid(extension, Uploader.IMAGE)) continue;
+                HttpURLConnection.setFollowRedirects(false);
+                URL srcUrl = new URL(src);
+                // 只支持 http 和 https 协议
+                String protocol = srcUrl.getProtocol();
+                if (!"http".equals(protocol) && !"https".equals(protocol)) continue;
+                // 只允许 默认、80、443 端口
+                int port = srcUrl.getPort();
+                if (port != -1 && port != 80 && port != 443) continue;
+                // 不访问本机
+                String host = srcUrl.getHost();
+                if (InetAddress.getByName(host).isSiteLocalAddress()) continue;
+                HttpURLConnection conn = (HttpURLConnection) srcUrl.openConnection();
                 // state = "ContentType Invalid";
-                continue;
-            }
-            if (conn.getResponseCode() != 200) {
+                if (!conn.getContentType().contains("image")) continue;
                 // state = "Request Error";
-                continue;
+                if (conn.getResponseCode() != 200) continue;
+                String pathname = site.getSiteBase(Uploader.getQuickPathname(Uploader.IMAGE, extension));
+                try (InputStream is = conn.getInputStream()) {
+                    fileHandler.storeFile(is, pathname);
+                }
+                String url = urlPrefix + pathname;
+                result.append("{\"state\": \"SUCCESS\",");
+                result.append("\"url\":\"").append(url).append("\",");
+                result.append("\"source\":\"").append(src).append("\"},");
             }
-            String pathname = site.getSiteBase(Uploader.getQuickPathname(Uploader.IMAGE, extension));
-            InputStream is = null;
-            try {
-                is = conn.getInputStream();
-                fileHandler.storeFile(is, pathname);
-            } finally {
-                IOUtils.closeQuietly(is);
-            }
-            String url = urlPrefix + pathname;
-            urls.add(url);
-            srcs.add(src);
-            result.append("{\"state\": \"SUCCESS\",");
-            result.append("\"url\":\"").append(url).append("\",");
-            result.append("\"source\":\"").append(src).append("\"},");
+        } catch (Exception e) {
+            // 为防止 SSRF 不在前台反馈任何信息
+            logger.error(null, e);
         }
         if (result.charAt(result.length() - 1) == ',') {
             result.setLength(result.length() - 1);

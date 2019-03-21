@@ -62,6 +62,7 @@
                 </div>
                 <button class="btn btn-default btn-sm" type="submit"><s:message code="search"/></button>
             </form>
+            <shiro:hasPermission name="core:site:import">
             <div class="form-group">
                 <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
@@ -82,6 +83,7 @@
                     });
                 </script>
             </div>
+            </shiro:hasPermission>
             <form method="post">
                 <tags:search_params/>
                 <div class="btn-toolbar ls-btn-bar">

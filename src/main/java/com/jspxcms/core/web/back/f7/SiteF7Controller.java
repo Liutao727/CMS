@@ -5,8 +5,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,6 +34,7 @@ public class SiteF7Controller {
 	 * @param modelMap
 	 * @return
 	 */
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_site_tree.do")
 	public String f7SiteTree(Integer id,
 			@RequestParam(defaultValue = "true") Boolean allowRoot,

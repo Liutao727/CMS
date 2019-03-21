@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,12 +39,12 @@ import com.jspxcms.core.support.UploadHandler;
 @RequestMapping("/commons")
 public class ImageCropController {
 	@RequiresPermissions("commons:img_crop:select")
-	@RequestMapping(value = "img_area_select.do")
+	@GetMapping(value = "img_area_select.do")
 	public String imgAreaSelect(String src, Integer targetWidth, Integer targetHeight, String targetFrame, String name,
 			org.springframework.ui.Model modelMap) {
 		String srcNoCache = src;
 		if (StringUtils.isNotBlank(src)) {
-			srcNoCache += src.indexOf("?") == -1 ? "?" : "&";
+			srcNoCache += !src.contains("?") ? "?" : "&";
 			srcNoCache += "d=" + System.currentTimeMillis();
 		}
 		modelMap.addAttribute("src", src);
@@ -55,7 +57,7 @@ public class ImageCropController {
 	}
 
 	@RequiresPermissions("commons:img_crop:submit")
-	@RequestMapping(value = "img_crop.do")
+	@PostMapping(value = "img_crop.do")
 	public String imgCrop(String src, Float scale, Integer left, Integer top, Integer width, Integer height,
 			Integer targetWidth, Integer targetHeight, String name,
 			@RequestParam(defaultValue = "false") boolean watermark, HttpServletRequest request,

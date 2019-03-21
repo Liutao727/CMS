@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,7 +39,7 @@ public class VisitLogController {
             .getLogger(VisitLogController.class);
 
     @RequiresPermissions("ext:visit_log:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(
             @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
             HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -51,7 +53,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:view")
-    @RequestMapping("view.do")
+    @GetMapping("view.do")
     public String view(
             Integer id,
             Integer position,
@@ -87,7 +89,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:delete")
-    @RequestMapping("batch_delete.do")
+    @PostMapping("batch_delete.do")
     public String batchDelete(Date before, HttpServletRequest request,
                               RedirectAttributes ra) {
         Site site = Context.getCurrentSite();
@@ -100,7 +102,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:traffic_analysis")
-    @RequestMapping("traffic_analysis.do")
+    @GetMapping("traffic_analysis.do")
     public String trafficAnalysis(Date begin, Date end, String period,
                                   HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Integer siteId = Context.getCurrentSiteId();
@@ -151,7 +153,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:source_analysis")
-    @RequestMapping("source_analysis.do")
+    @GetMapping("source_analysis.do")
     public String sourceAnalysis(Date begin, Date end, String period,
                                  Pageable pageable, HttpServletRequest request,
                                  org.springframework.ui.Model modelMap) {
@@ -194,7 +196,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:url_analysis")
-    @RequestMapping("url_analysis.do")
+    @GetMapping("url_analysis.do")
     public String urlAnalysis(Date begin, Date end, String period,
                               Pageable pageable, HttpServletRequest request,
                               org.springframework.ui.Model modelMap) {
@@ -234,7 +236,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:country_analysis")
-    @RequestMapping("country_analysis.do")
+    @GetMapping("country_analysis.do")
     public String countryAnalysis(Date begin, Date end, String period,
                                   Pageable pageable, HttpServletRequest request,
                                   org.springframework.ui.Model modelMap) {
@@ -273,7 +275,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:browser_analysis")
-    @RequestMapping("browser_analysis.do")
+    @GetMapping("browser_analysis.do")
     public String browserAnalysis(Date begin, Date end, String period,
                                   Pageable pageable, HttpServletRequest request,
                                   org.springframework.ui.Model modelMap) {
@@ -312,7 +314,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:os_analysis")
-    @RequestMapping("os_analysis.do")
+    @GetMapping("os_analysis.do")
     public String osAnalysis(Date begin, Date end, String period,
                              Pageable pageable, HttpServletRequest request,
                              org.springframework.ui.Model modelMap) {
@@ -351,7 +353,7 @@ public class VisitLogController {
     }
 
     @RequiresPermissions("ext:visit_log:device_analysis")
-    @RequestMapping("device_analysis.do")
+    @GetMapping("device_analysis.do")
     public String deviceAnalysis(Date begin, Date end, String period,
                                  Pageable pageable, HttpServletRequest request,
                                  org.springframework.ui.Model modelMap) {

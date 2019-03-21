@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -46,7 +44,7 @@ public class AdController {
 			.getLogger(AdController.class);
 
 	@RequiresPermissions("ext:ad:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -61,7 +59,7 @@ public class AdController {
 	}
 
 	@RequiresPermissions("ext:ad:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, Integer slotId,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -87,7 +85,7 @@ public class AdController {
 	}
 
 	@RequiresPermissions("ext:ad:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer querySlotId,
@@ -116,7 +114,7 @@ public class AdController {
 	}
 
 	@RequiresPermissions("ext:ad:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Ad bean, Integer slotId, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -139,7 +137,7 @@ public class AdController {
 	}
 
 	@RequiresPermissions("ext:ad:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Ad bean, Integer slotId,
 			Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {

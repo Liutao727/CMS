@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jspxcms.common.file.CommonFile;
@@ -37,6 +39,7 @@ import com.jspxcms.core.support.Context;
 @RequestMapping("/core/web_file")
 public class WebFileF7Controller {
 
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_template_tree.do")
 	public String f7TemplateTree(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap)
@@ -84,6 +87,7 @@ public class WebFileF7Controller {
 		return "core/web_file/choose_template_tree";
 	}
 
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_style_tree.do")
 	public String f7StyleTree(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap)
@@ -131,6 +135,7 @@ public class WebFileF7Controller {
 		return "core/web_file/choose_template_tree";
 	}
 
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_uploads.do")
 	public String f7Uploads(HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) throws IOException {
@@ -167,6 +172,7 @@ public class WebFileF7Controller {
 		return "core/web_file/choose_uploads";
 	}
 
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_uploads_list.do")
 	public String f7UploadsList(HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap)

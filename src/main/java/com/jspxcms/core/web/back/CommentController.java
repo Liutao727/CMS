@@ -22,9 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -50,7 +48,7 @@ public class CommentController {
 			.getLogger(CommentController.class);
 
 	@RequiresPermissions("core:comment:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -64,7 +62,7 @@ public class CommentController {
 	}
 
 	@RequiresPermissions("core:comment:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		if (id != null) {
 			Comment bean = service.get(id);
@@ -75,7 +73,7 @@ public class CommentController {
 	}
 
 	@RequiresPermissions("core:comment:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(
 			Integer id,
 			Integer position,
@@ -96,7 +94,7 @@ public class CommentController {
 	}
 
 	@RequiresPermissions("core:comment:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Comment bean, Integer parentId, String redirect,
 			HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -118,7 +116,7 @@ public class CommentController {
 	}
 
 	@RequiresPermissions("core:comment:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Comment bean,
 			Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {

@@ -751,19 +751,13 @@ var utils = UE.utils = {
      * ```
      */
     unhtml:function (str, reg) {
-        return str ? str.replace(reg || /[&<">'](?:(amp|lt|quot|gt|#39|nbsp|#\d+|ldquo|rdquo|#xff0c);)?/g, function (a, b) {
-            if (b) {
-                return a;
-            } else {
-                return {
-                    '<':'&lt;',
-                    '&':'&amp;',
-                    '"':'&quot;',
-                    '>':'&gt;',
-                    "'":'&#39;'
-                }[a]
-            }
-
+        return str ? str.replace(reg || /[<">']/g, function (a) {
+            return {
+                '<':'&lt;',
+                '"':'&quot;',
+                '>':'&gt;',
+                "'":'&#39;'
+            }[a];
         }) : '';
     },
     /**

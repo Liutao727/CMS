@@ -18,10 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +37,7 @@ public class NodeController {
     private static final Logger logger = LoggerFactory.getLogger(NodeController.class);
 
     @RequiresPermissions("core:node:left")
-    @RequestMapping("left.do")
+    @GetMapping("left.do")
     public String left(HttpServletRequest request, org.springframework.ui.Model modelMap) {
         User user = Context.getCurrentUser();
         Integer siteId = Context.getCurrentSiteId();
@@ -51,7 +48,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:list")
-    @RequestMapping("list.do")
+    @GetMapping("list.do")
     public String list(Integer queryParentId, @RequestParam(defaultValue = "true") boolean showDescendants,
                        @PageableDefault(sort = {"treeNumber", "id"}, direction = Direction.ASC) Pageable pageable,
                        HttpServletRequest request, org.springframework.ui.Model modelMap) {
@@ -85,7 +82,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:batch_create_form")
-    @RequestMapping(value = "batch_create.do")
+    @GetMapping(value = "batch_create.do")
     public String batchCreateForm(Integer queryParentId,
                                   Boolean showDescendants, HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Integer siteId = Context.getCurrentSiteId();
@@ -95,7 +92,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:batch_create_submit")
-    @RequestMapping(value = "batch_create.do", method = RequestMethod.POST)
+    @PostMapping(value = "batch_create.do")
     public String batchCreateSubmit(Integer parentId, String batchData, HttpServletRequest request, RedirectAttributes ra) {
         Integer userId = Context.getCurrentUserId();
         Integer siteId = Context.getCurrentSiteId();
@@ -106,7 +103,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:create")
-    @RequestMapping("create.do")
+    @GetMapping("create.do")
     public String create(Integer cid, Integer parentId, Integer modelId, Integer infoModelId, Integer queryParentId,
                          Boolean showDescendants, HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -195,7 +192,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:edit")
-    @RequestMapping("edit.do")
+    @GetMapping("edit.do")
     public String edit(Integer id, Integer modelId, Integer queryParentId,
                        @RequestParam(defaultValue = "false") boolean showDescendants, Integer position, @PageableDefault(sort = {
             "treeNumber", "id"}, direction = Direction.ASC) Pageable pageable, HttpServletRequest request,
@@ -259,7 +256,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:save")
-    @RequestMapping("save.do")
+    @PostMapping("save.do")
     public String save(Integer cid, Node bean, NodeDetail detail, Integer[] infoPermIds, Integer[] nodePermIds,
                        Integer[] viewGroupIds, Integer[] contriGroupIds, Integer[] commentGroupIds, Integer[] viewOrgIds,
                        Integer parentId, Integer nodeModelId, Integer infoModelId, Integer workflowId,
@@ -313,7 +310,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:update")
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     public String update(@ModelAttribute("bean") Node bean, @ModelAttribute("detail") NodeDetail detail,
                          Integer[] infoPermIds, Integer[] nodePermIds, Integer[] viewGroupIds, Integer[] contriGroupIds,
                          Integer[] commentGroupIds, Integer[] viewOrgIds, Integer parentId, Integer nodeModelId,
@@ -379,7 +376,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:batch_update")
-    @RequestMapping("batch_update.do")
+    @PostMapping("batch_update.do")
     public String batchUpdate(Integer[] id, String[] name, String[] number, Integer[] views, Boolean[] hidden,
                               Integer queryParentId, Boolean showDescendants, Pageable pageable, HttpServletRequest request,
                               RedirectAttributes ra) {
@@ -431,7 +428,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:move_form")
-    @RequestMapping("move_form.do")
+    @GetMapping("move_form.do")
     public String moveForm(Integer[] ids, Boolean noChecked, Integer queryParentId, Boolean showDescendants,
                            HttpServletRequest request, org.springframework.ui.Model modelMap) {
         Site site = Context.getCurrentSite();
@@ -463,7 +460,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:move_submit")
-    @RequestMapping("move_submit.do")
+    @PostMapping("move_submit.do")
     public String moveSubmit(Integer[] ids, Integer id, Integer queryParentId, Boolean showDescendants,
                              HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();
@@ -488,7 +485,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:merge_form")
-    @RequestMapping("merge_form.do")
+    @GetMapping("merge_form.do")
     public String mergeForm(@RequestParam(defaultValue = "true") boolean deleteMergedNode, Boolean noChecked,
                             Integer queryParentId, Boolean showDescendants, HttpServletRequest request,
                             org.springframework.ui.Model modelMap) {
@@ -509,7 +506,7 @@ public class NodeController {
     }
 
     @RequiresPermissions("core:node:merge_submit")
-    @RequestMapping("merge_submit.do")
+    @PostMapping("merge_submit.do")
     public String mergeSubmit(Integer[] ids, Integer id, @RequestParam(defaultValue = "true") boolean deleteMergedNode,
                               Integer queryParentId, Boolean showDescendants, HttpServletRequest request, RedirectAttributes ra) {
         Site site = Context.getCurrentSite();

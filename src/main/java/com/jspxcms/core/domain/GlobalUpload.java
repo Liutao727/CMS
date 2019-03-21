@@ -47,10 +47,10 @@ public class GlobalUpload implements Configurable {
 	public ScaleParam getScaleParam(Boolean scale, Boolean exact, Integer width, Integer height) {
 		ScaleParam scaleInfo;
 		if (scale == null) {
-			width = getImageMaxWidth();
-			height = getImageMaxHeight();
-			scale = (width != null && width > 0) || (height != null && height > 0);
-			scaleInfo = new ScaleParam(scale, false, width, height);
+			int maxWidth = getImageMaxWidth();
+			int maxHeight = getImageMaxHeight();
+			scale = (maxWidth > 0) || (maxHeight > 0);
+			scaleInfo = new ScaleParam(scale, false, maxWidth, maxHeight);
 		} else {
 			scaleInfo = new ScaleParam(scale, exact, width, height);
 		}
@@ -93,7 +93,6 @@ public class GlobalUpload implements Configurable {
 			return false;
 		}
 		return true;
-
 	}
 
 	public String getExtensions(String type) {
@@ -133,7 +132,12 @@ public class GlobalUpload implements Configurable {
 	}
 
 	public String getFileExtensions() {
-		return getCustoms().get(FILE_EXTENSIONS);
+		String extensions = getCustoms().get(FILE_EXTENSIONS);
+		if (StringUtils.isNotBlank(extensions)) {
+			return extensions;
+		} else {
+			return "zip,7z,gz,bz2,iso,rar,pdf,doc,docx,xls,xlsx,ppt,pptx";
+		}
 	}
 
 	public void setFileExtensions(String fileExtensions) {
@@ -145,7 +149,12 @@ public class GlobalUpload implements Configurable {
 	}
 
 	public String getImageExtensions() {
-		return getCustoms().get(IMAGE_EXTENSIONS);
+		String extensions = getCustoms().get(IMAGE_EXTENSIONS);
+        if (StringUtils.isNotBlank(extensions)) {
+            return extensions;
+        } else {
+            return "jpg,jpeg,png,gif";
+        }
 	}
 
 	public void setImageExtensions(String imageExtensions) {
@@ -157,7 +166,12 @@ public class GlobalUpload implements Configurable {
 	}
 
 	public String getFlashExtensions() {
-		return getCustoms().get(FLASH_EXTENSIONS);
+        String extensions = getCustoms().get(FLASH_EXTENSIONS);
+        if (StringUtils.isNotBlank(extensions)) {
+            return extensions;
+        } else {
+            return "swf,flv,f4v";
+        }
 	}
 
 	public void setFlashExtensions(String flashExtensions) {
@@ -169,7 +183,12 @@ public class GlobalUpload implements Configurable {
 	}
 
 	public String getVideoExtensions() {
-		return getCustoms().get(VIDEO_EXTENSIONS);
+        String extensions = getCustoms().get(VIDEO_EXTENSIONS);
+        if (StringUtils.isNotBlank(extensions)) {
+            return extensions;
+        } else {
+            return "mp4,m3u8";
+        }
 	}
 
 	public void setVideoExtensions(String videoExtensions) {
@@ -181,7 +200,12 @@ public class GlobalUpload implements Configurable {
 	}
 
 	public String getDocExtensions() {
-		return getCustoms().get(DOC_EXTENSIONS);
+        String extensions = getCustoms().get(DOC_EXTENSIONS);
+        if (StringUtils.isNotBlank(extensions)) {
+            return extensions;
+        } else {
+            return "pdf,doc,docx,xls,xlsx,ppt,pptx";
+        }
 	}
 
 	public void setDocExtensions(String docExtensions) {

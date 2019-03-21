@@ -1,12 +1,5 @@
 package com.jspxcms.common.image;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -14,6 +7,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 图片工具类
@@ -167,7 +166,7 @@ public class Images {
 				watermarkInfo.getMinHeight());
 	}
 
-	public static void watermark(BufferedImage buff, BufferedImage watermark, int postion, int paddingX, int paddingY,
+	public static void watermark(BufferedImage buff, BufferedImage watermark, int position, int paddingX, int paddingY,
 			float alpha, int minWidth, int minHeight) {
 		int width = buff.getWidth();
 		int height = buff.getHeight();
@@ -178,7 +177,7 @@ public class Images {
 			return;
 		}
 		int x, y;
-		switch (postion) {
+		switch (position) {
 		// NorthWest
 		case 1: {
 			x = paddingX;
@@ -234,7 +233,7 @@ public class Images {
 			break;
 		}
 		default: {
-			throw new IllegalArgumentException("postion must be 1..9");
+			throw new IllegalArgumentException("position must be 1..9");
 		}
 		}
 		watermark(buff, watermark, x, y, alpha);

@@ -14,9 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.web.Servlets;
@@ -51,7 +49,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:base_edit")
-	@RequestMapping("base_edit.do")
+	@GetMapping("base_edit.do")
 	public String baseEdit(org.springframework.ui.Model modelMap) {
 		List<PublishPoint> uploadsPublishPointList = publishPointService.findByType(PublishPoint.TYPE_UPLOAD);
 		List<Site> siteList = siteService.findList();
@@ -63,7 +61,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:base_update")
-	@RequestMapping("base_update.do")
+	@PostMapping("base_update.do")
 	public String baseUpdate(@ModelAttribute("bean") Global bean, Integer uploadsPublishPointId,
 			HttpServletRequest request, RedirectAttributes ra) {
 		service.update(bean, uploadsPublishPointId);
@@ -74,7 +72,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:custom_edit")
-	@RequestMapping("custom_edit.do")
+	@GetMapping("custom_edit.do")
 	public String customEdit(HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Model model = modelService.findDefault(null, Global.MODEL_TYPE);
 		modelMap.addAttribute("model", model);
@@ -84,7 +82,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:custom_update")
-	@RequestMapping("custom_update.do")
+	@PostMapping("custom_update.do")
 	public String customUpdate(@ModelAttribute("bean") Global bean, HttpServletRequest request, RedirectAttributes ra) {
 		Map<String, String> map = Servlets.getParamMap(request, "customs_");
 		Map<String, String> clobMap = Servlets.getParamMap(request, "clobs_");
@@ -96,7 +94,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:upload_edit")
-	@RequestMapping("upload_edit.do")
+	@GetMapping("upload_edit.do")
 	public String uploadEdit(org.springframework.ui.Model modelMap) {
 		modelMap.addAttribute(TYPE, "upload");
 		return "core/conf_global/conf_global_upload";
@@ -104,7 +102,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:upload_update")
-	@RequestMapping("upload_update.do")
+	@PostMapping("upload_update.do")
 	public String uploadUpdate(GlobalUpload bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
 		logService.operation("opr.confGlobal.uploadEdit", null, null, 1, request);
@@ -114,7 +112,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:register_edit")
-	@RequestMapping("register_edit.do")
+	@GetMapping("register_edit.do")
 	public String registerEdit(org.springframework.ui.Model modelMap) {
 		List<MemberGroup> groupList = memberGroupService.findRealGroups();
 		List<Org> orgList = orgService.findList();
@@ -126,7 +124,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:register_update")
-	@RequestMapping("register_update.do")
+	@PostMapping("register_update.do")
 	public String registerUpdate(GlobalRegister bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
 		logService.operation("opr.confGlobal.registerEdit", null, null, 1, request);
@@ -136,7 +134,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:mail_edit")
-	@RequestMapping("mail_edit.do")
+	@GetMapping("mail_edit.do")
 	public String mailEdit(org.springframework.ui.Model modelMap) {
 		modelMap.addAttribute(TYPE, "mail");
 		return "core/conf_global/conf_global_mail";
@@ -144,7 +142,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:mail_update")
-	@RequestMapping("mail_update.do")
+	@PostMapping("mail_update.do")
 	public String mailUpdate(GlobalMail bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
 		logService.operation("opr.confGlobal.mailEdit", null, null, 1, request);
@@ -169,7 +167,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:other_edit")
-	@RequestMapping("other_edit.do")
+	@GetMapping("other_edit.do")
 	public String otherEdit(org.springframework.ui.Model modelMap) {
 		modelMap.addAttribute(TYPE, "other");
 		return "core/conf_global/conf_global_other";
@@ -177,7 +175,7 @@ public class ConfGlobalController {
 
 	@RequiresRoles("super")
 	@RequiresPermissions("core:conf_global:other_update")
-	@RequestMapping("other_update.do")
+	@PostMapping("other_update.do")
 	public String otherUpdate(GlobalOther bean, HttpServletRequest request, RedirectAttributes ra) {
 		service.updateConf(bean);
 		logService.operation("opr.confGlobal.otherEdit", null, null, 1, request);

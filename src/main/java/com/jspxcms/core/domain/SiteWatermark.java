@@ -1,21 +1,20 @@
 package com.jspxcms.core.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.jspxcms.common.image.WatermarkParam;
 import com.jspxcms.core.support.Configurable;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SiteWatermark implements Configurable {
 	public static final String PREFIX = "sys_watermark_";
 	/**
-	 * 模式：关闭注册
+	 * 模式：关闭水印
 	 */
 	public static final int MODE_OFF = 0;
 	/**
-	 * 模式：开放注册
+	 * 模式：开启水印
 	 */
 	public static final int MODE_ON = 1;
 	/**

@@ -87,8 +87,8 @@ public class CollectorImpl implements Collector {
                     }
                     Info info = new Info();
                     InfoDetail detail = new InfoDetail();
-                    Map<String, String> customs = new HashMap<String, String>();
-                    Map<String, String> clobs = new HashMap<String, String>();
+                    Map<String, String> customs = new HashMap<>();
+                    Map<String, String> clobs = new HashMap<>();
                     boolean success = service.collcetItem(httpclient, itemUri,
                             collectId, charset, nodeId, creatorId, info,
                             detail, customs, clobs);

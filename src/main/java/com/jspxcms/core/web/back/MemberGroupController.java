@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -46,9 +44,9 @@ import com.jspxcms.core.support.Context;
 public class MemberGroupController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberGroupController.class);
 
-	@RequestMapping("list.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:list")
+	@GetMapping("list.do")
 	public String list(@PageableDefault(sort = { "seq", "id" }) Pageable pageable, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
@@ -57,9 +55,9 @@ public class MemberGroupController {
 		return "core/member_group/member_group_list";
 	}
 
-	@RequestMapping("create.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:create")
+	@GetMapping("create.do")
 	public String create(Integer id, org.springframework.ui.Model modelMap) {
 		if (id != null) {
 			MemberGroup bean = service.get(id);
@@ -69,9 +67,9 @@ public class MemberGroupController {
 		return "core/member_group/member_group_form";
 	}
 
-	@RequestMapping("edit.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:edit")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position, @PageableDefault(sort = { "seq", "id" }) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -90,9 +88,9 @@ public class MemberGroupController {
 		return "core/member_group/member_group_form";
 	}
 
-	@RequestMapping("save.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:save")
+	@PostMapping("save.do")
 	public String save(MemberGroup bean, Integer[] viewNodeIds, Integer[] contriNodeIds, Integer[] commentNodeIds,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -110,9 +108,9 @@ public class MemberGroupController {
 		}
 	}
 
-	@RequestMapping("update.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:update")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") MemberGroup bean, Integer[] viewNodeIds, Integer[] contriNodeIds,
 			Integer[] commentNodeIds, Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -140,9 +138,9 @@ public class MemberGroupController {
 		}
 	}
 
-	@RequestMapping("delete.do")
 	@RequiresRoles("super")
 	@RequiresPermissions("core:member_group:delete")
+	@RequestMapping("delete.do")
 	public String delete(Integer[] ids, HttpServletRequest request, RedirectAttributes ra) {
 		for (Integer id : ids) {
 			if (id != null && id == 0) {

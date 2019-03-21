@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -39,7 +37,7 @@ public class MessageController {
 	private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
 
 	@RequiresPermissions("core:message:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Map<String, String[]> params = Servlets.getParamValuesMap(request, Constants.SEARCH_PREFIX);
@@ -49,7 +47,7 @@ public class MessageController {
 	}
 
 	@RequiresPermissions("core:message:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position,
 			@PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
@@ -64,7 +62,7 @@ public class MessageController {
 	}
 
 	@RequiresPermissions("core:message:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") Message bean, @ModelAttribute("messageText") MessageText messageText,
 			Integer position, String redirect, RedirectAttributes ra) {
 		service.update(bean);

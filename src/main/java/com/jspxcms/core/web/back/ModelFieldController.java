@@ -18,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.orm.RowSide;
@@ -49,7 +47,7 @@ public class ModelFieldController {
 			.getLogger(ModelFieldController.class);
 
 	@RequiresPermissions("core:model_field:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(Integer modelId, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -66,7 +64,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:predefined_list")
-	@RequestMapping("predefined_list.do")
+	@GetMapping("predefined_list.do")
 	public String predefinedList(Integer modelId,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -78,7 +76,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer modelId, Integer id,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -94,7 +92,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(Integer id, Integer position,
 			HttpServletRequest request, org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -112,7 +110,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(ModelField bean, Integer modelId, Boolean clob,
 			String redirect, HttpServletRequest request, RedirectAttributes ra) {
 		Map<String, String> customs = Servlets.getParamMap(request, "customs_");
@@ -134,7 +132,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:batch_save")
-	@RequestMapping("/batch_save.do")
+	@PostMapping("/batch_save.do")
 	public String batchSave(Integer modelId, String[] name, String[] label,
 			Boolean[] dblColumn, String[] property, String[] custom,
 			HttpServletRequest request, RedirectAttributes ra) {
@@ -154,7 +152,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(@ModelAttribute("bean") ModelField bean, Boolean clob,
 			Integer position, String redirect, HttpServletRequest request,
 			RedirectAttributes ra) {
@@ -177,7 +175,7 @@ public class ModelFieldController {
 	}
 
 	@RequiresPermissions("core:model_field:batch_update")
-	@RequestMapping("batch_update.do")
+	@PostMapping("batch_update.do")
 	public String batchUpdate(Integer modelId, Integer[] id, String[] name,
 			String[] label, Boolean[] dblColumn, HttpServletRequest request,
 			RedirectAttributes redirect) {

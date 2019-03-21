@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -60,56 +58,56 @@ public class WebFileUploadsController extends WebFileControllerAbstractor {
 	}
 
 	@RequiresPermissions("core:web_file_2:left")
-	@RequestMapping("left.do")
+	@GetMapping("left.do")
 	public String left(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		return super.left(request, response, modelMap);
 	}
 
 	@RequiresPermissions("core:web_file_2:left")
-	@RequestMapping("left_tree.do")
+	@GetMapping("left_tree.do")
 	public String leftTree(HttpServletRequest request, HttpServletResponse response,
 			org.springframework.ui.Model modelMap) throws IOException {
 		return super.leftTree(request, response, modelMap);
 	}
 
 	@RequiresPermissions("core:web_file_2:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		return super.list(request, response, modelMap);
 	}
 
 	@RequiresPermissions("core:web_file_2:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		return super.create(request, response, modelMap);
 	}
 
 	@RequiresPermissions("core:web_file_2:edit")
-	@RequestMapping("edit.do")
+	@GetMapping("edit.do")
 	public String edit(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		return super.edit(request, response, modelMap);
 	}
 
 	@RequiresPermissions("core:web_file_2:mkdir")
-	@RequestMapping(value = "mkdir.do", method = RequestMethod.POST)
+	@PostMapping(value = "mkdir.do")
 	public String mkdir(String parentId, String dir, HttpServletRequest request, HttpServletResponse response,
 			RedirectAttributes ra) throws IOException {
 		return super.mkdir(parentId, dir, request, response, ra);
 	}
 
 	@RequiresPermissions("core:web_file_2:save")
-	@RequestMapping(value = "save.do", method = RequestMethod.POST)
+	@PostMapping(value = "save.do")
 	public String save(String parentId, String name, String text, String redirect, HttpServletRequest request,
 			HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		return super.save(parentId, name, text, redirect, request, response, ra);
 	}
 
 	@RequiresPermissions("core:web_file_2:update")
-	@RequestMapping(value = "update.do", method = RequestMethod.POST)
+	@PostMapping(value = "update.do")
 	public void update(String parentId, String origName, String name, String text, Integer position, String redirect,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		super.update(parentId, origName, name, text, position, redirect, request, response);
@@ -123,14 +121,14 @@ public class WebFileUploadsController extends WebFileControllerAbstractor {
 	}
 
 	@RequiresPermissions("core:web_file_2:rename")
-	@RequestMapping("rename.do")
+	@PostMapping("rename.do")
 	public String rename(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		return super.rename(request, response, ra);
 	}
 
 	@RequiresPermissions("core:web_file_2:move")
-	@RequestMapping("move.do")
+	@PostMapping("move.do")
 	public String move(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra)
 			throws IOException {
 		return super.move(request, response, ra);
@@ -158,20 +156,20 @@ public class WebFileUploadsController extends WebFileControllerAbstractor {
 	}
 
 	@RequiresPermissions("core:web_file_2:upload")
-	@RequestMapping("upload.do")
+	@PostMapping("upload.do")
 	public void upload(@RequestParam(value = "file", required = false) MultipartFile file, String parentId,
 			HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
 		super.upload(file, parentId, request, response);
 	}
 
 	@RequiresPermissions("core:web_file_2:zip_upload")
-	@RequestMapping("zip_upload.do")
+	@PostMapping("zip_upload.do")
 	public void zipUpload(@RequestParam(value = "file", required = false) MultipartFile file, String parentId,
 			HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra) throws IOException {
 		super.zipUpload(file, parentId, request, response, ra);
 	}
 
-	@RequestMapping("choose_dir.do")
+	@GetMapping("choose_dir.do")
 	protected String dir(HttpServletRequest request, HttpServletResponse response, org.springframework.ui.Model modelMap)
 			throws IOException {
 		return super.dir(request, response, modelMap);

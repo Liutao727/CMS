@@ -6,10 +6,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jspxcms.common.web.Servlets;
@@ -26,6 +28,7 @@ import com.jspxcms.core.support.Context;
 @Controller
 @RequestMapping("/core/special")
 public class SpecialF7Controller {
+	@RequiresPermissions("core:nav")
 	@RequestMapping("choose_special_multi.do")
 	public String f7NodeTreeMulti(Integer[] ids, HttpServletRequest request,
 			HttpServletResponse response, org.springframework.ui.Model modelMap) {

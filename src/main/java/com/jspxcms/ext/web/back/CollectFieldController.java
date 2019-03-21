@@ -18,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jspxcms.common.util.Reflections;
@@ -50,7 +48,7 @@ public class CollectFieldController {
 			"downloads" };
 
 	@RequiresPermissions("ext:collect_field:list")
-	@RequestMapping("list.do")
+	@GetMapping("list.do")
 	public String list(Integer collectId, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -63,7 +61,7 @@ public class CollectFieldController {
 	}
 
 	@RequiresPermissions("ext:collect_field:create")
-	@RequestMapping("create.do")
+	@GetMapping("create.do")
 	public String create(Integer collectId, HttpServletRequest request,
 			org.springframework.ui.Model modelMap) {
 		Site site = Context.getCurrentSite();
@@ -79,7 +77,7 @@ public class CollectFieldController {
 	}
 
 	@RequiresPermissions("ext:collect_field:save")
-	@RequestMapping("save.do")
+	@PostMapping("save.do")
 	public String save(Integer collectId, String[] code, String[] name,
 			Integer[] type, HttpServletRequest request, RedirectAttributes ra) {
 		Integer siteId = Context.getCurrentSiteId();
@@ -98,7 +96,7 @@ public class CollectFieldController {
 	}
 
 	@RequiresPermissions("ext:collect_field:update")
-	@RequestMapping("update.do")
+	@PostMapping("update.do")
 	public String update(Integer collectId, Integer[] id, String[] name,
 			Integer[] sourceType, String[] sourceText, String[] sourceUrl,
 			String[] dataPattern, Boolean[] dataReg, String[] dataAreaPattern,
