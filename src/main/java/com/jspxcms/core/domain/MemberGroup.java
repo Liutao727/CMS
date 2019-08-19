@@ -1,6 +1,8 @@
 package com.jspxcms.core.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -47,14 +49,14 @@ public class MemberGroup implements java.io.Serializable {
 	public static final int UNVERIFIEDS = 3;
 
 	@Transient
-	public Set<Node> getViewNodes() {
+	public List<Node> getViewNodes() {
 		return getViewNodes(null);
 	}
 
 	@Transient
-	public Set<Node> getViewNodes(Integer siteId) {
-		Set<NodeMemberGroup> nodeGroups = getNodeGroups();
-		Set<Node> nodes = new HashSet<Node>();
+	public List<Node> getViewNodes(Integer siteId) {
+		List<NodeMemberGroup> nodeGroups = getNodeGroups();
+		List<Node> nodes = new ArrayList<>();
 		for (NodeMemberGroup ng : nodeGroups) {
 			Integer sid = ng.getNode().getSite().getId();
 			if (ng.getViewPerm() && (siteId == null || siteId.equals(sid))) {
@@ -65,14 +67,14 @@ public class MemberGroup implements java.io.Serializable {
 	}
 
 	@Transient
-	public Set<Node> getContriNodes() {
+	public List<Node> getContriNodes() {
 		return getContriNodes(null);
 	}
 
 	@Transient
-	public Set<Node> getContriNodes(Integer siteId) {
-		Set<NodeMemberGroup> nodeGroups = getNodeGroups();
-		Set<Node> nodes = new HashSet<Node>();
+	public List<Node> getContriNodes(Integer siteId) {
+		List<NodeMemberGroup> nodeGroups = getNodeGroups();
+		List<Node> nodes = new ArrayList<>();
 		for (NodeMemberGroup ng : nodeGroups) {
 			Integer sid = ng.getNode().getSite().getId();
 			if (ng.getContriPerm() && (siteId == null || siteId.equals(sid))) {
@@ -83,14 +85,14 @@ public class MemberGroup implements java.io.Serializable {
 	}
 
 	@Transient
-	public Set<Node> getCommentNodes() {
+	public List<Node> getCommentNodes() {
 		return getCommentNodes(null);
 	}
 
 	@Transient
-	public Set<Node> getCommentNodes(Integer siteId) {
-		Set<NodeMemberGroup> nodeGroups = getNodeGroups();
-		Set<Node> nodes = new HashSet<Node>();
+	public List<Node> getCommentNodes(Integer siteId) {
+		List<NodeMemberGroup> nodeGroups = getNodeGroups();
+		List<Node> nodes = new ArrayList<>();
 		for (NodeMemberGroup ng : nodeGroups) {
 			Integer sid = ng.getNode().getSite().getId();
 			if (ng.getCommentPerm() && (siteId == null || siteId.equals(sid))) {
@@ -128,7 +130,7 @@ public class MemberGroup implements java.io.Serializable {
 
 	private Integer id;
 
-	private Set<NodeMemberGroup> nodeGroups = new HashSet<NodeMemberGroup>(0);
+	private List<NodeMemberGroup> nodeGroups = new ArrayList<>();
 
 	private String name;
 	private String description;
@@ -149,11 +151,11 @@ public class MemberGroup implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "group")
-	public Set<NodeMemberGroup> getNodeGroups() {
+	public List<NodeMemberGroup> getNodeGroups() {
 		return nodeGroups;
 	}
 
-	public void setNodeGroups(Set<NodeMemberGroup> nodeGroups) {
+	public void setNodeGroups(List<NodeMemberGroup> nodeGroups) {
 		this.nodeGroups = nodeGroups;
 	}
 

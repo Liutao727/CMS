@@ -136,7 +136,7 @@
                     <div class="ls-norecord"><s:message code="recordNotFound"/></div>
                 </c:if>
             </form>
-            <form action="list.do" method="get" class="ls-page">
+            <form action="site_push_list.do" method="get" class="ls-page">
                 <tags:search_params excludePage="true"/>
                 <f:hidden name="queryNodeId" value="${queryNodeId}"/>
                 <f:hidden name="queryNodeType" value="${queryNodeType}"/>

@@ -45,6 +45,8 @@
                 <prop key="auto_import">/spring.ftl as s</prop>
                 <!-- 模板异常处理方式。默认会将错误信息直接显示在页面里，方便调试；生产环境可以将异常重新抛出，由 spring 处理异常。 -->
                 <!--<prop key="template_exception_handler">rethrow</prop>-->
+                <!-- 生产环境下，模板异常写入日志可能导致日志文件过于庞大，可设置模板异常不写入日志 -->
+                <!--<prop key="log_template_exceptions">false</prop>-->
             </props>
         </property>
     </bean>

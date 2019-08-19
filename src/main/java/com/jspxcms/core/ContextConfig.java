@@ -10,7 +10,9 @@ import com.jspxcms.core.constant.Constants;
 import com.jspxcms.core.support.SiteResolver;
 import com.jspxcms.core.support.WeixinProxyFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.owasp.html.examples.EbayPolicyExample;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -71,10 +73,12 @@ public class ContextConfig {
     @Bean
     @Primary
     public PolicyFactory policyFactory() {
-        // PolicyFactory policyFactory =
-        // Sanitizers.FORMATTING.and(Sanitizers.BLOCKS).and(Sanitizers.STYLES)
-        // .and(Sanitizers.LINKS).and(Sanitizers.TABLES).and(Sanitizers.IMAGES);
-        return EbayPolicyExample.POLICY_DEFINITION;
+//        PolicyFactory policyFactory = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS).and(Sanitizers.STYLES).and(Sanitizers.LINKS).and(Sanitizers.TABLES).and(Sanitizers.IMAGES);
+        PolicyFactory policy = EbayPolicyExample.POLICY_DEFINITION.and(new HtmlPolicyBuilder()
+                .allowAttributes("class", "controls", "preload", "width", "height", "src").onElements("video")
+                .allowAttributes("src", "type").onElements("source")
+                .allowElements("video", "source").toFactory());
+        return policy;
     }
 
     /**
@@ -158,6 +162,7 @@ public class ContextConfig {
 
     /**
      * WebLogic12cR2(12.2.1.3.0) 上传有会出错，要使用CommonsMultipartResolver
+     *
      * @return
      */
     @Bean

@@ -678,7 +678,7 @@
                     <span class="btn btn-success fileinput-button">
                         <i class="glyphicon glyphicon-plus"></i>
                         <span><s:message code="info.docImport"/></span>
-                        <input id="editor_${field.name}FileUpload" type="file" name="file" accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        <input id="editor_${field.name}FileUpload" type="file" name="file" accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword">
                     </span>
                     <div id="editor_${field.name}Progress" class="progress" style="display:none;">
                         <div class="progress-bar progress-bar-success"></div>

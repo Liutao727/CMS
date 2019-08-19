@@ -181,7 +181,7 @@
     - copy@core:web_file_1:copy
     - edit@core:web_file_1:edit
     - webFile.open@core:web_file_1:open
-    - save@:web_file_1:save
+    - save@core:web_file_1:save
     - update@core:web_file_1:update
     - delete@core:web_file_1:delete
     - webFile.rename@core:web_file_1:rename
@@ -203,7 +203,7 @@
     - copy@core:web_file_2:copy
     - edit@core:web_file_2:edit
     - webFile.open@core:web_file_2:open
-    - save@:web_file_2:save
+    - save@core:web_file_2:save
     - update@core:web_file_2:update
     - delete@core:web_file_2:delete
     - webFile.rename@core:web_file_2:rename
@@ -225,7 +225,7 @@
 #    - copy@core:web_file_3:copy
 #    - edit@core:web_file_3:edit
 #    - webFile.open@core:web_file_3:open
-#    - save@:web_file_3:save
+#    - save@core:web_file_3:save
 #    - update@core:web_file_3:update
 #    - delete@core:web_file_3:delete
 #    - webFile.rename@core:web_file_3:rename

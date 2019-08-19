@@ -73,7 +73,7 @@
                     var siteJfUpload = Cms.jfUpload("site", {
                         url: "import.do?_site=" + ($.cookie("_site") || ""),
                         file_size_limit: 0,
-                        acceptFileTypes: /\.xml$/i,
+                        acceptFileTypes: /\.zip$/i,
                         dataType: "html",
                         afterAlways: function (e, data) {
                             setTimeout(function () {

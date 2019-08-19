@@ -1,5 +1,15 @@
 # Jspxcms 发版说明
 
+## jspxcms-9.5.1 (2019-07-27)
+
+1. 文件管理save权限将`save@web_file_x:save`修正为`save@core:web_file_x:save`。
+2. 修复文档管理中正文编辑器保存视频时，会过滤掉视频代码的问题。
+3. 将站点导入允许的格式由xml改为zip。
+4. 将MemberGroup的nodeGroups集合，由Set改为List。因为Set在add时会遍历所有元素的equals方法，导致延迟加载失效。
+5. doc导入按钮选择文件时，默认文件格式由docx改为doc和docx。
+6. 增加模板异常不写入日志的配置示例。
+7. 修复站群推送列表翻页跳转文档列表的问题。
+8. 数据库配置文件增加数据库用户名密码示范，避免使用者误认为需要保留大括号。
 
 ## jspxcms-9.5.0 (2019-03-19)
 

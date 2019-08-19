@@ -30,7 +30,7 @@ public class QMemberGroup extends EntityPathBase<MemberGroup> {
 
     public final StringPath name = createString("name");
 
-    public final SetPath<com.jspxcms.core.domain.NodeMemberGroup, QNodeMemberGroup> nodeGroups = this.<com.jspxcms.core.domain.NodeMemberGroup, QNodeMemberGroup>createSet("nodeGroups", com.jspxcms.core.domain.NodeMemberGroup.class, QNodeMemberGroup.class, PathInits.DIRECT2);
+    public final ListPath<com.jspxcms.core.domain.NodeMemberGroup, QNodeMemberGroup> nodeGroups = this.<com.jspxcms.core.domain.NodeMemberGroup, QNodeMemberGroup>createList("nodeGroups", com.jspxcms.core.domain.NodeMemberGroup.class, QNodeMemberGroup.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> seq = createNumber("seq", Integer.class);
 

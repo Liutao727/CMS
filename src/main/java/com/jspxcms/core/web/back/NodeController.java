@@ -361,7 +361,6 @@ public class NodeController {
         if (parentId != null && bean.getParent() != null && !parentId.equals(bean.getParent().getId())) {
             service.move(new Integer[]{bean.getId()}, parentId, site.getId());
         }
-        logger.info("update Node, name={}.", bean.getName());
         ra.addAttribute("queryParentId", queryParentId);
         ra.addAttribute("showDescendants", showDescendants);
         ra.addFlashAttribute(MESSAGE, SAVE_SUCCESS);
